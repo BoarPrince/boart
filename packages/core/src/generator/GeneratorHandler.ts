@@ -1,0 +1,80 @@
+import { Initializer } from '../common/Initializer';
+
+import { Generator } from './Generator';
+
+/**
+ *
+ */
+export class GeneratorHandler implements Initializer<Generator> {
+    private readonly generators: Map<string, Generator>;
+    private static _instance;
+
+    /**
+     *
+     */
+    private constructor() {
+        this.generators = new Map();
+    }
+
+    /**
+     *
+     */
+    public static get instance(): GeneratorHandler {
+        if (!GeneratorHandler._instance) {
+            GeneratorHandler._instance = new GeneratorHandler();
+        }
+        return GeneratorHandler._instance;
+    }
+
+    /**
+     *
+     */
+    public clear() {
+        this.generators.clear();
+    }
+
+    /**
+     *
+     */
+    public delete(name: string) {
+        this.generators.delete(name);
+    }
+
+    /**
+     *
+     */
+    public add(name: string, item: Generator): Initializer<Generator> {
+        if (this.generators.has(name)) {
+            throw Error(`generator '${name}' already exists!`);
+        }
+        this.generators.set(name, item);
+        return this;
+    }
+
+    /**
+     *
+     */
+    addItems(generator: readonly Generator[]): Initializer<Generator> {
+        generator?.forEach(g => this.add(g.name, g));
+        return this;
+    }
+
+    /**
+     *
+     */
+    public generate(definition: string): string {
+        const match = definition.match(/^(?<name>[^:]+)(:(?<parameter>.+))?$/);
+
+        if (!match) {
+            throw Error(`generator definition '${definition}' can't be resolved!`);
+        }
+
+        const generator = this.generators.get(match.groups.name);
+        if (!generator) {
+            throw Error(`generator '${match.groups.name}' can't be found!`);
+        }
+
+        const parameters = (match.groups.parameter || '').split(':');
+        return generator.generate(...parameters);
+    }
+}

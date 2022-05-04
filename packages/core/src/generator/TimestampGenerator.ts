@@ -1,0 +1,25 @@
+import { Generator } from './Generator';
+
+const dateFormat = require('dateformat');
+
+/**
+ *
+ */
+export class TimestampGenerator implements Generator {
+    private static timeStampPostIdent = 0;
+
+    /**
+     *
+     */
+    readonly name = 'TimestampGenerator';
+
+    /**
+     *
+     */
+    generate(para?: string): string {
+        if (!!para) {
+            throw Error(`parameter '${para}' cannot be defined for timestamp generator`);
+        }
+        return dateFormat(new Date(), 'yyyymmddhhMMssms') + '' + TimestampGenerator.timeStampPostIdent++;
+    }
+}
