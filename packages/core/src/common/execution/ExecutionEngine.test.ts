@@ -1,0 +1,150 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/unbound-method */
+import { BaseRowType } from '../table/BaseRowType';
+import { TableRowType } from '../table/TableRowType';
+import { ExecutionContext } from './ExecutionContext';
+import { ExecutionEngine } from './ExecutionEngine';
+import { ExecutionUnit } from './ExecutionUnit';
+import 'jest-extended';
+
+/**
+ *
+ */
+interface TestConfig {
+    config_name: string;
+}
+
+/**
+ *
+ */
+interface TestContextPreExecution {
+    pre_name: string;
+}
+
+/**
+ *
+ */
+interface TestContextExecution {
+    data: string;
+}
+
+/**
+ *
+ */
+class TestExecutionContext implements ExecutionContext<TestConfig, TestContextPreExecution, TestContextExecution> {
+    config: TestConfig;
+    preExecution: TestContextPreExecution;
+    execution: TestContextExecution;
+}
+
+/**
+ *
+ */
+class ExecutionUnitMock implements ExecutionUnit<TestExecutionContext, any> {
+    /**
+     *
+     */
+    description = 'mock';
+    /**
+     *
+     */
+    execute = jest.fn();
+}
+
+/**
+ *
+ */
+describe('check execution engine', () => {
+    /**
+     *
+     */
+    it('check xxx', () => {
+        const rowDataConfig: BaseRowType<TestExecutionContext> = {
+            data: {
+                key: 'a:a',
+                keyPara: null,
+                values: {
+                    value1: null
+                },
+                values_replaced: {
+                    value1: null
+                },
+                _metaDefinition: {
+                    key: null,
+                    type: TableRowType.Configuration,
+                    executionUnit: new ExecutionUnitMock(),
+                    parameterType: null,
+                    validators: null
+                }
+            }
+        };
+
+        const rowDataPre: BaseRowType<TestExecutionContext> = {
+            data: {
+                key: 'a:a',
+                keyPara: null,
+                values: {
+                    value1: null
+                },
+                values_replaced: {
+                    value1: null
+                },
+                _metaDefinition: {
+                    key: null,
+                    type: TableRowType.PreProcessing,
+                    executionUnit: new ExecutionUnitMock(),
+                    parameterType: null,
+                    validators: null
+                }
+            }
+        };
+
+        const rowDataPost: BaseRowType<TestExecutionContext> = {
+            data: {
+                key: 'a:a',
+                keyPara: null,
+                values: {
+                    value1: null
+                },
+                values_replaced: {
+                    value1: null
+                },
+                _metaDefinition: {
+                    key: null,
+                    type: TableRowType.PostProcessing,
+                    executionUnit: new ExecutionUnitMock(),
+                    parameterType: null,
+                    validators: null
+                }
+            }
+        };
+
+        const contextGenerator = (): TestExecutionContext => {
+            return {
+                config: {
+                    config_name: ''
+                },
+                preExecution: {
+                    pre_name: ''
+                },
+                execution: {
+                    data: ''
+                }
+            };
+        };
+
+        const mainExecutionUnit = new ExecutionUnitMock();
+        const sut = new ExecutionEngine<TestExecutionContext, any>(mainExecutionUnit, contextGenerator);
+        sut.execute([rowDataPost, rowDataConfig, rowDataPre]);
+
+        expect(rowDataConfig.data._metaDefinition.executionUnit.execute) //
+            .toHaveBeenCalledBefore(rowDataPre.data._metaDefinition.executionUnit.execute as any);
+
+        expect(rowDataPre.data._metaDefinition.executionUnit.execute) //
+            .toHaveBeenCalledBefore(mainExecutionUnit.execute);
+
+        expect(mainExecutionUnit.execute) //
+            .toHaveBeenCalledBefore(rowDataPost.data._metaDefinition.executionUnit.execute as any);
+    });
+});
