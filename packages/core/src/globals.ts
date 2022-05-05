@@ -1,4 +1,5 @@
 import 'jest-extended';
+import { ContentType } from './data/ContentType';
 import { StoreMap } from './store/StoreMap';
 
 // an import is required, or else the global keyword does not work

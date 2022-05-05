@@ -1,5 +1,4 @@
 import { DataContent } from '../data/DataContent';
-
 import { StoreMap } from './StoreMap';
 
 /**

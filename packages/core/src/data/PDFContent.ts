@@ -1,4 +1,4 @@
-import { PdfExport } from '../common/pdfExport';
+import { PdfExport } from './pdfExport';
 
 import { ContentInstance } from './ContentInstance';
 import { ContentType } from './ContentType';

@@ -94,7 +94,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     private replaceOnce(value: string): string {
         return this.valueReplacers.reduce((v, r) => {
             const re = new RegExp(`\\\${${r.identifier}:((?<scope>[glts]):)?(?<property>[^{}]+)}`, 'g');
-            return v.replace(re, (m, scope_, scope: string, property: string) => {
+            return v.replace(re, (_m_, _scope_, scope: string, property: string) => {
                 switch (r.replacer.scoped) {
                     case ScopedType.false:
                         scope = null;

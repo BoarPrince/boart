@@ -1,30 +1,23 @@
 import { ContentType } from '../data/ContentType';
+
 import { DataContent } from '../data/DataContent';
 import { DataContentHelper } from '../data/DataContentHelper';
 
 import { StoreMap } from './StoreMap';
 
-
 /**
  *
  */
 export class StoreWrapper {
-    private readonly _store: StoreMap;
-    private readonly _storeName: string;
+    public readonly store: StoreMap;
+    public readonly storeName: string;
 
     /**
      *
      */
     constructor(store: StoreMap, storeName: string) {
-        this._store = store;
-        this._storeName = storeName;
-    }
-
-    /**
-     *
-     */
-    get store(): StoreMap {
-        return this._store;
+        this.store = store;
+        this.storeName = storeName;
     }
 
     /**

@@ -1,9 +1,9 @@
 import { fail } from 'assert';
 import { DataContent } from '../data/DataContent';
-import { ObjectContent } from '../data/ObjectContent';
+import { StoreMap } from '../store/StoreMap';
+import { StoreWrapper } from '../store/StoreWrapper';
 import { TextContent } from '../data/TextContent';
-import { StoreWrapper } from './StoreWrapper';
-import { StoreMap } from './StoreMap';
+import { ObjectContent } from '../data/ObjectContent';
 import { NativeContent } from '../data/NativeContent';
 
 /**
