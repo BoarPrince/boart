@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { MarkdownTableReader } from './MarkdownTableReader';
 
 /**
@@ -114,4 +115,24 @@ it('default table with two columns, header and two rows and containing three esc
     expect(result.headers).toBeDefined();
     expect(result.headers.cells).toStrictEqual(['h1', 'h2']);
     expect(result.rows).toEqual([{ cells: ['a1', 'a2'] }, { cells: ['b|1|2', 'b|2'] }]);
+});
+
+/**
+ *
+ */
+it('table with wrong row', () => {
+    try {
+        MarkdownTableReader.convert(
+            `|h1       |h2   |
+             |---------|-----|
+             |a1       |a2   |
+             wrong
+             |b1       |b2   |`
+        );
+    } catch (error) {
+        expect(error.message).toBe('row: ==>> wrong <<== is not a markdown row');
+        return;
+    }
+
+    assert.fail('error must be thrown if table is not correct');
 });

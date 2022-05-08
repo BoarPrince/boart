@@ -2,8 +2,34 @@ import { ContentType } from '../data/ContentType';
 
 import { DataContent } from '../data/DataContent';
 import { DataContentHelper } from '../data/DataContentHelper';
+import { Store } from './Store';
 
 import { StoreMap } from './StoreMap';
+
+/**
+ *
+ */
+class ObjectWrapper implements StoreMap {
+    /**
+     *
+     */
+    constructor(private map: object) {}
+
+    /**
+     *
+     */
+    put = (key: string, value: DataContent) => (this.map[key] = value);
+
+    /**
+     *
+     */
+    get = (key: string) => this.map[key] as DataContent;
+
+    /**
+     *
+     */
+    clear = () => (this.map = {});
+}
 
 /**
  *
@@ -15,8 +41,14 @@ export class StoreWrapper {
     /**
      *
      */
-    constructor(store: StoreMap, storeName: string) {
-        this.store = store;
+    constructor(store: StoreMap | object, storeName: string) {
+        if (!store) {
+            this.store = new ObjectWrapper({});
+        } else if (typeof store === 'object' && store.constructor.name === 'Object') {
+            this.store = new ObjectWrapper(store);
+        } else {
+            this.store = store as StoreMap;
+        }
         this.storeName = storeName;
     }
 

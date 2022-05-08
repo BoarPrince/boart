@@ -10,7 +10,11 @@ const config: Config.InitialOptions = {
     clearMocks: true,
     globals: {
         gauge: {
-            dataStore: {}
+            dataStore: {
+                specStore: {},
+                suiteStore: {},
+                scenarioStore: {}
+            }
         }
     },
     setupFilesAfterEnv: ["jest-extended/all"],
@@ -29,7 +33,7 @@ const config: Config.InitialOptions = {
       "json"
     ],
     collectCoverageFrom: [
-        "**/src/*/**/*.ts"
+        "**/src/*/**/{!(*.enum),}.ts"
     ],
     coveragePathIgnorePatterns: [
         "node_modules"

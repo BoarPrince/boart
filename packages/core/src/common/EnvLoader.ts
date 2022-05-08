@@ -98,12 +98,12 @@ export class EnvLoader {
     private initialize() {
         // read default settings
         this.initMapping(
-            EnvLoader.readSettings(fsPath.join(process.env.GAUGE_PROJECT_ROOT || '', process.env.environment_default_location || ''))
+            EnvLoader.readSettings(fsPath.join(process.env.GAUGE_PROJECT_ROOT || '.', process.env.environment_default_location || ''))
         );
 
         // add or override project specific settings
         this.initMapping(
-            EnvLoader.readSettings(fsPath.join(process.env.GAUGE_PROJECT_ROOT || '', process.env.environment_project_location || ''))
+            EnvLoader.readSettings(fsPath.join(process.env.GAUGE_PROJECT_ROOT || '.', process.env.environment_project_location || ''))
         );
     }
 

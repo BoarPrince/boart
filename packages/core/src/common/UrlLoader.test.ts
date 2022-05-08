@@ -97,6 +97,28 @@ describe('check url loader', () => {
     /**
      *
      */
+    it('check settings containing arrays', () => {
+        (fs.readFileSync as jest.Mock).mockReturnValue(
+            JSON.stringify({
+                path_mapping: {
+                    '/api/a/': ['http://service-a/'],
+                    '/api/b': 'http://service-b/'
+                }
+            })
+        );
+
+        const sut = UrlLoader.instance;
+
+        let path = sut.getAbsoluteUrl('/api/a/b');
+        expect(path).toBe('http://service-a/api/a/b');
+
+        path = sut.getAbsoluteUrl('/api/b/b');
+        expect(path).toBe('http://service-b/api/b/b');
+    });
+
+    /**
+     *
+     */
     it('check getAbsolutePath (check different service, but same service name starts)', () => {
         (fs.readFileSync as jest.Mock).mockReturnValue(
             JSON.stringify({

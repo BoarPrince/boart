@@ -29,7 +29,7 @@ export class MarkdownTableReader {
             }
 
             if (!reExpRowContent.test(row)) {
-                continue;
+                throw Error(`row: ==>> ${row.trim()} <<== is not a markdown row`);
             }
 
             matchCount++;

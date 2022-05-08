@@ -4,6 +4,7 @@ import { TableHandler } from './TableHandler';
 import { TableRowType } from './TableRowType';
 import { key, value } from './TableRowDecorator';
 import { TableMetaInfo } from './TableMetaInfo';
+import { GroupRowDefinition } from './GroupRowDefinition';
 
 /**
  *
@@ -64,7 +65,6 @@ describe('check TableHandler', () => {
             execute: jest.fn()
         };
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const sut = new TableHandler(RowWithOneValue, executionEngineMock);
 
         sut.addRowDefinition(
@@ -93,5 +93,47 @@ describe('check TableHandler', () => {
 
         expect(callPara[0].action).toBe('a');
         expect(callPara[0].value).toBe('b');
+    });
+
+    /**
+     *
+     */
+    it('add groupRow validation must add validators', () => {
+        const groupRowDefinition = GroupRowDefinition.getInstance('xxx');
+        groupRowDefinition.addGroupValidation({
+            name: 'validator1',
+            validate: null
+        });
+        groupRowDefinition.addGroupValidation({
+            name: 'validator2',
+            validate: null
+        });
+
+        const sut = new TableHandler(RowWithOneValue, null);
+        sut.addGroupValidator = jest.fn();
+        sut.addGroupRowDefinition(groupRowDefinition);
+
+        expect(sut.addGroupValidator).toBeCalledTimes(2);
+    });
+
+    /**
+     *
+     */
+    it('add groupRow definition must add definitions', () => {
+        const groupRowDefinition = GroupRowDefinition.getInstance('xxx');
+        groupRowDefinition.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('key'),
+                type: TableRowType.Configuration,
+                executionUnit: null,
+                validators: null
+            })
+        );
+
+        const sut = new TableHandler(RowWithOneValue, null);
+        sut.addRowDefinition = jest.fn();
+        sut.addGroupRowDefinition(groupRowDefinition);
+
+        expect(sut.addRowDefinition).toBeCalledTimes(1);
     });
 });

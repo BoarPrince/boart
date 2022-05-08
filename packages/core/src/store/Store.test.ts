@@ -1,263 +1,41 @@
-import { fail } from 'assert';
-import { DataContent } from '../data/DataContent';
-import { StoreMap } from '../store/StoreMap';
-import { StoreWrapper } from '../store/StoreWrapper';
-import { TextContent } from '../data/TextContent';
-import { ObjectContent } from '../data/ObjectContent';
-import { NativeContent } from '../data/NativeContent';
+import { Store } from './Store';
 
 /**
  *
  */
-class MockStore implements StoreMap {
-    private map = new Map<string, DataContent>();
+it('check test store', () => {
+    const sut = Store.instance;
 
-    put(key: string, value: DataContent) {
-        this.map.set(key, value);
-    }
+    sut.testStore.put('a', 'b');
+    expect(sut.testStore.get('a').toString()).toBe('b');
+});
 
-    get(key: string): DataContent {
-        return this.map.get(key);
-    }
+/**
+ *
+ */
+it('check local store', () => {
+    const sut = Store.instance;
 
-    clear() {
-        return this.map.clear();
-    }
-}
+    sut.localStore.put('a', 'b');
+    expect(sut.localStore.get('a').toString()).toBe('b');
+});
 
-describe('check store', () => {
-    let sut: StoreWrapper;
+/**
+ *
+ */
+it('check global store', () => {
+    const sut = Store.instance;
 
-    /**
-     *
-     */
-    beforeEach(() => {
-        sut = new StoreWrapper(new MockStore(), 'test');
-    });
+    sut.globalStore.put('a', 'b');
+    expect(sut.globalStore.get('a').toString()).toBe('b');
+});
 
-    /**
-     *
-     */
-    it('internal store must be mocked store', () => {
-        expect(sut.store).toBeInstanceOf(MockStore);
-    });
+/**
+ *
+ */
+it('check step store', () => {
+    const sut = Store.instance;
 
-    /**
-     *
-     */
-    it('get object from store (first level)', () => {
-        sut.put('a', { b: 'c' });
-        expect(sut.get('a').toJSON()).toBe('{"b":"c"}');
-    });
-
-    /**
-     *
-     */
-    it('get object from store (second level)', () => {
-        sut.put('a', { b: 'c' });
-        expect(sut.get('a#b').toJSON()).toBe('"c"');
-    });
-
-    /**
-     *
-     */
-    it('get object from store (string, text content)', () => {
-        sut.put('a', new TextContent('c'));
-        expect(sut.get('a').toJSON()).toBe('"c"');
-    });
-
-    /**
-     *
-     */
-    it('get object from store (string, object content)', () => {
-        sut.put('a', new ObjectContent('c'));
-        expect(sut.get('a').toString()).toBe('"c"');
-    });
-
-    /**
-     *
-     */
-    it('get deep structure from string value', () => {
-        sut.put('a', 'b');
-
-        try {
-            sut.get('a.b.c');
-        } catch (error) {
-            expect(error.message).toBe('getting "a.b.c" not possible, because it\'s not an object or an array');
-            return;
-        }
-        fail('expection was not thrown');
-    });
-
-    /**
-     *
-     */
-    it('get as string must return a string', () => {
-        sut.put('a', 'b');
-
-        const value = sut.get('a').toString();
-        if (typeof value !== 'string') {
-            fail(`return type must be of type 'string'`);
-        }
-    });
-
-    /**
-     *
-     */
-    it('set object value', () => {
-        sut.put('a#b', new TextContent('hallo'));
-        expect(sut.get('a#b').toString()).toBe('hallo');
-    });
-
-    /**
-     *
-     */
-    it('set object value (deep, string)', () => {
-        const valB = new ObjectContent();
-        const valC = new ObjectContent();
-
-        valC.set('c', new TextContent('hallo'));
-        valB.set('b', valC);
-
-        sut.put('a', valB);
-
-        expect(sut.get('a#b#c').getText()).toBe('hallo');
-        expect(sut.get('a').toJSON()).toBe('{"b":{"c":"hallo"}}');
-    });
-
-    /**
-     *
-     */
-    it('set object value (deep, number)', () => {
-        const valB = new ObjectContent();
-        const valC = new ObjectContent();
-
-        valC.set('c', new NativeContent(1));
-        valB.set('b', valC);
-
-        sut.put('a', valB);
-
-        expect(sut.get('a#b#c').getText()).toBe('1');
-        expect(sut.get('a').toJSON()).toBe('{"b":{"c":1}}');
-    });
-
-    /**
-     *
-     */
-    it('set object value (deep, boolean - true)', () => {
-        const valB = new ObjectContent();
-        const valC = new ObjectContent();
-
-        valC.set('c', new NativeContent(true));
-        valB.set('b', valC);
-
-        sut.put('a', valB);
-
-        expect(sut.get('a.b.c').getText()).toBe('true');
-        expect(sut.get('a').toJSON()).toBe('{"b":{"c":true}}');
-    });
-
-    /**
-     *
-     */
-    it('set object value (deep, boolean - false)', () => {
-        const valB = new ObjectContent();
-        const valC = new ObjectContent();
-
-        valC.set('c', new NativeContent(false));
-        valB.set('b', valC);
-
-        sut.put('a', valB);
-
-        expect(sut.get('a#b#c').getText()).toBe('false');
-        expect(sut.get('a').toJSON()).toBe('{"b":{"c":false}}');
-    });
-
-    /**
-     *
-     */
-    it('try setting with empty string', () => {
-        try {
-            sut.put('', 'a');
-        } catch (error) {
-            expect(error.message).toBe('name must be defined for saving value in storage');
-            return;
-        }
-
-        throw Error('error must occur');
-    });
-
-    /**
-     *
-     */
-    it('try getting none existing value', () => {
-        try {
-            sut.get('a');
-        } catch (error) {
-            expect(error.message).toBe(`getting "a" not possible, because it does not exist`);
-            return;
-        }
-
-        throw Error('error must occur');
-    });
-
-    /**
-     *
-     */
-    it('try getting with empty string', () => {
-        try {
-            sut.get('');
-        } catch (error) {
-            expect(error.message).toBe(`name must be defined for getting value from storage`);
-            return;
-        }
-
-        throw Error('error must occur');
-    });
-
-    /**
-     *
-     */
-    it('try getting with null', () => {
-        try {
-            sut.get(null);
-        } catch (error) {
-            expect(error.message).toBe(`name must be defined for getting value from storage`);
-            return;
-        }
-
-        throw Error('error must occur');
-    });
-
-    /**
-     *
-     */
-    it('try getting with undefined', () => {
-        try {
-            sut.get(undefined);
-        } catch (error) {
-            expect(error.message).toBe(`name must be defined for getting value from storage`);
-            return;
-        }
-
-        throw Error('error must occur');
-    });
-
-    /**
-     *
-     */
-    it('clear store', () => {
-        sut.put('a', 'b');
-        expect(sut.get('a').toString()).toEqual('b');
-
-        sut.clear();
-        try {
-            sut.get('a');
-        } catch (error) {
-            expect(error.message).toBe(`getting "a" not possible, because it does not exist`);
-            return;
-        }
-
-        throw Error('error must occur');
-    });
+    sut.stepStore.put('a', 'b');
+    expect(sut.stepStore.get('a').toString()).toBe('b');
 });

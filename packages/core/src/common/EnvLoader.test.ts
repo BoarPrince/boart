@@ -76,6 +76,26 @@ describe('check env loader', () => {
         /**
          *
          */
+        it('check with undefined root/path settings', () => {
+            process.env = {};
+            fs.readFileSync = jest.fn(() =>
+                JSON.stringify({
+                    environment: {
+                        valueNoEnv: 'default-value'
+                    }
+                })
+            ) as jest.Mock;
+
+            const sut = EnvLoader.instance;
+
+            expect(fs.readFileSync).toBeCalledWith('.', 'utf-8');
+            expect(sut.get('valueNoEnv')).toBe('default-value');
+            expect(sut.get('withStaging')).toBe('');
+        });
+
+        /**
+         *
+         */
         it('check default initialization', () => {
             const sut = EnvLoader.instance;
 

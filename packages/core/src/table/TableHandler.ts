@@ -44,17 +44,17 @@ export class TableHandler<
     /**
      *
      */
-    addGroupRowDefinition(groupRowDefinition: GroupRowDefinition<TExecutionContext, TRowType>): this {
-        groupRowDefinition.definitions.subscribe(rowDefinition => this.addRowDefinition(rowDefinition));
-        groupRowDefinition.validations.subscribe(groupValidator => this.addGroupValidator(groupValidator));
+    addGroupValidator(groupValidator: TypedGroupValidator<TExecutionContext, TRowType>): this {
+        this.groupValidations.push(groupValidator);
         return this;
     }
 
     /**
      *
      */
-    addGroupValidator(groupValidator: TypedGroupValidator<TExecutionContext, TRowType>): this {
-        this.groupValidations.push(groupValidator);
+    addGroupRowDefinition(groupRowDefinition: GroupRowDefinition<TExecutionContext, TRowType>): this {
+        groupRowDefinition.definitions.subscribe((rowDefinition) => this.addRowDefinition(rowDefinition));
+        groupRowDefinition.validations.subscribe((groupValidator) => this.addGroupValidator(groupValidator));
         return this;
     }
 
