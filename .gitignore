@@ -1,13 +1,8 @@
-.vscode
-
 node_modules
 dist
 tsconfig.tsbuildinfo
 
 coverage
-
-.circleci
-.github
 
 packages/core/src/**/*.js
 packages/core/src/**/*.d.ts

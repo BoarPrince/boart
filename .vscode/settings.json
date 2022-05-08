@@ -1,0 +1,67 @@
+{
+    "[.cpt]": {
+        "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
+    },
+    "[*.spec]": {
+        "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "coverage-gutters.showGutterCoverage": true,
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "*.cpt": "gauge",
+        "*.json": "jsonc",
+        "*.spec": "gauge"
+    },
+    "files.autoSave": "off",
+    "jest.autoRun": {
+        "watch": false
+    },
+    "jest.debugMode": true,
+    "markdownlint.config": {
+        "MD025": {
+            "front_matter_title": ""
+        },
+        "MD028": false
+    },
+    "search.exclude": {
+        "**/coverage": true,
+        "**/dist": true,
+        "**/gauge": true,
+        "**/logs": true,
+        "**/node_modules": true,
+        "**/reports": true,
+        "**/tests/util/*.js": true
+    },
+    "terminal.integrated.cursorWidth": 20,
+    "window.title": "B O A R - T",
+    "jestTestExplorer.flattenExplorer": false,
+    "jestTestExplorer.logpanel": true,
+    "jest.showCoverageOnLoad": true,
+    "jest.testExplorer": {
+        "enabled": true
+    },
+    "coverage-gutters.showLineCoverage": true,
+    "coverage-gutters.showRulerCoverage": false,
+    "eslint.format.enable": true,
+    "eslint.useESLintClass": true,
+    "jest.jestCommandLine": "./node_modules/.bin/jest --coverage",
+    "jestTestExplorer.pathToJest": "./node_modules/.bin/jest",
+    "testExplorer.useNativeTesting": false,
+    "testExplorer.addToEditorContextMenu": true,
+    "jestTestExplorer.hideEmptyProjects": false
+}
