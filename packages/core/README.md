@@ -1,3 +1,0 @@
-# boart.core
-
-core blabla

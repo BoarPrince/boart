@@ -1,10 +1,10 @@
 // jest.config.ts
-import type { Config } from "@jest/types"
+import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
     roots: ['packages'],
-    preset: "ts-jest",
-    testEnvironment: "node",
+    preset: 'ts-jest',
+    testEnvironment: 'node',
     verbose: false,
     automock: false,
     clearMocks: true,
@@ -17,7 +17,7 @@ const config: Config.InitialOptions = {
             }
         }
     },
-    setupFilesAfterEnv: ["jest-extended/all"],
+    setupFilesAfterEnv: ['jest-extended/all'],
     coverageThreshold: {
         global: {
             branches: 90,
@@ -26,21 +26,13 @@ const config: Config.InitialOptions = {
             statements: 90
         }
     },
-    testRegex: "(/__tests__/.*|\\.(test|spec))\\.(ts)$",
-    moduleFileExtensions: [
-      "ts",
-      "js",
-      "json"
-    ],
-    collectCoverageFrom: [
-        "**/src/*/**/{!(*.enum),}.ts"
-    ],
-    coveragePathIgnorePatterns: [
-        "node_modules"
-    ],
-    coverageReporters: ['json', 'lcov', 'text', 'clover'],
+    testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts)$',
+    moduleFileExtensions: ['ts', 'js', 'json'],
+    collectCoverageFrom: ['**/src/*/**/*.ts', '!**/src/*/**/*.enum.ts', '!**/src/*/**/*.d.ts'],
+    coveragePathIgnorePatterns: ['node_modules'],
+    coverageReporters: ['json', 'lcov', 'text', 'clover']
     // setupFiles: [
     //     './setupJest.js'
     //   ]
-}
-export default config
+};
+export default config;
