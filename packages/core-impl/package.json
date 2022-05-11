@@ -1,6 +1,9 @@
 {
   "name": "@boart/core-impl",
   "description": "",
+  "files": [
+    "index.ts"
+  ],
   "main": "index.js",
   "scripts": {
     "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json",
