@@ -27,6 +27,7 @@ const config: Config.InitialOptions = {
         }
     },
     testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts)$',
+    modulePathIgnorePatterns: ['dist'],
     moduleFileExtensions: ['ts', 'js', 'json'],
     collectCoverageFrom: ['**/src/*/**/*.ts', '!**/src/*/**/*.enum.ts', '!**/src/*/**/*.d.ts'],
     coveragePathIgnorePatterns: ['node_modules'],
