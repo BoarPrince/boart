@@ -1,0 +1,25 @@
+{
+  "name": "@boart/basic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kemark/boart.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kemark/boart/issues"
+  },
+  "homepage": "https://github.com/Kemark/boart#readme",
+  "dependencies": {
+    "@boart/core": "file:packages/core",
+    "@boart/core-impl": "file:packages/core-impl"
+  }
+}

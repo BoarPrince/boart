@@ -5,7 +5,6 @@ import jwt_decode from 'jwt-decode';
 import { Subject } from 'rxjs';
 
 import { ExecutionInfo } from './ExecutionInfo';
-import { timeStamp } from 'console';
 
 /**
  *
@@ -156,7 +155,6 @@ export class RestHttp {
             accessToken,
             get decoded(): string {
                 try {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                     return JSON.stringify(jwt_decode(accessToken));
                 } catch (error) {
                     return '-- decoding not possible --';
