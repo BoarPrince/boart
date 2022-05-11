@@ -8,7 +8,7 @@ import { TableHandler } from './TableHandler';
 /**
  *
  */
-export default abstract class TableHandlerBaseImpl<
+export abstract class TableHandlerBaseImpl<
     TExecutionContext extends ExecutionContext<object, object, object>,
     TRowType extends BaseRowType<TExecutionContext>
 > {
@@ -40,22 +40,22 @@ export default abstract class TableHandlerBaseImpl<
     /**
      *
      */
-    abstract rowType(): new (metaDef) => TRowType;
+    protected abstract rowType(): new (metaDef) => TRowType;
 
     /**
      *
      */
-    abstract mainExecutionUnit(): AsyncExecutionUnit<TExecutionContext, TRowType>;
+    protected abstract mainExecutionUnit(): AsyncExecutionUnit<TExecutionContext, TRowType>;
 
     /**
      *
      */
-    abstract newContext(): TExecutionContext;
+    protected abstract newContext(): TExecutionContext;
 
     /**
      *
      */
-    abstract addGroupRowDefinition(tableHandler: TableHandler<TExecutionContext, TRowType>);
-    abstract addRowDefinition(tableHandler: TableHandler<TExecutionContext, TRowType>);
-    abstract addGroupValidation(tableHandler: TableHandler<TExecutionContext, TRowType>);
+    protected abstract addGroupRowDefinition(tableHandler: TableHandler<TExecutionContext, TRowType>);
+    protected abstract addRowDefinition(tableHandler: TableHandler<TExecutionContext, TRowType>);
+    protected abstract addGroupValidation(tableHandler: TableHandler<TExecutionContext, TRowType>);
 }

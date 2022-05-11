@@ -28,6 +28,13 @@ export class GroupRowDefinition<
     /**
      *
      */
+    static contains(name: string): boolean {
+        return GroupRowDefinition.singleton.has(name);
+    }
+
+    /**
+     *
+     */
     static getInstance<TExecutionContext extends ExecutionContext<object, object, object>, TRowType extends BaseRowType<TExecutionContext>>(
         name: string
     ): GroupRowDefinition<TExecutionContext, TRowType> {

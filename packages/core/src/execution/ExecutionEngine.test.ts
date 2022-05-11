@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/unbound-method */
+import 'jest-extended';
+
 import { BaseRowType } from '../table/BaseRowType';
 import { TableRowType } from '../table/TableRowType';
 import { ExecutionContext } from './ExecutionContext';
 import { ExecutionEngine } from './ExecutionEngine';
 import { ExecutionUnit } from './ExecutionUnit';
-import 'jest-extended';
 
 /**
  *

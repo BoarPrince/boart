@@ -25,20 +25,22 @@ export class ExecutionEngine<
     /**
      *
      */
-    async execute(rows: ReadonlyArray<TRowType>): Promise<void> {
+    async execute(rows: ReadonlyArray<TRowType>): Promise<TExecutionContext> {
         this.executeByType(rows, this.context, TableRowType.Configuration);
         this.executeByType(rows, this.context, TableRowType.PreProcessing);
 
         await this.mainExecutionUnit.execute(this.context, null);
 
         this.executeByType(rows, this.context, TableRowType.PostProcessing);
+
+        return this.context;
     }
 
     /**
      *
      */
     private executeByType(rows: ReadonlyArray<TRowType>, context: TExecutionContext, type: TableRowType): void {
-        rows.filter(row => row.data._metaDefinition.type === type) //
-            .forEach(row => row.data._metaDefinition.executionUnit.execute(context, row));
+        rows.filter((row) => row.data._metaDefinition.type === type) //
+            .forEach((row) => row.data._metaDefinition.executionUnit.execute(context, row));
     }
 }

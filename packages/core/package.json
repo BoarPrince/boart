@@ -8,6 +8,9 @@
   "homepage": "https://github.com/Kemark/boart#readme",
   "keywords": [],
   "license": "ISC",
+  "files": [
+    "index.ts"
+  ],
   "main": "index.js",
   "repository": {
     "type": "git",

@@ -1,7 +1,7 @@
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { BaseRowMetaDefinition } from './BaseRowMetaDefinition';
 import { BaseRowType } from './BaseRowType';
-import TableHandlerBaseImpl from './TableHandlerBaseImpl';
+import { TableHandlerBaseImpl } from './TableHandlerBaseImpl';
 
 /**
  *

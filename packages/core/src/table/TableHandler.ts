@@ -61,9 +61,9 @@ export class TableHandler<
     /**
      *
      */
-    process(tableDefinition: TableRows): Promise<void>;
-    process(tableDefinition: string): Promise<void>;
-    process(tableDefinition: TableRows | string): Promise<void> {
+    process(tableDefinition: TableRows): Promise<TExecutionContext>;
+    process(tableDefinition: string): Promise<TExecutionContext>;
+    process(tableDefinition: TableRows | string): Promise<TExecutionContext> {
         const dataBinder = new RowDataBinder(this.columnMetaInfo.tableName, this.columnMetaInfo, tableDefinition);
         dataBinder.check();
         const valueRows = dataBinder.bind();

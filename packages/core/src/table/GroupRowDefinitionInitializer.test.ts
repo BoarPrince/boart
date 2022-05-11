@@ -53,19 +53,18 @@ describe('check GroupRowDefinition Initializer', () => {
     /**
      *
      */
-    it('check initialization', done => {
+    it('check initialization', (done) => {
         /**
          *
          */
         @GroupRowDefinitionInitializer('group-xxx', TableRowType.PostProcessing)
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class ExecutionUnitMock implements ExecutionUnit<TestExecutionContext1, RowTypeValue<TestExecutionContext1>> {
             description = 'mock-xxx';
             execute = jest.fn();
         }
 
         const derived_sut = GroupRowDefinition.getInstance('group-xxx');
-        void derived_sut.definitions.forEach(definition => {
+        void derived_sut.definitions.forEach((definition) => {
             expect(definition.key.description).toBe('mock-xxx');
             done();
         });
