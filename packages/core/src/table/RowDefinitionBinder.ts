@@ -8,7 +8,7 @@ import { RowValue } from './RowValue';
 import { MetaInfo } from './TableMetaInfo';
 
 /**
- *
+ * Binds the row definitions to the meta defintions of each row
  */
 export class RowDefinitionBinder<
     TExecutionContext extends ExecutionContext<object, object, object>,
@@ -34,22 +34,26 @@ export class RowDefinitionBinder<
             }
         };
 
-        return this.rowsWithValues?.map(row => {
+        return this.rowsWithValues?.map((row) => {
             const rowDef = { para: null } as {
                 key: string;
                 para: string;
+                selector: string;
                 definition: RowDefinition<TExecutionContext, TRowType>;
             };
-            for (const paraDef of this.rowDefinitions) {
-                const paraKey = paraDef.key.description + ':';
-                if (paraDef.key.description === row.key) {
-                    rowDef.key = paraDef.key.description;
-                    rowDef.definition = paraDef;
-                    break;
-                } else if (row.key.startsWith(paraKey)) {
-                    rowDef.key = paraDef.key.description;
-                    rowDef.definition = paraDef;
-                    rowDef.para = row.key.replace(paraKey, '');
+            for (const metaDef of this.rowDefinitions) {
+                const parts = row.key.split('#');
+                const rowKeyDef = parts.shift();
+                rowDef.selector = parts.join('#') || null;
+                rowDef.definition = metaDef;
+
+                if (metaDef.key.description === rowKeyDef) {
+                    // if (metaDef.key.description === row.key) {
+                    rowDef.key = metaDef.key.description;
+                } else if (rowKeyDef.startsWith(`${metaDef.key.description}:`)) {
+                    rowDef.key = metaDef.key.description;
+                    rowDef.para = rowKeyDef.replace(`${metaDef.key.description}:`, '');
+                    rowDef.definition = metaDef;
                     break;
                 }
             }
@@ -73,6 +77,7 @@ export class RowDefinitionBinder<
                 _metaDefinition: rowDef.definition,
                 key: rowDef.key,
                 keyPara: rowDef.para,
+                selector: rowDef.selector,
                 values: row.values,
                 values_replaced: row.values_replaced
             });

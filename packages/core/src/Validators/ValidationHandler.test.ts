@@ -19,6 +19,7 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
+                    selector: null,
                     values: {
                         value1: 'a'
                     },
@@ -54,6 +55,7 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
+                    selector: null,
                     values: {
                         value1: 'a'
                     },
@@ -75,7 +77,7 @@ describe('check row validators', () => {
             expect(validator.validate).toBeCalledTimes(1);
             expect(validator.validate).toBeCalledWith(
                 rowData.data,
-                [rowData].map(row => row.data)
+                [rowData].map((row) => row.data)
             );
         });
 
@@ -96,6 +98,7 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
+                    selector: null,
                     values: {
                         value1: 'a'
                     },
@@ -115,7 +118,7 @@ describe('check row validators', () => {
             sut.validate([rowData]);
 
             expect(validator.validate).toBeCalledTimes(1);
-            expect(validator.validate).toBeCalledWith([rowData].map(row => row.data));
+            expect(validator.validate).toBeCalledWith([rowData].map((row) => row.data));
         });
     });
 });

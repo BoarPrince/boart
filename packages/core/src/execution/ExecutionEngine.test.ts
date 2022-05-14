@@ -62,6 +62,7 @@ describe('check execution engine', () => {
             data: {
                 key: 'a:a',
                 keyPara: null,
+                selector: null,
                 values: {
                     value1: null
                 },
@@ -82,6 +83,7 @@ describe('check execution engine', () => {
             data: {
                 key: 'a:a',
                 keyPara: null,
+                selector: null,
                 values: {
                     value1: null
                 },
@@ -102,6 +104,7 @@ describe('check execution engine', () => {
             data: {
                 key: 'a:a',
                 keyPara: null,
+                selector: null,
                 values: {
                     value1: null
                 },
