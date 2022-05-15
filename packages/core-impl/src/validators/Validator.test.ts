@@ -34,6 +34,7 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
+                    selector: null,
                     values: {
                         value1: 'a'
                     },
@@ -43,6 +44,7 @@ describe('check row validators', () => {
                     _metaDefinition: {
                         key: null,
                         type: null,
+                        selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: null
@@ -85,6 +87,7 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
+                    selector: null,
                     values: {
                         value1: value
                     },
@@ -94,6 +97,7 @@ describe('check row validators', () => {
                     _metaDefinition: {
                         key: null,
                         type: null,
+                        selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: [new BoolValidator('value1'), new DoNotingValidator()]
@@ -125,6 +129,7 @@ describe('check row validators', () => {
                     data: {
                         key: 'a:a',
                         keyPara: null,
+                        selector: null,
                         values: {
                             value1: value
                         },
@@ -134,6 +139,7 @@ describe('check row validators', () => {
                         _metaDefinition: {
                             key: null,
                             type: null,
+                            selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: [new BoolValidator(columnName)]
@@ -172,6 +178,7 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
+                    selector: null,
                     values: {
                         value1: value
                     },
@@ -181,6 +188,7 @@ describe('check row validators', () => {
                     _metaDefinition: {
                         key: null,
                         type: null,
+                        selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: [new IntValidator('value1')]
@@ -212,6 +220,7 @@ describe('check row validators', () => {
                     data: {
                         key: 'a:a',
                         keyPara: null,
+                        selector: null,
                         values: {
                             value1: value
                         },
@@ -221,6 +230,7 @@ describe('check row validators', () => {
                         _metaDefinition: {
                             key: null,
                             type: null,
+                            selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: [new IntValidator(columnName)]
@@ -253,6 +263,7 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
+                    selector: null,
                     values: {
                         value1: null
                     },
@@ -262,6 +273,7 @@ describe('check row validators', () => {
                     _metaDefinition: {
                         key: Symbol('a:a'),
                         type: null,
+                        selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: [new DependsOnValidator(Symbol('b:b'))]
@@ -273,6 +285,7 @@ describe('check row validators', () => {
                 data: {
                     key: 'b:b',
                     keyPara: null,
+                    selector: null,
                     values: {
                         value1: null
                     },
@@ -282,6 +295,7 @@ describe('check row validators', () => {
                     _metaDefinition: {
                         key: null,
                         type: null,
+                        selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: null
@@ -301,6 +315,7 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
+                    selector: null,
                     values: {
                         value1: null
                     },
@@ -310,6 +325,7 @@ describe('check row validators', () => {
                     _metaDefinition: {
                         key: Symbol('a:a'),
                         type: null,
+                        selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: [new DependsOnValidator(Symbol('c:c'))]
@@ -321,6 +337,7 @@ describe('check row validators', () => {
                 data: {
                     key: 'b:b',
                     keyPara: null,
+                    selector: null,
                     values: {
                         value1: null
                     },
@@ -330,6 +347,7 @@ describe('check row validators', () => {
                     _metaDefinition: {
                         key: null,
                         type: null,
+                        selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: null
@@ -377,6 +395,7 @@ describe('check row validators', () => {
                     data: {
                         key: 'a:1',
                         keyPara: null,
+                        selector: null,
                         values: {
                             value1: null
                         },
@@ -386,6 +405,7 @@ describe('check row validators', () => {
                         _metaDefinition: {
                             key: null,
                             type: null,
+                            selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
@@ -396,6 +416,7 @@ describe('check row validators', () => {
                     data: {
                         key: 'a:2',
                         keyPara: null,
+                        selector: null,
                         values: {
                             value1: null
                         },
@@ -405,6 +426,7 @@ describe('check row validators', () => {
                         _metaDefinition: {
                             key: null,
                             type: null,
+                            selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
@@ -415,6 +437,7 @@ describe('check row validators', () => {
                     data: {
                         key: 'a:3',
                         keyPara: null,
+                        selector: null,
                         values: {
                             value1: null
                         },
@@ -424,6 +447,7 @@ describe('check row validators', () => {
                         _metaDefinition: {
                             key: null,
                             type: null,
+                            selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
@@ -476,6 +500,7 @@ describe('check row validators', () => {
                     data: {
                         key: 'a:1',
                         keyPara: null,
+                        selector: null,
                         values: {
                             value1: null
                         },
@@ -485,6 +510,7 @@ describe('check row validators', () => {
                         _metaDefinition: {
                             key: null,
                             type: null,
+                            selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
@@ -495,6 +521,7 @@ describe('check row validators', () => {
                     data: {
                         key: 'a:2',
                         keyPara: null,
+                        selector: null,
                         values: {
                             value1: null
                         },
@@ -504,6 +531,7 @@ describe('check row validators', () => {
                         _metaDefinition: {
                             key: null,
                             type: null,
+                            selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
@@ -514,6 +542,7 @@ describe('check row validators', () => {
                     data: {
                         key: 'a:3',
                         keyPara: null,
+                        selector: null,
                         values: {
                             value1: null
                         },
@@ -523,6 +552,7 @@ describe('check row validators', () => {
                         _metaDefinition: {
                             key: null,
                             type: null,
+                            selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
@@ -560,6 +590,7 @@ describe('check row validators', () => {
                     data: {
                         key: key1.description,
                         keyPara: null,
+                        selector: null,
                         values: {
                             value1: null
                         },
@@ -569,6 +600,7 @@ describe('check row validators', () => {
                         _metaDefinition: {
                             key: null,
                             type: null,
+                            selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: [new UniqueValidator()]
@@ -579,6 +611,7 @@ describe('check row validators', () => {
                     data: {
                         key: key2.description,
                         keyPara: null,
+                        selector: null,
                         values: {
                             value1: null
                         },
@@ -588,6 +621,7 @@ describe('check row validators', () => {
                         _metaDefinition: {
                             key: null,
                             type: null,
+                            selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: [new UniqueValidator()]
@@ -620,6 +654,7 @@ describe('check row validators', () => {
             [Symbol('out'), '', [''], null], //
             [Symbol('out'), '', [null], null], //
             [Symbol('out'), '', ['', 'store'], null],
+            [Symbol('out'), '', [null, '', 'store'], null],
             [Symbol('out'), 'store', ['', 'store'], null],
             [Symbol('out'), 'store', ['', 'global'], `Parameter 'store' is not defined`]
         ])(
@@ -631,6 +666,7 @@ describe('check row validators', () => {
                         data: {
                             key: key.description,
                             keyPara: para,
+                            selector: null,
                             values: {
                                 value1: null
                             },
@@ -640,6 +676,7 @@ describe('check row validators', () => {
                             _metaDefinition: {
                                 key: null,
                                 type: null,
+                                selectorType: null,
                                 executionUnit: null,
                                 parameterType: null,
                                 validators: [new ParaValidator(allowedParas)]

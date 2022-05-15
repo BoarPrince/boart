@@ -28,6 +28,7 @@ import { TableRowType } from './src/table/TableRowType';
 import { TableRows } from './src/table/TableRows';
 import { ParaType } from './src/types/ParaType';
 import { ScopedType } from './src/types/ScopedType';
+import { SelectorType } from './src/types/SelectorType';
 import { ValueReplacer } from './src/value/ValueReplacer';
 
 /**
@@ -58,6 +59,7 @@ export {
     RowDefinition,
     RowValidator,
     ScopedType,
+    SelectorType,
     TableHandler,
     TableHandlerBaseImpl,
     TableRows,

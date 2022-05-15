@@ -45,6 +45,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: null,
+            selector: null,
             values: {
                 value: 'xxx'
             },
@@ -73,6 +74,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: null,
+            selector: null,
             values: {
                 value: 'xxx'
             },
@@ -103,6 +105,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: null,
+            selector: null,
             values: {
                 value: 'xxx'
             },
@@ -133,6 +136,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: null,
+            selector: null,
             values: {
                 value: 'xxx'
             },
@@ -145,6 +149,7 @@ describe('check property setter execution unit', () => {
         const row2 = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: null,
+            selector: null,
             values: {
                 value: 'yyy'
             },
@@ -180,6 +185,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: 'c',
+            selector: null,
             values: {
                 value: 'f'
             },
@@ -214,6 +220,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: 'c',
+            selector: null,
             values: {
                 value: 'f'
             },
@@ -226,6 +233,7 @@ describe('check property setter execution unit', () => {
         const row2 = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: 'e',
+            selector: null,
             values: {
                 value: '4'
             },
@@ -263,6 +271,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: 'a.f',
+            selector: null,
             values: {
                 value: '5'
             },
@@ -293,6 +302,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: 'a.f',
+            selector: null,
             values: {
                 value: '5'
             },
@@ -326,6 +336,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: 'a.f',
+            selector: null,
             values: {
                 value: '5'
             },
@@ -359,6 +370,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
             keyPara: '',
+            selector: null,
             values: {
                 value: '5'
             },
@@ -394,6 +406,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: 'id',
+            selector: null,
             values: {
                 value: '5'
             },
@@ -428,6 +441,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: 'id',
+            selector: null,
             values: {
                 value: '5'
             },
@@ -440,6 +454,7 @@ describe('check property setter execution unit', () => {
         const row2 = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: 'id2',
+            selector: null,
             values: {
                 value: '6'
             },
@@ -452,6 +467,7 @@ describe('check property setter execution unit', () => {
         const row3 = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: 'id3',
+            selector: null,
             values: {
                 value: '7'
             },
@@ -491,6 +507,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: 'id',
+            selector: null,
             values: {
                 value: '5'
             },
@@ -531,6 +548,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: '',
+            selector: null,
             values: {
                 value: 'a=1'
             },
@@ -543,6 +561,7 @@ describe('check property setter execution unit', () => {
         const row2 = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: '',
+            selector: null,
             values: {
                 value: 'b=2'
             },
@@ -589,6 +608,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: '',
+            selector: null,
             values: {
                 value: 'a=1'
             },
@@ -601,6 +621,7 @@ describe('check property setter execution unit', () => {
         const row2 = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: '',
+            selector: null,
             values: {
                 value: 'b=2'
             },
@@ -613,6 +634,7 @@ describe('check property setter execution unit', () => {
         const row3 = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: 'c',
+            selector: null,
             values: {
                 value: '3'
             },
@@ -660,6 +682,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: '',
+            selector: null,
             values: {
                 value: 'a=1'
             },
@@ -672,6 +695,7 @@ describe('check property setter execution unit', () => {
         const row2 = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: '',
+            selector: null,
             values: {
                 value: 'b=2'
             },
@@ -684,6 +708,7 @@ describe('check property setter execution unit', () => {
         const row3 = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: 'c',
+            selector: null,
             values: {
                 value: '3'
             },
@@ -731,6 +756,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: '',
+            selector: null,
             values: {
                 value: 'a=1'
             },
@@ -743,6 +769,7 @@ describe('check property setter execution unit', () => {
         const row2 = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: '',
+            selector: null,
             values: {
                 value: 'b=2'
             },
@@ -755,6 +782,7 @@ describe('check property setter execution unit', () => {
         const row3 = new RowTypePropValue<DataContext>({
             key: 'query',
             keyPara: 'c',
+            selector: null,
             values: {
                 value: '3'
             },
@@ -796,6 +824,7 @@ describe('check property setter execution unit', () => {
         const row = new RowTypePropValue<DataContext>({
             key: 'method',
             keyPara: 'post',
+            selector: null,
             values: {
                 value: 'http://xyz'
             },

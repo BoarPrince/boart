@@ -1,3 +1,4 @@
+import 'jest-extended';
 import {
     DataContent,
     ExecutionEngine,
@@ -122,11 +123,11 @@ describe('check expected:data execution units', () => {
          *
          */
         it.each([
-            ['string with deep 1', 'a', new ObjectContent({ a: 'b' }), 'b'],
-            ['string with deep 2', 'a.b', new ObjectContent({ a: { b: 'c' } }), 'c'],
-            ['number', 'a.b', new ObjectContent({ a: { b: 10 } }), '10'],
-            ['boolean (false)', 'a.b', new ObjectContent({ a: { b: false } }), 'false'],
-            ['boolean (true)', 'a.b', new ObjectContent({ a: { b: true } }), 'true']
+            ['1. string with deep 1', 'a', new ObjectContent({ a: 'b' }), 'b'],
+            ['2. string with deep 2', 'a.b', new ObjectContent({ a: { b: 'c' } }), 'c'],
+            ['3. number', 'a.b', new ObjectContent({ a: { b: 10 } }), '10'],
+            ['4. boolean (false)', 'a.b', new ObjectContent({ a: { b: false } }), 'false'],
+            ['5. boolean (true)', 'a.b', new ObjectContent({ a: { b: true } }), 'true']
         ])(`%s, property: %s, data: %s -> expected: %s `, async (_: string, property: string, data: DataContent, expected: string) => {
             tableHandler.executionEngine.context.execution.data = data;
             await tableHandler.process({
@@ -135,7 +136,7 @@ describe('check expected:data execution units', () => {
                 },
                 rows: [
                     {
-                        cells: [`expected:data:${property}`, expected]
+                        cells: [`expected:data#${property}`, expected]
                     }
                 ]
             });

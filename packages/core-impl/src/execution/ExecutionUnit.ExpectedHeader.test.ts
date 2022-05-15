@@ -100,7 +100,7 @@ describe('check expected:header execution units', () => {
                 },
                 rows: [
                     {
-                        cells: [`expected:header:${property}`, expected]
+                        cells: [`expected:header#${property}`, expected]
                     }
                 ]
             });
@@ -126,7 +126,7 @@ describe('check expected:header execution units', () => {
                     },
                     rows: [
                         {
-                            cells: [`expected:header:${property}`, expected]
+                            cells: [`expected:header#${property}`, expected]
                         }
                     ]
                 });
@@ -155,7 +155,7 @@ describe('check expected:header execution units', () => {
                     ]
                 });
             } catch (error) {
-                expect(error.message).toBe("'undefined': key 'expected:header' must have a parameter!");
+                expect(error.message).toBe("'undefined': key 'expected:header' must have a selector!");
                 return;
             }
 

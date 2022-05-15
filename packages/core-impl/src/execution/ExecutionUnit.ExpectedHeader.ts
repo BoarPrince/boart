@@ -1,4 +1,4 @@
-import { DataContentHelper, ExecutionUnit, ParaType } from '@boart/core';
+import { DataContentHelper, ExecutionUnit, ParaType, SelectorType } from '@boart/core';
 
 import { DataContext } from '../DataExecutionContext';
 import { RowTypeValue } from '../RowTypeValue';
@@ -10,7 +10,8 @@ import { RowTypeValue } from '../RowTypeValue';
  */
 export class ExpectedHeaderExecutinoUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
     readonly description = 'expected:header';
-    readonly parameterType = ParaType.True;
+    readonly parameterType = ParaType.False;
+    readonly selectorType = SelectorType.True;
 
     /**
      *
@@ -18,11 +19,7 @@ export class ExpectedHeaderExecutinoUnit implements ExecutionUnit<DataContext, R
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const expected = row.value.toString();
 
-        if (!row.actionPara) {
-            throw Error(`parameter must defined for ${this.description}`);
-        }
-
-        const header = DataContentHelper.getByPath(row.actionPara, context.execution.header).getText();
+        const header = DataContentHelper.getByPath(row.selector, context.execution.header).getText();
         if (expected !== header) {
             throw Error(`${this.description}: 
             expected: ${expected}

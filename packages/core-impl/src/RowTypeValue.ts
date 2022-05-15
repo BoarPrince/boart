@@ -11,7 +11,9 @@ export class RowTypeValue<TExecutionContext extends ExecutionContext<object, obj
     get actionPara() {
         return this.data.keyPara;
     }
-
+    get selector() {
+        return this.data.selector;
+    }
     @value()
     get value() {
         return this.data.values_replaced['value'];
