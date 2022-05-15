@@ -1,6 +1,7 @@
-import { BaseRowType } from '../table/BaseRowType';
-import { ParaType } from '../table/ParaType';
 import { RowValidator } from '../Validators/RowValidator';
+import { BaseRowType } from '../table/BaseRowType';
+import { ParaType } from '../types/ParaType';
+import { SelectorType } from '../types/SelectorType';
 
 import { ExecutionContext } from './ExecutionContext';
 
@@ -25,6 +26,11 @@ export interface ExecutionUnit<
      *
      */
     readonly parameterType?: ParaType;
+
+    /**
+     *
+     */
+    readonly selectorType?: SelectorType;
 
     /**
      *

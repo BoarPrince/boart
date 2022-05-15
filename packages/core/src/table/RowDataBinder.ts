@@ -51,7 +51,7 @@ class CellsIterator {
             }
 
             const cells = cellsCollection.shift();
-            cellsCollection.forEach(c => {
+            cellsCollection.forEach((c) => {
                 if (c[0] === '-') {
                     return;
                 }
@@ -114,15 +114,15 @@ export class RowDataBinder {
 
         // check containing columns
         columnsDefinition
-            .filter(col => !headerCells.includes(col))
-            .forEach(col => {
+            .filter((col) => !headerCells.includes(col))
+            .forEach((col) => {
                 throw Error(`'${this.tableName}': missing table definition, column: '${col}'`);
             });
 
         // check not defined columns
         headerCells //
-            .filter(header => !columnsDefinition.includes(header))
-            .forEach(col => {
+            .filter((header) => !columnsDefinition.includes(header))
+            .forEach((col) => {
                 throw Error(`column '${col}' is not defined!`);
             });
     }
@@ -137,7 +137,7 @@ export class RowDataBinder {
         const keyIndex = headerCells.indexOf(this.columnMetaInfo.key);
         const indexNameMapping = new Map<string, number>();
 
-        this.columnMetaInfo.values.forEach(col => {
+        this.columnMetaInfo.values.forEach((col) => {
             indexNameMapping.set(col, headerCells.indexOf(col));
         });
 

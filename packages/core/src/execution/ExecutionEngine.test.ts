@@ -74,6 +74,7 @@ describe('check execution engine', () => {
                     type: TableRowType.Configuration,
                     executionUnit: new ExecutionUnitMock(),
                     parameterType: null,
+                    selectorType: null,
                     validators: null
                 }
             }
@@ -95,6 +96,7 @@ describe('check execution engine', () => {
                     type: TableRowType.PreProcessing,
                     executionUnit: new ExecutionUnitMock(),
                     parameterType: null,
+                    selectorType: null,
                     validators: null
                 }
             }
@@ -116,6 +118,7 @@ describe('check execution engine', () => {
                     type: TableRowType.PostProcessing,
                     executionUnit: new ExecutionUnitMock(),
                     parameterType: null,
+                    selectorType: null,
                     validators: null
                 }
             }

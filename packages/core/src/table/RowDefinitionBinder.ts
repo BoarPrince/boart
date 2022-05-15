@@ -1,8 +1,9 @@
 import { ExecutionContext } from '../execution/ExecutionContext';
+import { ParaType } from '../types/ParaType';
+import { SelectorType } from '../types/SelectorType';
 
 import { BaseRowMetaDefinition } from './BaseRowMetaDefinition';
 import { BaseRowType } from './BaseRowType';
-import { ParaType } from './ParaType';
 import { RowDefinition } from './RowDefinition';
 import { RowValue } from './RowValue';
 import { MetaInfo } from './TableMetaInfo';
@@ -48,7 +49,6 @@ export class RowDefinitionBinder<
                 rowDef.definition = metaDef;
 
                 if (metaDef.key.description === rowKeyDef) {
-                    // if (metaDef.key.description === row.key) {
                     rowDef.key = metaDef.key.description;
                 } else if (rowKeyDef.startsWith(`${metaDef.key.description}:`)) {
                     rowDef.key = metaDef.key.description;
@@ -70,6 +70,17 @@ export class RowDefinitionBinder<
                     break;
                 case ParaType.False:
                     throwIf(!!rowDef.para, `'${this.tableName}': key '${row.key}' cannot have a parameter: '${rowDef.para}'!`);
+                    break;
+            }
+
+            switch (rowDef.definition.selectorType) {
+                case SelectorType.True:
+                    throwIf(!rowDef.selector, `'${this.tableName}': key '${row.key}' must have a selector!`);
+                    break;
+                case SelectorType.Optional:
+                    break;
+                case SelectorType.False:
+                    throwIf(!!rowDef.selector, `'${this.tableName}': key '${row.key}' cannot have a selector: '${rowDef.selector}'!`);
                     break;
             }
 

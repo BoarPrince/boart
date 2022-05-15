@@ -1,9 +1,10 @@
 import { RowValidator } from '../Validators/RowValidator';
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
+import { ParaType } from '../types/ParaType';
+import { SelectorType } from '../types/SelectorType';
 
 import { BaseRowType } from './BaseRowType';
-import { ParaType } from './ParaType';
 import { TableRowType } from './TableRowType';
 
 /**
@@ -19,6 +20,7 @@ interface RowDefinitionPara<
     readonly defaultValueColumn?: symbol;
     readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
     readonly parameterType?: ParaType;
+    readonly selectorType?: SelectorType;
     readonly validators: ReadonlyArray<RowValidator>;
 }
 
@@ -35,6 +37,7 @@ export class RowDefinition<
     public readonly defaultValueColumn?: symbol;
     public readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
     public readonly parameterType: ParaType = ParaType.False;
+    public readonly selectorType: SelectorType = SelectorType.False;
     public readonly validators = new Array<RowValidator>();
 
     /**
@@ -47,6 +50,7 @@ export class RowDefinition<
         this.defaultValueColumn = value.defaultValueColumn || this.defaultValueColumn;
         this.executionUnit = value.executionUnit;
         this.parameterType = value.executionUnit?.parameterType || value.parameterType || this.parameterType;
+        this.selectorType = value.executionUnit?.selectorType || value.selectorType || this.selectorType;
         this.validators = (value.executionUnit?.validators || []).concat(value.validators || []);
     }
 }

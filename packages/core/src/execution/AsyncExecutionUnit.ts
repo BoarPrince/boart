@@ -1,6 +1,6 @@
-import { BaseRowType } from '../table/BaseRowType';
-import { ParaType } from '../table/ParaType';
 import { RowValidator } from '../Validators/RowValidator';
+import { BaseRowType } from '../table/BaseRowType';
+import { ParaType } from '../types/ParaType';
 
 import { ExecutionContext } from './ExecutionContext';
 import { ExecutionUnit } from './ExecutionUnit';

@@ -20,13 +20,13 @@ import { BaseRowMetaDefinition } from './src/table/BaseRowMetaDefinition';
 import { BaseRowType } from './src/table/BaseRowType';
 import { GroupRowDefinition } from './src/table/GroupRowDefinition';
 import { MarkdownTableReader } from './src/table/MarkdownTableReader';
-import { ParaType } from './src/table/ParaType';
 import { RowDefinition } from './src/table/RowDefinition';
 import { TableHandler } from './src/table/TableHandler';
 import { TableHandlerBaseImpl } from './src/table/TableHandlerBaseImpl';
 import { key, value } from './src/table/TableRowDecorator';
 import { TableRowType } from './src/table/TableRowType';
 import { TableRows } from './src/table/TableRows';
+import { ParaType } from './src/types/ParaType';
 import { ScopedType } from './src/types/ScopedType';
 import { ValueReplacer } from './src/value/ValueReplacer';
 

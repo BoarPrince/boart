@@ -1,5 +1,6 @@
+import { ParaType } from '../types/ParaType';
+import { SelectorType } from '../types/SelectorType';
 import { AnyBaseRowType } from './BaseRowType';
-import { ParaType } from './ParaType';
 import { RowDefinition } from './RowDefinition';
 import { RowDefinitionBinder } from './RowDefinitionBinder';
 import { MetaInfo } from './TableMetaInfo';
@@ -75,15 +76,15 @@ describe('check binding', () => {
      *
      */
     it.each([
-        ['1.', 'a:a', ParaType.False, 'a:a', 'a:a', null, null],
-        ['2.', 'a:a', ParaType.Optional, 'a:a', 'a:a', null, null],
-        ['3.', 'a:a', ParaType.Optional, 'a:a:para', 'a:a', 'para', null],
-        ['4.', 'a-a', ParaType.Optional, 'a-a:para', 'a-a', 'para', null],
-        ['5.', 'a:a', ParaType.True, 'a:a:para', 'a:a', 'para', null],
-        ['6.', 'a:a', ParaType.True, 'a:a:para:1', 'a:a', 'para:1', null],
-        ['7.', 'a:a', ParaType.Optional, 'a:a:para:1', 'a:a', 'para:1', null],
-        ['8.', 'a:a', ParaType.Optional, 'a:a:para:1#s1', 'a:a', 'para:1', 's1'],
-        ['9.', 'a:a', ParaType.Optional, 'a:a:para#s1', 'a:a', 'para', 's1'],
+        ['01.', 'a:a', ParaType.False, 'a:a', 'a:a', null, null],
+        ['02.', 'a:a', ParaType.Optional, 'a:a', 'a:a', null, null],
+        ['03.', 'a:a', ParaType.Optional, 'a:a:para', 'a:a', 'para', null],
+        ['04.', 'a-a', ParaType.Optional, 'a-a:para', 'a-a', 'para', null],
+        ['05.', 'a:a', ParaType.True, 'a:a:para', 'a:a', 'para', null],
+        ['06.', 'a:a', ParaType.True, 'a:a:para:1', 'a:a', 'para:1', null],
+        ['07.', 'a:a', ParaType.Optional, 'a:a:para:1', 'a:a', 'para:1', null],
+        ['08.', 'a:a', ParaType.Optional, 'a:a:para:1#s1', 'a:a', 'para:1', 's1'],
+        ['09.', 'a:a', ParaType.Optional, 'a:a:para#s1', 'a:a', 'para', 's1'],
         ['10.', 'a:a', ParaType.Optional, 'a:a#s1', 'a:a', null, 's1']
     ])(
         `%s: check key and para defKey: '%s', paraType '%p', key: '%s', expected key: '%s', expected para: '%s'. expected selector: '%s'`,
@@ -100,6 +101,7 @@ describe('check binding', () => {
                 new RowDefinition({
                     key: Symbol(defKey),
                     parameterType: paraType,
+                    selectorType: SelectorType.Optional,
                     type: TableRowType.PostProcessing,
                     executionUnit: null,
                     validators: null
@@ -124,9 +126,47 @@ describe('check binding', () => {
      *
      */
     it.each([
-        ['1.', 'a:a', ParaType.False, 'a:a:para', `'test-table': key 'a:a:para' cannot have a parameter: 'para'!`],
-        ['2.', 'a:a', ParaType.False, 'aa', `'test-table': key 'aa' is not valid`],
-        ['3.', 'a:a', ParaType.True, 'a:a', `'test-table': key 'a:a' must have a parameter!`]
+        ['a1.', 'a:a', SelectorType.False, 'a:a#b', 'b', `'test-table': key 'a:a#b' cannot have a selector: 'b'!`],
+        ['a2.', 'a:a', SelectorType.True, 'a:a#b', 'b', null],
+        ['a3.', 'a:a', SelectorType.Optional, 'a:a#b', 'b', null],
+        ['a4.', 'a:a', SelectorType.False, 'a:a:b#c', 'c', `'test-table': key 'a:a:b#c' cannot have a selector: 'c'!`],
+        ['a5.', 'a:a', SelectorType.True, 'a:a:b#c', 'c', null],
+        ['a6.', 'a:a', SelectorType.Optional, 'a:a:b#c', 'c', null]
+    ])(
+        `%s: check selector: '%s', selectorType '%p', key: '%s', expected selector: '%s'`,
+        (_: string, defKey: string, selectorType: SelectorType, rowKey: string, expectedSelector: string, expectedErrorMessage: string) => {
+            const rowDefinitions = [
+                new RowDefinition({
+                    key: Symbol(defKey),
+                    parameterType: ParaType.Optional,
+                    selectorType: selectorType,
+                    type: TableRowType.PostProcessing,
+                    executionUnit: null,
+                    validators: null
+                })
+            ];
+            const rawRows = [{ key: rowKey, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
+
+            const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
+            if (!!expectedErrorMessage) {
+                expect(() => sut.bind(RowWithOneValue)).toThrowError(expectedErrorMessage);
+            } else {
+                const rows = sut.bind(RowWithOneValue);
+                expect(rows).toBeDefined();
+                expect(rows.length).toBe(1);
+                expect(rows[0]).toBeDefined();
+                expect(rows[0].data.selector).toBe(expectedSelector);
+            }
+        }
+    );
+
+    /**
+     *
+     */
+    it.each([
+        ['b1.', 'a:a', ParaType.False, 'a:a:para', `'test-table': key 'a:a:para' cannot have a parameter: 'para'!`],
+        ['b2.', 'a:a', ParaType.False, 'aa', `'test-table': key 'aa' is not valid`],
+        ['b3.', 'a:a', ParaType.True, 'a:a', `'test-table': key 'a:a' must have a parameter!`]
     ])(
         `%s: check error for key and para (defKey: '%s', paraType: '%p', key: '%s', expected key: '%s', expected para: '%s'`,
         (_: string, defKey: string, paraType: ParaType, rowKey: string, expectedErrorMessage: string) => {

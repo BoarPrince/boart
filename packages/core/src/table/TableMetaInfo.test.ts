@@ -44,22 +44,22 @@ class TableTypeNoValueTest extends AnyBaseRowType {
 
 describe('check TableMetaInfo', () => {
     it('check key info', () => {
-        const metaInfo = TableMetaInfo.get(TableTypeTest);
-        expect(metaInfo.key).toBe('action');
+        const sut = TableMetaInfo.get(TableTypeTest);
+        expect(sut.key).toBe('action');
     });
 
     it('check value info', () => {
-        const metaInfo = TableMetaInfo.get(TableTypeTest);
-        expect(metaInfo.values).toBeDefined();
-        expect(metaInfo.values.length).toBe(2);
-        expect(metaInfo.values).toEqual(['value1', 'value2']);
+        const sut = TableMetaInfo.get(TableTypeTest);
+        expect(sut.values).toBeDefined();
+        expect(sut.values.length).toBe(2);
+        expect(sut.values).toEqual(['value1', 'value2']);
     });
 
     it('check meta info by instance', () => {
         const instance = new TableTypeTest(null);
-        const metaInfo = TableMetaInfo.getByInstance(instance);
-        expect(metaInfo.key).toBeDefined();
-        expect(metaInfo.values).toBeDefined();
+        const sut = TableMetaInfo.getByInstance(instance);
+        expect(sut.key).toBeDefined();
+        expect(sut.values).toBeDefined();
     });
 
     it('check no key defined', () => {
