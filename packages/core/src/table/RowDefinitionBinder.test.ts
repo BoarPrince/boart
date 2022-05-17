@@ -1,3 +1,4 @@
+import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
 import { AnyBaseRowType } from './BaseRowType';
@@ -194,6 +195,57 @@ describe('check binding', () => {
             throw Error(`paraType:false with parameter must throw an error`);
         }
     );
+
+    /**
+     *
+     */
+    it('use multiple row definitions', async () => {
+        /**
+         *
+         */
+        class MockExecutionUnit implements ExecutionUnit<any, any> {
+            constructor(description: string) {
+                this.description = description;
+            }
+            execute(context: any, row: any): void {
+                // do noting in mock
+            }
+            description: string;
+        }
+
+        const rowDefinitions = [
+            new RowDefinition({
+                key: Symbol('a1'),
+                type: TableRowType.PostProcessing,
+                executionUnit: new MockExecutionUnit('unit1'),
+                validators: null
+            }),
+            new RowDefinition({
+                key: Symbol('a2'),
+                type: TableRowType.PostProcessing,
+                executionUnit: new MockExecutionUnit('unit2'),
+                validators: null
+            }),
+            new RowDefinition({
+                key: Symbol('a3'),
+                type: TableRowType.PostProcessing,
+                executionUnit: new MockExecutionUnit('unit3'),
+                validators: null
+            })
+        ];
+
+        const rawRows = [{ key: 'a2', values: { value1: 'b2' }, values_replaced: { value1: 'b2' } }];
+        const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
+        const boundRows = sut.bind(RowWithOneValue);
+
+        expect(boundRows).toBeDefined();
+        expect(boundRows).toBeArrayOfSize(1);
+
+        const rowWithDef = boundRows.find((def) => def.action === 'a2');
+
+        expect(rowWithDef.value1).toBe('b2');
+        expect(rowWithDef.data._metaDefinition.executionUnit.description).toBe('unit2');
+    });
 });
 
 /**

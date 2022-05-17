@@ -42,18 +42,19 @@ export class RowDefinitionBinder<
                 selector: string;
                 definition: RowDefinition<TExecutionContext, TRowType>;
             };
-            for (const metaDef of this.rowDefinitions) {
+            for (const rowDefinition of this.rowDefinitions) {
                 const parts = row.key.split('#');
                 const rowKeyDef = parts.shift();
                 rowDef.selector = parts.join('#') || null;
-                rowDef.definition = metaDef;
+                rowDef.definition = rowDefinition;
 
-                if (metaDef.key.description === rowKeyDef) {
-                    rowDef.key = metaDef.key.description;
-                } else if (rowKeyDef.startsWith(`${metaDef.key.description}:`)) {
-                    rowDef.key = metaDef.key.description;
-                    rowDef.para = rowKeyDef.replace(`${metaDef.key.description}:`, '');
-                    rowDef.definition = metaDef;
+                if (rowDefinition.key.description === rowKeyDef) {
+                    rowDef.key = rowDefinition.key.description;
+                    break;
+                } else if (rowKeyDef.startsWith(`${rowDefinition.key.description}:`)) {
+                    rowDef.key = rowDefinition.key.description;
+                    rowDef.para = rowKeyDef.replace(`${rowDefinition.key.description}:`, '');
+                    rowDef.definition = rowDefinition;
                     break;
                 }
             }
