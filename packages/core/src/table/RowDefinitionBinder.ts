@@ -9,6 +9,16 @@ import { RowValue } from './RowValue';
 import { MetaInfo } from './TableMetaInfo';
 
 /**
+ *
+ */
+interface RowDef<TExecutionContext extends ExecutionContext<object, object, object>, TRowType extends BaseRowType<TExecutionContext>> {
+    key: string;
+    para: string;
+    selector: string;
+    definition: RowDefinition<TExecutionContext, TRowType>;
+}
+
+/**
  * Binds the row definitions to the meta defintions of each row
  */
 export class RowDefinitionBinder<
@@ -29,61 +39,46 @@ export class RowDefinitionBinder<
      *
      */
     bind(type: new (def: BaseRowMetaDefinition<TExecutionContext, TRowType>) => TRowType): Array<TRowType> {
-        const throwIf = (condition: boolean, errorMessage: string): void => {
-            if (condition) {
-                throw Error(errorMessage);
-            }
-        };
-
         return this.rowsWithValues?.map((row) => {
-            const rowDef = { para: null } as {
-                key: string;
-                para: string;
-                selector: string;
-                definition: RowDefinition<TExecutionContext, TRowType>;
-            };
-            for (const rowDefinition of this.rowDefinitions) {
-                const parts = row.key.split('#');
-                const rowKeyDef = parts.shift();
-                rowDef.selector = parts.join('#') || null;
-                rowDef.definition = rowDefinition;
+            const rowDef = {
+                key: null,
+                para: null,
+                selector: null,
+                definition: null
+            } as RowDef<TExecutionContext, TRowType>;
 
-                if (rowDefinition.key.description === rowKeyDef) {
-                    rowDef.key = rowDefinition.key.description;
-                    break;
-                } else if (rowKeyDef.startsWith(`${rowDefinition.key.description}:`)) {
-                    rowDef.key = rowDefinition.key.description;
-                    rowDef.para = rowKeyDef.replace(`${rowDefinition.key.description}:`, '');
-                    rowDef.definition = rowDefinition;
+            const definitions = this.rowDefinitions.map((definition) => {
+                const parts = row.key.split('#');
+                const rowKey = parts.shift();
+                const rowSelector = parts.join('#') || null;
+                return { rowKey, rowSelector, key: definition.key.description, definition };
+            });
+
+            // Prioritize definitions without parameter higher
+            for (const def of definitions) {
+                rowDef.selector = def.rowSelector;
+                rowDef.definition = def.definition;
+
+                if (def.key === def.rowKey) {
+                    rowDef.key = def.key;
                     break;
                 }
             }
 
             if (!rowDef.key) {
-                throw Error(`'${this.tableName}': key '${row.key}' is not valid`);
+                // if not match found without parameter, check matching with parameters
+                for (const def of definitions) {
+                    if (def.rowKey.startsWith(`${def.key}:`)) {
+                        rowDef.key = def.key;
+                        rowDef.para = def.rowKey.replace(`${def.key}:`, '');
+                        rowDef.definition = def.definition;
+                        break;
+                    }
+                }
             }
 
-            switch (rowDef.definition.parameterType) {
-                case ParaType.True:
-                    throwIf(!rowDef.para, `'${this.tableName}': key '${row.key}' must have a parameter!`);
-                    break;
-                case ParaType.Optional:
-                    break;
-                case ParaType.False:
-                    throwIf(!!rowDef.para, `'${this.tableName}': key '${row.key}' cannot have a parameter: '${rowDef.para}'!`);
-                    break;
-            }
-
-            switch (rowDef.definition.selectorType) {
-                case SelectorType.True:
-                    throwIf(!rowDef.selector, `'${this.tableName}': key '${row.key}' must have a selector!`);
-                    break;
-                case SelectorType.Optional:
-                    break;
-                case SelectorType.False:
-                    throwIf(!!rowDef.selector, `'${this.tableName}': key '${row.key}' cannot have a selector: '${rowDef.selector}'!`);
-                    break;
-            }
+            // checks if the binding could be fullfilled
+            this.checkBinding(row, rowDef);
 
             const rows = new type({
                 _metaDefinition: rowDef.definition,
@@ -96,6 +91,43 @@ export class RowDefinitionBinder<
 
             return this.bindDefaultValues(rows);
         });
+    }
+
+    /**
+     * checks the correct binding  result
+     */
+    private checkBinding(row: RowValue, rowDef: RowDef<TExecutionContext, TRowType>): void {
+        const throwIf = (condition: boolean, errorMessage: string): void => {
+            if (condition) {
+                throw Error(errorMessage);
+            }
+        };
+
+        if (!rowDef.key) {
+            throw Error(`'${this.tableName}': key '${row.key}' is not valid`);
+        }
+
+        switch (rowDef.definition.parameterType) {
+            case ParaType.True:
+                throwIf(!rowDef.para, `'${this.tableName}': key '${row.key}' must have a parameter!`);
+                break;
+            case ParaType.Optional:
+                break;
+            case ParaType.False:
+                throwIf(!!rowDef.para, `'${this.tableName}': key '${row.key}' cannot have a parameter: '${rowDef.para}'!`);
+                break;
+        }
+
+        switch (rowDef.definition.selectorType) {
+            case SelectorType.True:
+                throwIf(!rowDef.selector, `'${this.tableName}': key '${row.key}' must have a selector!`);
+                break;
+            case SelectorType.Optional:
+                break;
+            case SelectorType.False:
+                throwIf(!!rowDef.selector, `'${this.tableName}': key '${row.key}' cannot have a selector: '${rowDef.selector}'!`);
+                break;
+        }
     }
 
     /**

@@ -1,3 +1,4 @@
+import 'jest-extended';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
@@ -195,11 +196,16 @@ describe('check binding', () => {
             throw Error(`paraType:false with parameter must throw an error`);
         }
     );
+});
 
+/**
+ *
+ */
+describe('check binding with multiple definitions', () => {
     /**
      *
      */
-    it('use multiple row definitions', async () => {
+    it('use multiple definitions', async () => {
         /**
          *
          */
@@ -246,6 +252,82 @@ describe('check binding', () => {
         expect(rowWithDef.value1).toBe('b2');
         expect(rowWithDef.data._metaDefinition.executionUnit.description).toBe('unit2');
     });
+
+    /**
+     *
+     */
+    it.each([
+        ['01.', 'a:a', ParaType.False, 'a:a', 'a:a', null, null],
+        ['02.', 'a:a', ParaType.True, 'a:a:para1', 'a:a:para1', null, null],
+        ['03.', 'a:a', ParaType.False, 'a:a:para1', 'a:a:para1', null, null],
+        ['04.', 'a:a', ParaType.Optional, 'a:a:para3', 'a:a', 'para3', null],
+        ['05.', 'a:a', ParaType.True, 'a:a:para1#selector', 'a:a:para1', null, 'selector'],
+        ['06.', 'a:a', ParaType.Optional, 'a:a:para3#selector', 'a:a', 'para3', 'selector']
+    ])(
+        `%s use multiple rows and multiple definitions => check key and para defKey: '%s', paraType '%p', key: '%s', expected key: '%s', expected para: '%s'. expected selector: '%s'`,
+        (
+            _: string,
+            defKey: string,
+            paraType: ParaType,
+            rowKey: string,
+            expectedKey: string,
+            expectedPara: string,
+            expectedSelector: string
+        ) => {
+            const rowDefinitions = [
+                new RowDefinition({
+                    key: Symbol('a:a:para:1'),
+                    parameterType: ParaType.False,
+                    selectorType: SelectorType.Optional,
+                    type: TableRowType.PostProcessing,
+                    executionUnit: null,
+                    validators: null
+                }),
+                new RowDefinition({
+                    key: Symbol(defKey),
+                    parameterType: paraType,
+                    selectorType: SelectorType.Optional,
+                    type: TableRowType.PostProcessing,
+                    executionUnit: null,
+                    validators: null
+                }),
+                new RowDefinition({
+                    key: Symbol('a:a:para:2'),
+                    parameterType: ParaType.Optional,
+                    selectorType: SelectorType.Optional,
+                    type: TableRowType.PostProcessing,
+                    executionUnit: null,
+                    validators: null
+                }),
+                new RowDefinition({
+                    key: Symbol('a:a:para1'),
+                    parameterType: ParaType.Optional,
+                    selectorType: SelectorType.Optional,
+                    type: TableRowType.PostProcessing,
+                    executionUnit: null,
+                    validators: null
+                })
+            ];
+
+            const rawRows = [
+                { key: rowKey, values: { value1: 'b' }, values_replaced: { value1: 'b' } },
+                { key: 'a:a:para1', values: { value1: 'b1' }, values_replaced: { value1: 'b1' } },
+                { key: 'a:a:para:1', values: { value1: 'b:1' }, values_replaced: { value1: 'b:1' } },
+                { key: 'a:a:para:2', values: { value1: 'b:2' }, values_replaced: { value1: 'b:2' } }
+            ];
+
+            const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
+            const rows = sut.bind(RowWithOneValue);
+
+            expect(rows).toBeDefined();
+            expect(rows.length).toBe(4);
+            expect(rows[0]).toBeDefined();
+            expect(rows[0].action).toBe(expectedKey);
+            expect(rows[0].actionPara).toBe(expectedPara);
+            expect(rows[0].data.selector).toBe(expectedSelector);
+            expect(rows[0].value1).toBe('b');
+        }
+    );
 });
 
 /**
