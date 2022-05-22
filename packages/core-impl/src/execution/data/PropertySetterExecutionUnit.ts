@@ -7,9 +7,9 @@ type Config = {
     concat?: boolean;
     delimiter?: string;
     defaultModifier?: (rowValue: ContentType) => ContentType;
-    actionParaModifier?: (rowValue: ContentType) => ContentType;
+    actionSelectorModifier?: (rowValue: ContentType) => ContentType;
     defaultSetter?: (value: ContentType, rowValue: ContentType) => ContentType;
-    actionParaSetter?: (value: ContentType, rowValue: ContentType, para: string) => ContentType;
+    actionSelectorSetter?: (value: ContentType, rowValue: ContentType, para: string) => ContentType;
 };
 
 /**
@@ -31,12 +31,12 @@ export class PropertySetterExecutionUnit<
         this.config.concat = this.config.concat || false;
         this.config.delimiter = this.config.delimiter || '\n';
         this.config.defaultModifier = this.config.defaultModifier || ((value: ContentType) => value);
-        this.config.actionParaModifier = this.config.actionParaModifier || this.config.defaultModifier;
+        this.config.actionSelectorModifier = this.config.actionSelectorModifier || this.config.defaultModifier;
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this.config.defaultSetter = this.config.defaultSetter || this.defaultSetter.bind(this);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this.config.actionParaSetter = this.config.actionParaSetter || this.defaultActionParaSetter.bind(this);
+        this.config.actionSelectorSetter = this.config.actionSelectorSetter || this.defaultActionSelectorSetter.bind(this);
     }
 
     /**
@@ -49,15 +49,15 @@ export class PropertySetterExecutionUnit<
      */
     private defaultSetter(value: ContentType, rowValue: ContentType): ContentType {
         const delimiter = !value ? '' : this.config.delimiter;
-        return this.config.concat === false ? rowValue : `${value || ''}${delimiter}${rowValue}`;
+        return this.config.concat === false ? rowValue : `${value?.toString() || ''}${delimiter}${rowValue?.toString() || ''}`;
     }
 
     /**
      *
      */
-    private defaultActionParaSetter(value: ContentType, rowValue: ContentType, para: string): ContentType {
-        const val = DataContentHelper.create(new ObjectContent(value));
-        return DataContentHelper.setByPath(para, rowValue, val).toJSON();
+    private defaultActionSelectorSetter(value: ContentType, rowValue: ContentType, selector: string): ContentType {
+        const val = DataContentHelper.create(!DataContentHelper.isObject(value) ? new ObjectContent(value) : value);
+        return DataContentHelper.setByPath(selector, rowValue, val).toJSON();
     }
 
     /**
@@ -74,7 +74,7 @@ export class PropertySetterExecutionUnit<
                 return context[self.propertyLevel1];
             },
             set val(value: ContentType) {
-                context[self.propertyLevel1] = value;
+                context[self.propertyLevel1] = DataContentHelper.create(value);
             }
         };
 
@@ -86,15 +86,15 @@ export class PropertySetterExecutionUnit<
                 return context[self.propertyLevel1][self.propertyLevel2];
             },
             set val(value: ContentType) {
-                context[self.propertyLevel1][self.propertyLevel2] = value;
+                context[self.propertyLevel1][self.propertyLevel2] = DataContentHelper.create(value);
             }
         };
 
         const accessor = !this.propertyLevel2 ? oneLevel : twoLevel;
-        if (!row.actionPara) {
+        if (!row.data.selector) {
             accessor.val = this.config.defaultSetter(accessor.val, this.config.defaultModifier(row.value));
         } else {
-            accessor.val = this.config.actionParaSetter(accessor.val, this.config.actionParaModifier(row.value), row.actionPara);
+            accessor.val = this.config.actionSelectorSetter(accessor.val, this.config.actionSelectorModifier(row.value), row.data.selector);
         }
     }
 }

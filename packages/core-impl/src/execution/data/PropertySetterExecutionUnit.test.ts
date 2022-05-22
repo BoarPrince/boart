@@ -56,7 +56,7 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config['value']).toBe('xxx');
+        expect(context.config['value'].toString()).toBe('xxx');
     });
 
     /**
@@ -85,7 +85,7 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config).toBe('xxx');
+        expect(context.config.toString()).toBe('xxx');
     });
 
     /**
@@ -116,7 +116,7 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config['value']).toBe('xxx');
+        expect(context.config['value'].toString()).toBe('xxx');
     });
 
     /**
@@ -161,13 +161,13 @@ describe('check property setter execution unit', () => {
 
         sut.execute(context, row);
         sut.execute(context, row2);
-        expect(context.config['value']).toBe('xxx\nyyy');
+        expect(context.config['value'].toString()).toBe('xxx\nyyy');
     });
 
     /**
      *
      */
-    it('check with actionPara', () => {
+    it('check with selector', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: false });
 
         const context: DataContext = {
@@ -184,8 +184,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
-            keyPara: 'c',
-            selector: null,
+            keyPara: null,
+            selector: 'c',
             values: {
                 value: 'f'
             },
@@ -196,13 +196,13 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config['value']).toBe('{"a":"b","c":"f","e":3}');
+        expect(context.config['value'].toString()).toBe('{"a":"b","c":"f","e":3}');
     });
 
     /**
      *
      */
-    it('check with actionPara (two changes)', () => {
+    it('check with selector - two changes', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: false });
 
         const context: DataContext = {
@@ -219,8 +219,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
-            keyPara: 'c',
-            selector: null,
+            keyPara: null,
+            selector: 'c',
             values: {
                 value: 'f'
             },
@@ -232,8 +232,8 @@ describe('check property setter execution unit', () => {
 
         const row2 = new RowTypePropValue<DataContext>({
             key: 'a:a',
-            keyPara: 'e',
-            selector: null,
+            keyPara: null,
+            selector: 'e',
             values: {
                 value: '4'
             },
@@ -245,7 +245,7 @@ describe('check property setter execution unit', () => {
 
         sut.execute(context, row);
         sut.execute(context, row2);
-        expect(context.config['value']).toBe('{"a":"b","c":"f","e":4}');
+        expect(context.config['value'].toString()).toBe('{"a":"b","c":"f","e":4}');
     });
 
     /**
@@ -270,8 +270,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
-            keyPara: 'a.f',
-            selector: null,
+            keyPara: null,
+            selector: 'a.f',
             values: {
                 value: '5'
             },
@@ -282,7 +282,7 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config['value']).toBe('{"a":{"f":5},"c":"d","e":3}');
+        expect(context.config['value'].toString()).toBe('{"a":{"f":5},"c":"d","e":3}');
     });
 
     /**
@@ -301,8 +301,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
-            keyPara: 'a.f',
-            selector: null,
+            keyPara: null,
+            selector: 'a.f',
             values: {
                 value: '5'
             },
@@ -313,7 +313,7 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config['value']).toBe('{"a":{"f":5}}');
+        expect(context.config['value'].toString()).toBe('{"a":{"f":5}}');
     });
 
     /**
@@ -322,7 +322,7 @@ describe('check property setter execution unit', () => {
     it('check with actionPara (use actionParaModifier)', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: false,
-            actionParaModifier: (rowValue) => `-${rowValue}-`
+            actionSelectorModifier: (rowValue) => `-${rowValue}-`
         });
 
         const context: DataContext = {
@@ -335,8 +335,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'a:a',
-            keyPara: 'a.f',
-            selector: null,
+            keyPara: null,
+            selector: 'a.f',
             values: {
                 value: '5'
             },
@@ -347,7 +347,7 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config['value']).toBe('{"a":{"f":"-5-"}}');
+        expect(context.config['value'].toString()).toBe('{"a":{"f":"-5-"}}');
     });
 
     /**
@@ -381,7 +381,7 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config['value']).toBe('-5-');
+        expect(context.config['value'].toString()).toBe('-5-');
     });
 
     /**
@@ -390,7 +390,7 @@ describe('check property setter execution unit', () => {
     it('check query style (actionParaSetter), one para', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: false,
-            actionParaSetter: (_value: ContentType, rowValue: ContentType, para: string): ContentType => {
+            actionSelectorSetter: (_value: ContentType, rowValue: ContentType, para: string): ContentType => {
                 return `${para}=${rowValue}`;
             }
         });
@@ -405,8 +405,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: 'id',
-            selector: null,
+            keyPara: null,
+            selector: 'id',
             values: {
                 value: '5'
             },
@@ -417,7 +417,7 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config['value']).toBe('id=5');
+        expect(context.config['value'].toString()).toBe('id=5');
     });
 
     /**
@@ -426,7 +426,7 @@ describe('check property setter execution unit', () => {
     it('check query style (actionParaSetter), three paras', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: false,
-            actionParaSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
+            actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
                 `${!value ? '' : value + '&'}${para}=${rowValue}`
         });
 
@@ -440,8 +440,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: 'id',
-            selector: null,
+            keyPara: null,
+            selector: 'id',
             values: {
                 value: '5'
             },
@@ -453,8 +453,8 @@ describe('check property setter execution unit', () => {
 
         const row2 = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: 'id2',
-            selector: null,
+            keyPara: null,
+            selector: 'id2',
             values: {
                 value: '6'
             },
@@ -466,8 +466,8 @@ describe('check property setter execution unit', () => {
 
         const row3 = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: 'id3',
-            selector: null,
+            keyPara: null,
+            selector: 'id3',
             values: {
                 value: '7'
             },
@@ -480,7 +480,7 @@ describe('check property setter execution unit', () => {
         sut.execute(context, row);
         sut.execute(context, row2);
         sut.execute(context, row3);
-        expect(context.config['value']).toBe('id=5&id2=6&id3=7');
+        expect(context.config['value'].toString()).toBe('id=5&id2=6&id3=7');
     });
 
     /**
@@ -489,9 +489,9 @@ describe('check property setter execution unit', () => {
     it('check query style (actionParaSetter and modifier)', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: false,
-            actionParaSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
+            actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
                 `${!value ? '' : value + '&'}${para}=${rowValue}`,
-            actionParaModifier: (rowValue: ContentType): ContentType => {
+            actionSelectorModifier: (rowValue: ContentType): ContentType => {
                 return `-${rowValue}-`;
             }
         });
@@ -506,8 +506,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: 'id',
-            selector: null,
+            keyPara: null,
+            selector: 'id',
             values: {
                 value: '5'
             },
@@ -518,7 +518,7 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config['value']).toBe('id=-5-');
+        expect(context.config['value'].toString()).toBe('id=-5-');
     });
 
     /**
@@ -573,7 +573,7 @@ describe('check property setter execution unit', () => {
 
         sut.execute(context, row);
         sut.execute(context, row2);
-        expect(context.config['value']).toBe('-a-=-1-&-b-=-2-');
+        expect(context.config['value'].toString()).toBe('-a-=-1-&-b-=-2-');
     });
 
     /**
@@ -583,9 +583,9 @@ describe('check property setter execution unit', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: true,
             delimiter: '&',
-            actionParaSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
+            actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
                 `${!value ? '' : value + '&'}${para}=${rowValue}`,
-            actionParaModifier: (rowValue: ContentType): ContentType => {
+            actionSelectorModifier: (rowValue: ContentType): ContentType => {
                 return `-${rowValue}-`;
             },
             defaultModifier: (rowValue: ContentType): ContentType => {
@@ -607,8 +607,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: '',
-            selector: null,
+            keyPara: null,
+            selector: '',
             values: {
                 value: 'a=1'
             },
@@ -620,8 +620,8 @@ describe('check property setter execution unit', () => {
 
         const row2 = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: '',
-            selector: null,
+            keyPara: null,
+            selector: '',
             values: {
                 value: 'b=2'
             },
@@ -633,8 +633,8 @@ describe('check property setter execution unit', () => {
 
         const row3 = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: 'c',
-            selector: null,
+            keyPara: null,
+            selector: 'c',
             values: {
                 value: '3'
             },
@@ -647,7 +647,7 @@ describe('check property setter execution unit', () => {
         sut.execute(context, row);
         sut.execute(context, row2);
         sut.execute(context, row3);
-        expect(context.config['value']).toBe('-a-=-1-&-b-=-2-&c=-3-');
+        expect(context.config['value'].toString()).toBe('-a-=-1-&-b-=-2-&c=-3-');
     });
 
     /**
@@ -657,9 +657,9 @@ describe('check property setter execution unit', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: true,
             delimiter: '&',
-            actionParaSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
+            actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
                 `${!value ? '' : value + '&'}${para}=${rowValue}`,
-            actionParaModifier: (rowValue: ContentType): ContentType => {
+            actionSelectorModifier: (rowValue: ContentType): ContentType => {
                 return `-${rowValue}-`;
             },
             defaultModifier: (rowValue: ContentType): ContentType => {
@@ -681,8 +681,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: '',
-            selector: null,
+            keyPara: null,
+            selector: '',
             values: {
                 value: 'a=1'
             },
@@ -694,8 +694,8 @@ describe('check property setter execution unit', () => {
 
         const row2 = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: '',
-            selector: null,
+            keyPara: null,
+            selector: '',
             values: {
                 value: 'b=2'
             },
@@ -707,8 +707,8 @@ describe('check property setter execution unit', () => {
 
         const row3 = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: 'c',
-            selector: null,
+            keyPara: null,
+            selector: 'c',
             values: {
                 value: '3'
             },
@@ -721,7 +721,7 @@ describe('check property setter execution unit', () => {
         sut.execute(context, row3);
         sut.execute(context, row);
         sut.execute(context, row2);
-        expect(context.config['value']).toBe('c=-3-&-a-=-1-&-b-=-2-');
+        expect(context.config['value'].toString()).toBe('c=-3-&-a-=-1-&-b-=-2-');
     });
 
     /**
@@ -731,9 +731,9 @@ describe('check property setter execution unit', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: true,
             delimiter: '&',
-            actionParaSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
+            actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
                 `${!value ? '' : value + '&'}${para}=${rowValue}`,
-            actionParaModifier: (rowValue: ContentType): ContentType => {
+            actionSelectorModifier: (rowValue: ContentType): ContentType => {
                 return `-${rowValue}-`;
             },
             defaultModifier: (rowValue: ContentType): ContentType => {
@@ -755,8 +755,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: '',
-            selector: null,
+            keyPara: null,
+            selector: '',
             values: {
                 value: 'a=1'
             },
@@ -768,8 +768,8 @@ describe('check property setter execution unit', () => {
 
         const row2 = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: '',
-            selector: null,
+            keyPara: null,
+            selector: '',
             values: {
                 value: 'b=2'
             },
@@ -781,8 +781,8 @@ describe('check property setter execution unit', () => {
 
         const row3 = new RowTypePropValue<DataContext>({
             key: 'query',
-            keyPara: 'c',
-            selector: null,
+            keyPara: null,
+            selector: 'c',
             values: {
                 value: '3'
             },
@@ -795,7 +795,7 @@ describe('check property setter execution unit', () => {
         sut.execute(context, row);
         sut.execute(context, row3);
         sut.execute(context, row2);
-        expect(context.config['value']).toBe('-a-=-1-&c=-3-&-b-=-2-');
+        expect(context.config['value'].toString()).toBe('-a-=-1-&c=-3-&-b-=-2-');
     });
 
     /**
@@ -803,7 +803,7 @@ describe('check property setter execution unit', () => {
      */
     it('check method/url style', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'restCall', {
-            actionParaSetter: (value: ContentType, rowValue: ContentType, para: string): RestCallContext => ({
+            actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): RestCallContext => ({
                 method: para,
                 url: rowValue.toString()
             })
@@ -823,8 +823,8 @@ describe('check property setter execution unit', () => {
 
         const row = new RowTypePropValue<DataContext>({
             key: 'method',
-            keyPara: 'post',
-            selector: null,
+            keyPara: null,
+            selector: 'post',
             values: {
                 value: 'http://xyz'
             },
@@ -835,6 +835,6 @@ describe('check property setter execution unit', () => {
         });
 
         sut.execute(context, row);
-        expect(context.config['restCall']).toEqual({ method: 'post', url: 'http://xyz' });
+        expect(context.config['restCall'].toString()).toBe('{"method":"post","url":"http://xyz"}');
     });
 });
