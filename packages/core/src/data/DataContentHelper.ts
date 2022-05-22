@@ -57,15 +57,30 @@ export class DataContentHelper {
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static isContent(variable: any) {
+    static isContent(variable: any): boolean {
         return !!variable && !!variable.getValue;
     }
 
     /**
      *
      */
-    static isString(variable) {
+    static isString(variable: ContentType): boolean {
         return Object.prototype.toString.call(variable) === '[object String]';
+    }
+    /**
+     *
+     */
+    public static isObject(variable: ContentType): boolean {
+        if (!DataContentHelper.isContent(variable)) {
+            return false;
+        }
+
+        const contentVariable = variable as DataContent;
+        if (typeof contentVariable.isObject !== 'function') {
+            return false;
+        }
+
+        return contentVariable.isObject();
     }
 
     /**
@@ -196,21 +211,5 @@ export class DataContentHelper {
             .replace(/^\[(\d+)\]/g, '$1') // [0].x.x
             .replace(/\[(\d+)\]/g, '.$1'); // x.x[0].x
         return !key ? [] : key.split(/[#.]/);
-    }
-
-    /**
-     *
-     */
-    public static isObject(variable: unknown) {
-        if (!DataContentHelper.isContent(variable)) {
-            return false;
-        }
-
-        const contentVariable = variable as DataContent;
-        if (typeof contentVariable.isObject !== 'function') {
-            return false;
-        }
-
-        return contentVariable.isObject();
     }
 }

@@ -312,7 +312,7 @@ describe('check data contents', () => {
          */
         it('create null value', () => {
             const value = DataContentHelper.create('null');
-            expect(DataContentHelper.isObject(value)).toBeFalse();
+            expect(DataContentHelper.isObject(value)).toBeFalsy();
         });
 
         /**
@@ -320,35 +320,35 @@ describe('check data contents', () => {
          */
         it('create boolean value', () => {
             const value = DataContentHelper.create('false');
-            expect(DataContentHelper.isObject(value)).toBeFalse();
+            expect(DataContentHelper.isObject(value)).toBeFalsy();
         });
 
         /**
          *
          */
         it('check non data object (number)', () => {
-            expect(DataContentHelper.isObject(1)).toBeFalse();
+            expect(DataContentHelper.isObject(1)).toBeFalsy();
         });
 
         /**
          *
          */
         it('check non data object (boolean)', () => {
-            expect(DataContentHelper.isObject(false)).toBeFalse();
+            expect(DataContentHelper.isObject(false)).toBeFalsy();
         });
 
         /**
          *
          */
         it('check non data object (string)', () => {
-            expect(DataContentHelper.isObject('xxx')).toBeFalse();
+            expect(DataContentHelper.isObject('xxx')).toBeFalsy();
         });
 
         /**
          *
          */
         it('check non data object (object)', () => {
-            expect(DataContentHelper.isObject({ getValue: true })).toBeFalse();
+            expect(DataContentHelper.isObject({ getValue: true })).toBeFalsy();
         });
 
         /**
@@ -717,6 +717,17 @@ describe('check data contents', () => {
                 expect(sut_object.toJSON()).toBe(expectedJSON);
             }
         );
+
+        /**
+         *
+         */
+        it('set path two times', () => {
+            const sut_object = DataContentHelper.setByPath('a', 'c', new ObjectContent({ a: 'b' }));
+            expect(sut_object.toJSON()).toBe('{"a":"c"}');
+
+            const sut_object2 = DataContentHelper.setByPath('a', 'd', sut_object);
+            expect(sut_object2.toJSON()).toBe('{"a":"d"}');
+        });
 
         /**
          *
