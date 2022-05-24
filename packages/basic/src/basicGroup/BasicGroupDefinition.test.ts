@@ -119,6 +119,9 @@ it('wrong action key must throw an error', async () => {
     }).rejects.toThrowError(`'undefined': key 'wrong action' is not valid`);
 });
 
+/**
+ *
+ */
 describe('check expected:data', () => {
     /**
      *
@@ -222,6 +225,11 @@ describe('check expected:data', () => {
             actual: {"a":"xyz"}`);
     });
 });
+
+/**
+ *
+ */
+describe('check wait', () => {});
 
 // MarkdownTableReader.convert(
 //     `|action         |value |

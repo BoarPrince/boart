@@ -1,8 +1,8 @@
 import { DataContentHelper, ExecutionUnit, ParaType } from '@boart/core';
 
-import { DataContext } from '../DataExecutionContext';
-import { RowTypeValue } from '../RowTypeValue';
-import { JsonLogic } from '../jsonlogic/JsonLogic';
+import { DataContext } from '../../DataExecutionContext';
+import { RowTypeValue } from '../../RowTypeValue';
+import { JsonLogic } from '../../jsonlogic/JsonLogic';
 
 /**
  * | action               | value |

@@ -1,7 +1,7 @@
 import { DataContentHelper, ExecutionUnit, ParaType, SelectorType } from '@boart/core';
 
-import { DataContext } from '../DataExecutionContext';
-import { RowTypeValue } from '../RowTypeValue';
+import { DataContext } from '../../DataExecutionContext';
+import { RowTypeValue } from '../../RowTypeValue';
 
 /**
  * | action                 | value |
@@ -21,7 +21,7 @@ export class ExpectedHeaderExecutinoUnit implements ExecutionUnit<DataContext, R
 
         const header = DataContentHelper.getByPath(row.selector, context.execution.header).getText();
         if (expected !== header) {
-            throw Error(`${this.description}: 
+            throw Error(`${this.description}:
             expected: ${expected}
             actual: ${header}`);
         }

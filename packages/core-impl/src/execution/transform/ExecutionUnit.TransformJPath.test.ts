@@ -9,8 +9,8 @@ import {
     TableRowType,
     TextContent
 } from '@boart/core';
-import { DataContext } from '../DataExecutionContext';
-import { RowTypeValue } from '../RowTypeValue';
+import { DataContext } from '../../DataExecutionContext';
+import { RowTypeValue } from '../../RowTypeValue';
 
 import { TransformJPathExecutionUnit } from './ExecutionUnit.TransformJPath';
 

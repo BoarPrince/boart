@@ -1,8 +1,8 @@
 import { DataContentHelper, ExecutionUnit, ParaType } from '@boart/core';
 import JSPath from 'jspath';
 
-import { DataContext } from '../DataExecutionContext';
-import { RowTypeValue } from '../RowTypeValue';
+import { DataContext } from '../../DataExecutionContext';
+import { RowTypeValue } from '../../RowTypeValue';
 
 /**
  * | action          | value |

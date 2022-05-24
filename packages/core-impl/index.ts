@@ -1,11 +1,11 @@
 import { DataContext, DataExecutionContext } from './src/DataExecutionContext';
 import { RowTypeValue } from './src/RowTypeValue';
-import { ExpectedDataExecutinoUnit } from './src/execution/ExecutionUnit.ExpectedData';
-import { ExpectedHeaderExecutinoUnit } from './src/execution/ExecutionUnit.ExpectedHeader';
-import { ExpectedJsonLogicExecutionUnit } from './src/execution/ExecutionUnit.ExpectedJsonLogic';
-import { TransformJPathExecutionUnit } from './src/execution/ExecutionUnit.TransformJPath';
-import { TransformJsonLogicExecutionUnit } from './src/execution/ExecutionUnit.TransformJsonLogic';
 import { PropertySetterExecutionUnit } from './src/execution/data/PropertySetterExecutionUnit';
+import { ExpectedDataExecutinoUnit } from './src/execution/expected/ExecutionUnit.ExpectedData';
+import { ExpectedHeaderExecutinoUnit } from './src/execution/expected/ExecutionUnit.ExpectedHeader';
+import { ExpectedJsonLogicExecutionUnit } from './src/execution/expected/ExecutionUnit.ExpectedJsonLogic';
+import { TransformJPathExecutionUnit } from './src/execution/transform/ExecutionUnit.TransformJPath';
+import { TransformJsonLogicExecutionUnit } from './src/execution/transform/ExecutionUnit.TransformJsonLogic';
 import { ParaValidator } from './src/validators/ParaValidator';
 import { RequiredValidator } from './src/validators/RequiredValidator';
 import { UniqueValidator } from './src/validators/UniqueValidator';

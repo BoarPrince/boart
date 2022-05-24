@@ -1,8 +1,8 @@
 import { DataContentHelper, ExecutionUnit, ParaType, SelectorType } from '@boart/core';
 
-import { DataContext } from '../DataExecutionContext';
-import { RowTypeValue } from '../RowTypeValue';
-import { ParaValidator } from '../validators/ParaValidator';
+import { DataContext } from '../../DataExecutionContext';
+import { RowTypeValue } from '../../RowTypeValue';
+import { ParaValidator } from '../../validators/ParaValidator';
 
 /**
  * | action            | value |

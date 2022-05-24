@@ -1,6 +1,6 @@
 import { ExecutionEngine, ExecutionUnit, NativeContent, NullContent, RowDefinition, TableHandler, TableRowType } from '@boart/core';
-import { DataContext } from '../DataExecutionContext';
-import { RowTypeValue } from '../RowTypeValue';
+import { DataContext } from '../../DataExecutionContext';
+import { RowTypeValue } from '../../RowTypeValue';
 import { ExpectedJsonLogicExecutionUnit } from './ExecutionUnit.ExpectedJsonLogic';
 
 /**

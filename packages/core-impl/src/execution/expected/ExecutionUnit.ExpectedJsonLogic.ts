@@ -1,9 +1,9 @@
 import { ExecutionUnit, ParaType } from '@boart/core';
 
-import { DataContext } from '../DataExecutionContext';
-import { RowTypeValue } from '../RowTypeValue';
-import { JsonLogic } from '../jsonlogic/JsonLogic';
-import { ParaValidator } from '../validators/ParaValidator';
+import { DataContext } from '../../DataExecutionContext';
+import { RowTypeValue } from '../../RowTypeValue';
+import { JsonLogic } from '../../jsonlogic/JsonLogic';
+import { ParaValidator } from '../../validators/ParaValidator';
 
 /**
  * | action                   | value |
