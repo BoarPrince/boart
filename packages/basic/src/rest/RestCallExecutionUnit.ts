@@ -1,4 +1,4 @@
-import { AsyncExecutionUnit } from '@boart/core';
+import { ExecutionUnit } from '@boart/core';
 import { DataContext, RowTypeValue } from '@boart/core-impl';
 
 import { RestCallContext } from './RestCallContext';
@@ -6,7 +6,7 @@ import { RestCallContext } from './RestCallContext';
 /**
  *
  */
-export class RestCallExecutionUnit implements AsyncExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>> {
+export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>> {
     description = 'rest call - main';
 
     /**

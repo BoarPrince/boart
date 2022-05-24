@@ -57,7 +57,7 @@ describe('check execution engine', () => {
     /**
      *
      */
-    it('check xxx', () => {
+    it('check call order', async () => {
         const rowDataConfig: BaseRowType<TestExecutionContext> = {
             data: {
                 key: 'a:a',
@@ -140,15 +140,15 @@ describe('check execution engine', () => {
 
         const mainExecutionUnit = new ExecutionUnitMock();
         const sut = new ExecutionEngine<TestExecutionContext, any>(mainExecutionUnit, contextGenerator);
-        sut.execute([rowDataPost, rowDataConfig, rowDataPre]);
+        await sut.execute([rowDataPost, rowDataConfig, rowDataPre]);
 
-        expect(rowDataConfig.data._metaDefinition.executionUnit.execute) //
+        expect(await rowDataConfig.data._metaDefinition.executionUnit.execute) //
             .toHaveBeenCalledBefore(rowDataPre.data._metaDefinition.executionUnit.execute as any);
 
-        expect(rowDataPre.data._metaDefinition.executionUnit.execute) //
+        expect(await rowDataPre.data._metaDefinition.executionUnit.execute) //
             .toHaveBeenCalledBefore(mainExecutionUnit.execute);
 
-        expect(mainExecutionUnit.execute) //
+        expect(await mainExecutionUnit.execute) //
             .toHaveBeenCalledBefore(rowDataPost.data._metaDefinition.executionUnit.execute as any);
     });
 });

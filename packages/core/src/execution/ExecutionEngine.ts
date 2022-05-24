@@ -1,8 +1,8 @@
 import { BaseRowType } from '../table/BaseRowType';
 import { TableRowType } from '../table/TableRowType';
 
-import { AsyncExecutionUnit } from './AsyncExecutionUnit';
 import { ExecutionContext } from './ExecutionContext';
+import { ExecutionUnit } from './ExecutionUnit';
 
 /**
  *
@@ -16,7 +16,7 @@ export class ExecutionEngine<
      *
      */
     constructor(
-        private readonly mainExecutionUnit: AsyncExecutionUnit<TExecutionContext, TRowType>,
+        private readonly mainExecutionUnit: ExecutionUnit<TExecutionContext, TRowType>,
         private readonly executionContextGenerator: () => TExecutionContext
     ) {
         this.context = this.executionContextGenerator();
@@ -26,12 +26,12 @@ export class ExecutionEngine<
      *
      */
     async execute(rows: ReadonlyArray<TRowType>): Promise<TExecutionContext> {
-        this.executeByType(rows, this.context, TableRowType.Configuration);
-        this.executeByType(rows, this.context, TableRowType.PreProcessing);
+        await this.executeByType(rows, this.context, TableRowType.Configuration);
+        await this.executeByType(rows, this.context, TableRowType.PreProcessing);
 
         await this.mainExecutionUnit.execute(this.context, null);
 
-        this.executeByType(rows, this.context, TableRowType.PostProcessing);
+        await this.executeByType(rows, this.context, TableRowType.PostProcessing);
 
         return this.context;
     }
@@ -39,8 +39,10 @@ export class ExecutionEngine<
     /**
      *
      */
-    private executeByType(rows: ReadonlyArray<TRowType>, context: TExecutionContext, type: TableRowType): void {
-        rows.filter((row) => row.data._metaDefinition.type === type) //
-            .forEach((row) => row.data._metaDefinition.executionUnit.execute(context, row));
+    private async executeByType(rows: ReadonlyArray<TRowType>, context: TExecutionContext, type: TableRowType): Promise<void> {
+        const rowsByType = rows.filter((row) => row.data._metaDefinition.type === type);
+        for (const row of rowsByType) {
+            await row.data._metaDefinition.executionUnit.execute(context, row);
+        }
     }
 }

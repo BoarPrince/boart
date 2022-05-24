@@ -1,6 +1,6 @@
-import { AsyncExecutionUnit } from '../execution/AsyncExecutionUnit';
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionEngine } from '../execution/ExecutionEngine';
+import { ExecutionUnit } from '../execution/ExecutionUnit';
 
 import { BaseRowType } from './BaseRowType';
 import { TableHandler } from './TableHandler';
@@ -45,7 +45,7 @@ export abstract class TableHandlerBaseImpl<
     /**
      *
      */
-    protected abstract mainExecutionUnit(): AsyncExecutionUnit<TExecutionContext, TRowType>;
+    protected abstract mainExecutionUnit(): ExecutionUnit<TExecutionContext, TRowType>;
 
     /**
      *

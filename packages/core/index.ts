@@ -10,7 +10,6 @@ import { NativeContent } from './src/data/NativeContent';
 import { NullContent } from './src/data/NullContent';
 import { ObjectContent } from './src/data/ObjectContent';
 import { TextContent } from './src/data/TextContent';
-import { AsyncExecutionUnit } from './src/execution/AsyncExecutionUnit';
 import { ExecutionContext } from './src/execution/ExecutionContext';
 import { ExecutionEngine } from './src/execution/ExecutionEngine';
 import { ExecutionUnit } from './src/execution/ExecutionUnit';
@@ -35,7 +34,6 @@ import { ValueReplacer } from './src/value/ValueReplacer';
  *
  */
 export {
-    AsyncExecutionUnit,
     BaseRowMetaDefinition,
     BaseRowType,
     ContentType,
