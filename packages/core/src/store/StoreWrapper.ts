@@ -1,9 +1,8 @@
 import { ContentType } from '../data/ContentType';
-
 import { DataContent } from '../data/DataContent';
 import { DataContentHelper } from '../data/DataContentHelper';
-import { Store } from './Store';
 
+import { Store } from './Store';
 import { StoreMap } from './StoreMap';
 
 /**

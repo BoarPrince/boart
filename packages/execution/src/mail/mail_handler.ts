@@ -1,8 +1,10 @@
 const assert = require('assert');
-const { Subject } = require('rxjs');
-const Utils = require('./utils');
+
 const MailListener = require('mail-listener4');
+const { Subject } = require('rxjs');
+
 const EnvLoader = require('./env_loader');
+const Utils = require('./utils');
 
 /**
  *

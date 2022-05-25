@@ -1,7 +1,9 @@
 import assert from 'assert';
 import fs from 'fs';
 import fsPath from 'path';
+
 import { Observable, Subject } from 'rxjs';
+
 import { ArraySubject } from './ArraySubject';
 
 /**

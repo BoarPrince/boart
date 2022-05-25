@@ -1,8 +1,10 @@
-import * as express from 'express';
-import * as BodyParser from 'body-parser';
-import { Express } from 'express-serve-static-core';
-import { AddressInfo } from 'net';
 import { Server } from 'http';
+import { AddressInfo } from 'net';
+
+import * as BodyParser from 'body-parser';
+import * as express from 'express';
+import { Express } from 'express-serve-static-core';
+
 
 /**
  *
@@ -23,7 +25,7 @@ export class RestServer {
     /**
      *
      */
-    public static getInstance(port: number = 8081) {
+    public static getInstance(port = 8081) {
         let instance = RestServer.instances.get(port);
         if (!instance) {
             instance = new RestServer();

@@ -1,8 +1,10 @@
 import assert from 'assert';
+
 import amqp2 from 'amqplib';
 import { Observable, Subject } from 'rxjs';
-const Utils = require('./utils');
+
 const EnvLoader = require('./env_loader');
+const Utils = require('./utils');
 
 /**
  *
