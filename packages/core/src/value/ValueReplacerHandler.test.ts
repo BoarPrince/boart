@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { ScopedType } from '../types/ScopedType';
-import { ValueReplacerHandler } from './ValueReplacerHandler';
-import { ValueReplacer } from './ValueReplacer';
 import { Store } from '../store/Store';
-import assert from 'assert';
+import { ScopedType } from '../types/ScopedType';
+
+import { ValueReplacer } from './ValueReplacer';
+import { ValueReplacerHandler } from './ValueReplacerHandler';
 
 jest.mock('../store/Store', () => {
     const suiteMap = new Map<string, string>();
@@ -411,7 +411,7 @@ describe('check valueReplaceHandler', () => {
                 return;
             }
 
-            assert.fail('if adding replacers with the same identifier, an error should thrown.');
+            fail('if adding replacers with the same identifier, an error should thrown.');
         });
 
         /**
@@ -430,7 +430,7 @@ describe('check valueReplaceHandler', () => {
                 return;
             }
 
-            assert.fail('An error must be thrown if no value can be matched');
+            fail('An error must be thrown if no value can be matched');
         });
 
         /**

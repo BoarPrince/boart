@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import { TimestampGenerator } from './TimestampGenerator';
 
 describe('check timestamp generator', () => {

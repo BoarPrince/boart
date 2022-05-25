@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import { UUIDGenerator } from './UUIDGenerator';
 
 describe('check UUIDGenerator', () => {

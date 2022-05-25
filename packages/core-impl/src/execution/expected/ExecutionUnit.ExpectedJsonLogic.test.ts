@@ -1,6 +1,8 @@
 import { ExecutionEngine, ExecutionUnit, NativeContent, NullContent, RowDefinition, TableHandler, TableRowType } from '@boart/core';
+
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
+
 import { ExpectedJsonLogicExecutionUnit } from './ExecutionUnit.ExpectedJsonLogic';
 
 /**
@@ -73,9 +75,9 @@ describe('check expected:jsonLogic execution units', () => {
     /**
      *
      */
-    it('check truthy (correct)', () => {
+    it('check truthy (correct)', async () => {
         tableHandler.executionEngine.context.execution.data = new NativeContent(1);
-        tableHandler.process({
+        await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -90,9 +92,9 @@ describe('check expected:jsonLogic execution units', () => {
     /**
      *
      */
-    it('check falsy (correct)', () => {
+    it('check falsy (correct)', async () => {
         tableHandler.executionEngine.context.execution.data = new NativeContent(1);
-        tableHandler.process({
+        await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -107,9 +109,9 @@ describe('check expected:jsonLogic execution units', () => {
     /**
      *
      */
-    it('check falsy (correct)', () => {
+    it('check falsy (correct)', async () => {
         tableHandler.executionEngine.context.execution.data = new NativeContent(1);
-        tableHandler.process({
+        await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },

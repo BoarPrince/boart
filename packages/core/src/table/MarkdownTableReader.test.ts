@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import { MarkdownTableReader } from './MarkdownTableReader';
 
 /**

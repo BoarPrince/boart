@@ -1,5 +1,7 @@
 import fs from 'fs';
+
 import { GaugeEnvironment } from '../types/GaugeEnvironment';
+
 import { EnvironmentSettings, EnvLoader } from './EnvLoader';
 
 /**

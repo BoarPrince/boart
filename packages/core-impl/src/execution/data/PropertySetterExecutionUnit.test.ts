@@ -1,7 +1,9 @@
 import { ContentType, ExecutionContext } from '@boart/core';
+
 import { DataExecutionContext } from '../../DataExecutionContext';
 import { RowTypePropValue } from '../../RowTypePropValue';
 import { RowTypeValue } from '../../RowTypeValue';
+
 import { PropertySetterExecutionUnit } from './PropertySetterExecutionUnit';
 
 /**

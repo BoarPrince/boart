@@ -1,13 +1,15 @@
-require('jest-fetch-mock').enableMocks();
+import { TextContent } from '@boart/core';
+import fetchMock from 'jest-fetch-mock';
 
 import { RestHttp } from './RestHttp';
-import fetchMock from 'jest-fetch-mock';
-import { TextContent } from '@boart/core';
+
+fetchMock.enableMocks();
 
 /**
  *
  */
 jest.mock('@boart/core', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const originalModule = jest.requireActual('@boart/core');
     return {
         __esModule: true,

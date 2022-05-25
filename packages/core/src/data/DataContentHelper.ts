@@ -154,7 +154,7 @@ export class DataContentHelper {
         }
 
         let lastKey = firstKey;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+         
         const contentValue: ContentType = keys.reduce((value: ContentType, currentKey: string) => {
             try {
                 if (!value) {

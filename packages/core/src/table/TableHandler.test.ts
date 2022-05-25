@@ -1,10 +1,10 @@
 import { AnyBaseRowType } from './BaseRowType';
+import { GroupRowDefinition } from './GroupRowDefinition';
 import { RowDefinition } from './RowDefinition';
 import { TableHandler } from './TableHandler';
-import { TableRowType } from './TableRowType';
-import { key, value } from './TableRowDecorator';
 import { TableMetaInfo } from './TableMetaInfo';
-import { GroupRowDefinition } from './GroupRowDefinition';
+import { key, value } from './TableRowDecorator';
+import { TableRowType } from './TableRowType';
 
 /**
  *

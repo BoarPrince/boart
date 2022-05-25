@@ -1,5 +1,6 @@
 import fs from 'fs';
-import { TextLanguageHandler, EnvironmentSettings } from './TextLanguageHandler';
+
+import { EnvironmentSettings, TextLanguageHandler } from './TextLanguageHandler';
 
 jest.mock('fs');
 

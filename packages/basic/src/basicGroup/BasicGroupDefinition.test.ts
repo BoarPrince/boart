@@ -12,6 +12,7 @@ import {
     TextContent
 } from '@boart/core';
 import { DataExecutionContext, PropertySetterExecutionUnit, RowTypeValue } from '@boart/core-impl';
+
 import BasicGroupDefinition from './BasicGroupDefinition';
 
 /**

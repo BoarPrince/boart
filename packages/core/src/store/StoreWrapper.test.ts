@@ -1,10 +1,13 @@
 import { fail } from 'assert';
+
 import { DataContent } from '../data/DataContent';
+import { NativeContent } from '../data/NativeContent';
+import { ObjectContent } from '../data/ObjectContent';
+import { TextContent } from '../data/TextContent';
+
 import { StoreMap } from './StoreMap';
 import { StoreWrapper } from './StoreWrapper';
-import { TextContent } from '../data/TextContent';
-import { ObjectContent } from '../data/ObjectContent';
-import { NativeContent } from '../data/NativeContent';
+
 
 /**
  *

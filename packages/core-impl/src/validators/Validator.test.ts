@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GroupValidator, ParaType, RowValidator } from '@boart/core';
-import { AnyBaseRowType } from '@boart/core/src/table/BaseRowType';
 import { ValidationHandler } from '@boart/core/src/Validators/ValidationHandler';
+import { AnyBaseRowType } from '@boart/core/src/table/BaseRowType';
+
 import { BoolValidator } from './BoolValidator';
 import { DependsOnValidator } from './DependsOnValidator';
 import { IntValidator } from './IntValidator';
@@ -18,6 +18,7 @@ describe('check row validators', () => {
         /**
          *
          */
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class GroupingValidator implements GroupValidator {
             name = 'GroupValidatorMock';
             validate() {

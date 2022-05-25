@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import { Generator } from './Generator';
 import { GeneratorHandler } from './GeneratorHandler';
 

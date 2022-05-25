@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { AnyBaseRowType } from '../table/BaseRowType';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
+
 import { GroupValidator } from './GroupValidator';
 import { RowValidator } from './RowValidator';
 import { ValidationHandler } from './ValidationHandler';

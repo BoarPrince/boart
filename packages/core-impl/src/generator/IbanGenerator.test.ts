@@ -1,6 +1,8 @@
 import assert from 'assert';
-import { IbanGenerator } from './IbanGenerator';
+
 import IBAN from 'iban';
+
+import { IbanGenerator } from './IbanGenerator';
 
 describe('check IBAN Generator', () => {
     const sut = new IbanGenerator();

@@ -2,6 +2,7 @@ import 'jest-extended';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
+
 import { AnyBaseRowType } from './BaseRowType';
 import { RowDefinition } from './RowDefinition';
 import { RowDefinitionBinder } from './RowDefinitionBinder';

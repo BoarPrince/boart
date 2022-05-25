@@ -1,4 +1,5 @@
 import { MarkdownTableReader } from '@boart/core';
+
 import RestCallTableHandler from './RestCallTableHandler';
 
 const sut = new RestCallTableHandler();

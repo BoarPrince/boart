@@ -20,8 +20,7 @@ export class CurlGenerator {
         const curl = [];
         curl.push(`curl -i -X ${this.executionInfo.option.method} '${this.executionInfo.url}'`);
 
-        for (const [key, value] of Object.entries(this.executionInfo.option.headers)) {
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        for (const [key, value] of Object.entries(this.executionInfo.option.headers) ) {
             curl.push(`-H '${key}: ${value}'`);
         }
 

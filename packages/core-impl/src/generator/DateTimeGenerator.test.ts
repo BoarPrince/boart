@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import { DateTimeGenerator } from './DateTimeGenerator';
 
 describe('dateTime generator', () => {

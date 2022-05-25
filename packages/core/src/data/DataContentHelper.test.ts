@@ -1,9 +1,9 @@
+import { ContentType } from './ContentType';
 import { DataContentHelper } from './DataContentHelper';
 import { NativeContent } from './NativeContent';
+import { NullContent } from './NullContent';
 import { ObjectContent } from './ObjectContent';
 import { TextContent } from './TextContent';
-import { ContentType } from './ContentType';
-import { NullContent } from './NullContent';
 
 describe('check data contents', () => {
     /**

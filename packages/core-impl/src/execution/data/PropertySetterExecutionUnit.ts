@@ -33,9 +33,9 @@ export class PropertySetterExecutionUnit<
         this.config.defaultModifier = this.config.defaultModifier || ((value: ContentType) => value);
         this.config.actionSelectorModifier = this.config.actionSelectorModifier || this.config.defaultModifier;
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+         
         this.config.defaultSetter = this.config.defaultSetter || this.defaultSetter.bind(this);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+         
         this.config.actionSelectorSetter = this.config.actionSelectorSetter || this.defaultActionSelectorSetter.bind(this);
     }
 

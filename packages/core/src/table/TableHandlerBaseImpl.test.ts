@@ -1,4 +1,5 @@
 import { ExecutionContext } from '../execution/ExecutionContext';
+
 import { BaseRowMetaDefinition } from './BaseRowMetaDefinition';
 import { BaseRowType } from './BaseRowType';
 import { TableHandlerBaseImpl } from './TableHandlerBaseImpl';
@@ -23,9 +24,7 @@ export class TestRowType<TExecutionContext extends ExecutionContext<object, obje
  *
  */
 jest.mock('./TableHandler', () => ({
-    TableHandler: class MockHandler {
-        constructor() {}
-    }
+    TableHandler: class MockHandler {}
 }));
 
 /**

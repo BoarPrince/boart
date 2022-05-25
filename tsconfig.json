@@ -3,9 +3,6 @@
   "compilerOptions": {
     "baseUrl": "./"
   },
-  "files": [
-    "global.ts"
-  ],
   "include": [
     "./packages/**/*.ts"
   ],

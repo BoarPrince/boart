@@ -1,5 +1,7 @@
 import assert from 'assert';
+
 import { RandomGenerator } from './RandomGenerator';
+
 const IBAN = require('iban');
 
 describe('check random generator', () => {

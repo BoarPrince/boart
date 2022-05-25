@@ -1,10 +1,11 @@
 import { EnvLoader, GeneratorHandler, ScopedType, TextLanguageHandler, ValueReplacer } from '@boart/core';
+
 import { EnvironmentReplacer } from './EnvironmentReplacer';
+import { GenerateReplacer } from './GenerateReplacer';
 import { ReferenceHandler } from './ReferenceHandler';
 import { ReferenceReplacer } from './ReferenceReplacer';
 import { StoreReplacer } from './StoreReplace';
 import { TextReplacer } from './TextReplacer';
-import { GenerateReplacer } from './GenerateReplacer';
 
 /**
  *

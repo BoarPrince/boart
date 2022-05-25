@@ -1,4 +1,5 @@
 import assert from 'assert';
+
 import { ISODateGenerator } from './ISODateGenerator';
 
 describe('isodate generator', () => {

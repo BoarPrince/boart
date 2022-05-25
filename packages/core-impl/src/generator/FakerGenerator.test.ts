@@ -1,5 +1,7 @@
 import assert from 'assert';
+
 import { faker } from '@faker-js/faker';
+
 import { FakeGenerator } from './FakeGenerator';
 
 let languageChangeSubscriber: (lang: string) => void;

@@ -1,10 +1,11 @@
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
+
 import { BaseRowType } from './BaseRowType';
 import { GroupRowDefinition } from './GroupRowDefinition';
 import { GroupRowDefinitionInitializer } from './GroupRowDefinitionInitializer';
-import { TableRowType } from './TableRowType';
 import { key, value } from './TableRowDecorator';
+import { TableRowType } from './TableRowType';
 
 /**
  *
