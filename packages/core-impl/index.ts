@@ -1,9 +1,9 @@
 import { DataContext, DataExecutionContext } from './src/DataExecutionContext';
 import { RowTypeValue } from './src/RowTypeValue';
-import { PropertySetterExecutionUnit } from './src/execution/data/PropertySetterExecutionUnit';
 import { ExpectedDataExecutinoUnit } from './src/execution/expected/ExecutionUnit.ExpectedData';
 import { ExpectedHeaderExecutinoUnit } from './src/execution/expected/ExecutionUnit.ExpectedHeader';
 import { ExpectedJsonLogicExecutionUnit } from './src/execution/expected/ExecutionUnit.ExpectedJsonLogic';
+import { PropertySetterExecutionUnit } from './src/execution/property-setter/PropertySetterExecutionUnit';
 import { TransformJPathExecutionUnit } from './src/execution/transform/ExecutionUnit.TransformJPath';
 import { TransformJsonLogicExecutionUnit } from './src/execution/transform/ExecutionUnit.TransformJsonLogic';
 import { ParaValidator } from './src/validators/ParaValidator';

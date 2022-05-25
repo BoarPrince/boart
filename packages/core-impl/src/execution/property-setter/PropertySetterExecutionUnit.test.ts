@@ -324,7 +324,7 @@ describe('check property setter execution unit', () => {
     it('check with actionPara (use actionParaModifier)', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: false,
-            actionSelectorModifier: (rowValue) => `-${rowValue}-`
+            actionSelectorModifier: (rowValue) => `-${rowValue?.toString()}-`
         });
 
         const context: DataContext = {
@@ -358,7 +358,7 @@ describe('check property setter execution unit', () => {
     it('check without actionPara (use defaultModifier)', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: false,
-            defaultModifier: (rowValue) => `-${rowValue}-`
+            defaultModifier: (rowValue) => `-${rowValue?.toString()}-`
         });
 
         const context: DataContext = {
@@ -393,7 +393,7 @@ describe('check property setter execution unit', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: false,
             actionSelectorSetter: (_value: ContentType, rowValue: ContentType, para: string): ContentType => {
-                return `${para}=${rowValue}`;
+                return `${para}=${rowValue?.toString()}`;
             }
         });
 
@@ -429,7 +429,7 @@ describe('check property setter execution unit', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: false,
             actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-                `${!value ? '' : value + '&'}${para}=${rowValue}`
+                `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString()}`
         });
 
         const context: DataContext = {
@@ -492,9 +492,9 @@ describe('check property setter execution unit', () => {
         const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
             concat: false,
             actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-                `${!value ? '' : value + '&'}${para}=${rowValue}`,
+                `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString()}`,
             actionSelectorModifier: (rowValue: ContentType): ContentType => {
-                return `-${rowValue}-`;
+                return `-${rowValue?.toString()}-`;
             }
         });
 
@@ -586,9 +586,9 @@ describe('check property setter execution unit', () => {
             concat: true,
             delimiter: '&',
             actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-                `${!value ? '' : value + '&'}${para}=${rowValue}`,
+                `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString()}`,
             actionSelectorModifier: (rowValue: ContentType): ContentType => {
-                return `-${rowValue}-`;
+                return `-${rowValue?.toString()}-`;
             },
             defaultModifier: (rowValue: ContentType): ContentType => {
                 return rowValue
@@ -660,9 +660,9 @@ describe('check property setter execution unit', () => {
             concat: true,
             delimiter: '&',
             actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-                `${!value ? '' : value + '&'}${para}=${rowValue}`,
+                `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString()}`,
             actionSelectorModifier: (rowValue: ContentType): ContentType => {
-                return `-${rowValue}-`;
+                return `-${rowValue?.toString()}-`;
             },
             defaultModifier: (rowValue: ContentType): ContentType => {
                 return rowValue
@@ -734,9 +734,9 @@ describe('check property setter execution unit', () => {
             concat: true,
             delimiter: '&',
             actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-                `${!value ? '' : value + '&'}${para}=${rowValue}`,
+                `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString()}`,
             actionSelectorModifier: (rowValue: ContentType): ContentType => {
-                return `-${rowValue}-`;
+                return `-${rowValue?.toString()}-`;
             },
             defaultModifier: (rowValue: ContentType): ContentType => {
                 return rowValue
