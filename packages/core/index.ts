@@ -15,6 +15,7 @@ import { ExecutionEngine } from './src/execution/ExecutionEngine';
 import { ExecutionUnit } from './src/execution/ExecutionUnit';
 import { Generator } from './src/generator/Generator';
 import { GeneratorHandler } from './src/generator/GeneratorHandler';
+import { StoreWrapper } from './src/store/StoreWrapper';
 import { BaseRowMetaDefinition } from './src/table/BaseRowMetaDefinition';
 import { BaseRowType } from './src/table/BaseRowType';
 import { GroupRowDefinition } from './src/table/GroupRowDefinition';
@@ -26,6 +27,7 @@ import { key, value } from './src/table/TableRowDecorator';
 import { TableRowType } from './src/table/TableRowType';
 import { TableRows } from './src/table/TableRows';
 import { ParaType } from './src/types/ParaType';
+import { ScopeType } from './src/types/ScopeType';
 import { ScopedType } from './src/types/ScopedType';
 import { SelectorType } from './src/types/SelectorType';
 import { ValueReplacer } from './src/value/ValueReplacer';
@@ -57,7 +59,9 @@ export {
     RowDefinition,
     RowValidator,
     ScopedType,
+    ScopeType,
     SelectorType,
+    StoreWrapper,
     TableHandler,
     TableHandlerBaseImpl,
     TableRows,

@@ -12,7 +12,7 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
     /**
      *
      */
-    description = 'desc';
+    description = 'mock';
 
     /**
      *
@@ -126,10 +126,10 @@ describe('check expected:jsonLogic execution units', () => {
     /**
      *
      */
-    it('check wrong property', () => {
+    it('check wrong property', async () => {
         tableHandler.executionEngine.context.execution.data = new NativeContent(1);
         try {
-            tableHandler.process({
+            await tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
                 },

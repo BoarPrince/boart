@@ -1,6 +1,7 @@
 import { ContentType } from '../data/ContentType';
 import { DataContent } from '../data/DataContent';
 import { DataContentHelper } from '../data/DataContentHelper';
+import { ScopeType } from '../types/ScopeType';
 
 import { Store } from './Store';
 import { StoreMap } from './StoreMap';
@@ -102,6 +103,26 @@ export class StoreWrapper {
             }
         } else {
             return contentValue;
+        }
+    }
+
+    /**
+     *
+     */
+    static getWrapperByScope(scope: string): StoreWrapper {
+        switch (scope) {
+            case ScopeType.Global: {
+                return Store.instance.globalStore;
+            }
+            case ScopeType.Local: {
+                return Store.instance.localStore;
+            }
+            case ScopeType.Step: {
+                return Store.instance.stepStore;
+            }
+            default: {
+                return Store.instance.testStore;
+            }
         }
     }
 }

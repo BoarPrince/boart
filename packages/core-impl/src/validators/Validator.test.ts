@@ -8,6 +8,7 @@ import { IntValidator } from './IntValidator';
 import { ParaValidator } from './ParaValidator';
 import { RequiredValidator } from './RequiredValidator';
 import { UniqueValidator } from './UniqueValidator';
+import { ValueRequiredValidator } from './ValueRequiredValidator';
 import { XORValidator } from './XORValidator';
 
 describe('check row validators', () => {
@@ -581,6 +582,9 @@ describe('check row validators', () => {
      *
      */
     describe('check unique validator', () => {
+        /**
+         *
+         */
         it.each([
             [Symbol('a:1'), Symbol('a:2'), null], //
             [Symbol('a:1'), Symbol('a:1'), `Validator: 'UniqueValidator' => key 'a:1' occurs 2 times`]
@@ -697,6 +701,68 @@ describe('check row validators', () => {
                     }
 
                     throw Error(`Error must be thrown if para validator should detect a problem`);
+                }
+            }
+        );
+    });
+
+    /**
+     *
+     */
+    describe('check value required validator', () => {
+        /**
+         *
+         */
+        it.each([
+            ['value1', '---', '---', null], //
+            ['value2', '---', '---', null], //
+            ['value1', '---', null, null], //
+            ['value2', null, '---', null], //
+            ['value1', null, '---', `xxx: missing value for column 'value1'`],
+            ['value2', '---', null, `xxx: missing value for column 'value2'`],
+            ['value1', null, null, `xxx: missing value for column 'value1'`],
+            ['value2', null, null, `xxx: missing value for column 'value2'`]
+        ])(
+            `check required value (column: '%s', value: '%s', error message: 's'`,
+            (requiredColumn: string, value1: string, value2: string, errorMessage: string) => {
+                const sut = new ValidationHandler(null);
+                const rowData: AnyBaseRowType[] = [
+                    {
+                        data: {
+                            key: 'xxx',
+                            keyPara: null,
+                            selector: null,
+                            values: {
+                                value1,
+                                value2
+                            },
+                            values_replaced: {
+                                value1,
+                                value2
+                            },
+                            _metaDefinition: {
+                                key: Symbol('xxx'),
+                                type: null,
+                                selectorType: null,
+                                executionUnit: null,
+                                parameterType: ParaType.False,
+                                validators: [new ValueRequiredValidator(requiredColumn)]
+                            }
+                        }
+                    }
+                ];
+
+                if (!errorMessage) {
+                    sut.validate(rowData);
+                } else {
+                    try {
+                        sut.validate(rowData);
+                    } catch (error) {
+                        expect(error.message).toBe(errorMessage);
+                        return;
+                    }
+
+                    throw Error(`Error must be thrown if ValueRequired validator should detect a problem`);
                 }
             }
         );

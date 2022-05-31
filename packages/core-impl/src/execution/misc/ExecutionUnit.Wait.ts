@@ -1,4 +1,4 @@
-import { ExecutionContext, ExecutionUnit, ParaType } from '@boart/core';
+import { ExecutionUnit, ParaType } from '@boart/core';
 
 import { AnyContext } from '../../AnyContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -25,8 +25,7 @@ export class WaitExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue
     /**
      *
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    execute(_: ExecutionContext<object, object, object>, row: RowTypeValue<any>): Promise<void> {
+    execute(_: AnyContext, row: RowTypeValue<AnyContext>): Promise<void> {
         const duration = parseInt(row.value.toString());
         const multiplicator = !row.actionPara || row.actionPara === 'sec' ? 1000 : 1000 * 60;
 

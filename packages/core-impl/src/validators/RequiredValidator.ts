@@ -24,7 +24,7 @@ export class RequiredValidator implements GroupValidator {
         this.keys.forEach((key) => {
             const count = rows.filter((row) => row.key === key.description)?.length || 0;
             if (count === 0) {
-                throw Error(`Key '${key.description}' is required, but it's missing`);
+                throw Error(`Key '${key.description.toString()}' is required, but it's missing`);
             }
         });
     }

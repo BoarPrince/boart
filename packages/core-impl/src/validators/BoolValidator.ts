@@ -19,6 +19,7 @@ export class BoolValidator implements RowValidator {
     /**
      *
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validate(row: BaseRowMetaDefinition<any, any>) {
         if (!Object.keys(row.values).some((key) => key === this.columnName)) {
             throw Error(`Validator: '${this.constructor.name}' => column '${this.columnName}' is not defined`);
