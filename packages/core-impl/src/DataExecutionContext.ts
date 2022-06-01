@@ -6,6 +6,7 @@ import { DataContent, ExecutionContext } from '@boart/core';
 export interface DataExecutionContext {
     data: DataContent;
     header: DataContent;
+    transformed: DataContent;
 }
 
 /**

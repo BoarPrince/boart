@@ -48,6 +48,7 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
             },
             execution: {
                 data: new NullContent(),
+                transformed: new NullContent(),
                 header: null
             }
         });

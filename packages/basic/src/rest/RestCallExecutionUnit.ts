@@ -14,6 +14,7 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): Promise<void> {
         console.log(context, row);
+        context.execution.transformed = context.execution.data;
         return null;
         // context.execution.data =
     }

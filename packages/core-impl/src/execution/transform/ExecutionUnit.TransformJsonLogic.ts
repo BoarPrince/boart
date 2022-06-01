@@ -18,8 +18,8 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const rule = row.value.toString();
-        const data = context.execution.data.getText();
+        const data = context.execution.transformed.getText();
 
-        context.execution.data = DataContentHelper.create(JsonLogic.instance.transform(rule, data));
+        context.execution.transformed = DataContentHelper.create(JsonLogic.instance.transform(rule, data));
     }
 }

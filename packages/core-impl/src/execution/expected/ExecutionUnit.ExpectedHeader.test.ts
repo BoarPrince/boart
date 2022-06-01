@@ -57,6 +57,7 @@ class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<
             },
             execution: {
                 data: new NullContent(),
+                transformed: new NullContent(),
                 header: null
             }
         });

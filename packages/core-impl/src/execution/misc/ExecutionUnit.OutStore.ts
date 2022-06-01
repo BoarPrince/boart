@@ -41,7 +41,7 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
     /**
      *
      */
-    constructor(private executionType?: 'data' | 'header') {}
+    constructor(private executionType?: 'data' | 'header' | 'transformed') {}
 
     /** */
     get description(): string {
@@ -52,6 +52,9 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
             case 'header':
                 return 'store:header';
 
+            case 'transformed':
+                return 'store:transformed';
+
             default:
                 return 'store';
         }
@@ -61,7 +64,16 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
      *
      */
     private getDataContent(context: DataContext): DataContent {
-        return this.executionType === 'header' ? context.execution.header : context.execution.data;
+        switch (this.executionType) {
+            case 'data':
+                return context.execution.data;
+
+            case 'header':
+                return context.execution.header;
+
+            default:
+                return context.execution.transformed;
+        }
     }
 
     /**

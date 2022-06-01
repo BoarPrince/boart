@@ -3,6 +3,7 @@ import 'jest-extended';
 import {
     ExecutionContext,
     MarkdownTableReader,
+    NullContent,
     ObjectContent,
     ParaType,
     RowDefinition,
@@ -57,6 +58,7 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
         },
         execution: {
             data: null,
+            transformed: null,
             header: null
         }
     });

@@ -37,6 +37,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
         },
         execution: {
             data: null,
+            transformed: null,
             header: null
         }
     });

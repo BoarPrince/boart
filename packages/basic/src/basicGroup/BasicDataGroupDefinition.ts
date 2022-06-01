@@ -69,6 +69,13 @@ if (!GroupRowDefinition.contains('basic-data')) {
             validators: null
         })
     );
+    basicGroup.addRowDefinition(
+        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+            type: TableRowType.PostProcessing,
+            executionUnit: new OutStoreExecutionUnit('transformed'),
+            validators: null
+        })
+    );
 }
 
 export default GroupRowDefinition.getInstance<DataContext, RowTypeValue<DataContext>>('basic-data');

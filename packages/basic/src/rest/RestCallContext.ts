@@ -1,4 +1,5 @@
-import { DataContent, ExecutionContext } from '@boart/core';
+import { ExecutionContext } from '@boart/core';
+import { DataExecutionContext } from '@boart/core-impl';
 
 /**
  *
@@ -20,12 +21,4 @@ interface RestCallPreExecutionContext {
 /**
  *
  */
-interface RestCallExecutionContext {
-    data: DataContent;
-    header: DataContent;
-}
-
-/**
- *
- */
-export type RestCallContext = ExecutionContext<RestCallConfigContext, RestCallPreExecutionContext, RestCallExecutionContext>;
+export type RestCallContext = ExecutionContext<RestCallConfigContext, RestCallPreExecutionContext, DataExecutionContext>;

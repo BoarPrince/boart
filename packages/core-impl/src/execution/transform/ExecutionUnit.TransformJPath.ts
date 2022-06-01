@@ -18,7 +18,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const rule = row.value.toString();
-        const data = JSON.parse(context.execution.data.toJSON()) as object;
+        const data = JSON.parse(context.execution.transformed.toJSON()) as object;
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const transformedValue = JSPath.apply(rule, data) as ReadonlyArray<object>;
@@ -28,9 +28,9 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
 
         if (Array.isArray(transformedValue) && transformedValue.length === 1) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            context.execution.data = DataContentHelper.create(transformedValue[0]);
+            context.execution.transformed = DataContentHelper.create(transformedValue[0]);
         } else {
-            context.execution.data = DataContentHelper.create(transformedValue);
+            context.execution.transformed = DataContentHelper.create(transformedValue);
         }
     }
 }
