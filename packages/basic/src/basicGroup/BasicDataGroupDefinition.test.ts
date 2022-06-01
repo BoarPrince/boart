@@ -13,7 +13,7 @@ import {
 } from '@boart/core';
 import { DataExecutionContext, PropertySetterExecutionUnit, RowTypeValue } from '@boart/core-impl';
 
-import BasicGroupDefinition from './BasicGroupDefinition';
+import BasicGroupDefinition from './BasicDataGroupDefinition';
 
 /**
  *
@@ -95,6 +95,7 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
     /**
      *
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected addGroupValidation(_tableHandler: TableHandler<MockContext, RowTypeValue<MockContext>>) {
         // no validation needed for test purposes
     }
@@ -226,26 +227,3 @@ describe('check expected:data', () => {
             actual: {"a":"xyz"}`);
     });
 });
-
-/**
- *
- */
-describe('check wait', () => {});
-
-// MarkdownTableReader.convert(
-//     `|action         |value |
-//      |---------------|------|
-//      |wait:before:sec|20   |`
-// );
-
-// MarkdownTableReader.convert(
-//     `|action         |value |
-//      |---------------|------|
-//      |wait:before:min|20   |`
-// );
-
-// MarkdownTableReader.convert(
-//     `|action         |value |
-//      |---------------|------|
-//      |wait:after:min |20   |`
-// );

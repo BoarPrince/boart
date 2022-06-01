@@ -1,49 +1,30 @@
 import { GroupRowDefinition, RowDefinition, TableRowType } from '@boart/core';
-import {
-    DataContext,
-    ExpectedDataExecutinoUnit,
-    ExpectedHeaderExecutinoUnit,
-    ExpectedJsonLogicExecutionUnit,
-    RowTypeValue,
-    TransformJPathExecutionUnit,
-    TransformJsonLogicExecutionUnit
-} from '@boart/core-impl';
+import { AnyContext, DataContext, DescriptionExecutionUnit, ParaValidator, RowTypeValue, WaitExecutionUnit } from '@boart/core-impl';
 
 if (!GroupRowDefinition.contains('basic')) {
-    const basicGroup = GroupRowDefinition.getInstance<DataContext, RowTypeValue<DataContext>>('basic');
+    const basicGroup = GroupRowDefinition.getInstance<AnyContext, RowTypeValue<AnyContext>>('basic');
 
     basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+        new RowDefinition<AnyContext, RowTypeValue<AnyContext>>({
+            key: Symbol('wait:after'),
             type: TableRowType.PostProcessing,
-            executionUnit: new ExpectedDataExecutinoUnit(),
-            validators: null
+            executionUnit: new WaitExecutionUnit(),
+            validators: [new ParaValidator([null, 'sec', 'min'])]
         })
     );
     basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
-            type: TableRowType.PostProcessing,
-            executionUnit: new ExpectedHeaderExecutinoUnit(),
-            validators: null
+        new RowDefinition<AnyContext, RowTypeValue<AnyContext>>({
+            key: Symbol('wait:before'),
+            type: TableRowType.PreProcessing,
+            executionUnit: new WaitExecutionUnit(),
+            validators: [new ParaValidator([null, 'sec', 'min'])]
         })
     );
     basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
-            type: TableRowType.PostProcessing,
-            executionUnit: new ExpectedJsonLogicExecutionUnit(),
-            validators: null
-        })
-    );
-    basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
-            type: TableRowType.PostProcessing,
-            executionUnit: new TransformJPathExecutionUnit(),
-            validators: null
-        })
-    );
-    basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
-            type: TableRowType.PostProcessing,
-            executionUnit: new TransformJsonLogicExecutionUnit(),
+        new RowDefinition<AnyContext, RowTypeValue<AnyContext>>({
+            key: Symbol('description'),
+            type: TableRowType.PreProcessing,
+            executionUnit: new DescriptionExecutionUnit(),
             validators: null
         })
     );

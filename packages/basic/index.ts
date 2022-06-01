@@ -1,3 +1,4 @@
+import BasicDataGroupDefinition from './src/basicGroup/BasicDataGroupDefinition';
 import BasicGroupDefinition from './src/basicGroup/BasicGroupDefinition';
 
-export { BasicGroupDefinition };
+export { BasicDataGroupDefinition, BasicGroupDefinition };
