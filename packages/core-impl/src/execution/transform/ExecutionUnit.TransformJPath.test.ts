@@ -72,11 +72,35 @@ describe('check transform:jpath execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, new ExecutionEngineMock());
 
     const sut = new TransformJPathExecutionUnit();
+    const sutData = new TransformJPathExecutionUnit('data');
+    const sutHeader = new TransformJPathExecutionUnit('header');
+    const sutTransformed = new TransformJPathExecutionUnit('transformed');
 
     tableHandler.addRowDefinition(
         new RowDefinition({
             type: TableRowType.PostProcessing,
             executionUnit: sut,
+            validators: null
+        })
+    );
+    tableHandler.addRowDefinition(
+        new RowDefinition({
+            type: TableRowType.PostProcessing,
+            executionUnit: sutData,
+            validators: null
+        })
+    );
+    tableHandler.addRowDefinition(
+        new RowDefinition({
+            type: TableRowType.PostProcessing,
+            executionUnit: sutHeader,
+            validators: null
+        })
+    );
+    tableHandler.addRowDefinition(
+        new RowDefinition({
+            type: TableRowType.PostProcessing,
+            executionUnit: sutTransformed,
             validators: null
         })
     );
@@ -183,5 +207,108 @@ describe('check transform:jpath execution units', () => {
         }
 
         throw Error('error must occur when role is not correct');
+    });
+
+    /**
+     *
+     */
+    it('transform (use selector)', async () => {
+        tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ a: true, b: [true, false] });
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: [`transform:jpath#a`, '.b']
+                }
+            ]
+        });
+        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
+        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(ObjectContent);
+        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('{"a":[true,false],"b":[true,false]}');
+    });
+
+    /**
+     *
+     */
+    it('transform (executionType)', async () => {
+        tableHandler.executionEngine.context.execution.data = new ObjectContent({ a: true, b: [true, false] });
+        tableHandler.executionEngine.context.execution.transformed = new ObjectContent();
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: [`transform:jpath:data`, '.a']
+                }
+            ]
+        });
+        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
+        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(NativeContent);
+        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('true');
+    });
+
+    /**
+     *
+     */
+    it('transform (selector and executionType)', async () => {
+        tableHandler.executionEngine.context.execution.data = new ObjectContent({ a: true, b: [true, false] });
+        tableHandler.executionEngine.context.execution.transformed = new ObjectContent();
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: [`transform:jpath:data#c`, '.a']
+                }
+            ]
+        });
+        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
+        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(ObjectContent);
+        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('{"c":true}');
+    });
+
+    /**
+     *
+     */
+    it('transform (selector and executionType:header)', async () => {
+        tableHandler.executionEngine.context.execution.header = new ObjectContent({ a: true, b: [true, false] });
+        tableHandler.executionEngine.context.execution.transformed = new ObjectContent();
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: [`transform:jpath:header#c`, '.a']
+                }
+            ]
+        });
+        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
+        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(ObjectContent);
+        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('{"c":true}');
+    });
+
+    /**
+     *
+     */
+    it('transform (use selector and executionType:transformed)', async () => {
+        tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ a: true, b: [true, false] });
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: [`transform:jpath:transformed#a`, '.b']
+                }
+            ]
+        });
+        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
+        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(ObjectContent);
+        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('{"a":[true,false],"b":[true,false]}');
     });
 });

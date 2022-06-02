@@ -154,7 +154,7 @@ export class DataContentHelper {
         }
 
         let lastKey = firstKey;
-         
+
         const contentValue: ContentType = keys.reduce((value: ContentType, currentKey: string) => {
             try {
                 if (!value) {
@@ -173,7 +173,7 @@ export class DataContentHelper {
     /**
      *
      */
-    public static setByPath(key: string | string[], value: ContentType, content: DataContent): DataContent {
+    public static setByPath(selector: string | string[], value: ContentType, content: DataContent): DataContent {
         /**
          *
          */
@@ -184,7 +184,7 @@ export class DataContentHelper {
             return contentObject.asDataContentObject();
         };
 
-        const keys = Array.isArray(key) ? key : DataContentHelper.splitKeys(key);
+        const keys = Array.isArray(selector) ? selector : DataContentHelper.splitKeys(selector);
         const lastKey = keys.pop();
 
         const parentContent = content || DataContentHelper.create({});
