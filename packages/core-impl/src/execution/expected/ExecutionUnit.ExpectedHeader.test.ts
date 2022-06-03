@@ -11,8 +11,7 @@ import {
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
-
-import { ExpectedHeaderExecutinoUnit } from './ExecutionUnit.ExpectedHeader';
+import { ExpectedDataExecutinoUnit } from './ExecutionUnit.ExpectedData';
 
 /**
  *
@@ -72,7 +71,7 @@ class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<
 describe('check expected:header execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
 
-    const sut = new ExpectedHeaderExecutinoUnit();
+    const sut = new ExpectedDataExecutinoUnit('header');
 
     tableHandler.addRowDefinition(
         new RowDefinition({
@@ -134,7 +133,7 @@ describe('check expected:header execution units', () => {
                     ]
                 });
             } catch (error) {
-                expect(error.message).toStartWith(`expected:header:`);
+                expect(error.message).toStartWith(`error: expected:header`);
                 return;
             }
 
@@ -158,7 +157,7 @@ describe('check expected:header execution units', () => {
                     ]
                 });
             } catch (error) {
-                expect(error.message).toBe("'undefined': key 'expected:header' must have a selector!");
+                expect(error.message).toBe(`error: expected:header\n\texpected: b\n\tactual: {"a":"b"}`);
                 return;
             }
 

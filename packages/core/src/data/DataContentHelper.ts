@@ -165,6 +165,7 @@ export class DataContentHelper {
             } finally {
                 lastKey = currentKey;
             }
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         }, content.getValue()[firstKey]);
 
         return DataContentHelper.create(contentValue);

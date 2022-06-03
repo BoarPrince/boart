@@ -75,7 +75,7 @@ class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<
 describe('check expected:data execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
 
-    const sut = new ExpectedDataExecutinoUnit();
+    const sut = new ExpectedDataExecutinoUnit('data');
 
     tableHandler.addRowDefinition(
         new RowDefinition({
@@ -170,7 +170,7 @@ describe('check expected:data execution units', () => {
                     ]
                 });
             } catch (error) {
-                expect(error.message).toStartWith(`expected:data:`);
+                expect(error.message).toStartWith(`error: expected:data`);
                 return;
             }
 
