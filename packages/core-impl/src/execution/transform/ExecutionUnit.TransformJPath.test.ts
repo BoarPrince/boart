@@ -72,35 +72,11 @@ describe('check transform:jpath execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, new ExecutionEngineMock());
 
     const sut = new TransformJPathExecutionUnit();
-    const sutData = new TransformJPathExecutionUnit('data');
-    const sutHeader = new TransformJPathExecutionUnit('header');
-    const sutTransformed = new TransformJPathExecutionUnit('transformed');
 
     tableHandler.addRowDefinition(
         new RowDefinition({
             type: TableRowType.PostProcessing,
             executionUnit: sut,
-            validators: null
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sutData,
-            validators: null
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sutHeader,
-            validators: null
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sutTransformed,
             validators: null
         })
     );

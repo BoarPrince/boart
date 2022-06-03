@@ -3,7 +3,6 @@ import 'jest-extended';
 import {
     ExecutionContext,
     MarkdownTableReader,
-    NullContent,
     ObjectContent,
     ParaType,
     RowDefinition,
@@ -92,6 +91,15 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
                 validators: null
             })
         );
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('header:config'),
+                type: TableRowType.PreProcessing,
+                parameterType: ParaType.False,
+                executionUnit: new PropertySetterExecutionUnit<MockContext, RowTypeValue<MockContext>>('execution', 'header'),
+                validators: null
+            })
+        );
     }
 
     /**
@@ -126,7 +134,7 @@ it('wrong action key must throw an error', async () => {
 /**
  *
  */
-describe('check expected:data', () => {
+describe('check expected,expected:data', () => {
     /**
      *
      */
@@ -160,6 +168,21 @@ describe('check expected:data', () => {
     /**
      *
      */
+    it('expected can check complete value - correct', async () => {
+        sut.handler.executionEngine.context.execution.data = new TextContent('xxx');
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action   |value  |
+             |---------|-------|
+             |expected |xxx    |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+
+    /**
+     *
+     */
     it('expected:data can check complete value - incorrect', async () => {
         sut.handler.executionEngine.context.execution.data = new TextContent('xxx');
 
@@ -171,9 +194,7 @@ describe('check expected:data', () => {
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`expected:data:
-            expected: x-x-x
-            actual: xxx`);
+        }).rejects.toThrowError(`error: expected:data\n\texpected: x-x-x\n\tactual: xxx`);
     });
 
     /**
@@ -205,9 +226,7 @@ describe('check expected:data', () => {
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`expected:data:
-            expected: xyz
-            actual: xy`);
+        }).rejects.toThrowError(`error: expected:data\n\texpected: xyz\n\tactual: xy`);
     });
 
     /**
@@ -224,8 +243,122 @@ describe('check expected:data', () => {
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`expected:data:
-            expected: xyz
-            actual: {"a":"xyz"}`);
+        }).rejects.toThrowError(`error: expected:data\n\texpected: xyz\n\tactual: {"a":"xyz"}`);
+    });
+
+    /**
+     *
+     */
+    it('expected:data can check value with selector and regexp', async () => {
+        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 'aabaa' });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action                |value |
+             |----------------------|------|
+             |expected:data:regexp#a|.+b.+ |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+});
+
+/**
+ *
+ */
+describe('check expected:header', () => {
+    /**
+     *
+     */
+    it('expected:header can check value defined by config unit', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action         |value |
+             |---------------|------|
+             |header:config  |xyz   |
+             |expected:header|xyz   |`
+        );
+
+        const context = await sut.handler.process(tableDef);
+        expect(context.execution.header.toString()).toBe('xyz');
+    });
+
+    /**
+     *
+     */
+    it('expected:header can check complete value - correct', async () => {
+        sut.handler.executionEngine.context.execution.header = new TextContent('xxx');
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action         |value  |
+             |---------------|-------|
+             |expected:header|xxx    |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+
+    /**
+     *
+     */
+    it('expected:header can check complete value - incorrect', async () => {
+        sut.handler.executionEngine.context.execution.header = new TextContent('xxx');
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action         |value  |
+             |---------------|-------|
+             |expected:header|x-x-x  |`
+        );
+
+        await expect(async () => {
+            await sut.handler.process(tableDef);
+        }).rejects.toThrowError(`error: expected:header\n\texpected: x-x-x\n\tactual: xxx`);
+    });
+
+    /**
+     *
+     */
+    it('expected:header can check value with selector', async () => {
+        sut.handler.executionEngine.context.execution.header = new ObjectContent({ a: 'xyz' });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action           |value |
+             |-----------------|------|
+             |expected:header#a|xyz   |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+
+    /**
+     *
+     */
+    it('expected:header can check value with selector - incorrect', async () => {
+        sut.handler.executionEngine.context.execution.header = new ObjectContent({ a: 'xy' });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action           |value |
+             |-----------------|------|
+             |expected:header#a|xyz   |`
+        );
+
+        await expect(async () => {
+            await sut.handler.process(tableDef);
+        }).rejects.toThrowError(`error: expected:header\n\texpected: xyz\n\tactual: xy`);
+    });
+
+    /**
+     *
+     */
+    it('expected:header can check value without selector, but it is expected - incorrect', async () => {
+        sut.handler.executionEngine.context.execution.header = new ObjectContent({ a: 'xyz' });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action           |value |
+             |-----------------|------|
+             |expected:header  |xyz   |`
+        );
+
+        await expect(async () => {
+            await sut.handler.process(tableDef);
+        }).rejects.toThrowError(`error: expected:header\n\texpected: xyz\n\tactual: {"a":"xyz"}`);
     });
 });

@@ -45,19 +45,7 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
 
     /** */
     get description(): string {
-        switch (this.executionType) {
-            case 'data':
-                return 'store:data';
-
-            case 'header':
-                return 'store:header';
-
-            case 'transformed':
-                return 'store:transformed';
-
-            default:
-                return 'store';
-        }
+        return !this.executionType ? 'store' : `store:${this.executionType}`;
     }
 
     /**
@@ -82,8 +70,8 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const storeName = row.value.toString();
 
-        const baseData = this.getDataContent(context);
-        const data = !row.selector ? baseData : DataContentHelper.getByPath(row.selector, baseData);
+        const baseContent = this.getDataContent(context);
+        const data = !row.selector ? baseContent : DataContentHelper.getByPath(row.selector, baseContent);
 
         const store = StoreWrapper.getWrapperByScope(row.actionPara);
         store.put(storeName, data);

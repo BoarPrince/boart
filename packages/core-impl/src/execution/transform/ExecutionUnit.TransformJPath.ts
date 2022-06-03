@@ -3,6 +3,8 @@ import JSPath from 'jspath';
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
+import { ParaValidator } from '../../validators/ParaValidator';
+import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
 
 /**
  * | action          | value |
@@ -10,37 +12,20 @@ import { RowTypeValue } from '../../RowTypeValue';
  * | transform:jpath | xxxx  |
  */
 export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+    readonly description = 'transform:jpath';
     readonly parameterType = ParaType.Optional;
     readonly selectorType = SelectorType.Optional;
+    readonly validators = [
+        new ParaValidator(['data', 'header', 'transformed']), //
+        new ValueRequiredValidator('value')
+    ];
 
     /**
      *
      */
-    constructor(private executionType?: 'data' | 'header' | 'transformed') {}
-
-    /** */
-    get description(): string {
-        switch (this.executionType) {
-            case 'data':
-                return 'transform:jpath:data';
-
-            case 'header':
-                return 'transform:jpath:header';
-
-            case 'transformed':
-                return 'transform:jpath:transformed';
-
-            default:
-                return 'transform:jpath';
-        }
-    }
-
-    /**
-     *
-     */
-    private getSourceData(context: DataContext): object {
+    private getSourceData(context: DataContext, executionType: string): object {
         const sourceFacade = () => {
-            switch (this.executionType) {
+            switch (executionType) {
                 case 'data':
                     return context.execution.data;
 
@@ -60,7 +45,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const rule = row.value.toString();
-        const data = this.getSourceData(context);
+        const data = this.getSourceData(context, row.actionPara);
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const transformedValue = JSPath.apply(rule, data) as ReadonlyArray<object>;

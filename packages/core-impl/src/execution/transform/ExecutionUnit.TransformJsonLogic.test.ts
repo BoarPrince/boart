@@ -72,35 +72,11 @@ describe('check transform:jsonLogic execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, new ExecutionEngineMock());
 
     const sut = new TransformJsonLogicExecutionUnit();
-    const sutData = new TransformJsonLogicExecutionUnit('data');
-    const sutHeader = new TransformJsonLogicExecutionUnit('header');
-    const sutTransformed = new TransformJsonLogicExecutionUnit('transformed');
 
     tableHandler.addRowDefinition(
         new RowDefinition({
             type: TableRowType.PostProcessing,
             executionUnit: sut,
-            validators: null
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sutData,
-            validators: null
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sutHeader,
-            validators: null
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sutTransformed,
             validators: null
         })
     );

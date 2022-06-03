@@ -2,7 +2,6 @@ import { AnyContext } from './src/AnyContext';
 import { DataContext, DataExecutionContext } from './src/DataExecutionContext';
 import { RowTypeValue } from './src/RowTypeValue';
 import { ExpectedDataExecutinoUnit } from './src/execution/expected/ExecutionUnit.ExpectedData';
-import { ExpectedHeaderExecutinoUnit } from './src/execution/expected/ExecutionUnit.ExpectedHeader';
 import { ExpectedJsonLogicExecutionUnit } from './src/execution/expected/ExecutionUnit.ExpectedJsonLogic';
 import { DescriptionExecutionUnit } from './src/execution/misc/ExecutionUnit.Description';
 import { OutStoreExecutionUnit } from './src/execution/misc/ExecutionUnit.OutStore';
@@ -27,7 +26,6 @@ export {
     DataExecutionContext,
     DescriptionExecutionUnit,
     ExpectedDataExecutinoUnit,
-    ExpectedHeaderExecutinoUnit,
     ExpectedJsonLogicExecutionUnit,
     OutStoreExecutionUnit,
     ParaValidator,
