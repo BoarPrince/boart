@@ -41,7 +41,7 @@ export class RowDefinitionBinder<
     bind(type: new (def: BaseRowMetaDefinition<TExecutionContext, TRowType>) => TRowType): Array<TRowType> {
         return this.rowsWithValues?.map((row) => {
             const rowDef = {
-                key: null,
+                key: '',
                 para: null,
                 selector: null,
                 definition: null
@@ -68,11 +68,11 @@ export class RowDefinitionBinder<
             if (!rowDef.key) {
                 // if not match found without parameter, check matching with parameters
                 for (const def of definitions) {
-                    if (def.rowKey.startsWith(`${def.key}:`)) {
+                    const defKey = def.key || '';
+                    if (def.rowKey.startsWith(`${defKey}:`) && def.key.length >= rowDef.key.length) {
                         rowDef.key = def.key;
-                        rowDef.para = def.rowKey.replace(`${def.key}:`, '');
+                        rowDef.para = def.rowKey.replace(`${defKey}:`, '');
                         rowDef.definition = def.definition;
-                        break;
                     }
                 }
             }
@@ -114,7 +114,10 @@ export class RowDefinitionBinder<
             case ParaType.Optional:
                 break;
             case ParaType.False:
-                throwIf(!!rowDef.para, `'${this.tableName}': key '${row.key}' cannot have a parameter: '${rowDef.para}'!`);
+                throwIf(
+                    !!rowDef.para,
+                    `'${this.tableName}': key '${row.key}' with definition '${rowDef.key}' cannot have a parameter: '${rowDef.para}'!`
+                );
                 break;
         }
 

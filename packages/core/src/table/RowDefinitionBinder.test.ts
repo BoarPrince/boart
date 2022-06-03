@@ -167,7 +167,7 @@ describe('check binding', () => {
      *
      */
     it.each([
-        ['b1.', 'a:a', ParaType.False, 'a:a:para', `'test-table': key 'a:a:para' cannot have a parameter: 'para'!`],
+        ['b1.', 'a:a', ParaType.False, 'a:a:para', "'test-table': key 'a:a:para' with definition 'a:a' cannot have a parameter: 'para'!"],
         ['b2.', 'a:a', ParaType.False, 'aa', `'test-table': key 'aa' is not valid`],
         ['b3.', 'a:a', ParaType.True, 'a:a', `'test-table': key 'a:a' must have a parameter!`]
     ])(
@@ -206,15 +206,17 @@ describe('check binding with multiple definitions', () => {
     /**
      *
      */
-    it('use multiple definitions', async () => {
+    it('use multiple definitions', () => {
         /**
          *
          */
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         class MockExecutionUnit implements ExecutionUnit<any, any> {
             constructor(description: string) {
                 this.description = description;
             }
-            execute(context: any, row: any): void {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            execute(_context, _row): void {
                 // do noting in mock
             }
             description: string;
@@ -263,7 +265,8 @@ describe('check binding with multiple definitions', () => {
         ['03.', 'a:a', ParaType.False, 'a:a:para1', 'a:a:para1', null, null],
         ['04.', 'a:a', ParaType.Optional, 'a:a:para3', 'a:a', 'para3', null],
         ['05.', 'a:a', ParaType.True, 'a:a:para1#selector', 'a:a:para1', null, 'selector'],
-        ['06.', 'a:a', ParaType.Optional, 'a:a:para3#selector', 'a:a', 'para3', 'selector']
+        ['06.', 'a:a', ParaType.Optional, 'a:a:para3#selector', 'a:a', 'para3', 'selector'],
+        ['07.', 'a:a:para:1:2', ParaType.Optional, 'a:a:para:1:2:3', 'a:a:para:1:2', '3', null]
     ])(
         `%s use multiple rows and multiple definitions => check key and para defKey: '%s', paraType '%p', key: '%s', expected key: '%s', expected para: '%s'. expected selector: '%s'`,
         (
