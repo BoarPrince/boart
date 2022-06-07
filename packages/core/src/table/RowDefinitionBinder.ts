@@ -47,12 +47,15 @@ export class RowDefinitionBinder<
                 definition: null
             } as RowDef<TExecutionContext, TRowType>;
 
-            const definitions = this.rowDefinitions.map((definition) => {
-                const parts = row.key.split('#');
-                const rowKey = parts.shift();
-                const rowSelector = parts.join('#') || null;
-                return { rowKey, rowSelector, key: definition.key.description, definition };
-            });
+            const definitions = this.rowDefinitions
+                .map((definition) => {
+                    const parts = row.key.split('#');
+                    const rowKey = parts.shift();
+                    const rowSelector = parts.join('#') || null;
+                    return { rowKey, rowSelector, key: definition.key.description, definition };
+                })
+                // longest key first, because longer key must match first
+                .sort((def1, def2) => def2.key.length - def1.key.length);
 
             // Prioritize definitions without parameter higher
             for (const def of definitions) {
@@ -69,10 +72,11 @@ export class RowDefinitionBinder<
                 // if not match found without parameter, check matching with parameters
                 for (const def of definitions) {
                     const defKey = def.key || '';
-                    if (def.rowKey.startsWith(`${defKey}:`) && def.key.length >= rowDef.key.length) {
+                    if (def.rowKey.startsWith(`${defKey}:`)) {
                         rowDef.key = def.key;
                         rowDef.para = def.rowKey.replace(`${defKey}:`, '');
                         rowDef.definition = def.definition;
+                        break;
                     }
                 }
             }
