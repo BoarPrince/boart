@@ -25,15 +25,12 @@ interface JsonLogicOutput {
  *
  */
 export class JsonLogic {
-    private static _instance: JsonLogic;
+    private static readonly _instance = new JsonLogic();
 
     /**
      *
      */
     static get instance(): JsonLogic {
-        if (!JsonLogic._instance) {
-            JsonLogic._instance = new JsonLogic();
-        }
         return JsonLogic._instance;
     }
 
@@ -54,6 +51,7 @@ export class JsonLogic {
             throw Error(`name is required for JsonLogicOperator: '${operator.constructor.name}'`);
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         names.forEach((name) => json_logic_js.add_operation(name, (...args: readonly unknown[]) => operator.execute(...args)));
     }
 
@@ -91,6 +89,7 @@ export class JsonLogic {
             return {
                 rule: logicInput.rule,
                 error: logicInput.error,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 data: json_logic_js.apply(logicInput.rule, logicInput.data) as string
             };
         } catch (error) {
