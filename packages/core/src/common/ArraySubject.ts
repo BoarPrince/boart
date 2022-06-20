@@ -4,7 +4,14 @@ import { Observer, Subject, Subscription } from 'rxjs';
  *
  */
 export class ArraySubject<T> extends Subject<T> {
-    private readonly items: T[] = [];
+    private items: T[] = [];
+
+    /**
+     *
+     */
+    clear(): void {
+        this.items = [];
+    }
 
     /**
      *
@@ -23,14 +30,14 @@ export class ArraySubject<T> extends Subject<T> {
         complete?: (() => void) | null
     ): Subscription {
         if (!(observerOrNext as Partial<Observer<T>>).next) {
-            this.items.forEach(item => (observerOrNext as (value: T) => void)(item));
+            this.items.forEach((item) => (observerOrNext as (value: T) => void)(item));
             return super.subscribe({
-                next: v => (observerOrNext as (value: T) => void)(v),
+                next: (v) => (observerOrNext as (value: T) => void)(v),
                 error,
                 complete
             });
         } else {
-            this.items.forEach(item => (observerOrNext as Partial<Observer<T>>).next(item));
+            this.items.forEach((item) => (observerOrNext as Partial<Observer<T>>).next(item));
             return super.subscribe(observerOrNext as Partial<Observer<T>>);
         }
     }
