@@ -17,8 +17,8 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
     /**
      *
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    execute = jest.fn((context: DataContext, row: RowTypeValue<DataContext>): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unused-vars
+    execute = jest.fn(async (context: DataContext, row: RowTypeValue<DataContext>): Promise<void> => {
         // do noting
         return;
     });
@@ -69,7 +69,7 @@ describe('check expected:jsonLogic execution units', () => {
         new RowDefinition({
             type: TableRowType.PostProcessing,
             executionUnit: sut,
-            validators: null
+            validators: []
         })
     );
 
@@ -85,23 +85,6 @@ describe('check expected:jsonLogic execution units', () => {
             rows: [
                 {
                     cells: [`expected:jsonLogic:true`, '{"===": [{"var": ""}, 1]}']
-                }
-            ]
-        });
-    });
-
-    /**
-     *
-     */
-    it('check falsy (correct)', async () => {
-        tableHandler.executionEngine.context.execution.data = new NativeContent(1);
-        await tableHandler.process({
-            headers: {
-                cells: ['action', 'value']
-            },
-            rows: [
-                {
-                    cells: [`expected:jsonLogic:false`, '{"===": [{"var": ""}, 2]}']
                 }
             ]
         });

@@ -1,5 +1,6 @@
 import { GroupValidator } from './src/Validators/GroupValidator';
 import { RowValidator } from './src/Validators/RowValidator';
+import { ArraySubject } from './src/common/ArraySubject';
 import { EnvLoader } from './src/common/EnvLoader';
 import { JsonHelper } from './src/common/JsonHelper';
 import { TextLanguageHandler } from './src/common/TextLanguageHandler';
@@ -36,6 +37,7 @@ import { ValueReplacer } from './src/value/ValueReplacer';
  *
  */
 export {
+    ArraySubject,
     BaseRowMetaDefinition,
     BaseRowType,
     ContentType,
