@@ -41,4 +41,11 @@ export class ArraySubject<T> extends Subject<T> {
             return super.subscribe(observerOrNext as Partial<Observer<T>>);
         }
     }
+
+    /**
+     *
+     */
+    toArray(): ReadonlyArray<T> {
+        return this.items;
+    }
 }

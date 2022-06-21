@@ -34,8 +34,16 @@ export class ExpectedOperatorInitializer {
     /**
      *
      */
-    public addOperator(operator: ExpectedOperator): void {
-        this._operators.next(operator);
+    public addOperator(operator: ExpectedOperator, ignoreEqual = false): void {
+        const existingOperator = this._operators.toArray().find((o) => o.name === operator.name);
+
+        if (!existingOperator) {
+            this._operators.next(operator);
+        }
+
+        if (!!existingOperator && ignoreEqual === false) {
+            throw new Error(`expected operator '${operator.name}' already exists`);
+        }
     }
 
     /**

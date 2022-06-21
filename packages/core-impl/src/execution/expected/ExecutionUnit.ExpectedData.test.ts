@@ -442,4 +442,26 @@ describe('check expected:data execution units with operators', () => {
         expect(operator.check.mock.calls[0][1]).toBeString();
         expect(operator.check).toBeCalledWith(dataToCheck, 'b');
     });
+
+    /**
+     *
+     */
+    it('add operator with the same name twice (do not ignore)', () => {
+        const operator1 = new TestOperator('op1');
+        const operator2 = new TestOperator('op1');
+
+        ExpectedOperatorInitializer.instance.addOperator(operator1);
+        expect(() => ExpectedOperatorInitializer.instance.addOperator(operator2)).toThrowError("expected operator 'op1' already exists");
+    });
+
+    /**
+     *
+     */
+    it('add operator with the same name twice (ignore equal)', () => {
+        const operator1 = new TestOperator('op1');
+        const operator2 = new TestOperator('op1');
+
+        ExpectedOperatorInitializer.instance.addOperator(operator1);
+        ExpectedOperatorInitializer.instance.addOperator(operator2, true);
+    });
 });
