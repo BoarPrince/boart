@@ -14,25 +14,25 @@ describe('regexp', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeTruthy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check textcontent', () => {
-        const result = sut.check(new TextContent('aba'), '.b.');
-        expect(result).toBeTruthy();
+    it('check textcontent', async () => {
+        const result = await sut.check(new TextContent('aba'), '.b.');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check textcontent false', () => {
-        const result = sut.check(new TextContent('aba'), '.c.');
-        expect(result).toBeFalsy();
+    it('check textcontent false', async () => {
+        const result = await sut.check(new TextContent('aba'), '.c.');
+        expect(result.result).toBeFalsy();
     });
 });
 
@@ -47,57 +47,65 @@ describe('contains', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeFalsy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check string', () => {
-        const result = sut.check(new TextContent('aba'), 'b');
-        expect(result).toBeTruthy();
+    it('check string', async () => {
+        const result = await sut.check(new TextContent('aba'), 'b');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string false', () => {
-        const result = sut.check(new TextContent('aba'), 'c');
-        expect(result).toBeFalsy();
+    it('check string false', async () => {
+        const result = await sut.check(new TextContent('aba'), 'c');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), 'c');
-        expect(result).toBeTruthy();
+    it('check array', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), 'c');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array false', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), 'd');
-        expect(result).toBeFalsy();
+    it('check array false', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), 'd');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), 'c');
-        expect(result).toBeTruthy();
+    it('check object', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), 'c');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object false', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), 'd');
-        expect(result).toBeFalsy();
+    it('check object false', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), 'd');
+        expect(result.result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('check number', async () => {
+        const result = await sut.check(new NativeContent(232), '3');
+        expect(result.result).toBeFalsy();
     });
 });
 
@@ -112,73 +120,73 @@ describe('empty', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeTruthy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string', () => {
-        const result = sut.check(new TextContent(''), '');
-        expect(result).toBeTruthy();
+    it('check string', async () => {
+        const result = await sut.check(new TextContent(''), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string false', () => {
-        const result = sut.check(new TextContent('aba'), '');
-        expect(result).toBeFalsy();
+    it('check string false', async () => {
+        const result = await sut.check(new TextContent('aba'), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array', () => {
-        const result = sut.check(new ObjectContent([]), '');
-        expect(result).toBeTruthy();
+    it('check array', async () => {
+        const result = await sut.check(new ObjectContent([]), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array false', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '');
-        expect(result).toBeFalsy();
+    it('check array false', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object', () => {
-        const result = sut.check(new ObjectContent({}), '');
-        expect(result).toBeTruthy();
+    it('check object', async () => {
+        const result = await sut.check(new ObjectContent({}), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object false', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
-        expect(result).toBeFalsy();
+    it('check object false', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number 0', () => {
-        const result = sut.check(new NativeContent(0), '');
-        expect(result).toBeFalsy();
+    it('check number 0', async () => {
+        const result = await sut.check(new NativeContent(0), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number <> 0', () => {
-        const result = sut.check(new NativeContent(2), '');
-        expect(result).toBeFalsy();
+    it('check number <> 0', async () => {
+        const result = await sut.check(new NativeContent(2), '');
+        expect(result.result).toBeFalsy();
     });
 });
 
@@ -187,111 +195,119 @@ describe('empty', () => {
  * C O U N T
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-describe('equal', () => {
+describe('count', () => {
     const sut = ExpectedOperatorImplementation.count;
 
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeFalsy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check null / 0', () => {
-        const result = sut.check(new NullContent(), '0');
-        expect(result).toBeTruthy();
+    it('check null / 0', async () => {
+        const result = await sut.check(new NullContent(), '0');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string', () => {
-        const result = sut.check(new TextContent('aaa'), '3');
-        expect(result).toBeTruthy();
+    it('check string', async () => {
+        const result = await sut.check(new TextContent('aaa'), '3');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string false', () => {
-        const result = sut.check(new TextContent('aba'), '4');
-        expect(result).toBeFalsy();
+    it('check string false', async () => {
+        const result = await sut.check(new TextContent('aba'), '4');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array empty', () => {
-        const result = sut.check(new ObjectContent([]), '0');
-        expect(result).toBeTruthy();
+    it('check string containing number', async () => {
+        const result = await sut.check(new TextContent('5'), '5');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '3');
-        expect(result).toBeTruthy();
+    it('check array empty', async () => {
+        const result = await sut.check(new ObjectContent([]), '0');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array false 1', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '4');
-        expect(result).toBeFalsy();
+    it('check array', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '3');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array false 2', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '');
-        expect(result).toBeFalsy();
+    it('check array false 1', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '4');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object empty', () => {
-        const result = sut.check(new ObjectContent({}), '0');
-        expect(result).toBeTruthy();
+    it('check array false 2', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
-        expect(result).toBeTruthy();
+    it('check object empty', async () => {
+        const result = await sut.check(new ObjectContent({}), '0');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object false', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
-        expect(result).toBeFalsy();
+    it('check object', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check number 0', () => {
-        const result = sut.check(new NativeContent(0), '0');
-        expect(result).toBeFalsy();
+    it('check object false', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number <> 0', () => {
-        const result = sut.check(new NativeContent(2), '2');
-        expect(result).toBeFalsy();
+    it('check number 0', async () => {
+        const result = await sut.check(new NativeContent(0), '0');
+        expect(result.result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('check number <> 0', async () => {
+        const result = await sut.check(new NativeContent(2), '2');
+        expect(result.result).toBeFalsy();
     });
 });
 
@@ -306,137 +322,137 @@ describe('count:equal-greater', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeFalsy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check null / 0', () => {
-        const result = sut.check(new NullContent(), '0');
-        expect(result).toBeTruthy();
+    it('check null / 0', async () => {
+        const result = await sut.check(new NullContent(), '0');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check null / 1', () => {
-        const result = sut.check(new NullContent(), '1');
-        expect(result).toBeFalsy();
+    it('check null / 1', async () => {
+        const result = await sut.check(new NullContent(), '1');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check string equal', () => {
-        const result = sut.check(new TextContent('aaa'), '3');
-        expect(result).toBeTruthy();
+    it('check string equal', async () => {
+        const result = await sut.check(new TextContent('aaa'), '3');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string greater', () => {
-        const result = sut.check(new TextContent('aaa'), '2');
-        expect(result).toBeTruthy();
+    it('check string greater', async () => {
+        const result = await sut.check(new TextContent('aaa'), '2');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string false', () => {
-        const result = sut.check(new TextContent('aba'), '4');
-        expect(result).toBeFalsy();
+    it('check string false', async () => {
+        const result = await sut.check(new TextContent('aba'), '4');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array empty', () => {
-        const result = sut.check(new ObjectContent([]), '0');
-        expect(result).toBeTruthy();
+    it('check array empty', async () => {
+        const result = await sut.check(new ObjectContent([]), '0');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array equal', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '3');
-        expect(result).toBeTruthy();
+    it('check array equal', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '3');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array greater', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '2');
-        expect(result).toBeTruthy();
+    it('check array greater', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '2');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array false 1', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '4');
-        expect(result).toBeFalsy();
+    it('check array false 1', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '4');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array false 2', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '');
-        expect(result).toBeFalsy();
+    it('check array false 2', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object empty', () => {
-        const result = sut.check(new ObjectContent({}), '0');
-        expect(result).toBeTruthy();
+    it('check object empty', async () => {
+        const result = await sut.check(new ObjectContent({}), '0');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object equal', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
-        expect(result).toBeTruthy();
+    it('check object equal', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object greater', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
-        expect(result).toBeTruthy();
+    it('check object greater', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object false', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
-        expect(result).toBeFalsy();
+    it('check object false', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number 0', () => {
-        const result = sut.check(new NativeContent(0), '0');
-        expect(result).toBeFalsy();
+    it('check number 0', async () => {
+        const result = await sut.check(new NativeContent(0), '0');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number <> 0', () => {
-        const result = sut.check(new NativeContent(2), '2');
-        expect(result).toBeFalsy();
+    it('check number <> 0', async () => {
+        const result = await sut.check(new NativeContent(2), '2');
+        expect(result.result).toBeFalsy();
     });
 });
 
@@ -451,137 +467,137 @@ describe('count:equal-smaller', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeFalsy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check null / 0', () => {
-        const result = sut.check(new NullContent(), '0');
-        expect(result).toBeTruthy();
+    it('check null / 0', async () => {
+        const result = await sut.check(new NullContent(), '0');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check null / -1', () => {
-        const result = sut.check(new NullContent(), '-1');
-        expect(result).toBeFalsy();
+    it('check null / -1', async () => {
+        const result = await sut.check(new NullContent(), '-1');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check string equal', () => {
-        const result = sut.check(new TextContent('aaa'), '3');
-        expect(result).toBeTruthy();
+    it('check string equal', async () => {
+        const result = await sut.check(new TextContent('aaa'), '3');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string smaller', () => {
-        const result = sut.check(new TextContent('aaa'), '4');
-        expect(result).toBeTruthy();
+    it('check string smaller', async () => {
+        const result = await sut.check(new TextContent('aaa'), '4');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string false', () => {
-        const result = sut.check(new TextContent('aba'), '2');
-        expect(result).toBeFalsy();
+    it('check string false', async () => {
+        const result = await sut.check(new TextContent('aba'), '2');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array empty', () => {
-        const result = sut.check(new ObjectContent([]), '0');
-        expect(result).toBeTruthy();
+    it('check array empty', async () => {
+        const result = await sut.check(new ObjectContent([]), '0');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array equal', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '3');
-        expect(result).toBeTruthy();
+    it('check array equal', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '3');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array smaller', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '4');
-        expect(result).toBeTruthy();
+    it('check array smaller', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '4');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array false 1', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '2');
-        expect(result).toBeFalsy();
+    it('check array false 1', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '2');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array false 2', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '');
-        expect(result).toBeFalsy();
+    it('check array false 2', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object empty', () => {
-        const result = sut.check(new ObjectContent({}), '0');
-        expect(result).toBeTruthy();
+    it('check object empty', async () => {
+        const result = await sut.check(new ObjectContent({}), '0');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object equal', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
-        expect(result).toBeTruthy();
+    it('check object equal', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object smaller', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
-        expect(result).toBeTruthy();
+    it('check object smaller', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object false', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
-        expect(result).toBeFalsy();
+    it('check object false', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number 0', () => {
-        const result = sut.check(new NativeContent(0), '0');
-        expect(result).toBeFalsy();
+    it('check number 0', async () => {
+        const result = await sut.check(new NativeContent(0), '0');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number <> 0', () => {
-        const result = sut.check(new NativeContent(2), '2');
-        expect(result).toBeFalsy();
+    it('check number <> 0', async () => {
+        const result = await sut.check(new NativeContent(2), '2');
+        expect(result.result).toBeFalsy();
     });
 });
 
@@ -596,137 +612,137 @@ describe('greater', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeFalsy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check null / 0', () => {
-        const result = sut.check(new NullContent(), '0');
-        expect(result).toBeFalsy();
+    it('check null / 0', async () => {
+        const result = await sut.check(new NullContent(), '0');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check null / -1', () => {
-        const result = sut.check(new NullContent(), '-1');
-        expect(result).toBeTruthy();
+    it('check null / -1', async () => {
+        const result = await sut.check(new NullContent(), '-1');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string equal', () => {
-        const result = sut.check(new TextContent('aaa'), '3');
-        expect(result).toBeFalsy();
+    it('check string equal', async () => {
+        const result = await sut.check(new TextContent('aaa'), '3');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check string greater', () => {
-        const result = sut.check(new TextContent('aaa'), '2');
-        expect(result).toBeTruthy();
+    it('check string greater', async () => {
+        const result = await sut.check(new TextContent('aaa'), '2');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string false', () => {
-        const result = sut.check(new TextContent('aba'), '4');
-        expect(result).toBeFalsy();
+    it('check string false', async () => {
+        const result = await sut.check(new TextContent('aba'), '4');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array empty', () => {
-        const result = sut.check(new ObjectContent([]), '0');
-        expect(result).toBeFalsy();
+    it('check array empty', async () => {
+        const result = await sut.check(new ObjectContent([]), '0');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array equal', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '3');
-        expect(result).toBeFalsy();
+    it('check array equal', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '3');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array greater', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '2');
-        expect(result).toBeTruthy();
+    it('check array greater', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '2');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array false 1', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '4');
-        expect(result).toBeFalsy();
+    it('check array false 1', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '4');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array false 2', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '');
-        expect(result).toBeFalsy();
+    it('check array false 2', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object empty', () => {
-        const result = sut.check(new ObjectContent({}), '0');
-        expect(result).toBeFalsy();
+    it('check object empty', async () => {
+        const result = await sut.check(new ObjectContent({}), '0');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object equal', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
-        expect(result).toBeFalsy();
+    it('check object equal', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object greater', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
-        expect(result).toBeTruthy();
+    it('check object greater', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object false', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
-        expect(result).toBeFalsy();
+    it('check object false', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number 0', () => {
-        const result = sut.check(new NativeContent(0), '0');
-        expect(result).toBeFalsy();
+    it('check number 0', async () => {
+        const result = await sut.check(new NativeContent(0), '0');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number greater', () => {
-        const result = sut.check(new NativeContent(3), '2');
-        expect(result).toBeTruthy();
+    it('check number greater', async () => {
+        const result = await sut.check(new NativeContent(3), '2');
+        expect(result.result).toBeTruthy();
     });
 });
 
@@ -741,137 +757,137 @@ describe('smaller', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeFalsy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check null / 0', () => {
-        const result = sut.check(new NullContent(), '0');
-        expect(result).toBeFalsy();
+    it('check null / 0', async () => {
+        const result = await sut.check(new NullContent(), '0');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check null / 1', () => {
-        const result = sut.check(new NullContent(), '1');
-        expect(result).toBeTruthy();
+    it('check null / 1', async () => {
+        const result = await sut.check(new NullContent(), '1');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string equal', () => {
-        const result = sut.check(new TextContent('aaa'), '3');
-        expect(result).toBeFalsy();
+    it('check string equal', async () => {
+        const result = await sut.check(new TextContent('aaa'), '3');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check string smaller', () => {
-        const result = sut.check(new TextContent('aaa'), '4');
-        expect(result).toBeTruthy();
+    it('check string smaller', async () => {
+        const result = await sut.check(new TextContent('aaa'), '4');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string false', () => {
-        const result = sut.check(new TextContent('aba'), '2');
-        expect(result).toBeFalsy();
+    it('check string false', async () => {
+        const result = await sut.check(new TextContent('aba'), '2');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array empty', () => {
-        const result = sut.check(new ObjectContent([]), '0');
-        expect(result).toBeFalsy();
+    it('check array empty', async () => {
+        const result = await sut.check(new ObjectContent([]), '0');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array equal', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '3');
-        expect(result).toBeFalsy();
+    it('check array equal', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '3');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array smaller', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '4');
-        expect(result).toBeTruthy();
+    it('check array smaller', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '4');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array false 1', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '2');
-        expect(result).toBeFalsy();
+    it('check array false 1', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '2');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array false 2', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '');
-        expect(result).toBeFalsy();
+    it('check array false 2', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object empty', () => {
-        const result = sut.check(new ObjectContent({}), '0');
-        expect(result).toBeFalsy();
+    it('check object empty', async () => {
+        const result = await sut.check(new ObjectContent({}), '0');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object equal', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
-        expect(result).toBeFalsy();
+    it('check object equal', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object smaller', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
-        expect(result).toBeTruthy();
+    it('check object smaller', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object false', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
-        expect(result).toBeFalsy();
+    it('check object false', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number 0', () => {
-        const result = sut.check(new NativeContent(0), '0');
-        expect(result).toBeFalsy();
+    it('check number 0', async () => {
+        const result = await sut.check(new NativeContent(0), '0');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number smaller', () => {
-        const result = sut.check(new NativeContent(3), '4');
-        expect(result).toBeTruthy();
+    it('check number smaller', async () => {
+        const result = await sut.check(new NativeContent(3), '4');
+        expect(result.result).toBeTruthy();
     });
 });
 
@@ -886,57 +902,57 @@ describe('IsArray', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeFalsy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check string', () => {
-        const result = sut.check(new TextContent('aaa'), '');
-        expect(result).toBeFalsy();
+    it('check string', async () => {
+        const result = await sut.check(new TextContent('aaa'), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array empty', () => {
-        const result = sut.check(new ObjectContent([]), '');
-        expect(result).toBeTruthy();
+    it('check array empty', async () => {
+        const result = await sut.check(new ObjectContent([]), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check array', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '');
-        expect(result).toBeTruthy();
+    it('check array', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object empty', () => {
-        const result = sut.check(new ObjectContent({}), '');
-        expect(result).toBeFalsy();
+    it('check object empty', async () => {
+        const result = await sut.check(new ObjectContent({}), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object equal', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
-        expect(result).toBeFalsy();
+    it('check object equal', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number 0', () => {
-        const result = sut.check(new NativeContent(0), '');
-        expect(result).toBeFalsy();
+    it('check number 0', async () => {
+        const result = await sut.check(new NativeContent(0), '');
+        expect(result.result).toBeFalsy();
     });
 });
 
@@ -951,9 +967,9 @@ describe('IsObject', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeFalsy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeFalsy();
     });
 
     // reset array
@@ -971,49 +987,49 @@ describe('IsObject', () => {
     /**
      *
      */
-    it('check string', () => {
-        const result = sut.check(new TextContent('aaa'), '');
-        expect(result).toBeFalsy();
+    it('check string', async () => {
+        const result = await sut.check(new TextContent('aaa'), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array empty', () => {
-        const result = sut.check(new ObjectContent([]), '');
-        expect(result).toBeFalsy();
+    it('check array empty', async () => {
+        const result = await sut.check(new ObjectContent([]), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '');
-        expect(result).toBeFalsy();
+    it('check array', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object empty', () => {
-        const result = sut.check(new ObjectContent({}), '');
-        expect(result).toBeTruthy();
+    it('check object empty', async () => {
+        const result = await sut.check(new ObjectContent({}), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check object equal', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
-        expect(result).toBeTruthy();
+    it('check object equal', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check number 0', () => {
-        const result = sut.check(new NativeContent(0), '');
-        expect(result).toBeFalsy();
+    it('check number 0', async () => {
+        const result = await sut.check(new NativeContent(0), '');
+        expect(result.result).toBeFalsy();
     });
 });
 
@@ -1028,81 +1044,81 @@ describe('isNull', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeTruthy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check undefined', () => {
-        const result = sut.check(new NativeContent(undefined), '');
-        expect(result).toBeTruthy();
+    it('check undefined', async () => {
+        const result = await sut.check(new NativeContent(undefined), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string', () => {
-        const result = sut.check(new TextContent(''), '');
-        expect(result).toBeFalsy();
+    it('check string', async () => {
+        const result = await sut.check(new TextContent(''), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check string false', () => {
-        const result = sut.check(new TextContent('aba'), '');
-        expect(result).toBeFalsy();
+    it('check string false', async () => {
+        const result = await sut.check(new TextContent('aba'), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array', () => {
-        const result = sut.check(new ObjectContent([]), '');
-        expect(result).toBeFalsy();
+    it('check array', async () => {
+        const result = await sut.check(new ObjectContent([]), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array false', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '');
-        expect(result).toBeFalsy();
+    it('check array false', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object', () => {
-        const result = sut.check(new ObjectContent({}), '');
-        expect(result).toBeFalsy();
+    it('check object', async () => {
+        const result = await sut.check(new ObjectContent({}), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object false', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
-        expect(result).toBeFalsy();
+    it('check object false', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number 0', () => {
-        const result = sut.check(new NativeContent(0), '');
-        expect(result).toBeFalsy();
+    it('check number 0', async () => {
+        const result = await sut.check(new NativeContent(0), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number <> 0', () => {
-        const result = sut.check(new NativeContent(2), '');
-        expect(result).toBeFalsy();
+    it('check number <> 0', async () => {
+        const result = await sut.check(new NativeContent(2), '');
+        expect(result.result).toBeFalsy();
     });
 });
 
@@ -1117,105 +1133,105 @@ describe('isNumber', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeFalsy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check undefined', () => {
-        const result = sut.check(new NativeContent(undefined), '');
-        expect(result).toBeFalsy();
+    it('check undefined', async () => {
+        const result = await sut.check(new NativeContent(undefined), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check string', () => {
-        const result = sut.check(new TextContent(''), '');
-        expect(result).toBeFalsy();
+    it('check string', async () => {
+        const result = await sut.check(new TextContent(''), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check string, containing number', () => {
-        const result = sut.check(new TextContent('1'), '');
-        expect(result).toBeTruthy();
+    it('check string, containing number', async () => {
+        const result = await sut.check(new TextContent('1'), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string false', () => {
-        const result = sut.check(new TextContent('aba'), '');
-        expect(result).toBeFalsy();
+    it('check string false', async () => {
+        const result = await sut.check(new TextContent('aba'), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array', () => {
-        const result = sut.check(new ObjectContent([]), '');
-        expect(result).toBeFalsy();
+    it('check array', async () => {
+        const result = await sut.check(new ObjectContent([]), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array false', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), '');
-        expect(result).toBeFalsy();
+    it('check array false', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object', () => {
-        const result = sut.check(new ObjectContent({}), '');
-        expect(result).toBeFalsy();
+    it('check object', async () => {
+        const result = await sut.check(new ObjectContent({}), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object false', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
-        expect(result).toBeFalsy();
+    it('check object false', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check number 0', () => {
-        const result = sut.check(new NativeContent(0), '');
-        expect(result).toBeTruthy();
+    it('check number 0', async () => {
+        const result = await sut.check(new NativeContent(0), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check number <> 0', () => {
-        const result = sut.check(new NativeContent(2), '');
-        expect(result).toBeTruthy();
+    it('check number <> 0', async () => {
+        const result = await sut.check(new NativeContent(2), '');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check boolean false', () => {
-        const result = sut.check(new NativeContent(false), '');
-        expect(result).toBeFalsy();
+    it('check boolean false', async () => {
+        const result = await sut.check(new NativeContent(false), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check boolean true', () => {
-        const result = sut.check(new NativeContent(true), '');
-        expect(result).toBeFalsy();
+    it('check boolean true', async () => {
+        const result = await sut.check(new NativeContent(true), '');
+        expect(result.result).toBeFalsy();
     });
 });
 
@@ -1230,48 +1246,48 @@ describe('startsWith', () => {
     /**
      *
      */
-    it('check null', () => {
-        const result = sut.check(new NullContent(), '');
-        expect(result).toBeFalsy();
+    it('check null', async () => {
+        const result = await sut.check(new NullContent(), '');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check string', () => {
-        const result = sut.check(new TextContent('aba'), 'ab');
-        expect(result).toBeTruthy();
+    it('check string', async () => {
+        const result = await sut.check(new TextContent('aba'), 'ab');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string - native content', () => {
-        const result = sut.check(new NativeContent('aba'), 'ab');
-        expect(result).toBeTruthy();
+    it('check string - native content', async () => {
+        const result = await sut.check(new NativeContent('aba'), 'ab');
+        expect(result.result).toBeTruthy();
     });
 
     /**
      *
      */
-    it('check string false', () => {
-        const result = sut.check(new TextContent('aba'), 'c');
-        expect(result).toBeFalsy();
+    it('check string false', async () => {
+        const result = await sut.check(new TextContent('aba'), 'c');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check array', () => {
-        const result = sut.check(new ObjectContent(['a', 'b', 'c']), 'c');
-        expect(result).toBeFalsy();
+    it('check array', async () => {
+        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), 'c');
+        expect(result.result).toBeFalsy();
     });
 
     /**
      *
      */
-    it('check object', () => {
-        const result = sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), 'c');
-        expect(result).toBeFalsy();
+    it('check object', async () => {
+        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), 'c');
+        expect(result.result).toBeFalsy();
     });
 });

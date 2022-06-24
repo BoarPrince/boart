@@ -1,6 +1,6 @@
 import { DataContent } from '@boart/core';
 
-import { ExpectedOperator } from './ExpectedOperator';
+import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
 import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
 
 /**
@@ -20,11 +20,13 @@ export class ExpectedOperatorImplementation {
     static get regexp(): ExpectedOperator {
         return {
             name: 'regexp',
-            check: (value: DataContent, expectedValue: string): boolean => {
+            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
                 const valueAsString = value.toString();
                 const match = valueAsString.match(expectedValue);
                 const matchedValue = !match ? '' : match[0];
-                return valueAsString === matchedValue;
+                return {
+                    result: valueAsString === matchedValue
+                };
             }
         };
     }
@@ -35,9 +37,11 @@ export class ExpectedOperatorImplementation {
     static get startsWith(): ExpectedOperator {
         return {
             name: 'startsWith',
-            check: (value: DataContent, expectedValue: string): boolean => {
+            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
                 const baseValue = value.getValue();
-                return baseValue == null ? false : baseValue.toString().startsWith(expectedValue);
+                return {
+                    result: baseValue == null ? false : baseValue.toString().startsWith(expectedValue)
+                };
             }
         };
     }
@@ -48,19 +52,28 @@ export class ExpectedOperatorImplementation {
     static get contains(): ExpectedOperator {
         return {
             name: 'contains',
-            check: (value: DataContent, expectedValue: string): boolean => {
+            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
                 const baseValue = value.getValue();
+                const negativeResult = {
+                    result: false
+                };
 
                 if (baseValue == null) {
-                    return false;
+                    return negativeResult;
                 } else if (Array.isArray(baseValue)) {
-                    return Object.values(baseValue).includes(expectedValue);
+                    return {
+                        result: Object.values(baseValue).includes(expectedValue)
+                    };
                 } else if (typeof baseValue === 'object') {
-                    return Object.keys(baseValue).includes(expectedValue);
+                    return {
+                        result: Object.keys(baseValue).includes(expectedValue)
+                    };
                 } else if (typeof baseValue === 'string') {
-                    return baseValue.includes(expectedValue);
+                    return {
+                        result: baseValue.includes(expectedValue)
+                    };
                 } else {
-                    return false;
+                    return negativeResult;
                 }
             }
         };
@@ -94,10 +107,12 @@ export class ExpectedOperatorImplementation {
     static get smaller(): ExpectedOperator {
         return {
             name: 'smaller',
-            check: (value: DataContent, expectedValue: string): boolean => {
+            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
                 const valueLength = ExpectedOperatorImplementation.getCount(value);
                 const expected = parseInt(expectedValue);
-                return valueLength === Number.MIN_VALUE ? false : valueLength < expected;
+                return {
+                    result: valueLength === Number.MIN_VALUE ? false : valueLength < expected
+                };
             }
         };
     }
@@ -108,10 +123,12 @@ export class ExpectedOperatorImplementation {
     static get greater(): ExpectedOperator {
         return {
             name: 'greater',
-            check: (value: DataContent, expectedValue: string): boolean => {
+            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
                 const valueLength = ExpectedOperatorImplementation.getCount(value);
                 const expected = parseInt(expectedValue);
-                return valueLength === Number.MIN_VALUE ? false : valueLength > expected;
+                return {
+                    result: valueLength === Number.MIN_VALUE ? false : valueLength > expected
+                };
             }
         };
     }
@@ -122,10 +139,12 @@ export class ExpectedOperatorImplementation {
     static get count(): ExpectedOperator {
         return {
             name: 'count',
-            check: (value: DataContent, expectedValue: string): boolean => {
+            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
                 const valueLength = ExpectedOperatorImplementation.getCount(value, false);
                 const expected = parseInt(expectedValue);
-                return valueLength === Number.MIN_VALUE ? false : valueLength === expected;
+                return {
+                    result: valueLength === Number.MIN_VALUE ? false : valueLength === expected
+                };
             }
         };
     }
@@ -136,10 +155,12 @@ export class ExpectedOperatorImplementation {
     static get countEqualOrGreater(): ExpectedOperator {
         return {
             name: 'count:equal-greater',
-            check: (value: DataContent, expectedValue: string): boolean => {
+            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
                 const valueLength = ExpectedOperatorImplementation.getCount(value, false);
                 const expected = parseInt(expectedValue);
-                return valueLength === Number.MIN_VALUE ? false : valueLength >= expected;
+                return {
+                    result: valueLength === Number.MIN_VALUE ? false : valueLength >= expected
+                };
             }
         };
     }
@@ -150,10 +171,12 @@ export class ExpectedOperatorImplementation {
     static get countEqualOrSmaller(): ExpectedOperator {
         return {
             name: 'count:equal-smaller',
-            check: (value: DataContent, expectedValue: string): boolean => {
+            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
                 const valueLength = ExpectedOperatorImplementation.getCount(value, false);
                 const expected = parseInt(expectedValue);
-                return valueLength === Number.MIN_VALUE ? false : valueLength <= expected;
+                return {
+                    result: valueLength === Number.MIN_VALUE ? false : valueLength <= expected
+                };
             }
         };
     }
@@ -164,10 +187,11 @@ export class ExpectedOperatorImplementation {
     static get empty(): ExpectedOperator {
         return {
             name: 'empty',
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            check: (value: DataContent, _: string): boolean => {
+            check: (value: DataContent): ExpectedOperatorResult => {
                 const valueLength = ExpectedOperatorImplementation.getCount(value, false);
-                return valueLength === Number.MIN_VALUE ? false : valueLength === 0;
+                return {
+                    result: valueLength === Number.MIN_VALUE ? false : valueLength === 0
+                };
             }
         };
     }
@@ -178,10 +202,11 @@ export class ExpectedOperatorImplementation {
     static get isArray(): ExpectedOperator {
         return {
             name: 'array',
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            check: (value: DataContent, _: string): boolean => {
+            check: (value: DataContent): ExpectedOperatorResult => {
                 const baseValue = value.getValue();
-                return Array.isArray(baseValue);
+                return {
+                    result: Array.isArray(baseValue)
+                };
             }
         };
     }
@@ -192,10 +217,11 @@ export class ExpectedOperatorImplementation {
     static get isObject(): ExpectedOperator {
         return {
             name: 'object',
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            check: (value: DataContent, _: string): boolean => {
+            check: (value: DataContent): ExpectedOperatorResult => {
                 const baseValue = value.getValue();
-                return !!baseValue && !Array.isArray(baseValue) && typeof baseValue === 'object';
+                return {
+                    result: !!baseValue && !Array.isArray(baseValue) && typeof baseValue === 'object'
+                };
             }
         };
     }
@@ -205,11 +231,12 @@ export class ExpectedOperatorImplementation {
      */
     static get isNumber(): ExpectedOperator {
         return {
-            name: 'mumber',
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            check: (value: DataContent, _: string): boolean => {
+            name: 'number',
+            check: (value: DataContent): ExpectedOperatorResult => {
                 const baseValue = value.toString();
-                return !isNaN(parseInt(baseValue));
+                return {
+                    result: !isNaN(parseInt(baseValue))
+                };
             }
         };
     }
@@ -220,9 +247,10 @@ export class ExpectedOperatorImplementation {
     static get isNull(): ExpectedOperator {
         return {
             name: 'null',
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            check: (value: DataContent, _: string): boolean => {
-                return value.getValue() == null;
+            check: (value: DataContent): ExpectedOperatorResult => {
+                return {
+                    result: value.getValue() == null
+                };
             }
         };
     }

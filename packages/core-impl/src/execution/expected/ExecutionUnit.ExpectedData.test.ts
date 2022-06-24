@@ -289,11 +289,48 @@ describe('check expected:header execution units', () => {
                     ]
                 });
             } catch (error) {
-                expect(error.message).toBe(`error: expected:header\n\texpected: b\n\tactual: {"a":"b"}`);
+                expect(error.message).toBe(`error: expected:header\n\texpected:: b\n\tactual: {"a":"b"}`);
                 return;
             }
 
             throw Error('error must be thrown, if value is not expected');
+        });
+    });
+});
+
+/*
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * E X P E C T E D : T R A N S F O R M E D
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
+describe('check expected:transformed execution units', () => {
+    const tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
+
+    const sut = new ExpectedDataExecutinoUnit('transformed');
+
+    tableHandler.addRowDefinition(
+        new RowDefinition({
+            type: TableRowType.PostProcessing,
+            executionUnit: sut,
+            validators: null
+        })
+    );
+
+    /**
+     *
+     */
+    it('check transformed', async () => {
+        tableHandler.executionEngine.context.execution.transformed = new TextContent('xxx');
+
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: [`expected:transformed`, 'xxx']
+                }
+            ]
         });
     });
 });
@@ -318,15 +355,14 @@ describe('check expected:data execution units with operators', () => {
      *
      */
     class TestOperator implements ExpectedOperator {
-        name: string;
-        check = jest.fn().mockReturnValue(true);
+        check = jest.fn().mockReturnValue({
+            result: true
+        });
 
         /**
          *
          */
-        constructor(name: string) {
-            this.name = name;
-        }
+        constructor(public name: string) {}
     }
 
     /**
@@ -378,6 +414,35 @@ describe('check expected:data execution units with operators', () => {
             rows: [
                 {
                     cells: ['expected:data:op2', '']
+                }
+            ]
+        });
+    });
+
+    /**
+     *
+     */
+    it('add operator and use negate', async () => {
+        const sut = new ExpectedDataExecutinoUnit('data');
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+        const operator = new TestOperator('op3');
+        operator.check = jest.fn().mockReturnValue(false);
+        ExpectedOperatorInitializer.instance.addOperator(operator);
+
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: ['expected:data:not:op3', '']
                 }
             ]
         });
@@ -477,5 +542,41 @@ describe('check expected:data execution units with operators', () => {
 
         ExpectedOperatorInitializer.instance.addOperator(operator1);
         ExpectedOperatorInitializer.instance.addOperator(operator2, true);
+    });
+
+    /**
+     *
+     */
+    it('operator with error message', async () => {
+        const operator = new TestOperator('op1');
+        operator.check = jest.fn().mockReturnValue({
+            result: false,
+            errorMessage: 'operator error message'
+        });
+
+        ExpectedOperatorInitializer.instance.addOperator(operator);
+        const sut = new ExpectedDataExecutinoUnit('data');
+
+        tableHandler.executionEngine.context.execution.data = new NullContent();
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+
+        await expect(async () => {
+            await tableHandler.process({
+                headers: {
+                    cells: ['action', 'value']
+                },
+                rows: [
+                    {
+                        cells: ['expected:data:op1', '']
+                    }
+                ]
+            });
+        }).rejects.toThrowError('operator error message');
     });
 });
