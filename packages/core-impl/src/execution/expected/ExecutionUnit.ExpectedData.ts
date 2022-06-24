@@ -46,7 +46,23 @@ export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, Row
      *
      */
     constructor(private executionType?: 'data' | 'header' | 'transformed') {
-        ExpectedOperatorInitializer.instance.operators.subscribe((operator) => this.operators.push(operator));
+        ExpectedOperatorInitializer.instance.operators.subscribe((operator) => {
+            this.operators.push(operator);
+            this.operators.push({
+                name: operator.name + ':not',
+                check: (value, expectedValue) => !operator.check(value, expectedValue)
+            });
+        });
+        // add default implementation
+        this.operators.push({
+            name: '',
+            check: (value: DataContent, expectedValue: string): boolean => expectedValue.toString() == value.getText()
+        });
+        // add default negate
+        this.operators.push({
+            name: 'not',
+            check: (value: DataContent, expectedValue: string): boolean => expectedValue.toString() != value.getText()
+        });
     }
 
     /**
@@ -91,16 +107,10 @@ export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, Row
         const baseContent = DataContentHelper.create(this.getDataContent(context));
         const data = !row.selector ? baseContent : DataContentHelper.getByPath(row.selector, baseContent);
 
-        if (!row.actionPara) {
-            // use default implementation
-            if (expected.toString() !== data.getText()) {
-                throw Error(`error: ${this.description}\n\texpected: ${expected.toString()}\n\tactual: ${data.getText()}`);
-            }
-        } else {
-            const isOK = this.operators.find((o) => o.name === row.actionPara).check(data, row.value);
-            if (isOK === false) {
-                throw Error(`error: ${this.description}\n\texpectd:${row.actionPara}: ${expected.toString()}\n\tactual: ${data.getText()}`);
-            }
+        const operatorName = row.actionPara || '';
+        const isOK = this.operators.find((o) => o.name === operatorName).check(data, row.value?.toString());
+        if (isOK === false) {
+            throw Error(`error: ${this.description}\n\texpectd:${operatorName}: ${expected.toString()}\n\tactual: ${data.getText()}`);
         }
 
         // switch (row.actionPara) {

@@ -21,7 +21,7 @@ interface RowDefinitionPara<
     readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
     readonly parameterType?: ParaType;
     readonly selectorType?: SelectorType;
-    readonly validators: ReadonlyArray<RowValidator>;
+    readonly validators: ReadonlyArray<RowValidator> | null;
 }
 
 /**

@@ -87,6 +87,20 @@ describe('check expected:data execution units', () => {
         })
     );
 
+    it('not must negate the result', async () => {
+        tableHandler.executionEngine.context.execution.data = new TextContent('x');
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: ['expected:data:not', 'y']
+                }
+            ]
+        });
+    });
+
     /**
      *
      */
