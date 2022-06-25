@@ -10,4 +10,5 @@ export type ContentType =
     | boolean
     | number
     | object
-    | DataContent;
+    | DataContent
+    | null;

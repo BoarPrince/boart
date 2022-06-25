@@ -119,8 +119,8 @@ describe('check data contents', () => {
         it('Create null is null value', () => {
             const value = DataContentHelper.create(null);
             expect(value.getValue()).toBe(null);
-            expect(value.getText()).toBe('');
-            expect(value.toString()).toBe('');
+            expect(value.getText()).toBeNull();
+            expect(value.toString()).toBeNull();
         });
 
         /**

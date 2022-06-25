@@ -14,21 +14,21 @@ export class NullContent implements DataContent {
         return null;
     }
     getText(): string {
-        return '';
+        return null;
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     get(_key: string): DataContent {
         return this;
     }
     toString(): string {
-        return '';
+        return null;
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     split(_seperator: string): readonly string[] {
         return [];
     }
     toJSON(): string {
-        return '';
+        return null;
     }
     isObject(): boolean {
         return false;
