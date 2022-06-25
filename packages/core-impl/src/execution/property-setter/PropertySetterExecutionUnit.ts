@@ -1,7 +1,8 @@
-import { ContentType, DataContentHelper, ExecutionContext, ExecutionUnit, ObjectContent } from '@boart/core';
+import { ContentType, DataContentHelper, ExecutionContext, ExecutionUnit, NullContent, ObjectContent, ParaType } from '@boart/core';
 
 import { DataExecutionContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
+import { ParaValidator } from '../../validators/ParaValidator';
 
 type Config = {
     concat?: boolean;
@@ -33,9 +34,8 @@ export class PropertySetterExecutionUnit<
         this.config.defaultModifier = this.config.defaultModifier || ((value: ContentType) => value);
         this.config.actionSelectorModifier = this.config.actionSelectorModifier || this.config.defaultModifier;
 
-         
         this.config.defaultSetter = this.config.defaultSetter || this.defaultSetter.bind(this);
-         
+
         this.config.actionSelectorSetter = this.config.actionSelectorSetter || this.defaultActionSelectorSetter.bind(this);
     }
 
@@ -45,11 +45,17 @@ export class PropertySetterExecutionUnit<
     readonly description = 'Generic Property Setter';
 
     /**
+     * allow :null to set null
+     */
+    readonly parameterType = ParaType.Optional;
+    readonly validators = [new ParaValidator(['null'])];
+
+    /**
      *
      */
     private defaultSetter(value: ContentType, rowValue: ContentType): ContentType {
         const delimiter = !value ? '' : this.config.delimiter;
-        return this.config.concat === false ? rowValue : `${value?.toString() || ''}${delimiter}${rowValue?.toString() || ''}`;
+        return this.config.concat === false ? rowValue : `${value?.toString() || ''}${delimiter.toString()}${rowValue?.toString() || ''}`;
     }
 
     /**
@@ -91,10 +97,18 @@ export class PropertySetterExecutionUnit<
         };
 
         const accessor = !this.propertyLevel2 ? oneLevel : twoLevel;
-        if (!row.data.selector) {
-            accessor.val = this.config.defaultSetter(accessor.val, this.config.defaultModifier(row.value));
+        if (row.actionPara === 'null') {
+            accessor.val = null;
         } else {
-            accessor.val = this.config.actionSelectorSetter(accessor.val, this.config.actionSelectorModifier(row.value), row.data.selector);
+            if (!row.data.selector) {
+                accessor.val = this.config.defaultSetter(accessor.val, this.config.defaultModifier(row.value));
+            } else {
+                accessor.val = this.config.actionSelectorSetter(
+                    accessor.val,
+                    this.config.actionSelectorModifier(row.value),
+                    row.data.selector
+                );
+            }
         }
     }
 }
