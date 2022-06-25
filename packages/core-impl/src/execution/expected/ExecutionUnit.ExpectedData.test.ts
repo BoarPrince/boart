@@ -1,5 +1,6 @@
 import 'jest-extended';
 import {
+    BaseRowMetaDefinition,
     DataContent,
     ExecutionEngine,
     ExecutionUnit,
@@ -7,6 +8,7 @@ import {
     NullContent,
     ObjectContent,
     RowDefinition,
+    RowValidator,
     TableHandler,
     TableRowType,
     TextContent
@@ -16,8 +18,9 @@ import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
 
 import { ExpectedDataExecutinoUnit } from './ExecutionUnit.ExpectedData';
-import { ExpectedOperator } from './ExpectedOperator';
+import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
 import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
+import { IntValidator } from '../../validators/IntValidator';
 
 /**
  *
@@ -77,16 +80,27 @@ class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<
 describe('check expected:data execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
 
-    const sut = new ExpectedDataExecutinoUnit('data');
+    const sut1 = new ExpectedDataExecutinoUnit('data');
+    const sut2 = new ExpectedDataExecutinoUnit();
 
     tableHandler.addRowDefinition(
         new RowDefinition({
             type: TableRowType.PostProcessing,
-            executionUnit: sut,
+            executionUnit: sut1,
+            validators: null
+        })
+    );
+    tableHandler.addRowDefinition(
+        new RowDefinition({
+            type: TableRowType.PostProcessing,
+            executionUnit: sut2,
             validators: null
         })
     );
 
+    /**
+     *
+     */
     it('not must negate the result', async () => {
         tableHandler.executionEngine.context.execution.data = new TextContent('x');
         await tableHandler.process({
@@ -96,6 +110,40 @@ describe('check expected:data execution units', () => {
             rows: [
                 {
                     cells: ['expected:data:not', 'y']
+                }
+            ]
+        });
+    });
+
+    /**
+     *
+     */
+    it('use default operator - data', async () => {
+        tableHandler.executionEngine.context.execution.data = new TextContent('x');
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: ['expected:data', 'x']
+                }
+            ]
+        });
+    });
+
+    /**
+     *
+     */
+    it('use default operator - without data', async () => {
+        tableHandler.executionEngine.context.execution.data = new TextContent('x');
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: ['expected', 'x']
                 }
             ]
         });
@@ -289,7 +337,7 @@ describe('check expected:header execution units', () => {
                     ]
                 });
             } catch (error) {
-                expect(error.message).toBe(`error: expected:header\n\texpected:: b\n\tactual: {"a":"b"}`);
+                expect(error.message).toBe(`error: expected:header\n\texpected: b\n\tactual: {"a":"b"}`);
                 return;
             }
 
@@ -451,6 +499,40 @@ describe('check expected:data execution units with operators', () => {
     /**
      *
      */
+    it('use operator without data, header, or specification', async () => {
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: new ExpectedDataExecutinoUnit('data'),
+                validators: null
+            })
+        );
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: new ExpectedDataExecutinoUnit(),
+                validators: null
+            })
+        );
+        const operator = new TestOperator('op3');
+        operator.check = jest.fn().mockReturnValue(false);
+        ExpectedOperatorInitializer.instance.addOperator(operator);
+
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: ['expected:op3', '']
+                }
+            ]
+        });
+    });
+
+    /**
+     *
+     */
     it('NativeContent value parameter', async () => {
         ExpectedOperatorInitializer.instance.clear();
 
@@ -578,5 +660,53 @@ describe('check expected:data execution units with operators', () => {
                 ]
             });
         }).rejects.toThrowError('operator error message');
+    });
+
+    /**
+     *
+     */
+    it('operator with validator', async () => {
+        /**
+         *
+         */
+        const validator: RowValidator = {
+            validate: jest.fn().mockImplementation(() => {
+                throw Error('validator error');
+            })
+        };
+
+        /**
+         *
+         */
+        const operator: ExpectedOperator = {
+            name: 'opv',
+            validators: [validator],
+            check: jest.fn()
+        };
+
+        ExpectedOperatorInitializer.instance.addOperator(operator);
+        const sut = new ExpectedDataExecutinoUnit('data');
+
+        tableHandler.executionEngine.context.execution.data = new NullContent();
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+
+        await expect(async () => {
+            await tableHandler.process({
+                headers: {
+                    cells: ['action', 'value']
+                },
+                rows: [
+                    {
+                        cells: ['expected:data:opv', '']
+                    }
+                ]
+            });
+        }).rejects.toThrowError('validator error');
     });
 });

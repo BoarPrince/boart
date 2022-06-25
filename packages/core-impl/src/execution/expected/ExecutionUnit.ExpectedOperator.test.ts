@@ -16,7 +16,7 @@ describe('regexp', () => {
      */
     it('check null', async () => {
         const result = await sut.check(new NullContent(), '');
-        expect(result.result).toBeTruthy();
+        expect(result.result).toBeFalsy();
     });
 
     /**

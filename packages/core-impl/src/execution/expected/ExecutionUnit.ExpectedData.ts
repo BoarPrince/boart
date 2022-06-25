@@ -33,7 +33,8 @@ export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, Row
         this.operators.push({
             name: '',
             check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => ({
-                result: expectedValue.toString() == value.getText()
+                result: expectedValue.toString() == value.getText(),
+                errorMessage: `error: ${this.description}\n\texpected: ${expectedValue.toString()}\n\tactual: ${value.getText()}`
             })
         });
         // add default negate
@@ -88,7 +89,15 @@ export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, Row
         const data = !row.selector ? baseContent : DataContentHelper.getByPath(row.selector, baseContent);
 
         const operatorName = row.actionPara || '';
-        const expectedResult = await this.operators.find((o) => o.name === operatorName).check(data, row.value.toString());
+        const operator = this.operators.find((o) => o.name === operatorName);
+
+        // validate operator input
+        operator.validators?.forEach((validator) => {
+            validator.validate(row.data, null);
+        });
+
+        const expectedResult = await operator.check(data, row.value.toString());
+
         if (expectedResult.result === false) {
             throw Error(
                 !expectedResult.errorMessage

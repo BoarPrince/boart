@@ -1,4 +1,4 @@
-import { DataContent } from '@boart/core';
+import { DataContent, RowValidator } from '@boart/core';
 
 /**
  *
@@ -13,5 +13,6 @@ export interface ExpectedOperatorResult {
  */
 export interface ExpectedOperator {
     readonly name: string;
+    readonly validators?: Array<RowValidator>;
     check(value: DataContent, expectedValue?: string): ExpectedOperatorResult | Promise<ExpectedOperatorResult>;
 }

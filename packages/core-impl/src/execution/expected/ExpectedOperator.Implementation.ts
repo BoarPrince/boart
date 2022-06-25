@@ -1,4 +1,5 @@
 import { DataContent } from '@boart/core';
+import { IntValidator } from '../../validators/IntValidator';
 
 import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
 import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
@@ -22,7 +23,7 @@ export class ExpectedOperatorImplementation {
             name: 'regexp',
             check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
                 const valueAsString = value.toString();
-                const match = valueAsString.match(expectedValue);
+                const match = valueAsString?.match(expectedValue);
                 const matchedValue = !match ? '' : match[0];
                 return {
                     result: valueAsString === matchedValue
@@ -139,6 +140,7 @@ export class ExpectedOperatorImplementation {
     static get count(): ExpectedOperator {
         return {
             name: 'count',
+            validators: [new IntValidator('value')],
             check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
                 const valueLength = ExpectedOperatorImplementation.getCount(value, false);
                 const expected = parseInt(expectedValue);
@@ -249,7 +251,8 @@ export class ExpectedOperatorImplementation {
             name: 'null',
             check: (value: DataContent): ExpectedOperatorResult => {
                 return {
-                    result: value.getValue() == null
+                    result: value.getValue() == null,
+                    errorMessage: `error: expected:null: actual: ${value.getText()}`
                 };
             }
         };
