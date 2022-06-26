@@ -60,9 +60,15 @@ export class JsonLogic {
      */
     private static tryParse(content: string, errormessage: string): object | string {
         try {
+            // try parsing objects
             return JSON.parse(content);
-        } catch (error) {
-            throw new Error(errormessage);
+        } catch {
+            try {
+                // try parsing simple string
+                return JSON.parse(`"${content}"`);
+            } catch {
+                throw new Error(errormessage);
+            }
         }
     }
 

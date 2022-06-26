@@ -79,8 +79,9 @@ describe('check jsonLogic', () => {
          *
          */
         it.each([
-            ['1. simple equal', '{"===" : [ { "var" : "a" }, "c" ]}', JSON.stringify({ a: 'c' })],
-            ['2. complexer equal', '{"===" : [ { "var" : "a.b" }, "c" ]}', JSON.stringify({ a: { b: 'c' } })]
+            ['1. very simple equal', '{"===" : [ { "var" : "" }, "c" ]}', 'c'],
+            ['2. simple equal', '{"===" : [ { "var" : "a" }, "c" ]}', JSON.stringify({ a: 'c' })],
+            ['3. complexer equal', '{"===" : [ { "var" : "a.b" }, "c" ]}', JSON.stringify({ a: { b: 'c' } })]
         ])(`%s - isFalsy (false), %s -> data: %s `, (_: string, rule: string, data: string) => {
             const result = sut.isFalsy(rule, data);
             expect(result).toBe(false);
