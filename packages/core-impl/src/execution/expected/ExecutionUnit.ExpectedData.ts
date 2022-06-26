@@ -26,7 +26,13 @@ export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, Row
             this.operators.push(operator);
             this.operators.push({
                 name: 'not:' + operator.name,
-                check: (value, expectedValue): ExpectedOperatorResult => ({ result: !operator.check(value, expectedValue) })
+                check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
+                    const result = await operator.check(value, expectedValue);
+                    return {
+                        result: !result.result,
+                        errorMessage: result.errorMessage
+                    };
+                }
             });
         });
         // add default implementation
@@ -100,9 +106,10 @@ export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, Row
 
         if (expectedResult.result === false) {
             throw Error(
-                !expectedResult.errorMessage
-                    ? `error: ${this.description}\n\texpected:${operatorName}: ${expected.toString()}\n\tactual: ${data.getText()}`
-                    : expectedResult.errorMessage
+                `error: ${this.description}` +
+                    (!expectedResult.errorMessage
+                        ? `\n\texpected:${operatorName}: ${expected.toString()}\n\tactual: ${data.getText()}`
+                        : ', ' + expectedResult.errorMessage)
             );
         }
     }

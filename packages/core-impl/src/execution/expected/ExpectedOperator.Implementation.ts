@@ -1,4 +1,5 @@
 import { DataContent } from '@boart/core';
+
 import { IntValidator } from '../../validators/IntValidator';
 
 import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
@@ -83,22 +84,40 @@ export class ExpectedOperatorImplementation {
     /**
      *
      */
-    private static getCount(value: DataContent, allowNumber = true): number {
+    private static getCount(value: DataContent, allowNumber = true): { key?: string; length: number } {
         const baseValue = value.getValue();
         if (baseValue == null) {
-            return 0;
+            return {
+                length: 0
+            };
         } else if (Array.isArray(baseValue)) {
-            return Object.keys(baseValue).length;
+            const arrayKeys = Object.keys(baseValue);
+            return {
+                key: `indexes: '${arrayKeys.join(',')}'`,
+                length: arrayKeys.length
+            };
         } else if (typeof baseValue === 'number' && allowNumber) {
-            return baseValue;
+            return {
+                length: baseValue
+            };
         } else if (typeof baseValue === 'object') {
-            return Object.keys(baseValue).length;
+            const objectKeys = Object.keys(baseValue);
+            return {
+                key: `keys: '${objectKeys.join(',')}'`,
+                length: objectKeys.length
+            };
         } else if (typeof baseValue === 'string' && isNaN(parseInt(baseValue))) {
-            return baseValue.length;
+            return {
+                length: baseValue.length
+            };
         } else if (typeof baseValue === 'string' && !isNaN(parseInt(baseValue))) {
-            return parseInt(baseValue);
+            return {
+                length: parseInt(baseValue)
+            };
         } else {
-            return Number.MIN_VALUE;
+            return {
+                length: Number.MIN_VALUE
+            };
         }
     }
 
@@ -109,10 +128,10 @@ export class ExpectedOperatorImplementation {
         return {
             name: 'smaller',
             check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
-                const valueLength = ExpectedOperatorImplementation.getCount(value);
+                const count = ExpectedOperatorImplementation.getCount(value);
                 const expected = parseInt(expectedValue);
                 return {
-                    result: valueLength === Number.MIN_VALUE ? false : valueLength < expected
+                    result: count.length === Number.MIN_VALUE ? false : count.length < expected
                 };
             }
         };
@@ -125,10 +144,10 @@ export class ExpectedOperatorImplementation {
         return {
             name: 'greater',
             check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
-                const valueLength = ExpectedOperatorImplementation.getCount(value);
+                const count = ExpectedOperatorImplementation.getCount(value);
                 const expected = parseInt(expectedValue);
                 return {
-                    result: valueLength === Number.MIN_VALUE ? false : valueLength > expected
+                    result: count.length === Number.MIN_VALUE ? false : count.length > expected
                 };
             }
         };
@@ -142,10 +161,11 @@ export class ExpectedOperatorImplementation {
             name: 'count',
             validators: [new IntValidator('value')],
             check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
-                const valueLength = ExpectedOperatorImplementation.getCount(value, false);
+                const count = ExpectedOperatorImplementation.getCount(value, false);
                 const expected = parseInt(expectedValue);
                 return {
-                    result: valueLength === Number.MIN_VALUE ? false : valueLength === expected
+                    result: count.length === Number.MIN_VALUE ? false : count.length === expected,
+                    errorMessage: `value: ${expectedValue}, actual: ${count.key || ''}`
                 };
             }
         };
@@ -158,10 +178,10 @@ export class ExpectedOperatorImplementation {
         return {
             name: 'count:equal-greater',
             check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
-                const valueLength = ExpectedOperatorImplementation.getCount(value, false);
+                const count = ExpectedOperatorImplementation.getCount(value, false);
                 const expected = parseInt(expectedValue);
                 return {
-                    result: valueLength === Number.MIN_VALUE ? false : valueLength >= expected
+                    result: count.length === Number.MIN_VALUE ? false : count.length >= expected
                 };
             }
         };
@@ -174,10 +194,10 @@ export class ExpectedOperatorImplementation {
         return {
             name: 'count:equal-smaller',
             check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => {
-                const valueLength = ExpectedOperatorImplementation.getCount(value, false);
+                const count = ExpectedOperatorImplementation.getCount(value, false);
                 const expected = parseInt(expectedValue);
                 return {
-                    result: valueLength === Number.MIN_VALUE ? false : valueLength <= expected
+                    result: count.length === Number.MIN_VALUE ? false : count.length <= expected
                 };
             }
         };
@@ -190,9 +210,9 @@ export class ExpectedOperatorImplementation {
         return {
             name: 'empty',
             check: (value: DataContent): ExpectedOperatorResult => {
-                const valueLength = ExpectedOperatorImplementation.getCount(value, false);
+                const count = ExpectedOperatorImplementation.getCount(value, false);
                 return {
-                    result: valueLength === Number.MIN_VALUE ? false : valueLength === 0
+                    result: count.length === Number.MIN_VALUE ? false : count.length === 0
                 };
             }
         };
@@ -252,7 +272,7 @@ export class ExpectedOperatorImplementation {
             check: (value: DataContent): ExpectedOperatorResult => {
                 return {
                     result: value.getValue() == null,
-                    errorMessage: `error: expected:null: actual: ${value.getText()}`
+                    errorMessage: `null: actual: '${value.getText()}'`
                 };
             }
         };
