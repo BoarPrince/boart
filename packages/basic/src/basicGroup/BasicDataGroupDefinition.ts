@@ -5,7 +5,9 @@ import {
     ExpectedJsonLogicExecutionUnit,
     OutStoreExecutionUnit,
     RowTypeValue,
-    TransformJPathExecutionUnit
+    TransformJPathExecutionUnit,
+    TransformJsonLogicExecutionUnit,
+    TransformResetExecutionUnit
 } from '@boart/core-impl';
 
 if (!GroupRowDefinition.contains('basic-data')) {
@@ -52,13 +54,48 @@ if (!GroupRowDefinition.contains('basic-data')) {
             validators: null
         })
     );
+    basicGroup.addRowDefinition(
+        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+            type: TableRowType.PostProcessing,
+            executionUnit: new ExpectedJsonLogicExecutionUnit('data'),
+            validators: null
+        })
+    );
+    basicGroup.addRowDefinition(
+        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+            type: TableRowType.PostProcessing,
+            executionUnit: new ExpectedJsonLogicExecutionUnit('header'),
+            validators: null
+        })
+    );
+    basicGroup.addRowDefinition(
+        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+            type: TableRowType.PostProcessing,
+            executionUnit: new ExpectedJsonLogicExecutionUnit('transformed'),
+            validators: null
+        })
+    );
     //-------------------------------------------------------------------------
-    // Expected:JPath
+    // Transform
     //-------------------------------------------------------------------------
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new TransformJPathExecutionUnit(),
+            validators: null
+        })
+    );
+    basicGroup.addRowDefinition(
+        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+            type: TableRowType.PostProcessing,
+            executionUnit: new TransformJsonLogicExecutionUnit(),
+            validators: null
+        })
+    );
+    basicGroup.addRowDefinition(
+        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+            type: TableRowType.PostProcessing,
+            executionUnit: new TransformResetExecutionUnit(),
             validators: null
         })
     );

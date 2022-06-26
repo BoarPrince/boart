@@ -10,6 +10,7 @@ import { WaitExecutionUnit } from './src/execution/misc/ExecutionUnit.Wait';
 import { PropertySetterExecutionUnit } from './src/execution/property-setter/PropertySetterExecutionUnit';
 import { TransformJPathExecutionUnit } from './src/execution/transform/ExecutionUnit.TransformJPath';
 import { TransformJsonLogicExecutionUnit } from './src/execution/transform/ExecutionUnit.TransformJsonLogic';
+import { TransformResetExecutionUnit } from './src/execution/transform/ExecutionUnit.TransformReset';
 import { ScenarioReport } from './src/report/ScenarioReport';
 import { StepReport } from './src/report/StepReport';
 import { TestReport } from './src/report/TestReport';
@@ -38,6 +39,7 @@ export {
     TestReport,
     TransformJPathExecutionUnit,
     TransformJsonLogicExecutionUnit,
+    TransformResetExecutionUnit,
     UniqueValidator,
     ValueRequiredValidator,
     WaitExecutionUnit
