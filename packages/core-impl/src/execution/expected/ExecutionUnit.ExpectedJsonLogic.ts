@@ -48,7 +48,7 @@ export class ExpectedJsonLogicExecutionUnit implements ExecutionUnit<DataContext
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const rule = row.value.toString();
-        const data = this.getDataContent(context).getText();
+        const data = this.getDataContent(context)?.getText();
 
         if (row.actionPara === 'true') {
             JsonLogic.instance.checkTruthy(rule, data);

@@ -143,7 +143,7 @@ export class JsonLogic {
     public checkTruthy(rule: string, jsonData: string): void {
         const result = this.evaluate(rule, jsonData);
         if (result.data !== true) {
-            throw new Error(result.error || 'jsonLogic expression must be true:' + JSON.stringify(rule, null, '  '));
+            throw new Error(result.error || 'jsonLogic expression must be true: ' + JSON.stringify(rule, null, '  '));
         }
     }
 }

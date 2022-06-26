@@ -24,7 +24,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
      *
      */
     private getSourceData(context: DataContext, executionType: string): object {
-        const sourceFacade = () => {
+        const sourceData = () => {
             switch (executionType) {
                 case 'data':
                     return context.execution.data;
@@ -33,11 +33,13 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
                     return context.execution.header;
 
                 default:
-                    return context.execution.transformed;
+                    return !!context.execution.transformed && !!context.execution.transformed.getValue()
+                        ? context.execution.transformed
+                        : context.execution.data;
             }
         };
 
-        return JSON.parse(sourceFacade().toJSON()) as object;
+        return JSON.parse(sourceData()?.toJSON() || 'null') as object;
     }
 
     /**

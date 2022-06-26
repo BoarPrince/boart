@@ -32,7 +32,9 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
                 return context.execution.header;
 
             default:
-                return context.execution.transformed;
+                return !!context.execution.transformed && !!context.execution.transformed.getValue()
+                    ? context.execution.transformed
+                    : context.execution.data;
         }
     }
 
@@ -41,7 +43,7 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const rule = row.value.toString();
-        const data = this.getSourceData(context, row.actionPara).getText();
+        const data = this.getSourceData(context, row.actionPara)?.getText() || '';
 
         const transformedResult = DataContentHelper.create(JsonLogic.instance.transform(rule, data));
 
