@@ -165,7 +165,7 @@ export class ExpectedOperatorImplementation {
                 const expected = parseInt(expectedValue);
                 return {
                     result: count.length === Number.MIN_VALUE ? false : count.length === expected,
-                    errorMessage: `value: ${expectedValue}, actual: ${count.key || ''}`
+                    errorMessage: `, value: ${expectedValue}, actual: ${count.key || ''}`
                 };
             }
         };
@@ -272,7 +272,7 @@ export class ExpectedOperatorImplementation {
             check: (value: DataContent): ExpectedOperatorResult => {
                 return {
                     result: value.getValue() == null,
-                    errorMessage: `null: actual: '${value.getText()}'`
+                    errorMessage: `, null: actual: '${value.getText()}'`
                 };
             }
         };

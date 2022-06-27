@@ -62,7 +62,7 @@ export class PropertySetterExecutionUnit<
      *
      */
     private defaultActionSelectorSetter(value: ContentType, rowValue: ContentType, selector: string): ContentType {
-        const val = DataContentHelper.create(!DataContentHelper.isObject(value) ? new ObjectContent() : value);
+        const val = DataContentHelper.create(!DataContentHelper.isObject(value) ? new ObjectContent(value) : value);
         return DataContentHelper.setByPath(selector, rowValue, val).toJSON();
     }
 
@@ -97,18 +97,15 @@ export class PropertySetterExecutionUnit<
         };
 
         const accessor = !this.propertyLevel2 ? oneLevel : twoLevel;
+
         if (row.actionPara === 'null') {
             accessor.val = null;
+            return;
+        }
+        if (!row.data.selector) {
+            accessor.val = this.config.defaultSetter(accessor.val, this.config.defaultModifier(row.value));
         } else {
-            if (!row.data.selector) {
-                accessor.val = this.config.defaultSetter(accessor.val, this.config.defaultModifier(row.value));
-            } else {
-                accessor.val = this.config.actionSelectorSetter(
-                    accessor.val,
-                    this.config.actionSelectorModifier(row.value),
-                    row.data.selector
-                );
-            }
+            accessor.val = this.config.actionSelectorSetter(accessor.val, this.config.actionSelectorModifier(row.value), row.data.selector);
         }
     }
 }

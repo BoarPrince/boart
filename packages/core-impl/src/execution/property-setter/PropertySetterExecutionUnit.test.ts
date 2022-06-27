@@ -1,4 +1,4 @@
-import { ContentType, DataContent, ExecutionContext } from '@boart/core';
+import { ContentType, DataContent, ExecutionContext, NullContent } from '@boart/core';
 
 import { DataExecutionContext } from '../../DataExecutionContext';
 import { RowTypePropValue } from '../../RowTypePropValue';
@@ -120,7 +120,7 @@ it('check with concating (but not using)', () => {
 /**
  *
  */
-it('check setting null value', () => {
+it('check set null', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
 
     const context: DataContext = {
@@ -136,6 +136,37 @@ it('check setting null value', () => {
         keyPara: 'null',
         selector: null,
         values: {
+            value: ''
+        },
+        values_replaced: {
+            value: ''
+        },
+        _metaDefinition: null
+    });
+
+    sut.execute(context, row);
+    expect(context.config['value']?.toString()).toBeNull();
+});
+
+/**
+ *
+ */
+it('check null initialized', () => {
+    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+
+    const context: DataContext = {
+        config: {
+            value: null
+        },
+        preExecution: null,
+        execution: null
+    };
+
+    const row = new RowTypePropValue<DataContext>({
+        key: 'a:a',
+        keyPara: null,
+        selector: null,
+        values: {
             value: 'xxx'
         },
         values_replaced: {
@@ -145,7 +176,100 @@ it('check setting null value', () => {
     });
 
     sut.execute(context, row);
-    expect(context.config['value']?.toString()).toBe(null);
+    expect(context.config['value']?.toString()).toBe('xxx');
+});
+
+/**
+ *
+ */
+it('check null initialized and selector', () => {
+    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+
+    const context: DataContext = {
+        config: {
+            value: null
+        },
+        preExecution: null,
+        execution: null
+    };
+
+    const row = new RowTypePropValue<DataContext>({
+        key: 'a:a',
+        keyPara: null,
+        selector: 'a',
+        values: {
+            value: 'xxx'
+        },
+        values_replaced: {
+            value: 'xxx'
+        },
+        _metaDefinition: null
+    });
+
+    sut.execute(context, row);
+    expect(context.config['value']?.toString()).toBe('{"a":"xxx"}');
+});
+
+/**
+ *
+ */
+it('check NullContent initialized', () => {
+    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+
+    const context: DataContext = {
+        config: {
+            value: new NullContent()
+        },
+        preExecution: null,
+        execution: null
+    };
+
+    const row = new RowTypePropValue<DataContext>({
+        key: 'a:a',
+        keyPara: null,
+        selector: null,
+        values: {
+            value: 'xxx'
+        },
+        values_replaced: {
+            value: 'xxx'
+        },
+        _metaDefinition: null
+    });
+
+    sut.execute(context, row);
+    expect(context.config['value']?.toString()).toBe('xxx');
+});
+
+/**
+ *
+ */
+it('check NullContent initialized and selector', () => {
+    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+
+    const context: DataContext = {
+        config: {
+            value: new NullContent()
+        },
+        preExecution: null,
+        execution: null
+    };
+
+    const row = new RowTypePropValue<DataContext>({
+        key: 'a:a',
+        keyPara: null,
+        selector: 'a',
+        values: {
+            value: 'xxx'
+        },
+        values_replaced: {
+            value: 'xxx'
+        },
+        _metaDefinition: null
+    });
+
+    sut.execute(context, row);
+    expect(context.config['value']?.toString()).toBe('{"a":"xxx"}');
 });
 
 /**

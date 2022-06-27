@@ -40,7 +40,7 @@ export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, Row
             name: '',
             check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => ({
                 result: expectedValue.toString() == value.getText(),
-                errorMessage: `error: ${this.description}\n\texpected: ${expectedValue.toString()}\n\tactual: ${value.getText()}`
+                errorMessage: `\n\texpected: ${expectedValue.toString()}\n\tactual: ${value.getText()}`
             })
         });
         // add default negate
@@ -109,7 +109,7 @@ export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, Row
                 `error: ${this.description}` +
                     (!expectedResult.errorMessage
                         ? `\n\texpected:${operatorName}: ${expected.toString()}\n\tactual: ${data.getText()}`
-                        : ', ' + expectedResult.errorMessage)
+                        : expectedResult.errorMessage)
             );
         }
     }

@@ -1,6 +1,5 @@
 import 'jest-extended';
 import {
-    BaseRowMetaDefinition,
     DataContent,
     ExecutionEngine,
     ExecutionUnit,
@@ -18,9 +17,8 @@ import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
 
 import { ExpectedDataExecutinoUnit } from './ExecutionUnit.ExpectedData';
-import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
+import { ExpectedOperator } from './ExpectedOperator';
 import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
-import { IntValidator } from '../../validators/IntValidator';
 
 /**
  *
@@ -325,7 +323,7 @@ describe('check expected:header execution units', () => {
          */
         it('no parameter defined for accessing header', async () => {
             tableHandler.executionEngine.context.execution.header = new ObjectContent({ a: 'b' });
-            try {
+            await expect(async () => {
                 await tableHandler.process({
                     headers: {
                         cells: ['action', 'value']
@@ -336,12 +334,7 @@ describe('check expected:header execution units', () => {
                         }
                     ]
                 });
-            } catch (error) {
-                expect(error.message).toBe(`error: expected:header\n\texpected: b\n\tactual: {"a":"b"}`);
-                return;
-            }
-
-            throw Error('error must be thrown, if value is not expected');
+            }).rejects.toThrowError('error: expected:header\n\texpected: b\n\tactual: {"a":"b"}');
         });
     });
 });

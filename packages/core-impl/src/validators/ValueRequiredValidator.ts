@@ -4,7 +4,7 @@ import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
  *
  */
 export class ValueRequiredValidator implements RowValidator {
-    constructor(private readonly columnName: string) {}
+    constructor(private readonly columnName: string, private readonly errorMessage?: string) {}
 
     /**
      *
@@ -16,7 +16,10 @@ export class ValueRequiredValidator implements RowValidator {
         }
 
         if (!row.values_replaced[this.columnName]) {
-            throw Error(`${row._metaDefinition.key.description.toString()}: missing value for column '${this.columnName}'`);
+            throw Error(
+                `${row._metaDefinition.key.description.toString()}:` +
+                    (!this.errorMessage ? ` missing value for column '${this.columnName}'` : this.errorMessage)
+            );
         }
     }
 }
