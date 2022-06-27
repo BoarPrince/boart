@@ -70,7 +70,7 @@ export class StoreWrapper {
 
         if (keys.length > 1) {
             const firstKey = keys.shift();
-            const contentValue = DataContentHelper.create();
+            const contentValue = DataContentHelper.create(this.store.get(firstKey));
             DataContentHelper.setByPath(keys, value, contentValue);
             this.store.put(firstKey, contentValue);
         } else {

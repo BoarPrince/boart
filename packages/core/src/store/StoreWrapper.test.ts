@@ -8,7 +8,6 @@ import { TextContent } from '../data/TextContent';
 import { StoreMap } from './StoreMap';
 import { StoreWrapper } from './StoreWrapper';
 
-
 /**
  *
  */
@@ -28,6 +27,9 @@ class MockStore implements StoreMap {
     }
 }
 
+/**
+ *
+ */
 describe('check store', () => {
     let sut: StoreWrapper;
 
@@ -208,6 +210,16 @@ describe('check store', () => {
 
         expect(sut.get('a#b#c').getText()).toBe('false');
         expect(sut.get('a').toJSON()).toBe('{"b":{"c":false}}');
+    });
+
+    /**
+     *
+     */
+    it('set object value (structure)', () => {
+        sut.put('var.a', new NativeContent(1));
+        sut.put('var.b', new NativeContent(2));
+
+        expect(sut.get('var').getText()).toBe('{"a":1,"b":2}');
     });
 
     /**
