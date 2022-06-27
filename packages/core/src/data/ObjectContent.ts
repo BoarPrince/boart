@@ -22,7 +22,8 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
     constructor(value?: ContentType) {
         super();
 
-        value = value === null || value === undefined ? {} : value;
+        // check native null and NullContent
+        value = value == null || value.toString() == null ? {} : value;
         if (typeof value !== 'object') {
             this.value = this.tryParse(value.toString(), value);
         } else {
@@ -56,21 +57,21 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
     private transformToArray(value: ContentType): ContentType {
         if (!!value && typeof value === 'object') {
             if (Array.isArray(value)) {
-                return value.map(v => this.transformToArray(v));
+                return value.map((v) => this.transformToArray(v));
             } else {
                 const maxIndex = Object.keys(value)
-                    .map(k => Number.parseInt(k))
+                    .map((k) => Number.parseInt(k))
                     .sort((a, b) => a - b)
                     .pop();
 
                 if (isNaN(maxIndex)) {
-                    Object.keys(value).forEach(k => {
+                    Object.keys(value).forEach((k) => {
                         value[k] = this.transformToArray(value[k] as object);
                     });
                     return value;
                 } else {
                     const array = new Array(maxIndex + 1);
-                    Object.keys(value).forEach(k => {
+                    Object.keys(value).forEach((k) => {
                         array[Number.parseInt(k)] = this.transformToArray(value[k] as object);
                     });
                     return array;

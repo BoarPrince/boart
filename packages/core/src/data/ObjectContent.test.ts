@@ -39,7 +39,7 @@ describe('check object content', () => {
         ['16.', undefined, '{}'],
         ['17.', new TextContent('z'), '"z"'],
         ['18.', new NativeContent(new NativeContent(new TextContent('x'))), '"x"'],
-        ['19.', new ObjectContent(new NullContent()), 'null'],
+        ['19.', new ObjectContent(new NullContent()), '{}'],
         ['20.', new ObjectContent(new TextContent('a')), '"a"'],
         ['21.', new ObjectContent(new ObjectContent(new TextContent('a.b'))), '"a.b"'],
         ['22.', new ObjectContent(new ObjectContent({ 'a.c': new TextContent('d') })), '{"a.c":"d"}'],
