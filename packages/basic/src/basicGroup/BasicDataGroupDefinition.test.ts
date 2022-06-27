@@ -3,6 +3,7 @@ import 'jest-extended';
 import {
     ExecutionContext,
     MarkdownTableReader,
+    NativeContent,
     NullContent,
     ObjectContent,
     ParaType,
@@ -14,6 +15,7 @@ import {
     TextContent
 } from '@boart/core';
 import { DataExecutionContext, PropertySetterExecutionUnit, RowTypeValue } from '@boart/core-impl';
+import { Store } from '@boart/core/src/store/Store';
 
 import BasicGroupDefinition from './BasicDataGroupDefinition';
 
@@ -856,6 +858,7 @@ describe('check transformed jpath', () => {
         await sut.handler.process(tableDef);
     });
 });
+
 /**
  *
  */
@@ -1060,5 +1063,159 @@ describe('check transformed jsonLogic', () => {
         );
 
         await sut.handler.process(tableDef);
+    });
+});
+
+/**
+ *
+ */
+describe('out store', () => {
+    /**
+     *
+     */
+    beforeEach(() => {
+        sut.handler.executionEngine.context.execution.data = new NullContent();
+        sut.handler.executionEngine.context.execution.transformed = new NullContent();
+        Store.instance.testStore.clear();
+    });
+
+    /**
+     *
+     */
+    it('not initialized', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+        sut.handler.executionEngine.context.execution.data = undefined as any;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+        sut.handler.executionEngine.context.execution.transformed = undefined as any;
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action  |value |
+             |--------|------|
+             |store   | a    |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+
+    /**
+     *
+     */
+    it('null', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action  |value |
+             |--------|------|
+             |store   | var  |`
+        );
+
+        await sut.handler.process(tableDef);
+        expect(Store.instance.testStore.get('var')).toBeInstanceOf(NullContent);
+    });
+
+    /**
+     *
+     */
+    it('error: name is missing', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action  |value |
+             |--------|------|
+             |store   |      |`
+        );
+
+        await expect(async () => {
+            await sut.handler.process(tableDef);
+        }).rejects.toThrowError('store:name is missing');
+    });
+
+    /**
+     *
+     */
+    it('get deep value, first level', async () => {
+        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+        const tableDef = MarkdownTableReader.convert(
+            `|action  |value |
+             |--------|------|
+             |store#a | var  |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+        expect(result).toBeInstanceOf(NativeContent);
+        expect(result.getValue()).toBe(1);
+    });
+
+    /**
+     *
+     */
+    it('get deep value, first level, set and get', async () => {
+        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+        const tableDef = MarkdownTableReader.convert(
+            `|action  |value  |
+             |--------|-------|
+             |store#a | var#e |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.toString()).toBe('{"e":1}');
+    });
+
+    /**
+     *
+     */
+    it('get deep value, first level, set and get, multiple times - 2', async () => {
+        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+        const tableDef = MarkdownTableReader.convert(
+            `|action  |value  |
+             |--------|-------|
+             |store#a | var#e |
+             |store#b | var#f |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.toString()).toBe('{"e":1,"f":2}');
+    });
+
+    /**
+     *
+     */
+    it('get deep value, first level, set and get, multiple times - 3', async () => {
+        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+        const tableDef = MarkdownTableReader.convert(
+            `|action  |value  |
+             |--------|-------|
+             |store#a | var#e |
+             |store#b | var#f |
+             |store#c | var#g |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.toString()).toBe('{"e":1,"f":2,"g":3}');
+    });
+
+    /**
+     *
+     */
+    it('get deep value, first level, set and get, multiple times - 3', async () => {
+        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+        const tableDef = MarkdownTableReader.convert(
+            `|action  |value    |
+             |--------|---------|
+             |store#a | var#e.h |
+             |store#b | var#f   |
+             |store#c | var#g   |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.toString()).toBe('{"e":{"h":1},"f":2,"g":3}');
     });
 });

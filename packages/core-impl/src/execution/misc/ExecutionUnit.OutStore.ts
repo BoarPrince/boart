@@ -35,7 +35,7 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
     readonly parameterType = ParaType.Optional;
     readonly validators = [
         new ParaValidator([ScopeType.Global, ScopeType.Local, ScopeType.Step, ScopeType.Test]),
-        new ValueRequiredValidator('value')
+        new ValueRequiredValidator('value', 'name is missing')
     ];
 
     /**
@@ -60,7 +60,9 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
                 return context.execution.header;
 
             default:
-                return context.execution.transformed;
+                return !!context.execution.transformed && !!context.execution.transformed.getValue()
+                    ? context.execution.transformed
+                    : context.execution.data;
         }
     }
 
