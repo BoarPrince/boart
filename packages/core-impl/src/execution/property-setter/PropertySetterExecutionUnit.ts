@@ -80,7 +80,7 @@ export class PropertySetterExecutionUnit<
                 return context[self.propertyLevel1];
             },
             set val(value: ContentType) {
-                context[self.propertyLevel1] = DataContentHelper.create(value);
+                context[self.propertyLevel1] = value;
             }
         };
 
@@ -92,7 +92,7 @@ export class PropertySetterExecutionUnit<
                 return context[self.propertyLevel1][self.propertyLevel2];
             },
             set val(value: ContentType) {
-                context[self.propertyLevel1][self.propertyLevel2] = DataContentHelper.create(value);
+                context[self.propertyLevel1][self.propertyLevel2] = value;
             }
         };
 

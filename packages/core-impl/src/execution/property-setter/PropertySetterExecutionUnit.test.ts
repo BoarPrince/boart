@@ -1,4 +1,4 @@
-import { ContentType, DataContent, ExecutionContext, NullContent } from '@boart/core';
+import { ContentType, DataContent, DataContentHelper, ExecutionContext, NullContent } from '@boart/core';
 
 import { DataExecutionContext } from '../../DataExecutionContext';
 import { RowTypePropValue } from '../../RowTypePropValue';
@@ -145,7 +145,7 @@ it('check set null', () => {
     });
 
     sut.execute(context, row);
-    expect(context.config['value']?.toString()).toBeNull();
+    expect(context.config['value']).toBeNull();
 });
 
 /**
@@ -988,5 +988,72 @@ it('check method/url style', () => {
     });
 
     sut.execute(context, row);
-    expect(context.config['restCall'].toString()).toBe('{"method":"post","url":"http://xyz"}');
+    expect(context.config['restCall']).toEqual({ method: 'post', url: 'http://xyz' });
+});
+
+/**
+ *
+ */
+it('check param definition (actionParaSetter), three paras', () => {
+    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+        actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType => {
+            (value as object)[para] = rowValue;
+            return value;
+        }
+    });
+
+    const context: DataContext = {
+        config: {
+            value: {}
+        },
+        preExecution: null,
+        execution: null
+    };
+
+    const row = new RowTypePropValue<DataContext>({
+        key: 'param',
+        keyPara: null,
+        selector: 'para1',
+        values: {
+            value: '1'
+        },
+        values_replaced: {
+            value: '1'
+        },
+        _metaDefinition: null
+    });
+
+    const row2 = new RowTypePropValue<DataContext>({
+        key: 'param',
+        keyPara: null,
+        selector: 'para2',
+        values: {
+            value: '2'
+        },
+        values_replaced: {
+            value: '2'
+        },
+        _metaDefinition: null
+    });
+
+    const row3 = new RowTypePropValue<DataContext>({
+        key: 'param',
+        keyPara: null,
+        selector: 'para3',
+        values: {
+            value: '3'
+        },
+        values_replaced: {
+            value: '3'
+        },
+        _metaDefinition: null
+    });
+
+    sut.execute(context, row);
+    sut.execute(context, row2);
+    sut.execute(context, row3);
+
+    expect(context.config['value']).toBeInstanceOf(Object);
+    expect(context.config['value']?.constructor.name).toBe('Object');
+    expect(context.config['value']).toEqual({ para1: '1', para2: '2', para3: '3' });
 });
