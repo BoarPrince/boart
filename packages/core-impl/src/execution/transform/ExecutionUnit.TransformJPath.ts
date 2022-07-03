@@ -39,7 +39,8 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
             }
         };
 
-        return JSON.parse(sourceData()?.toJSON() || 'null') as object;
+        const data = sourceData();
+        return JSON.parse(DataContentHelper.create(data || null).toJSON()) as object;
     }
 
     /**

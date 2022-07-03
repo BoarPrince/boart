@@ -23,7 +23,7 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
     /**
      *
      */
-    private getSourceData(context: DataContext, executionType: string): DataContent {
+    private getSourceData(context: DataContext, executionType: string): object {
         switch (executionType) {
             case 'data':
                 return context.execution.data;
@@ -43,7 +43,7 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const rule = row.value.toString();
-        const data = this.getSourceData(context, row.actionPara)?.getText() || '';
+        const data = DataContentHelper.create(this.getSourceData(context, row.actionPara)).getText();
 
         const transformedResult = DataContentHelper.create(JsonLogic.instance.transform(rule, data));
 

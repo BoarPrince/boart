@@ -1,4 +1,4 @@
-import { DataContent, ExecutionUnit, ParaType } from '@boart/core';
+import { DataContent, DataContentHelper, ExecutionUnit, ParaType } from '@boart/core';
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -48,7 +48,7 @@ export class ExpectedJsonLogicExecutionUnit implements ExecutionUnit<DataContext
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const rule = row.value.toString();
-        const data = this.getDataContent(context)?.getText();
+        const data = DataContentHelper.create(this.getDataContent(context)).getText();
 
         if (row.actionPara === 'true') {
             JsonLogic.instance.checkTruthy(rule, data);

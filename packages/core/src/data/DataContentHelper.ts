@@ -86,12 +86,19 @@ export class DataContentHelper {
     /**
      *
      */
-    static create(text_or_array: ContentType = {}): DataContent {
+    static toJSON(data: ContentType): string {
+        return DataContentHelper.create(data).toJSON();
+    }
+
+    /**
+     *
+     */
+    static create(data: ContentType = {}): DataContent {
         /**
          *
          */
         const internalCreate = (value: ContentType): DataContent => {
-            if (value === null) {
+            if (value == null) {
                 return new NullContent();
             } else if (DataContentHelper.isContent(value)) {
                 return value as DataContent;
@@ -103,10 +110,10 @@ export class DataContentHelper {
                 return new NativeContent(value);
             }
         };
-        if (Array.isArray(text_or_array)) {
-            return new ObjectContent(text_or_array);
+        if (Array.isArray(data)) {
+            return new ObjectContent(data);
         } else {
-            return internalCreate(text_or_array);
+            return internalCreate(data);
         }
     }
 
