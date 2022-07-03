@@ -1,5 +1,6 @@
 import { ContentInstance } from './ContentInstance';
 import { ContentType } from './ContentType';
+import { DataContent } from './DataContent';
 import DataContentBase from './DataContentBase';
 import { DataContentObject } from './DataContentObject';
 
@@ -124,9 +125,10 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
     /**
      *
      */
-    set(key: string, value: ContentType) {
+    set(key: string, value: ContentType): DataContent {
         this.dirty = true;
         this.value[key] = value;
+        return this;
     }
 
     /**

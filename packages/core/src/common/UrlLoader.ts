@@ -31,6 +31,13 @@ export class UrlLoader {
     /**
      *
      */
+    static get dockerLocal(): string {
+        return 'host.docker.internal';
+    }
+
+    /**
+     *
+     */
     static get instance(): UrlLoader {
         if (!UrlLoader._instance) {
             UrlLoader._instance = new UrlLoader();
@@ -55,7 +62,8 @@ export class UrlLoader {
      */
     private readSettings(filename: string): Record<string, PathValue> {
         try {
-            const fileData = fs.readFileSync(filename, 'utf-8');
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            const fileData: string = fs.readFileSync(filename, 'utf-8');
             const settings = JSON.parse(fileData) as EnvironmentSettings;
             return settings.path_mapping || {};
         } catch (error) {
@@ -98,7 +106,7 @@ export class UrlLoader {
             .replace(/([^:])\/\//g, '$1/');
 
         return EnvLoader.instance.isDockerEnvironment() === true
-            ? absoluteUrl.replace(/([^\w])localhost([^\w])/, '$1host.docker.internal$2')
+            ? absoluteUrl.replace(/([^\w])localhost([^\w])/, `$1${UrlLoader.dockerLocal}$2`)
             : absoluteUrl;
     }
 }

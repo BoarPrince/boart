@@ -4,6 +4,7 @@ import { ArraySubject } from './src/common/ArraySubject';
 import { EnvLoader } from './src/common/EnvLoader';
 import { JsonHelper } from './src/common/JsonHelper';
 import { TextLanguageHandler } from './src/common/TextLanguageHandler';
+import { UrlLoader } from './src/common/UrlLoader';
 import { ContentType } from './src/data/ContentType';
 import { DataContent } from './src/data/DataContent';
 import { DataContentHelper } from './src/data/DataContentHelper';
@@ -70,6 +71,7 @@ export {
     TableRowType,
     TextContent,
     TextLanguageHandler,
+    UrlLoader,
     value,
     ValueReplacer
 };

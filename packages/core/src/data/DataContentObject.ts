@@ -17,7 +17,7 @@ export interface DataContentObject {
     /**
      *
      */
-    set(key: string, value: ContentType);
+    set(key: string, value: ContentType): ContentType;
 
     /**
      *
@@ -28,4 +28,9 @@ export interface DataContentObject {
      *
      */
     keys(): ReadonlyArray<string>;
+
+    /**
+     *
+     */
+    getValue(): ContentType;
 }

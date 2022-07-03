@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { EnvLoader } from './EnvLoader';
-import { EnvironmentSettings, UrlLoader } from './UrlLoader';
+import { UrlLoader } from './UrlLoader';
 
 jest.mock('fs');
 jest.mock('./EnvLoader', () => ({
