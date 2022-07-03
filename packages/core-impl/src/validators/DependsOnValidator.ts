@@ -12,17 +12,19 @@ export class DependsOnValidator implements RowValidator {
     /**
      *
      */
-    constructor(private readonly dependOnKey: symbol) {}
+    constructor(private readonly dependOnKey: string[]) {}
 
     /**
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validate(row: BaseRowMetaDefinition<any, any>, rows: readonly BaseRowMetaDefinition<any, any>[]) {
-        const count = rows?.reduce((c, r) => (r.key === this.dependOnKey.description ? c + 1 : c), 0);
+        let count = 0;
+        this.dependOnKey.forEach((key) => rows?.forEach((r) => (count += r.key === key ? 1 : 0)));
+
         if (count === 0) {
             throw Error(
-                `key '${row._metaDefinition.key.description}' depends on '${this.dependOnKey.description}', but it does not exist!`
+                `key '${row._metaDefinition.key.description || ''}' depends on '${this.dependOnKey.join(',')}', but it does not exist!`
             );
         }
     }

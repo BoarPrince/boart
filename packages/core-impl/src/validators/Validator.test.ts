@@ -278,7 +278,7 @@ describe('check row validators', () => {
                         selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
-                        validators: [new DependsOnValidator(Symbol('b:b'))]
+                        validators: [new DependsOnValidator(['b:b'])]
                     }
                 }
             };
@@ -330,7 +330,7 @@ describe('check row validators', () => {
                         selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
-                        validators: [new DependsOnValidator(Symbol('c:c'))]
+                        validators: [new DependsOnValidator(['c:c'])]
                     }
                 }
             };
