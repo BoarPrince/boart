@@ -1202,7 +1202,7 @@ describe('out store', () => {
     /**
      *
      */
-    it('get deep value, first level, set and get, multiple times - 3', async () => {
+    it('get deep value, second level, set, multiple times - 3', async () => {
         sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action  |value    |
@@ -1217,5 +1217,25 @@ describe('out store', () => {
         const result = Store.instance.testStore.get('var');
         expect(result).toBeInstanceOf(ObjectContent);
         expect(result.toString()).toBe('{"e":{"h":1},"f":2,"g":3}');
+    });
+
+    /**
+     *
+     */
+    it('get deep value, second level, set and get, multiple times - 3', async () => {
+        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: { e: 5 }, c: 3, d: 4 });
+        const tableDef = MarkdownTableReader.convert(
+            `|action    |value    |
+             |----------|---------|
+             |store#a   | var#e.h |
+             |store#b.e | var#f.u |
+             |store#c   | var#g   |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.toString()).toBe('{"e":{"h":1},"f":{"u":5},"g":3}');
     });
 });
