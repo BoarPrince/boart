@@ -58,7 +58,7 @@ describe('check rest http', () => {
         it('check null parameter (post)', async () => {
             const sut = new RestHttp('http://url');
             try {
-                await sut.post(null, null, null);
+                await sut.post('', null, null);
             } catch (error) {
                 expect(error.message).toBe('there is no body defined!');
                 return;
@@ -73,7 +73,7 @@ describe('check rest http', () => {
         it('check null parameter (put)', async () => {
             const sut = new RestHttp('http://url');
             try {
-                await sut.put(null, null, null);
+                await sut.put('', null, null);
             } catch (error) {
                 expect(error.message).toBe('there is no body defined!');
                 return;
@@ -100,7 +100,7 @@ describe('check rest http', () => {
          */
         it('check null parameter (post param)', async () => {
             const sut = new RestHttp('http://url');
-            const response = await sut.post_param(new Map(), null, null);
+            const response = await sut.post_param({}, null, null);
 
             const result = await response.text();
 
@@ -114,7 +114,7 @@ describe('check rest http', () => {
         it('check null parameter (bearer)', async () => {
             fetchMock.doMock(JSON.stringify({ access_token: 'xxxx' }));
             const sut = new RestHttp('http://url');
-            const bearer = await sut.bearer(null, null, null, null, null, null);
+            const bearer = await sut.bearer('', '', '', '', '', '');
 
             expect(bearer.accessToken).toBe('xxxx');
         });
@@ -130,7 +130,7 @@ describe('check rest http', () => {
         it('check decoding bearer (failing)', async () => {
             fetchMock.doMock(JSON.stringify({ access_token: 'xxxx' }));
             const sut = new RestHttp('http://url');
-            const bearer = await sut.bearer(null, null, null, null, null, null);
+            const bearer = await sut.bearer('', '', '', '', '', '');
 
             expect(bearer.decoded).toBe('-- decoding not possible --');
         });
@@ -143,7 +143,7 @@ describe('check rest http', () => {
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
             fetchMock.doMock(JSON.stringify({ access_token: accessToken }));
             const sut = new RestHttp('http://url');
-            const bearer = await sut.bearer(null, null, null, null, null, null);
+            const bearer = await sut.bearer('', '', '', '', '', '');
 
             const decoded = JSON.parse(bearer.decoded) as object;
             expect(decoded['name']).toBe('John Doe');
@@ -162,7 +162,8 @@ describe('check rest http', () => {
 
             expect(result).toBe('xxx');
             expect(fetchMock.mock.calls[0][0]).toBe('http://url');
-            expect(fetchMock.mock.calls[0][1].headers['Authorization']).toBe('Bearer my-bearer');
+            expect(fetchMock.mock.calls[0][1]?.headers).toHaveProperty('Authorization');
+            expect(fetchMock.mock.calls[0][1]?.headers?.['Authorization']).toBe('Bearer my-bearer');
         });
 
         /**
@@ -178,9 +179,12 @@ describe('check rest http', () => {
 
             expect(response.accessToken).toBe(accessToken);
             expect(fetchMock.mock.calls[0][0]).toBe('http://url');
-            expect(fetchMock.mock.calls[0][1].headers['Content-Type']).toBe('application/x-www-form-urlencoded');
+            expect(fetchMock.mock.calls[0][1]).toBeDefined();
+            expect(fetchMock.mock.calls[0][1]?.headers).toBeDefined();
+            expect(fetchMock.mock.calls[0][1]?.headers).toHaveProperty('Content-Type');
+            expect(fetchMock.mock.calls[0][1]?.headers?.['Content-Type']).toBe('application/x-www-form-urlencoded');
 
-            const body = fetchMock.mock.calls[0][1].body as URLSearchParams;
+            const body = fetchMock.mock.calls[0][1]?.body as URLSearchParams;
             expect(body).toBeInstanceOf(URLSearchParams);
             expect(body.get('password')).toBe('my-password');
             expect(body.get('client_id')).toBe('my-client-id');
@@ -227,7 +231,8 @@ describe('check rest http', () => {
 
             expect(result.result).toBe(42);
             expect(response.headers.get('content-type')).toBe('application/json');
-            expect(fetchMock.mock.calls[0][1].body).toBe(request);
+            expect(fetchMock.mock.calls[0][1]).toBeDefined();
+            expect(fetchMock.mock.calls[0][1]?.body).toBe(request);
         });
 
         /**
@@ -246,7 +251,8 @@ describe('check rest http', () => {
 
             expect(result.result).toBe(42);
             expect(response.headers.get('content-type')).toBe('application/json');
-            expect(fetchMock.mock.calls[0][1].body).toBe(stringBody);
+            expect(fetchMock.mock.calls[0][1]).toBeDefined();
+            expect(fetchMock.mock.calls[0][1]?.body).toBe(stringBody);
         });
 
         /**
@@ -264,7 +270,8 @@ describe('check rest http', () => {
 
             expect(result.result).toBe(42);
             expect(response.headers.get('content-type')).toBe('application/json');
-            expect(fetchMock.mock.calls[0][1].body).toBe(request);
+            expect(fetchMock.mock.calls[0][1]).toBeDefined();
+            expect(fetchMock.mock.calls[0][1]?.body).toBe(request);
         });
 
         /**
@@ -283,17 +290,18 @@ describe('check rest http', () => {
 
             expect(result.result).toBe(42);
             expect(response.headers.get('content-type')).toBe('application/json');
-            expect(fetchMock.mock.calls[0][1].body).toBe(stringBody);
+            expect(fetchMock.mock.calls[0][1]).toBeDefined();
+            expect(fetchMock.mock.calls[0][1]?.body).toBe(stringBody);
         });
 
         /**
          *
          */
         it('check default post_param', async () => {
-            const requestParam = new Map<string, string>([
-                ['a', 'b'],
-                ['c', 'd']
-            ]);
+            const requestParam = {
+                a: 'b',
+                c: 'd'
+            };
 
             const sut = new RestHttp('http://url');
             const response = await sut.post_param(requestParam, null, null);
@@ -306,7 +314,9 @@ describe('check rest http', () => {
             const params = new URLSearchParams();
             params.set('a', 'b');
             params.set('c', 'd');
-            expect(fetchMock.mock.calls[0][1].body).toStrictEqual(params);
+
+            expect(fetchMock.mock.calls[0][1]).toBeDefined();
+            expect(fetchMock.mock.calls[0][1]?.body).toStrictEqual(params);
         });
 
         /**
@@ -339,10 +349,10 @@ describe('check rest http', () => {
          *
          */
         it('check execution info (post_param)', async () => {
-            const requestParam = new Map<string, string>([
-                ['a', 'b'],
-                ['c', 'd']
-            ]);
+            const requestParam = {
+                a: 'b',
+                c: 'd'
+            };
             const sut = new RestHttp('http://url');
             await sut.post_param(requestParam, null, null);
 
@@ -353,6 +363,55 @@ describe('check rest http', () => {
                         method: 'POST',
                         body: { a: 'b', c: 'd' },
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        mode: 'no-cors',
+                        referrerPolicy: 'unsafe-url'
+                    }
+                })
+            );
+        });
+
+        /**
+         *
+         */
+        it('check execution info (form data)', async () => {
+            const formData = {
+                a: 'b',
+                c: 'd'
+            };
+            const sut = new RestHttp('http://url');
+            await sut.form_data(formData, null, null);
+
+            expect(JSON.stringify(sut.getExecutionInfo()).replace(/[-]+\d+/g, '----1111')).toEqual(
+                JSON.stringify({
+                    url: 'http://url',
+                    option: {
+                        method: 'POST',
+                        body: {
+                            _overheadLength: 200,
+                            _valueLength: 2,
+                            _valuesToMeasure: [],
+                            writable: false,
+                            readable: true,
+                            dataSize: 0,
+                            maxDataSize: 2097152,
+                            pauseStreams: true,
+                            _released: false,
+                            _streams: [
+                                '----1111\r\nContent-Disposition: form-data; name="a"\r\n\r\n',
+                                'b',
+                                null,
+                                '----1111\r\nContent-Disposition: form-data; name="c"\r\n\r\n',
+                                'd',
+                                null
+                            ],
+                            _currentStream: null,
+                            _insideLoop: false,
+                            _pendingNext: false,
+                            _boundary: '----1111'
+                        },
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
                         mode: 'no-cors',
                         referrerPolicy: 'unsafe-url'
                     }

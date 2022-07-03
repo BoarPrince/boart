@@ -1,6 +1,6 @@
 import { URLSearchParams } from 'url';
 
-import { JsonHelper } from '@boart/core';
+import { JsonHelper, UrlLoader } from '@boart/core';
 
 import { ExecutionInfo } from './ExecutionInfo';
 
@@ -18,9 +18,12 @@ export class CurlGenerator {
      */
     generate(): string {
         const curl = [];
-        curl.push(`curl -i -X ${this.executionInfo.option.method} '${this.executionInfo.url}'`);
+        const method = this.executionInfo.option.method || 'get';
+        const url = this.executionInfo.url.replace(UrlLoader.dockerLocal, 'localhost');
 
-        for (const [key, value] of Object.entries(this.executionInfo.option.headers) ) {
+        curl.push(`curl -i -X ${method} '${url}'`);
+
+        for (const [key, value] of Object.entries(this.executionInfo.option.headers)) {
             curl.push(`-H '${key}: ${value}'`);
         }
 

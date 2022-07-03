@@ -1,6 +1,5 @@
-import { URLSearchParams } from 'url';
-
 import { DataContent, EnvLoader, JsonHelper } from '@boart/core';
+import { default as Form_Data } from 'form-data';
 import jwt_decode from 'jwt-decode';
 import { Subject } from 'rxjs';
 
@@ -44,7 +43,7 @@ export class RestHttp {
      */
     private addHeaderInfo(
         bearer_token: string,
-        headers: Record<string, string>
+        headers?: Record<string, string>
     ): {
         headers: Record<string, string>;
         mode: RequestMode;
@@ -77,7 +76,7 @@ export class RestHttp {
         this.executionInfo = JSON.parse(
             JSON.stringify({
                 url: this.url,
-                option
+                option: option
             })
         );
 
@@ -166,10 +165,14 @@ export class RestHttp {
     /**
      *
      */
-    public async post_param(post_para: Map<string, string>, bearer_token: string, headers: Record<string, string>): Promise<Response> {
+    public async post_param(
+        post_para: Record<string, string>,
+        bearer_token?: string | null,
+        headers?: Record<string, string> | null
+    ): Promise<Response> {
         const params = new URLSearchParams();
-        for (const key of post_para.keys()) {
-            params.append(key, post_para.get(key));
+        for (const key of Object.keys(post_para)) {
+            params.append(key, post_para[key]);
         }
 
         const info = this.addHeaderInfo(bearer_token, headers);
@@ -187,7 +190,40 @@ export class RestHttp {
     /**
      *
      */
-    public async post(body: DataContent | string, bearer_token: string, headers: Record<string, string>): Promise<Response> {
+    public async form_data(
+        form_data: Record<string, string | Blob>,
+        bearer_token?: string | null,
+        headers?: Record<string, string> | null
+    ): Promise<Response> {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const formData = new Form_Data() as any;
+
+        for (const key of Object.keys(form_data)) {
+            const value = form_data[key];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            formData.append(key, value);
+        }
+
+        const info = this.addHeaderInfo(bearer_token, headers);
+        return this.fetch(this.url, {
+            method: 'POST',
+            // body: new Blob(encoder, { type: encoder.contentType }),
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            body: formData,
+            headers: Object.assign(info.headers, {}),
+            mode: info.mode,
+            referrerPolicy: info.referrerPolicy
+        });
+    }
+
+    /**
+     *
+     */
+    public async post(
+        body: DataContent | string,
+        bearer_token?: string | null,
+        headers?: Record<string, string> | null
+    ): Promise<Response> {
         throwIfNotOk(!!body, 'there is no body defined!');
 
         const info = this.addHeaderInfo(bearer_token, headers);
@@ -203,7 +239,7 @@ export class RestHttp {
     /**
      *
      */
-    public async put(body: DataContent | string, bearer_token: string, headers: Record<string, string>): Promise<Response> {
+    public async put(body: DataContent | string, bearer_token?: string | null, headers?: Record<string, string> | null): Promise<Response> {
         throwIfNotOk(!!body, 'there is no body defined!');
 
         const info = this.addHeaderInfo(bearer_token, headers);
@@ -219,7 +255,7 @@ export class RestHttp {
     /**
      *
      */
-    public async get(bearer_token: string, headers: Record<string, string>): Promise<Response> {
+    public async get(bearer_token?: string | null, headers?: Record<string, string> | null): Promise<Response> {
         const info = this.addHeaderInfo(bearer_token, headers);
         return this.fetch(this.url, {
             method: 'GET',
@@ -234,7 +270,7 @@ export class RestHttp {
     /**
      *
      */
-    public async delete(bearer_token: string, headers: Record<string, string>): Promise<Response> {
+    public async delete(bearer_token?: string | null, headers?: Record<string, string> | null): Promise<Response> {
         const info = this.addHeaderInfo(bearer_token, headers);
         return this.fetch(this.url, {
             method: 'DELETE',
