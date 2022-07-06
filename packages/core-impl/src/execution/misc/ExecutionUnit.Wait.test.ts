@@ -40,10 +40,12 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
     private static initializer(): () => DataContext {
         return (): DataContext => ({
             config: {},
-            preExecution: {},
+            preExecution: {
+                payload: null
+            },
             execution: {
-                data: new NullContent(),
-                transformed: new NullContent(),
+                data: null,
+                transformed: null,
                 header: null
             }
         });

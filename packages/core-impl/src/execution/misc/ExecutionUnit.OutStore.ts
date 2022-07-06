@@ -41,7 +41,7 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
     /**
      *
      */
-    constructor(private executionType?: 'data' | 'header' | 'transformed') {}
+    constructor(private executionType?: 'data' | 'header' | 'transformed' | 'payload') {}
 
     /** */
     get description(): string {
@@ -59,10 +59,11 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
             case 'header':
                 return context.execution.header;
 
+            case 'payload':
+                return context.preExecution.payload;
+
             default:
-                return !!context.execution.transformed && !!context.execution.transformed.getValue()
-                    ? context.execution.transformed
-                    : context.execution.data;
+                return context.execution.transformed || context.execution.data || context.preExecution.payload;
         }
     }
 
@@ -70,12 +71,12 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
      *
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
-        const storeName = row.value.toString();
+        const storeNameAndSelector = row.value.toString();
 
-        const baseContent = this.getDataContent(context);
-        const data = !row.selector ? baseContent : DataContentHelper.getByPath(row.selector, baseContent);
+        const value = this.getDataContent(context);
+        const data = !row.selector ? value : DataContentHelper.getByPath(row.selector, value);
 
         const store = StoreWrapper.getWrapperByScope(row.actionPara);
-        store.put(storeName, data);
+        store.put(storeNameAndSelector, data);
     }
 }
