@@ -54,7 +54,7 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
                 value: ''
             },
             preExecution: {
-                value: ''
+                payload: null
             },
             execution: {
                 data: null,

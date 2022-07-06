@@ -54,11 +54,11 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
                 value: ''
             },
             preExecution: {
-                value: ''
+                payload: null
             },
             execution: {
-                data: new NullContent(),
-                transformed: new NullContent(),
+                data: null,
+                transformed: null,
                 header: null
             }
         });
