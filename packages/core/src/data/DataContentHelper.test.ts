@@ -701,19 +701,20 @@ describe('check data contents', () => {
          *
          */
         it.each([
-            [null, 'a', 'a', '{"a":"a"}'],
-            [undefined, 'a', 'a', '{"a":"a"}'],
-            [{ a: 'b' }, 'a', 'a', '{"a":"a"}'],
-            [{ b: 'b' }, 'a', 'a', '{"b":"b","a":"a"}'],
-            [{ b: 'b' }, 'a#b', 'a', '{"b":"b","a":{"b":"a"}}'],
-            [{ b: 'b' }, 'a#b', 'a', '{"b":"b","a":{"b":"a"}}'],
-            [{ b: 'b' }, 'a#b#c', 'd', '{"b":"b","a":{"b":{"c":"d"}}}'],
-            [{ b: [{ c: 'd' }, 'e', 5] }, 'b.0.c', 'a', '{"b":[{"c":"a"},"e",5]}'],
-            [{ b: { c: ['d', 'e', 5] } }, 'b.c.0', 'a', '{"b":{"c":["a","e",5]}}']
+            ['01', null, 'a', 'a', '{"a":"a"}'],
+            ['02', undefined, 'a', 'a', '{"a":"a"}'],
+            ['03', { a: 1 }, 'a', '[]', '{"a":[]}'],
+            ['04', { a: 'b' }, 'a', 'a', '{"a":"a"}'],
+            ['05', { b: 'b' }, 'a', 'a', '{"b":"b","a":"a"}'],
+            ['06', { b: 'b' }, 'a#b', 'a', '{"b":"b","a":{"b":"a"}}'],
+            ['07', { b: 'b' }, 'a#b', 'a', '{"b":"b","a":{"b":"a"}}'],
+            ['08', { b: 'b' }, 'a#b#c', 'd', '{"b":"b","a":{"b":{"c":"d"}}}'],
+            ['09', { b: [{ c: 'd' }, 'e', 5] }, 'b.0.c', 'a', '{"b":[{"c":"a"},"e",5]}'],
+            ['10', { b: { c: ['d', 'e', 5] } }, 'b.c.0', 'a', '{"b":{"c":["a","e",5]}}']
         ])(
-            `intial: %s, path: '%s', value: '%s', expected: %s`,
-            (initialContent: ContentType, path: string, value: ContentType, expectedJSON: string) => {
-                const sut_object = DataContentHelper.setByPath(path, value, new ObjectContent(initialContent));
+            `%s:, intial: %s, path: '%s', value: '%s', expected: %s`,
+            (_: string, initialContent: ContentType, selector: string, value: ContentType, expectedJSON: string) => {
+                const sut_object = DataContentHelper.setByPath(selector, value, new ObjectContent(initialContent));
                 expect(sut_object.toJSON()).toBe(expectedJSON);
             }
         );

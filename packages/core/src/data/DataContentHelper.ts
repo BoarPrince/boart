@@ -41,6 +41,8 @@ export class DataContentHelper {
                 return new NativeContent(obj);
             } else if (typeof obj == 'number') {
                 return new NativeContent(obj);
+            } else if (Array.isArray(obj)) {
+                return new ObjectContent(obj);
             }
 
             const map = new ObjectContent();
