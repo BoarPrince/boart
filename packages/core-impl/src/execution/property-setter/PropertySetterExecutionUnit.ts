@@ -1,4 +1,4 @@
-import { ContentType, DataContentHelper, ExecutionContext, ExecutionUnit, NullContent, ObjectContent, ParaType } from '@boart/core';
+import { ContentType, DataContentHelper, ExecutionContext, ExecutionUnit, ObjectContent, ParaType } from '@boart/core';
 
 import { DataExecutionContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -10,6 +10,7 @@ type Config = {
     defaultModifier?: (rowValue: ContentType) => ContentType;
     actionSelectorModifier?: (rowValue: ContentType) => ContentType;
     defaultSetter?: (value: ContentType, rowValue: ContentType) => ContentType;
+    defaultTypeConverter?: (value: ContentType) => ContentType;
     actionSelectorSetter?: (value: ContentType, rowValue: ContentType, para: string) => ContentType;
 };
 
@@ -35,6 +36,7 @@ export class PropertySetterExecutionUnit<
         this.config.actionSelectorModifier = this.config.actionSelectorModifier || this.config.defaultModifier;
 
         this.config.defaultSetter = this.config.defaultSetter || this.defaultSetter.bind(this);
+        this.config.defaultTypeConverter = this.config.defaultTypeConverter || ((value: ContentType) => value);
 
         this.config.actionSelectorSetter = this.config.actionSelectorSetter || this.defaultActionSelectorSetter.bind(this);
     }
@@ -102,10 +104,18 @@ export class PropertySetterExecutionUnit<
             accessor.val = null;
             return;
         }
+        const result = {
+            modifiedValue: null as ContentType,
+            value: null as ContentType
+        };
         if (!row.data.selector) {
-            accessor.val = this.config.defaultSetter(accessor.val, this.config.defaultModifier(row.value));
+            result.modifiedValue = this.config.defaultModifier(row.value);
+            result.value = this.config.defaultSetter(accessor.val, result.modifiedValue);
         } else {
-            accessor.val = this.config.actionSelectorSetter(accessor.val, this.config.actionSelectorModifier(row.value), row.data.selector);
+            result.modifiedValue = this.config.actionSelectorModifier(row.value);
+            result.value = this.config.actionSelectorSetter(accessor.val, result.modifiedValue, row.data.selector);
         }
+
+        accessor.val = this.config.defaultTypeConverter(result.value);
     }
 }

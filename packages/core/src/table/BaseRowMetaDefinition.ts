@@ -11,8 +11,8 @@ export interface BaseRowMetaDefinition<
     TRowType extends BaseRowType<TExecutionContext>
 > {
     readonly key: string;
-    readonly keyPara: string;
-    readonly selector: string;
+    readonly keyPara?: string;
+    readonly selector?: string;
     readonly values: Record<string, string | number | boolean>;
     readonly values_replaced: Record<string, string | number | boolean>;
     readonly _metaDefinition: RowDefinition<TExecutionContext, TRowType>;
