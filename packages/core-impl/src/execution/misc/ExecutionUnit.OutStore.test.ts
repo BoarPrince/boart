@@ -2,6 +2,7 @@ import {
     DataContent,
     ExecutionEngine,
     ExecutionUnit,
+    NullContent,
     ObjectContent,
     RowDefinition,
     StoreWrapper,
@@ -74,7 +75,8 @@ const tableHandler = new TableHandler(RowTypeValue, new ExecutionEngineMock());
 const sut = new OutStoreExecutionUnit();
 const sutData = new OutStoreExecutionUnit('data');
 const sutHeader = new OutStoreExecutionUnit('header');
-const suttransformed = new OutStoreExecutionUnit('transformed');
+const sutTransformed = new OutStoreExecutionUnit('transformed');
+const sutPayload = new OutStoreExecutionUnit('payload');
 
 tableHandler.addRowDefinition(
     new RowDefinition({
@@ -100,7 +102,14 @@ tableHandler.addRowDefinition(
 tableHandler.addRowDefinition(
     new RowDefinition({
         type: TableRowType.PostProcessing,
-        executionUnit: suttransformed,
+        executionUnit: sutTransformed,
+        validators: null
+    })
+);
+tableHandler.addRowDefinition(
+    new RowDefinition({
+        type: TableRowType.PostProcessing,
+        executionUnit: sutPayload,
         validators: null
     })
 );
@@ -251,5 +260,54 @@ describe('out:store', () => {
                 expect(Store.instance.testStore.get('var').toString()).toBe(expected);
             }
         );
+    });
+
+    /**
+     *
+     */
+    describe('check preExecution.payload', () => {
+        /**
+         *
+         */
+        it('use default, if no execution result exists', async () => {
+            tableHandler.executionEngine.context.execution.data = new NullContent();
+            tableHandler.executionEngine.context.execution.transformed = new NullContent();
+            tableHandler.executionEngine.context.preExecution.payload = new ObjectContent({ a: 1 });
+
+            await tableHandler.process({
+                headers: {
+                    cells: ['action', 'value']
+                },
+                rows: [
+                    {
+                        cells: [`store`, `var`]
+                    }
+                ]
+            });
+
+            expect(Store.instance.testStore.get('var').toString()).toBe('{"a":1}');
+        });
+
+        /**
+         *
+         */
+        it('use explicit payload, if no execution result exists', async () => {
+            tableHandler.executionEngine.context.execution.data = new ObjectContent({ a: 1 });
+            tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ b: 2 });
+            tableHandler.executionEngine.context.preExecution.payload = new ObjectContent({ c: 3 });
+
+            await tableHandler.process({
+                headers: {
+                    cells: ['action', 'value']
+                },
+                rows: [
+                    {
+                        cells: [`store:payload`, `var`]
+                    }
+                ]
+            });
+
+            expect(Store.instance.testStore.get('var').toString()).toBe('{"c":3}');
+        });
     });
 });
