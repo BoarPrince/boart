@@ -1,7 +1,3 @@
- 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { BooleanSupportOption } from 'prettier';
-
 import { ContentInstance } from './ContentInstance';
 import { ContentType } from './ContentType';
 import { DataContent } from './DataContent';
@@ -12,7 +8,7 @@ import DataContentBase from './DataContentBase';
  */
 
 export class NativeContent extends DataContentBase implements DataContent {
-    private readonly value: number | string | BooleanSupportOption;
+    private readonly value: number | string | boolean;
 
     /**
      *
@@ -22,10 +18,16 @@ export class NativeContent extends DataContentBase implements DataContent {
     /**
      *
      */
-    constructor(value: any) {
+    constructor(value: number | string | boolean) {
         super();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this.value = value;
+    }
+
+    /**
+     *
+     */
+    toJSON(): string {
+        return this.value as string;
     }
 
     /**

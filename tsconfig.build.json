@@ -10,7 +10,8 @@
   "compilerOptions": {
     "target": "ES2019",
     "module": "commonjs",
-    // "strict": true,
+    "strict": false,
+    "strictNullChecks": false,
     "sourceMap": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

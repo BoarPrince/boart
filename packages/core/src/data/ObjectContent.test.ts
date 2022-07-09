@@ -1,5 +1,6 @@
+import 'jest-extended';
+
 import { ContentType } from './ContentType';
-import { NativeContent } from './NativeContent';
 import { NullContent } from './NullContent';
 import { ObjectContent } from './ObjectContent';
 import { TextContent } from './TextContent';
@@ -38,25 +39,24 @@ describe('check object content', () => {
         ['15.', null, '{}'],
         ['16.', undefined, '{}'],
         ['17.', new TextContent('z'), '"z"'],
-        ['18.', new NativeContent(new NativeContent(new TextContent('x'))), '"x"'],
-        ['19.', new ObjectContent(new NullContent()), '{}'],
-        ['20.', new ObjectContent(new TextContent('a')), '"a"'],
-        ['21.', new ObjectContent(new ObjectContent(new TextContent('a.b'))), '"a.b"'],
-        ['22.', new ObjectContent(new ObjectContent({ 'a.c': new TextContent('d') })), '{"a.c":"d"}'],
-        ['23.', new ObjectContent({ '0': null }), '[null]'],
-        ['24.', new ObjectContent({ '0': new TextContent('a') }), '["a"]'],
-        ['25.', new ObjectContent({ null: '' }), '{"null":""}'],
-        ['26.', new ObjectContent({ '0': 'a' }), '["a"]'],
-        ['27.', new ObjectContent({ a: 'b', 0: 'c' }), '{"0":"c","a":"b"}'],
-        ['28.', new ObjectContent({ '0': 'a', 1: 'b', '2': 'c' }), '["a","b","c"]'],
-        ['29.', new ObjectContent({ '0': 'a', 1: { a: 1, b: 2 } }), '["a",{"a":1,"b":2}]'],
-        ['30.', new ObjectContent({ '0': 'a', 1: { 0: 1, 1: 2 } }), '["a",[1,2]]'],
-        ['31.', new ObjectContent({ '0': 'a', 5: 'b' }), '["a",null,null,null,null,"b"]'],
-        ['32.', new ObjectContent({ '0': 'a', 1: 'b', c: 'd' }), '{"0":"a","1":"b","c":"d"}'],
-        ['33.', new ObjectContent({ z: 'a', 1: 'b', '2': 'c' }), '{"1":"b","2":"c","z":"a"}'],
-        ['34.', new ObjectContent({ b: 'c', d: { e: 'f' } }), '{"b":"c","d":{"e":"f"}}'],
-        ['35.', new ObjectContent({ b: 'c', d: new ObjectContent({ e: 'f' }) }), '{"b":"c","d":{"e":"f"}}'],
-        ['36.', new ObjectContent({ b: 'c', d: new ObjectContent({ b: { c: ['d', 'e', 5] } }) }), '{"b":"c","d":{"b":{"c":["d","e",5]}}}']
+        ['18.', new ObjectContent(new NullContent()), '{}'],
+        ['19.', new ObjectContent(new TextContent('a')), '"a"'],
+        ['20.', new ObjectContent(new ObjectContent(new TextContent('a.b'))), '"a.b"'],
+        ['21.', new ObjectContent(new ObjectContent({ 'a.c': new TextContent('d') })), '{"a.c":"d"}'],
+        ['22.', new ObjectContent({ '0': null }), '[null]'],
+        ['23.', new ObjectContent({ '0': new TextContent('a') }), '["a"]'],
+        ['24.', new ObjectContent({ null: '' }), '{"null":""}'],
+        ['25.', new ObjectContent({ '0': 'a' }), '["a"]'],
+        ['26.', new ObjectContent({ a: 'b', 0: 'c' }), '{"0":"c","a":"b"}'],
+        ['27.', new ObjectContent({ '0': 'a', 1: 'b', '2': 'c' }), '["a","b","c"]'],
+        ['28.', new ObjectContent({ '0': 'a', 1: { a: 1, b: 2 } }), '["a",{"a":1,"b":2}]'],
+        ['29.', new ObjectContent({ '0': 'a', 1: { 0: 1, 1: 2 } }), '["a",[1,2]]'],
+        ['30.', new ObjectContent({ '0': 'a', 5: 'b' }), '["a",null,null,null,null,"b"]'],
+        ['31.', new ObjectContent({ '0': 'a', 1: 'b', c: 'd' }), '{"0":"a","1":"b","c":"d"}'],
+        ['32.', new ObjectContent({ z: 'a', 1: 'b', '2': 'c' }), '{"1":"b","2":"c","z":"a"}'],
+        ['33.', new ObjectContent({ b: 'c', d: { e: 'f' } }), '{"b":"c","d":{"e":"f"}}'],
+        ['34.', new ObjectContent({ b: 'c', d: new ObjectContent({ e: 'f' }) }), '{"b":"c","d":{"e":"f"}}'],
+        ['35.', new ObjectContent({ b: 'c', d: new ObjectContent({ b: { c: ['d', 'e', 5] } }) }), '{"b":"c","d":{"b":{"c":["d","e",5]}}}']
     ])(`%s: in: %s -> out: %s `, (comment: string, contentInput: ContentType | undefined, jsonOotput: string) => {
         const sut = new ObjectContent(contentInput);
         expect(sut.getText()).toBe(jsonOotput);
