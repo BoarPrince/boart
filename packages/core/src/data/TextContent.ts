@@ -24,6 +24,18 @@ export class TextContent extends DataContentBase {
     /**
      *
      */
+    private static isObject(content: string): boolean {
+        try {
+            const parsedValue = JSON.parse(content) as object;
+            return typeof parsedValue === 'object';
+        } catch (error) {
+            return false;
+        }
+    }
+
+    /**
+     *
+     */
     getText(): string {
         return this.text;
     }
@@ -33,6 +45,18 @@ export class TextContent extends DataContentBase {
      */
     setText(text: string) {
         this.text = text;
+    }
+
+    /**
+     *
+     */
+    toJSON(): string {
+        if (TextContent.isObject(this.text)) {
+            // normally an exception, but the text content can be a valid json
+            return this.text;
+        } else {
+            return JSON.stringify(this.text);
+        }
     }
 
     /**
