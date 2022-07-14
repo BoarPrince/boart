@@ -1,9 +1,10 @@
-import { GroupRowDefinition, RowDefinition, TableRowType } from '@boart/core';
+import { DataContentHelper, GroupRowDefinition, ParaType, RowDefinition, SelectorType, TableRowType } from '@boart/core';
 import {
     DataContext,
     ExpectedDataExecutinoUnit,
     ExpectedJsonLogicExecutionUnit,
     OutStoreExecutionUnit,
+    PropertySetterExecutionUnit,
     RowTypeValue,
     TransformJPathExecutionUnit,
     TransformJsonLogicExecutionUnit,
@@ -12,6 +13,22 @@ import {
 
 if (!GroupRowDefinition.contains('basic-data')) {
     const basicGroup = GroupRowDefinition.getInstance<DataContext, RowTypeValue<DataContext>>('basic-data');
+
+    //-------------------------------------------------------------------------
+    // Expected
+    //-------------------------------------------------------------------------
+    basicGroup.addRowDefinition(
+        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+            key: Symbol('payload'),
+            type: TableRowType.PreProcessing,
+            parameterType: ParaType.False,
+            selectorType: SelectorType.Optional,
+            executionUnit: new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('preExecution', 'payload', {
+                defaultTypeConverter: (value) => DataContentHelper.create(value)
+            }),
+            validators: null
+        })
+    );
 
     //-------------------------------------------------------------------------
     // Expected
@@ -127,6 +144,13 @@ if (!GroupRowDefinition.contains('basic-data')) {
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new OutStoreExecutionUnit('transformed'),
+            validators: null
+        })
+    );
+    basicGroup.addRowDefinition(
+        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+            type: TableRowType.PostProcessing,
+            executionUnit: new OutStoreExecutionUnit('payload'),
             validators: null
         })
     );

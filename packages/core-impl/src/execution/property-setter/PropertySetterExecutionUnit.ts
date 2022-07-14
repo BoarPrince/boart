@@ -65,7 +65,7 @@ export class PropertySetterExecutionUnit<
      */
     private defaultActionSelectorSetter(value: ContentType, rowValue: ContentType, selector: string): ContentType {
         const val = DataContentHelper.create(!DataContentHelper.isObject(value) ? new ObjectContent(value) : value);
-        return DataContentHelper.setByPath(selector, rowValue, val).toJSON();
+        return DataContentHelper.setByPath(selector, rowValue, val);
     }
 
     /**

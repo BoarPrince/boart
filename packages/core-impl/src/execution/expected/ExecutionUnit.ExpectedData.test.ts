@@ -533,7 +533,7 @@ describe('check expected:data execution units with operators', () => {
         ExpectedOperatorInitializer.instance.addOperator(operator);
         const sut = new ExpectedDataExecutinoUnit('data');
 
-        const dataToCheck = new NativeContent('a');
+        const dataToCheck = new NativeContent(1);
         tableHandler.executionEngine.context.execution.data = dataToCheck;
         tableHandler.addRowDefinition(
             new RowDefinition({

@@ -22,45 +22,51 @@ describe('check object content', () => {
      *
      */
     it.each([
-        ['01.', '{"b" : "c", "d" : { "e" : "f" } }', '{"b":"c","d":{"e":"f"}}'],
-        ['02.', '{"a": "b", "c": 1}', '{"a":"b","c":1}'],
-        ['03.', '{"0": "a"}', '["a"]'],
-        ['04.', '{"0": "a", "1": "b"}', '["a","b"]'],
-        ['05.', ['a'], '["a"]'],
-        ['06.', 'a', '"a"'],
-        ['07.', 1.1, '1.1'],
-        ['08.', 1, '1'],
-        ['09.', true, 'true'],
-        ['10.', false, 'false'],
-        ['11.', [true], '[true]'],
-        ['12.', [false], '[false]'],
-        ['13.', [1], '[1]'],
-        ['14.', [0], '[0]'],
-        ['15.', null, '{}'],
-        ['16.', undefined, '{}'],
-        ['17.', new TextContent('z'), '"z"'],
-        ['18.', new ObjectContent(new NullContent()), '{}'],
-        ['19.', new ObjectContent(new TextContent('a')), '"a"'],
-        ['20.', new ObjectContent(new ObjectContent(new TextContent('a.b'))), '"a.b"'],
-        ['21.', new ObjectContent(new ObjectContent({ 'a.c': new TextContent('d') })), '{"a.c":"d"}'],
-        ['22.', new ObjectContent({ '0': null }), '[null]'],
-        ['23.', new ObjectContent({ '0': new TextContent('a') }), '["a"]'],
-        ['24.', new ObjectContent({ null: '' }), '{"null":""}'],
-        ['25.', new ObjectContent({ '0': 'a' }), '["a"]'],
-        ['26.', new ObjectContent({ a: 'b', 0: 'c' }), '{"0":"c","a":"b"}'],
-        ['27.', new ObjectContent({ '0': 'a', 1: 'b', '2': 'c' }), '["a","b","c"]'],
-        ['28.', new ObjectContent({ '0': 'a', 1: { a: 1, b: 2 } }), '["a",{"a":1,"b":2}]'],
-        ['29.', new ObjectContent({ '0': 'a', 1: { 0: 1, 1: 2 } }), '["a",[1,2]]'],
-        ['30.', new ObjectContent({ '0': 'a', 5: 'b' }), '["a",null,null,null,null,"b"]'],
-        ['31.', new ObjectContent({ '0': 'a', 1: 'b', c: 'd' }), '{"0":"a","1":"b","c":"d"}'],
-        ['32.', new ObjectContent({ z: 'a', 1: 'b', '2': 'c' }), '{"1":"b","2":"c","z":"a"}'],
-        ['33.', new ObjectContent({ b: 'c', d: { e: 'f' } }), '{"b":"c","d":{"e":"f"}}'],
-        ['34.', new ObjectContent({ b: 'c', d: new ObjectContent({ e: 'f' }) }), '{"b":"c","d":{"e":"f"}}'],
-        ['35.', new ObjectContent({ b: 'c', d: new ObjectContent({ b: { c: ['d', 'e', 5] } }) }), '{"b":"c","d":{"b":{"c":["d","e",5]}}}']
-    ])(`%s: in: %s -> out: %s `, (comment: string, contentInput: ContentType | undefined, jsonOotput: string) => {
+        ['01.', '{"b" : "c", "d" : { "e" : "f" } }', '{"b":"c","d":{"e":"f"}}', true],
+        ['02.', '{"a": "b", "c": 1}', '{"a":"b","c":1}', true],
+        ['03.', '{"0": "a"}', '["a"]', true],
+        ['04.', '{"0": "a", "1": "b"}', '["a","b"]', true],
+        ['05.', ['a'], '["a"]', true],
+        ['06.', 'a', 'a', false],
+        ['07.', 1.1, '1.1', true],
+        ['08.', 1, '1', true],
+        ['09.', true, 'true', true],
+        ['10.', false, 'false', true],
+        ['11.', [true], '[true]', true],
+        ['12.', [false], '[false]', true],
+        ['13.', [1], '[1]', true],
+        ['14.', [0], '[0]', true],
+        ['15.', null, '{}', true],
+        ['16.', undefined, '{}', true],
+        ['17.', new TextContent('z'), 'z', false],
+        ['18.', new ObjectContent(), '{}', true],
+        ['19.', new ObjectContent(new NullContent()), '{}', true],
+        ['20.', new ObjectContent(new TextContent('a')), 'a', false],
+        ['21.', new ObjectContent(new ObjectContent(new TextContent('a.b'))), 'a.b', false],
+        ['22.', new ObjectContent(new ObjectContent({ 'a.c': new TextContent('d') })), '{"a.c":"d"}', true],
+        ['23.', new ObjectContent({ '0': null }), '[null]', true],
+        ['24.', new ObjectContent({ '0': new TextContent('a') }), '["a"]', true],
+        ['25.', new ObjectContent({ null: '' }), '{"null":""}', true],
+        ['26.', new ObjectContent({ '0': 'a' }), '["a"]', true],
+        ['27.', new ObjectContent({ a: 'b', 0: 'c' }), '{"0":"c","a":"b"}', true],
+        ['28.', new ObjectContent({ '0': 'a', 1: 'b', '2': 'c' }), '["a","b","c"]', true],
+        ['29.', new ObjectContent({ '0': 'a', 1: { a: 1, b: 2 } }), '["a",{"a":1,"b":2}]', true],
+        ['30.', new ObjectContent({ '0': 'a', 1: { 0: 1, 1: 2 } }), '["a",[1,2]]', true],
+        ['31.', new ObjectContent({ '0': 'a', 5: 'b' }), '["a",null,null,null,null,"b"]', true],
+        ['32.', new ObjectContent({ '0': 'a', 1: 'b', c: 'd' }), '{"0":"a","1":"b","c":"d"}', true],
+        ['33.', new ObjectContent({ z: 'a', 1: 'b', '2': 'c' }), '{"1":"b","2":"c","z":"a"}', true],
+        ['34.', new ObjectContent({ b: 'c', d: { e: 'f' } }), '{"b":"c","d":{"e":"f"}}', true],
+        ['35.', new ObjectContent({ b: 'c', d: new ObjectContent({ e: 'f' }) }), '{"b":"c","d":{"e":"f"}}', true],
+        [
+            '36.',
+            new ObjectContent({ b: 'c', d: new ObjectContent({ b: { c: ['d', 'e', 5] } }) }),
+            '{"b":"c","d":{"b":{"c":["d","e",5]}}}',
+            true
+        ]
+    ])(`%s: in: %s -> out: %s `, (comment: string, contentInput: ContentType | undefined, jsonOutput: string, jsonAndTextSame: boolean) => {
         const sut = new ObjectContent(contentInput);
-        expect(sut.getText()).toBe(jsonOotput);
-        expect(sut.toJSON()).toBe(jsonOotput);
+        expect(sut.getText()).toBe(jsonOutput);
+        expect(sut.toJSON()).toBe(jsonAndTextSame ? jsonOutput : JSON.stringify(jsonOutput));
     });
 
     /**

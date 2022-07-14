@@ -5,6 +5,9 @@ import { NullContent } from './NullContent';
 import { ObjectContent } from './ObjectContent';
 import { TextContent } from './TextContent';
 
+/**
+ *
+ */
 describe('check data contents', () => {
     /**
      *
@@ -70,6 +73,50 @@ describe('check data contents', () => {
     /**
      *
      */
+    describe('native checking', () => {
+        /**
+         *
+         */
+        it.each([
+            ['01', 'number', 1], //
+            ['02', 'boolean', true],
+            ['03', 'undefined', undefined],
+            ['04', 'undefined', null],
+            ['05', 'object', {}],
+            ['06', 'array', []]
+        ])(`%s not a string: %s, native value: '%s'`, (_: string, __: string, nativeValue?: ContentType | null) => {
+            const isString = DataContentHelper.isString(nativeValue as unknown as string);
+            expect(isString).toBeFalsy();
+        });
+
+        /**
+         *
+         */
+        it.each([
+            ['01 - number', 1, '1', NativeContent], //
+            ['02 - boolean', true, 'true', NativeContent],
+            ['03 - undefined', undefined, undefined, NativeContent],
+            ['04 - null', null, null, NullContent],
+            ['05 - object', {}, '{}', ObjectContent],
+            ['06 - array', [], '[]', ObjectContent]
+        ])(
+            `create:toString: %s, native value '%s', toString value: '%s'`,
+            (
+                _: string, //
+                nativeValue?: ContentType | null,
+                expectedValue?: ContentType | null,
+                expectedType?: any | null
+            ) => {
+                const result = DataContentHelper.create(nativeValue);
+                expect(result).toBeInstanceOf(expectedType);
+                expect(result.toString()).toBe(expectedValue);
+            }
+        );
+    });
+
+    /**
+     *
+     */
     describe('check create DataContent', () => {
         /**
          *
@@ -94,7 +141,7 @@ describe('check data contents', () => {
          */
         it('Create undefined is native', () => {
             const value = DataContentHelper.create();
-            expect(value).toBeInstanceOf(ObjectContent);
+            expect(value).toBeInstanceOf(NativeContent);
         });
 
         /**
@@ -102,7 +149,7 @@ describe('check data contents', () => {
          */
         it('Create undefined is undefined value', () => {
             const value = DataContentHelper.create();
-            expect(value.toString()).toBe('{}');
+            expect(value.toString()).toBeUndefined();
         });
 
         /**

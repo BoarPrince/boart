@@ -8,7 +8,7 @@ import DataContentBase from './DataContentBase';
  */
 
 export class NativeContent extends DataContentBase implements DataContent {
-    private readonly value: number | string | boolean;
+    private readonly value: number | string | boolean | object;
 
     /**
      *
@@ -18,7 +18,7 @@ export class NativeContent extends DataContentBase implements DataContent {
     /**
      *
      */
-    constructor(value: number | string | boolean) {
+    constructor(value?: number | boolean | object) {
         super();
         this.value = value;
     }

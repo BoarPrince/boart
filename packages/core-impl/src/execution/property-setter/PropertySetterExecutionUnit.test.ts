@@ -918,5 +918,5 @@ it('use default type converter', () => {
 
     sut.execute(context, row);
     expect(context.config.value).toBeInstanceOf(ObjectContent);
-    expect(context.config.value?.toString()).toEqual('"x"');
+    expect(context.config.value?.toString()).toEqual('x');
 });

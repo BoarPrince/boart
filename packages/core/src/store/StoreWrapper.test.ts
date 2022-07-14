@@ -110,7 +110,7 @@ describe('check store', () => {
      */
     it('get object from store (string, object content)', () => {
         sut.put('a', new ObjectContent('c'));
-        expect(sut.get('a').toString()).toBe('"c"');
+        expect(sut.get('a').toString()).toBe('c');
     });
 
     /**

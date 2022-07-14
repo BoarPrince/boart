@@ -1,6 +1,7 @@
 import { ContentType } from '../data/ContentType';
 import { DataContent } from '../data/DataContent';
 import { DataContentHelper } from '../data/DataContentHelper';
+import { ObjectContent } from '../data/ObjectContent';
 import { ScopeType } from '../types/ScopeType';
 
 import { Store } from './Store';
@@ -70,7 +71,11 @@ export class StoreWrapper {
 
         if (keys.length > 1) {
             const firstKey = keys.shift();
-            const contentValue = DataContentHelper.create(this.store.get(firstKey));
+            const nativeContentValue = this.store.get(firstKey);
+            const contentValue =
+                nativeContentValue !== undefined //
+                    ? DataContentHelper.create(this.store.get(firstKey))
+                    : new ObjectContent();
             DataContentHelper.setByPath(keys, value, contentValue);
             this.store.put(firstKey, contentValue);
         } else {

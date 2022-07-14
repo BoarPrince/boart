@@ -1262,14 +1262,6 @@ describe('startsWith', () => {
     /**
      *
      */
-    it('check string - native content', async () => {
-        const result = await sut.check(new NativeContent('aba'), 'ab');
-        expect(result.result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
     it('check string false', async () => {
         const result = await sut.check(new TextContent('aba'), 'c');
         expect(result.result).toBeFalsy();

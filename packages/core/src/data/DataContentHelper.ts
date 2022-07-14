@@ -11,12 +11,21 @@ import { TextContent } from './TextContent';
  *
  */
 export class DataContentHelper {
+    private static NATIVE_NUMBER = new RegExp(/^(\d+\.\d+|\d+)$/);
+    private static NATIVE_BOOLEAN = new RegExp(/^(false|true)$/);
+    private static NATIVE_REGEXP = new RegExp(/^(\d+\.\d+|\d+|false|true)$/);
+    private static NATIVE_WITH_QUOTES_REGEXP = RegExp(/^"(["]*(\d+\.\d+|\d+|false|true|undefined|null)["]*)"$/);
+
     /**
      *
      */
-    static tryParse(content: string, failedContent = null): object {
+    static tryParse(content: string, failedContent = null): object | string {
         try {
-            return JSON.parse(content);
+            if (DataContentHelper.NATIVE_WITH_QUOTES_REGEXP.test(content)) {
+                return content;
+            } else {
+                return JSON.parse(content);
+            }
         } catch (error) {
             return failedContent;
         }
@@ -32,21 +41,23 @@ export class DataContentHelper {
             return null;
         }
 
-        const generator = (obj: unknown) => {
-            if (!obj) {
-                return new NativeContent(obj);
-            } else if (typeof obj === 'string') {
-                return new TextContent(obj);
-            } else if (typeof obj == 'boolean') {
-                return new NativeContent(obj);
-            } else if (typeof obj == 'number') {
-                return new NativeContent(obj);
-            } else if (Array.isArray(obj)) {
-                return new ObjectContent(obj);
+        const generator = (value: unknown) => {
+            if (value === null) {
+                return new NullContent();
+            } else if (value === undefined) {
+                return new NativeContent(undefined);
+            } else if (typeof value === 'string') {
+                return new TextContent(value);
+            } else if (typeof value == 'boolean') {
+                return new NativeContent(value);
+            } else if (typeof value == 'number') {
+                return new NativeContent(value);
+            } else if (Array.isArray(value)) {
+                return new ObjectContent(value);
             }
 
             const map = new ObjectContent();
-            Object.entries(obj).forEach(([pName, pValue]) => {
+            Object.entries(value).forEach(([pName, pValue]) => {
                 map.set(pName, generator(pValue));
             });
             return map;
@@ -66,9 +77,49 @@ export class DataContentHelper {
     /**
      *
      */
+    static isNullOrUndefined(variable: ContentType) {
+        if (variable == null) {
+            return true;
+        }
+
+        if (DataContentHelper.isContent(variable)) {
+            return (variable as DataContent).isNullOrUndefined();
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     */
+    static isNative(variable: ContentType): boolean {
+        return (
+            typeof variable === 'boolean' ||
+            typeof variable === 'number' ||
+            (typeof variable === 'string' && DataContentHelper.NATIVE_REGEXP.test(variable))
+        );
+    }
+
+    /**
+     *
+     */
+    static toNative(variable: boolean | number | string): number | boolean {
+        if (typeof variable === 'boolean' || typeof variable === 'number') {
+            return variable;
+        } else if (DataContentHelper.NATIVE_BOOLEAN.test(variable)) {
+            return variable === 'true';
+        } else if (DataContentHelper.NATIVE_NUMBER.test(variable)) {
+            return Number(variable).valueOf();
+        }
+    }
+
+    /**
+     *
+     */
     static isString(variable: ContentType): boolean {
         return Object.prototype.toString.call(variable) === '[object String]';
     }
+
     /**
      *
      */
@@ -95,27 +146,41 @@ export class DataContentHelper {
     /**
      *
      */
-    static create(data: ContentType = {}): DataContent {
-        /**
-         *
-         */
-        const internalCreate = (value: ContentType): DataContent => {
-            if (value == null) {
-                return new NullContent();
-            } else if (DataContentHelper.isContent(value)) {
-                return value as DataContent;
-            } else if (typeof value === 'string') {
-                return DataContentHelper.fromJSON(value) ?? new TextContent(value);
-            } else if (!!value && typeof value === 'object') {
-                return new ObjectContent(value);
-            } else {
-                return new NativeContent(value);
+    static create(value?: ContentType): DataContent {
+        if (value === null) {
+            return new NullContent();
+        } else if (value === undefined) {
+            return new NativeContent(undefined);
+        } else if (DataContentHelper.isContent(value)) {
+            return value as DataContent;
+        } else if (typeof value === 'string') {
+            switch (value) {
+                case 'undefined':
+                    return new NativeContent(undefined);
+                case 'null':
+                    return new NullContent();
+                default:
+                    if (DataContentHelper.NATIVE_WITH_QUOTES_REGEXP.test(value)) {
+                        // return new TextContent(JSON.parse(value) as string);
+                        // remove quotes
+                        return new TextContent(value.replace(DataContentHelper.NATIVE_WITH_QUOTES_REGEXP, '$1'));
+                    } else if (DataContentHelper.isNative(value)) {
+                        return new NativeContent(DataContentHelper.toNative(value));
+                    } else {
+                        const valueAsObject = DataContentHelper.tryParse(value);
+                        if (!valueAsObject) {
+                            return new TextContent(value);
+                        } else {
+                            return new ObjectContent(valueAsObject);
+                        }
+                    }
             }
-        };
-        if (Array.isArray(data)) {
-            return new ObjectContent(data);
+        } else if (Array.isArray(value)) {
+            return new ObjectContent(value);
+        } else if (DataContentHelper.isNative(value)) {
+            return new NativeContent(value as boolean | number);
         } else {
-            return internalCreate(data);
+            return new ObjectContent(value);
         }
     }
 

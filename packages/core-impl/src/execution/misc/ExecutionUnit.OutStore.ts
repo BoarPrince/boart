@@ -52,7 +52,8 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
      *
      */
     private getDataContent(context: DataContext): DataContent {
-        const nonNullValue = (value: DataContent) => (DataContentHelper.isNullOrUndefined(value) ? null : value);
+        const nonNullValue = (value: DataContent, nullValue?: DataContent) =>
+            DataContentHelper.isNullOrUndefined(value) && nullValue !== undefined ? nullValue : value;
 
         switch (this.executionType) {
             case 'data':
@@ -66,8 +67,8 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
 
             default:
                 return (
-                    nonNullValue(context.execution.transformed) ||
-                    nonNullValue(context.execution.data) ||
+                    nonNullValue(context.execution.transformed, null) ||
+                    nonNullValue(context.execution.data, null) ||
                     nonNullValue(context.preExecution.payload)
                 );
         }

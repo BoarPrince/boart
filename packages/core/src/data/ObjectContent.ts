@@ -2,6 +2,7 @@ import { ContentInstance } from './ContentInstance';
 import { ContentType } from './ContentType';
 import { DataContent } from './DataContent';
 import DataContentBase from './DataContentBase';
+import { DataContentHelper } from './DataContentHelper';
 import { DataContentObject } from './DataContentObject';
 
 /**
@@ -9,7 +10,6 @@ import { DataContentObject } from './DataContentObject';
  */
 
 export class ObjectContent extends DataContentBase implements DataContentObject {
-    private value: ContentType;
     private dirty = true;
 
     /**
@@ -20,15 +20,32 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
     /**
      *
      */
-    constructor(value?: ContentType) {
+    constructor(private value?: ContentType) {
         super();
 
         // check native null and NullContent
         value = value == null || value.toString() == null ? {} : value;
-        if (typeof value !== 'object') {
-            this.value = this.tryParse(value.toString(), value);
+        this.value = this.deepDeconstruct(value);
+    }
+
+    /**
+     *
+     */
+    private deepDeconstruct(value: ContentType): ContentType {
+        if (value == null) {
+            return value;
+        } else if (DataContentHelper.isContent(value)) {
+            return this.deepDeconstruct((value as DataContent).getValue());
+        } else if (typeof value !== 'object') {
+            const innerValue = this.tryParse(value.toString(), value);
+            // return innerValue;
+            return typeof innerValue === 'object' ? innerValue : value;
         } else {
-            this.value = value;
+            for (const key of Object.keys(value)) {
+                const val = value[key] as ContentType;
+                value[key] = this.deepDeconstruct(val);
+            }
+            return value;
         }
     }
 
@@ -36,20 +53,18 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
      *
      */
     toJSON(): string {
-        return JSON.stringify(this.getValue(), (_key: string, value: string | unknown) => {
-            if (typeof value === 'string') {
-                return this.tryParse(value, value);
-            } else {
-                return value;
-            }
-        });
+        return JSON.stringify(this.getValue());
     }
 
     /**
      *
      */
     getText(): string {
-        return this.toJSON();
+        if (typeof this.getValue() === 'object') {
+            return this.toJSON();
+        } else {
+            return this.getValue().toString();
+        }
     }
 
     /**
@@ -60,7 +75,7 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
             if (Array.isArray(value)) {
                 return value.map((v) => this.transformToArray(v));
             } else {
-                const maxIndex = Object.keys(value)
+                const maxIndex: number = Object.keys(value)
                     .map((k) => Number.parseInt(k))
                     .sort((a, b) => a - b)
                     .pop();
@@ -127,7 +142,7 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
      */
     set(key: string, value: ContentType): DataContent {
         this.dirty = true;
-        this.value[key] = value;
+        this.value[key] = this.deepDeconstruct(value);
         return this;
     }
 
