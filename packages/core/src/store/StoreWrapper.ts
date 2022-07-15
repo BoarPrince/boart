@@ -42,7 +42,7 @@ export class StoreWrapper {
     /**
      *
      */
-    constructor(store: StoreMap | object, storeName: string) {
+    constructor(store: StoreMap | object | null, storeName: string) {
         if (!store) {
             this.store = new ObjectWrapper({});
         } else if (typeof store === 'object' && store.constructor.name === 'Object') {

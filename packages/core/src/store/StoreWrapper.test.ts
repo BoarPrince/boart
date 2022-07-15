@@ -5,6 +5,7 @@ import { NativeContent } from '../data/NativeContent';
 import { ObjectContent } from '../data/ObjectContent';
 import { TextContent } from '../data/TextContent';
 
+import { Store } from './Store';
 import { StoreMap } from './StoreMap';
 import { StoreWrapper } from './StoreWrapper';
 
@@ -61,6 +62,25 @@ describe('check store', () => {
     it('internal store is null', () => {
         sut = new StoreWrapper(null, 'test');
         expect(sut.store.constructor.name).toBe('ObjectWrapper');
+    });
+
+    /**
+     *
+     */
+    it('add value to internal store', () => {
+        sut = new StoreWrapper(null, 'test');
+        sut.put('a', 'b');
+        expect(sut.get('a').toString()).toBe('b');
+    });
+
+    /**
+     *
+     */
+    it('clear values from internal store', () => {
+        sut = new StoreWrapper(null, 'test');
+        sut.put('a', 'b');
+        sut.clear();
+        expect(() => sut.get('a')).toThrowError(`getting "a" not possible, because it does not exist`);
     });
 
     /**
@@ -308,5 +328,22 @@ describe('check store', () => {
         }
 
         throw Error('error must occur');
+    });
+
+    /**
+     *
+     */
+    it('get wrappers by scope', () => {
+        let store = StoreWrapper.getWrapperByScope('g');
+        expect(store).toStrictEqual(Store.instance.globalStore);
+
+        store = StoreWrapper.getWrapperByScope('l');
+        expect(store).toStrictEqual(Store.instance.localStore);
+
+        store = StoreWrapper.getWrapperByScope('t');
+        expect(store).toStrictEqual(Store.instance.testStore);
+
+        store = StoreWrapper.getWrapperByScope('s');
+        expect(store).toStrictEqual(Store.instance.stepStore);
     });
 });
