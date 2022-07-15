@@ -19,51 +19,12 @@ export class DataContentHelper {
     /**
      *
      */
-    static tryParse(content: string, failedContent = null): object | string {
+    private static tryParse(content: string, failedContent = null): object | string {
         try {
-            if (DataContentHelper.NATIVE_WITH_QUOTES_REGEXP.test(content)) {
-                return content;
-            } else {
-                return JSON.parse(content);
-            }
+            return JSON.parse(content);
         } catch (error) {
             return failedContent;
         }
-    }
-
-    /**
-     *
-     */
-    static fromJSON(json: string): DataContent {
-        const parsedJSON = DataContentHelper.tryParse(json);
-        if (!parsedJSON) {
-            // not possible to parse
-            return null;
-        }
-
-        const generator = (value: unknown) => {
-            if (value === null) {
-                return new NullContent();
-            } else if (value === undefined) {
-                return new NativeContent(undefined);
-            } else if (typeof value === 'string') {
-                return new TextContent(value);
-            } else if (typeof value == 'boolean') {
-                return new NativeContent(value);
-            } else if (typeof value == 'number') {
-                return new NativeContent(value);
-            } else if (Array.isArray(value)) {
-                return new ObjectContent(value);
-            }
-
-            const map = new ObjectContent();
-            Object.entries(value).forEach(([pName, pValue]) => {
-                map.set(pName, generator(pValue));
-            });
-            return map;
-        };
-
-        return generator(parsedJSON);
     }
 
     /**
@@ -139,13 +100,6 @@ export class DataContentHelper {
     /**
      *
      */
-    static toJSON(data: ContentType): string {
-        return DataContentHelper.create(data).toJSON();
-    }
-
-    /**
-     *
-     */
     static create(value?: ContentType): DataContent {
         if (value === null) {
             return new NullContent();
@@ -188,19 +142,10 @@ export class DataContentHelper {
      *
      */
     private static getPathValue(property: string, value: ContentType, completePath: string) {
-        const dataContent = (value as DataContent).asDataContentObject ? (value as DataContent).asDataContentObject() : null;
-        if (!dataContent) {
-            if (!Object.keys(value).includes(property)) {
-                DataContentHelper.throwRecursiveError(completePath, property);
-            } else {
-                return value[property];
-            }
+        if (!Object.keys(value).includes(property)) {
+            DataContentHelper.throwRecursiveError(completePath, property);
         } else {
-            if (!dataContent.has(property)) {
-                DataContentHelper.throwRecursiveError(completePath, property);
-            } else {
-                return dataContent.get(property);
-            }
+            return value[property];
         }
     }
 
@@ -214,7 +159,7 @@ export class DataContentHelper {
     /**
      *
      */
-    public static getByPath(key: string | string[], content: DataContent): DataContent {
+    public static getByPath(key: string | string[], content?: DataContent | null): DataContent {
         const keys = Array.isArray(key) ? key : DataContentHelper.splitKeys(key);
         const completePath = keys.join('.');
         const firstKey = keys.shift();
@@ -281,7 +226,7 @@ export class DataContentHelper {
     /**
      *
      */
-    public static splitKeys(key: string): string[] {
+    public static splitKeys(key: string | null): string[] {
         key = (key || '') //
             .replace(/^\[(\d+)\]/g, '$1') // [0].x.x
             .replace(/\[(\d+)\]/g, '.$1'); // x.x[0].x

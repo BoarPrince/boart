@@ -43,19 +43,12 @@ export class TextContent extends DataContentBase {
     /**
      *
      */
-    setText(text: string) {
-        this.text = text;
-    }
-
-    /**
-     *
-     */
     toJSON(): string {
-        if (TextContent.isObject(this.getText())) {
+        if (TextContent.isObject(this.text)) {
             // normally not usual, but the text content can be a valid json (object)
             return this.text;
         } else {
-            return JSON.stringify(this.getText());
+            return JSON.stringify(this.text);
         }
     }
 

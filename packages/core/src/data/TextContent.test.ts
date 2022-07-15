@@ -33,5 +33,7 @@ it('object', () => {
 it('string', () => {
     const sut = new TextContent('a');
     expect(sut.toJSON()).toBe(JSON.stringify('a'));
+
     expect(sut.getText()).toBe('a');
+    expect(sut.getValue()).toBe('a');
 });
