@@ -50,16 +50,7 @@ describe('check data content base', () => {
      */
     it('check isNullOrUndefined', () => {
         const sut = new NativeContent(1);
-        expect(sut.isNullOrUndefined()).toBeFalse();
-    });
-
-    /**
-     *
-     */
-    it('check set- and getText (TextContent)', () => {
-        const sut = new TextContent('');
-        sut.setText('b');
-        expect(sut.getText()).toBe('b');
+        expect(sut.isNullOrUndefined()).toBeFalsy();
     });
 
     /**
@@ -67,7 +58,7 @@ describe('check data content base', () => {
      */
     it('check getValue (NativeContent)', () => {
         const sut = new NativeContent(false);
-        expect(sut.getValue()).toBeFalse();
+        expect(sut.getValue()).toBeFalsy();
     });
 
     /**

@@ -392,12 +392,49 @@ describe('out store from payload', () => {
     /**
      *
      */
+    it('add empty array to additional property - array with spaces', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value    |
+             |----------|----------|
+             |payload   | {"a": 1} |
+             |payload#b | [   ]    |
+             |store     | var      |`
+        );
+
+        await sut.handler.process(tableDef);
+        expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result.toString()).toBe('{"a":1,"b":[]}');
+    });
+
+    /**
+     *
+     */
     it('add empty object to additional property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
              |payload   | {"a": 1} |
              |payload#b | {}       |
+             |store     | var      |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.toString()).toBe('{"a":1,"b":{}}');
+    });
+
+    /**
+     *
+     */
+    it('add empty object to additional property - object with spaces', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value    |
+             |----------|----------|
+             |payload   | {"a": 1} |
+             |payload#b | {   }    |
              |store     | var      |`
         );
 

@@ -18,7 +18,7 @@ export class NativeContent extends DataContentBase implements DataContent {
     /**
      *
      */
-    constructor(value?: number | boolean | object) {
+    constructor(value?: number | boolean | object | null) {
         super();
         this.value = value;
     }
