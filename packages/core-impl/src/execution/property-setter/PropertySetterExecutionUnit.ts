@@ -57,7 +57,10 @@ export class PropertySetterExecutionUnit<
      */
     private defaultSetter(value: ContentType, rowValue: ContentType): ContentType {
         const delimiter = !value ? '' : this.config.delimiter;
-        return this.config.concat === false ? rowValue : `${value?.toString() || ''}${delimiter.toString()}${rowValue?.toString() || ''}`;
+        const toString = (val: ContentType) => val?.toString() || '';
+        return this.config.concat === false //
+            ? rowValue
+            : `${toString(value)}${delimiter.toString()}${toString(rowValue)}`;
     }
 
     /**
