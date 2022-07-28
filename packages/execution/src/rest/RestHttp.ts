@@ -71,7 +71,7 @@ export class RestHttp {
     /**
      *
      */
-    private async fetch(url: string, option: RequestInit): Promise<Response> {
+    private fetch(url: string, option: RequestInit): Promise<Response> {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this.executionInfo = JSON.parse(
             JSON.stringify({
@@ -195,7 +195,7 @@ export class RestHttp {
         bearer_token?: string | null,
         headers?: Record<string, string> | null
     ): Promise<Response> {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
         const formData = new Form_Data() as any;
 
         for (const key of Object.keys(form_data)) {
