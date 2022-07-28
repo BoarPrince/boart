@@ -1,17 +1,20 @@
-import { GroupRowDefinition, ParaType, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
-import { ParaValidator, PropertySetterExecutionUnit, RequiredValidator, RowTypeValue, UniqueValidator } from '@boart/core-impl';
+import { ContentType, GroupRowDefinition, ParaType, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
+import {
+    DependsOnValidator,
+    ParaValidator,
+    PropertySetterExecutionUnit,
+    RequiredValidator,
+    RowTypeValue,
+    UniqueValidator
+} from '@boart/core-impl';
 
-import { RestCallContext } from './RestCallContext';
+import { RestCallContext, RestCallPreExecutionContext } from './RestCallContext';
 import { RestCallExecutionUnit } from './RestCallExecutionUnit';
 
 /**
  *
  */
 export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallContext, RowTypeValue<RestCallContext>> {
-    private readonly key_body = Symbol('body');
-    private readonly key_query = Symbol('query');
-    private readonly key_method = Symbol('method');
-
     /**
      *
      */
@@ -25,15 +28,19 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
     /**
      *
      */
-    newContext = () => ({
+    newContext = (): RestCallContext => ({
         config: {
             value: ''
         },
         preExecution: {
             method: '',
+            url: '',
             payload: '',
             query: '',
-            url: ''
+            header: {},
+            param: {},
+            formData: {},
+            authentication: ''
         },
         execution: {
             data: null,
@@ -47,6 +54,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
      */
     addGroupRowDefinition(tableHandler: TableHandler<RestCallContext, RowTypeValue<RestCallContext>>) {
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic'));
+        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
 
     /**
@@ -55,17 +63,62 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
     addRowDefinition(tableHandler: TableHandler<RestCallContext, RowTypeValue<RestCallContext>>) {
         tableHandler.addRowDefinition(
             new RowDefinition({
-                key: this.key_body,
+                key: Symbol('form-data'),
                 type: TableRowType.PreProcessing,
-                parameterType: ParaType.Optional,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'payload'),
+                parameterType: ParaType.False,
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'formData', {
+                    defaultSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType => {
+                        (value as object)[para] = rowValue;
+                        return value;
+                    }
+                }),
+                validators: [new DependsOnValidator(['method:form-data'])]
+            })
+        );
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('param'),
+                type: TableRowType.PreProcessing,
+                parameterType: ParaType.False,
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'param', {
+                    defaultSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType => {
+                        (value as object)[para] = rowValue;
+                        return value;
+                    }
+                }),
+                validators: [new DependsOnValidator(['method:post-param'])]
+            })
+        );
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('header'),
+                type: TableRowType.PreProcessing,
+                parameterType: ParaType.False,
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'header', {
+                    actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType => {
+                        (value as object)[para] = rowValue;
+                        return value;
+                    }
+                }),
                 validators: null
             })
         );
 
         tableHandler.addRowDefinition(
             new RowDefinition({
-                key: this.key_query,
+                key: Symbol('payload'),
+                type: TableRowType.PreProcessing,
+                parameterType: ParaType.Optional,
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'payload'),
+                validators: [new DependsOnValidator(['method:post', 'method:put'])]
+            })
+        );
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('query'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.Optional,
                 executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'query'),
@@ -75,10 +128,35 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
 
         tableHandler.addRowDefinition(
             new RowDefinition({
-                key: this.key_method,
+                key: Symbol('authentication'),
+                type: TableRowType.PreProcessing,
+                parameterType: ParaType.False,
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>(
+                    'preExecution',
+                    'authentication'
+                ),
+                defaultValue: '${store:authentication}',
+                defaultValueColumn: Symbol('value'),
+                validators: null
+            })
+        );
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('method'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.True,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'method'),
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', null, {
+                    defaultSetter: (
+                        context: RestCallPreExecutionContext,
+                        rowValue: ContentType,
+                        para: string
+                    ): RestCallPreExecutionContext => {
+                        context.url = rowValue.toString();
+                        context.method = para;
+                        return context;
+                    }
+                }),
                 validators: [new UniqueValidator(), new ParaValidator(['post', 'get', 'delete', 'put', 'form-data', 'post-param'])]
             })
         );
@@ -88,6 +166,6 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
      *
      */
     addGroupValidation(tableHandler: TableHandler<RestCallContext, RowTypeValue<RestCallContext>>) {
-        tableHandler.addGroupValidator(new RequiredValidator([this.key_method]));
+        tableHandler.addGroupValidator(new RequiredValidator([Symbol('method')]));
     }
 }

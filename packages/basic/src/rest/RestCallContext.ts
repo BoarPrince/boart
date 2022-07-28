@@ -11,11 +11,15 @@ export interface RestCallConfigContext {
 /**
  *
  */
-interface RestCallPreExecutionContext {
-    payload: string;
-    method: string;
-    query: string;
+export interface RestCallPreExecutionContext {
     url: string;
+    method: string;
+    payload: string;
+    query: string;
+    param: Record<string, string>;
+    header: Record<string, string>;
+    formData: Record<string, string>;
+    authentication: string;
 }
 
 /**
