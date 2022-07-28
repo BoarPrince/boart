@@ -116,29 +116,6 @@ it('check with concating (but not using)', () => {
 /**
  *
  */
-it('check set null', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
-
-    const row = new RowTypePropValue<DataContext>({
-        key: 'a:a',
-        keyPara: 'null',
-        selector: undefined,
-        values: {
-            value: ''
-        },
-        values_replaced: {
-            value: ''
-        },
-        _metaDefinition: null
-    });
-
-    sut.execute(context, row);
-    expect(context.config['value']).toBeNull();
-});
-
-/**
- *
- */
 it('check null initialized', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
 
@@ -806,7 +783,7 @@ it('check query style (default, para, default and modifier)', () => {
  */
 it('check method/url style', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'restCall', {
-        actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): RestCallContext => ({
+        defaultSetter: (value: ContentType, rowValue: ContentType, para: string): RestCallContext => ({
             method: para,
             url: rowValue?.toString() || ''
         })
@@ -819,8 +796,8 @@ it('check method/url style', () => {
 
     const row = new RowTypePropValue<DataContext>({
         key: 'method',
-        keyPara: undefined,
-        selector: 'post',
+        keyPara: 'post',
+        selector: undefined,
         values: {
             value: 'http://xyz'
         },
@@ -839,7 +816,7 @@ it('check method/url style', () => {
  */
 it('check param definition (actionParaSetter), three paras', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
-        actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType => {
+        defaultSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType => {
             (value as object)[para] = rowValue;
             return value;
         }
@@ -849,8 +826,8 @@ it('check param definition (actionParaSetter), three paras', () => {
 
     const row = new RowTypePropValue<DataContext>({
         key: 'param',
-        keyPara: undefined,
-        selector: 'para1',
+        keyPara: 'para1',
+        selector: undefined,
         values: {
             value: '1'
         },
@@ -862,8 +839,8 @@ it('check param definition (actionParaSetter), three paras', () => {
 
     const row2 = new RowTypePropValue<DataContext>({
         key: 'param',
-        keyPara: undefined,
-        selector: 'para2',
+        keyPara: 'para2',
+        selector: undefined,
         values: {
             value: '2'
         },
@@ -875,8 +852,8 @@ it('check param definition (actionParaSetter), three paras', () => {
 
     const row3 = new RowTypePropValue<DataContext>({
         key: 'param',
-        keyPara: undefined,
-        selector: 'para3',
+        keyPara: 'para3',
+        selector: undefined,
         values: {
             value: '3'
         },

@@ -461,20 +461,6 @@ describe('check expected operators', () => {
     /**
      *
      */
-    it('null operator', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action           |value |
-             |-----------------|------|
-             |data:config:null |      |
-             |expected:null    |      |`
-        );
-
-        await sut.handler.process(tableDef);
-    });
-
-    /**
-     *
-     */
     it('null operator - falure', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action        |value |

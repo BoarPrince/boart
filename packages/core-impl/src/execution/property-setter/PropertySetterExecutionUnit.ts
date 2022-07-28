@@ -2,16 +2,15 @@ import { ContentType, DataContentHelper, ExecutionContext, ExecutionUnit, Object
 
 import { DataExecutionContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
-import { ParaValidator } from '../../validators/ParaValidator';
 
 type Config = {
     concat?: boolean;
     delimiter?: string;
     defaultModifier?: (rowValue: ContentType) => ContentType;
     actionSelectorModifier?: (rowValue: ContentType) => ContentType;
-    defaultSetter?: (value: ContentType, rowValue: ContentType) => ContentType;
+    defaultSetter?: (value: ContentType, rowValue: ContentType, para: string) => ContentType;
     defaultTypeConverter?: (value: ContentType) => ContentType;
-    actionSelectorSetter?: (value: ContentType, rowValue: ContentType, para: string) => ContentType;
+    actionSelectorSetter?: (value: ContentType, rowValue: ContentType, selector: string) => ContentType;
 };
 
 /**
@@ -50,7 +49,7 @@ export class PropertySetterExecutionUnit<
      * allow :null to set null
      */
     readonly parameterType = ParaType.Optional;
-    readonly validators = [new ParaValidator(['null'])];
+    readonly validators = [];
 
     /**
      *
@@ -103,17 +102,13 @@ export class PropertySetterExecutionUnit<
 
         const accessor = !this.propertyLevel2 ? oneLevel : twoLevel;
 
-        if (row.actionPara === 'null') {
-            accessor.val = null;
-            return;
-        }
         const result = {
             modifiedValue: null as ContentType,
             value: null as ContentType
         };
         if (!row.data.selector) {
             result.modifiedValue = this.config.defaultModifier(row.value);
-            result.value = this.config.defaultSetter(accessor.val, result.modifiedValue);
+            result.value = this.config.defaultSetter(accessor.val, result.modifiedValue, row.actionPara);
         } else {
             result.modifiedValue = this.config.actionSelectorModifier(row.value);
             result.value = this.config.actionSelectorSetter(accessor.val, result.modifiedValue, row.data.selector);
