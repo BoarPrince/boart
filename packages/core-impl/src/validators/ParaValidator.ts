@@ -12,7 +12,11 @@ export class ParaValidator implements RowValidator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validate(row: BaseRowMetaDefinition<any, any>) {
         if (!!row.keyPara && !this.allowedPara.some((allowedPara) => row.keyPara === allowedPara || (!allowedPara && !row.keyPara))) {
-            throw Error(`Parameter '${row.keyPara}' is not defined`);
+            throw Error(
+                `Parameter '${row.keyPara}' of key '${row.key}' is not defined. Allowed is ${this.allowedPara
+                    .map((k) => `'${k}'`)
+                    .join(' or ')}`
+            );
         }
     }
 }

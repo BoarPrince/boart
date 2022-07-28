@@ -124,7 +124,7 @@ describe('check expected:jsonLogic execution units', () => {
                 ]
             });
         } catch (error) {
-            expect(error.message).toBe("Parameter 'fals' is not defined");
+            expect(error.message).toBe("Parameter 'fals' of key 'expected:jsonLogic' is not defined. Allowed is 'true' or 'false'");
             return;
         }
 

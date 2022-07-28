@@ -661,7 +661,7 @@ describe('check row validators', () => {
             [Symbol('out'), '', ['', 'store'], null],
             [Symbol('out'), '', [null, '', 'store'], null],
             [Symbol('out'), 'store', ['', 'store'], null],
-            [Symbol('out'), 'store', ['', 'global'], `Parameter 'store' is not defined`]
+            [Symbol('out'), 'store', ['', 'global'], "Parameter 'store' of key 'out' is not defined. Allowed is '' or 'global'"]
         ])(
             `check para validation (metaKey: '%s', key: '%s', allowed Paras: '%s', error message: '%s'`,
             (key: symbol, para: string, allowedParas: string[], errorMessage: string) => {

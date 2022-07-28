@@ -26,6 +26,7 @@
     "iban": "^0.0.14",
     "json-logic-js": "^2.0.2",
     "jspath": "^0.4.0",
+    "pdfjs-dist": "^2.14.305",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
