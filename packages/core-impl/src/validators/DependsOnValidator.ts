@@ -20,11 +20,13 @@ export class DependsOnValidator implements RowValidator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validate(row: BaseRowMetaDefinition<any, any>, rows: readonly BaseRowMetaDefinition<any, any>[]) {
         let count = 0;
-        this.dependOnKey.forEach((key) => rows?.forEach((r) => (count += r.key === key ? 1 : 0)));
+        this.dependOnKey.forEach((key) => rows?.forEach((r) => (count += r.key === key || `${r.key}:${r.keyPara || ''}` === key ? 1 : 0)));
 
         if (count === 0) {
             throw Error(
-                `key '${row._metaDefinition.key.description || ''}' depends on '${this.dependOnKey.join(',')}', but it does not exist!`
+                `key '${row._metaDefinition.key.description || ''}' depends on ${this.dependOnKey
+                    .map((k) => `'${k}'`)
+                    .join(' or ')}, but it does not exist!`
             );
         }
     }
