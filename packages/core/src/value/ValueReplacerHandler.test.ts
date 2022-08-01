@@ -38,461 +38,575 @@ jest.mock('../store/Store', () => {
     };
 });
 
-describe('check valueReplaceHandler', () => {
+/**
+ *
+ */
+class NamedValueReplacerMock implements ValueReplacer {
+    constructor(private _name: string) {}
+
+    get name() {
+        return this._name;
+    }
+    priority = 100;
+    scoped = ScopedType.true;
+    replace = jest.fn((property: string) => `#${property}#`);
+}
+
+/**
+ *
+ */
+class ValueReplacerMock implements ValueReplacer {
+    get name() {
+        return 'ValueReplacerMock';
+    }
+    priority = 100;
+    scoped = ScopedType.true;
+    replace = jest.fn((property: string): string | null | undefined => `#${property}#`);
+}
+
+/**
+ *
+ */
+class StoreReplacerMock extends ValueReplacerMock {
+    getProperty(property: string): string {
+        return property;
+    }
+
+    get name() {
+        return 'StoreReplacerMock';
+    }
+}
+
+/**
+ *
+ */
+class NullableReplacerMock extends ValueReplacerMock {
+    nullable = true;
+    constructor(private value: string | null | undefined, private printProperty: boolean) {
+        super();
+    }
+    get name() {
+        return 'NullReplacerMock';
+    }
+    replace = jest.fn((property: string) => {
+        if (this.printProperty) {
+            return `${property}:${this.value || ''}`;
+        } else {
+            return this.value;
+        }
+    });
+}
+
+class StoreReplacerNoMatchMock implements ValueReplacer {
+    readonly name = 'StoreReplacerNoMatchMock';
+    priority = 100;
+    scoped = ScopedType.true;
+    getProperty(property: string): string {
+        return property;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    replace = jest.fn((_p: string) => null);
+}
+
+/**
+ *
+ */
+class ValueReplacerMockWithProperty extends ValueReplacerMock {
+    constructor(private propName: string) {
+        super();
+    }
+
+    getProperty(): string {
+        return this.propName;
+    }
+}
+
+const sut = ValueReplacerHandler.instance;
+
+/**
+ *
+ */
+beforeEach(() => {
+    sut.clear();
+    Store.instance.globalStore.clear();
+    Store.instance.localStore.clear();
+    Store.instance.testStore.clear();
+    Store.instance.stepStore.clear();
+});
+
+/**
+ *
+ */
+describe('check common functionality', () => {
     /**
      *
      */
-    class NamedValueReplacerMock implements ValueReplacer {
-        constructor(private _name: string) {}
-
-        get name() {
-            return this._name;
-        }
-        priority = 100;
-        scoped = ScopedType.true;
-        replace = jest.fn((property: string) => `#${property}#`);
-    }
-
     /**
      *
      */
-    class ValueReplacerMock implements ValueReplacer {
-        get name() {
-            return 'ValueReplacerMock';
-        }
-        priority = 100;
-        scoped = ScopedType.true;
-        replace = jest.fn((property: string) => `#${property}#`);
-    }
+    it('adding and removing replacers', () => {
+        const valueReplace = new ValueReplacerMock();
 
-    /**
-     *
-     */
-    class StoreReplacerMock extends ValueReplacerMock {
-        getProperty(property: string): string {
-            return property;
-        }
+        sut.add('test', valueReplace);
 
-        get name() {
-            return 'StoreReplacerMock';
-        }
-    }
+        let replacedValue = sut.replace('--${test:a}--');
+        expect(replacedValue).toBe('--#a#--');
 
-    class StoreReplacerNoMatchMock implements ValueReplacer {
-        readonly name = 'StoreReplacerNoMatchMock';
-        priority = 100;
-        scoped = ScopedType.true;
-        getProperty(property: string): string {
-            return property;
-        }
-        replace = jest.fn(() => null);
-    }
+        sut.delete('test');
 
-    /**
-     *
-     */
-    class ValueReplacerMockWithProperty extends ValueReplacerMock {
-        constructor(private propName: string) {
-            super();
-        }
-
-        getProperty(): string {
-            return this.propName;
-        }
-    }
-
-    const sut = ValueReplacerHandler.instance;
-
-    /**
-     *
-     */
-    beforeEach(() => {
-        sut.clear();
-        Store.instance.globalStore.clear();
-        Store.instance.localStore.clear();
-        Store.instance.testStore.clear();
-        Store.instance.stepStore.clear();
+        replacedValue = sut.replace('--${test:a}--');
+        expect(replacedValue).toBe('--${test:a}--');
     });
 
     /**
      *
      */
-    describe('check common functionality', () => {
-        /**
-         *
-         */
-        /**
-         *
-         */
-        it('adding and removing replacers', () => {
-            const valueReplace = new ValueReplacerMock();
+    /**
+     *
+     */
+    it('adding replacers with addItems (check recursive)', () => {
+        const valueReplacerXXX = new NamedValueReplacerMock('xxx');
+        const valueReplacerYYY = new NamedValueReplacerMock('yyy');
 
-            sut.add('test', valueReplace);
+        sut.addItems([valueReplacerXXX, valueReplacerYYY]);
 
-            let replacedValue = sut.replace('--${test:a}--');
-            expect(replacedValue).toBe('--#a#--');
-
-            sut.delete('test');
-
-            replacedValue = sut.replace('--${test:a}--');
-            expect(replacedValue).toBe('--${test:a}--');
-        });
-
-        /**
-         *
-         */
-        /**
-         *
-         */
-        it('adding replacers with addItems (check recursive)', () => {
-            const valueReplacerXXX = new NamedValueReplacerMock('xxx');
-            const valueReplacerYYY = new NamedValueReplacerMock('yyy');
-
-            sut.addItems([valueReplacerXXX, valueReplacerYYY]);
-
-            const replacedValue = sut.replace('--${yyy:${xxx:a}}--');
-            expect(replacedValue).toBe('--##a##--');
-        });
-
-        /**
-         *
-         */
-        /**
-         *
-         */
-        it('adding replacers with addItems (check linear)', () => {
-            const valueReplacerXXX = new NamedValueReplacerMock('xxx');
-            const valueReplacerYYY = new NamedValueReplacerMock('yyy');
-
-            sut.addItems([valueReplacerXXX, valueReplacerYYY]);
-
-            const replacedValue = sut.replace('--${yyy:a} ${xxx:a}--');
-            expect(replacedValue).toBe('--#a# #a#--');
-        });
+        const replacedValue = sut.replace('--${yyy:${xxx:a}}--');
+        expect(replacedValue).toBe('--##a##--');
     });
 
     /**
      *
      */
-    describe('check valueHandler (unscoped)', () => {
-        /**
-         *
-         */
-        it('replacement without scope', () => {
-            const valueReplace = new ValueReplacerMock();
-            valueReplace.scoped = ScopedType.false;
-            sut.add('test', valueReplace);
-            const replacedValue = sut.replace('--${test:a}--');
+    /**
+     *
+     */
+    it('adding replacers with addItems (check linear)', () => {
+        const valueReplacerXXX = new NamedValueReplacerMock('xxx');
+        const valueReplacerYYY = new NamedValueReplacerMock('yyy');
 
-            expect(replacedValue).toBe('--#a#--');
-            expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
-        });
+        sut.addItems([valueReplacerXXX, valueReplacerYYY]);
 
-        /**
-         *
-         */
-        it('replacement with global (suite) scope', () => {
-            sut.add('test', new ValueReplacerMock());
-            const replacedValue = sut.replace('--${test:g:a}--');
+        const replacedValue = sut.replace('--${yyy:a} ${xxx:a}--');
+        expect(replacedValue).toBe('--#a# #a#--');
+    });
+});
 
-            expect(replacedValue).toBe('--#a#--');
-            expect(Store.instance.globalStore.get).toHaveBeenCalled();
-            expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
-        });
+/**
+ *
+ */
+describe('check valueHandler (unscoped)', () => {
+    /**
+     *
+     */
+    it('replacement without scope', () => {
+        const valueReplace = new ValueReplacerMock();
+        valueReplace.scoped = ScopedType.false;
+        sut.add('test', valueReplace);
+        const replacedValue = sut.replace('--${test:a}--');
 
-        /**
-         *
-         */
-        it('replacement with file/local (spec) scope', () => {
-            sut.add('test', new ValueReplacerMock());
-            const replacedValue = sut.replace('--${test:l:a}--');
-
-            expect(replacedValue).toBe('--#a#--');
-            expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.localStore.get).toHaveBeenCalled();
-            expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
-        });
-
-        /**
-         *
-         */
-        it('replacement with test (scenario) scope', () => {
-            sut.add('test', new ValueReplacerMock());
-            const replacedValue = sut.replace('--${test:t:a}--');
-
-            expect(replacedValue).toBe('--#a#--');
-            expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.testStore.get).toHaveBeenCalled();
-            expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
-        });
-
-        /**
-         *
-         */
-        it('replacement with step (step) scope', () => {
-            sut.add('test', new ValueReplacerMock());
-            const replacedValue = sut.replace('--${test:s:a}--');
-
-            expect(replacedValue).toBe('--#a#--');
-            expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.stepStore.get).toHaveBeenCalled();
-        });
-
-        /**
-         *
-         */
-        it('replacement with storeIdentifier', () => {
-            sut.add('test', new ValueReplacerMock());
-            const result = sut.replace('--${test:l:a}--');
-
-            expect(Store.instance.localStore.get).toBeCalledWith('#test#:#a#');
-            expect(result).toBe('--#a#--');
-        });
-
-        /**
-         *
-         */
-        it('replacement with property definition', () => {
-            sut.add('test', new ValueReplacerMockWithProperty('prop'));
-            sut.replace('--${test:l:a}--');
-
-            expect(Store.instance.localStore.get).toBeCalledWith('prop');
-        });
-
-        /**
-         *
-         */
-        it('replacement with multiple scoped (not yet known)', () => {
-            const replacer = new ValueReplacerMock();
-            replacer.scoped = ScopedType.multiple;
-            sut.add('store', replacer);
-            const result = sut.replace('--${store:a}--');
-
-            expect(Store.instance.localStore.get).toBeCalledWith('#store#:#a#');
-            expect(Store.instance.globalStore.get).toBeCalledWith('#store#:#a#');
-            expect(Store.instance.testStore.get).toBeCalledWith('#store#:#a#');
-            expect(Store.instance.stepStore.get).toBeCalledWith('#store#:#a#');
-
-            expect(result).toBe('--#a#--');
-        });
+        expect(replacedValue).toBe('--#a#--');
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
     });
 
     /**
      *
      */
-    describe('check valueHandler (scoped)', () => {
-        /**
-         *
-         */
-        it('replacement with multiple scoped (known for step)', () => {
-            const replacer = new StoreReplacerMock();
-            replacer.scoped = ScopedType.multiple;
+    it('replacement with global (suite) scope', () => {
+        sut.add('test', new ValueReplacerMock());
+        const replacedValue = sut.replace('--${test:g:a}--');
+
+        expect(replacedValue).toBe('--#a#--');
+        expect(Store.instance.globalStore.get).toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('replacement with file/local (spec) scope', () => {
+        sut.add('test', new ValueReplacerMock());
+        const replacedValue = sut.replace('--${test:l:a}--');
+
+        expect(replacedValue).toBe('--#a#--');
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).toHaveBeenCalled();
+        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('replacement with test (scenario) scope', () => {
+        sut.add('test', new ValueReplacerMock());
+        const replacedValue = sut.replace('--${test:t:a}--');
+
+        expect(replacedValue).toBe('--#a#--');
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('replacement with step (step) scope', () => {
+        sut.add('test', new ValueReplacerMock());
+        const replacedValue = sut.replace('--${test:s:a}--');
+
+        expect(replacedValue).toBe('--#a#--');
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('replacement with storeIdentifier', () => {
+        sut.add('test', new ValueReplacerMock());
+        const result = sut.replace('--${test:l:a}--');
+
+        expect(Store.instance.localStore.get).toBeCalledWith('#test#:#a#');
+        expect(result).toBe('--#a#--');
+    });
+
+    /**
+     *
+     */
+    it('replacement with property definition', () => {
+        sut.add('test', new ValueReplacerMockWithProperty('prop'));
+        sut.replace('--${test:l:a}--');
+
+        expect(Store.instance.localStore.get).toBeCalledWith('prop');
+    });
+
+    /**
+     *
+     */
+    it('replacement with multiple scoped (not yet known)', () => {
+        const replacer = new ValueReplacerMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store', replacer);
+        const result = sut.replace('--${store:a}--');
+
+        expect(Store.instance.localStore.get).toBeCalledWith('#store#:#a#');
+        expect(Store.instance.globalStore.get).toBeCalledWith('#store#:#a#');
+        expect(Store.instance.testStore.get).toBeCalledWith('#store#:#a#');
+        expect(Store.instance.stepStore.get).toBeCalledWith('#store#:#a#');
+
+        expect(result).toBe('--#a#--');
+    });
+});
+
+/**
+ *
+ */
+describe('check valueHandler (scoped)', () => {
+    /**
+     *
+     */
+    it('replacement with multiple scoped (known for step)', () => {
+        const replacer = new StoreReplacerMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store', replacer);
+
+        Store.instance.stepStore.put('e', '#b#');
+        const result = sut.replace('--${store:e}--');
+
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).toBeCalledWith('e');
+
+        expect(result).toBe('--#b#--');
+    });
+
+    /**
+     *
+     */
+    it('replacement with multiple scoped (known for scenario)', () => {
+        const replacer = new StoreReplacerMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store', replacer);
+
+        Store.instance.testStore.put('a', '#b#');
+        const result = sut.replace('--${store:a}--');
+
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).toBeCalledWith('a');
+        expect(Store.instance.stepStore.get).toBeCalledWith('a');
+
+        expect(result).toBe('--#b#--');
+    });
+
+    /**
+     *
+     */
+    it('replacement with multiple scoped (known for spec)', () => {
+        const replacer = new StoreReplacerMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store', replacer);
+
+        Store.instance.localStore.put('a', '#b#');
+        const result = sut.replace('--${store:a}--');
+
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).toBeCalledWith('a');
+        expect(Store.instance.localStore.get).toBeCalledTimes(1);
+        expect(Store.instance.testStore.get).toBeCalledWith('a');
+        expect(Store.instance.testStore.get).toBeCalledTimes(1);
+        expect(Store.instance.stepStore.get).toBeCalledWith('a');
+        expect(Store.instance.stepStore.get).toBeCalledTimes(1);
+
+        expect(result).toBe('--#b#--');
+    });
+
+    /**
+     *
+     */
+    it('replacement with multiple scoped (known for suite)', () => {
+        const replacer = new StoreReplacerMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store', replacer);
+
+        Store.instance.globalStore.put('a', '#b#');
+        const result = sut.replace('--${store:a}--');
+
+        expect(Store.instance.globalStore.get).toBeCalledWith('a');
+        expect(Store.instance.globalStore.get).toBeCalledTimes(1);
+        expect(Store.instance.localStore.get).toBeCalledWith('a');
+        expect(Store.instance.localStore.get).toBeCalledTimes(1);
+        expect(Store.instance.testStore.get).toBeCalledWith('a');
+        expect(Store.instance.testStore.get).toBeCalledTimes(1);
+        expect(Store.instance.stepStore.get).toBeCalledWith('a');
+        expect(Store.instance.stepStore.get).toBeCalledTimes(1);
+
+        expect(result).toBe('--#b#--');
+    });
+
+    /**
+     *
+     */
+    it('use multiple replacers with different identifiers', () => {
+        const replacer = new StoreReplacerMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store3', replacer);
+        sut.add('store', replacer);
+        sut.add('store2', replacer);
+
+        Store.instance.testStore.put('a', '#b#');
+        const result = sut.replace('--${store:a}--');
+
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).toBeCalledWith('a');
+        expect(Store.instance.testStore.get).toBeCalledTimes(1);
+        expect(Store.instance.stepStore.get).toBeCalledWith('a');
+        expect(Store.instance.stepStore.get).toBeCalledTimes(1);
+
+        expect(result).toBe('--#b#--');
+    });
+
+    /**
+     *
+     */
+    it('use multiple replacers with same identifier', () => {
+        const replacer = new StoreReplacerMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store', replacer);
+
+        try {
             sut.add('store', replacer);
+        } catch (error) {
+            expect(error.message).toBe(`valueReplacer 'store' already exists!`);
+            return;
+        }
 
-            Store.instance.stepStore.put('e', '#b#');
-            const result = sut.replace('--${store:e}--');
+        fail('if adding replacers with the same identifier, an error should thrown.');
+    });
 
-            expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.stepStore.get).toBeCalledWith('e');
+    /**
+     *
+     */
+    it('use multiple replacers with no match', () => {
+        const replacer = new StoreReplacerNoMatchMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store', replacer);
+        Store.instance.testStore.put('a', '#b#');
 
-            expect(result).toBe('--#b#--');
-        });
+        try {
+            sut.replace('--${store:x}--');
+        } catch (error) {
+            expect(error.message).toBe(`can't find value of 'store:x'`);
+            return;
+        }
 
-        /**
-         *
-         */
-        it('replacement with multiple scoped (known for scenario)', () => {
-            const replacer = new StoreReplacerMock();
-            replacer.scoped = ScopedType.multiple;
-            sut.add('store', replacer);
+        fail('An error must be thrown if no value can be matched');
+    });
 
-            Store.instance.testStore.put('a', '#b#');
-            const result = sut.replace('--${store:a}--');
+    /**
+     *
+     */
+    it('replace values recursively with same replacer', () => {
+        const replacer = new StoreReplacerNoMatchMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store', replacer);
 
-            expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.testStore.get).toBeCalledWith('a');
-            expect(Store.instance.stepStore.get).toBeCalledWith('a');
+        Store.instance.testStore.put('a', 'b');
+        Store.instance.testStore.put('b', 'c');
+        const result = sut.replace('--${store:${store:a}}--');
 
-            expect(result).toBe('--#b#--');
-        });
+        expect(result).toBe('--c--');
+    });
 
-        /**
-         *
-         */
-        it('replacement with multiple scoped (known for spec)', () => {
-            const replacer = new StoreReplacerMock();
-            replacer.scoped = ScopedType.multiple;
-            sut.add('store', replacer);
+    /**
+     *
+     */
+    it('replace values recursively with different replacers', () => {
+        const replacer = new StoreReplacerNoMatchMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store', replacer);
 
-            Store.instance.localStore.put('a', '#b#');
-            const result = sut.replace('--${store:a}--');
+        const replacer2 = new StoreReplacerNoMatchMock();
+        replacer2.scoped = ScopedType.multiple;
+        sut.add('test', replacer2);
 
-            expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.localStore.get).toBeCalledWith('a');
-            expect(Store.instance.localStore.get).toBeCalledTimes(1);
-            expect(Store.instance.testStore.get).toBeCalledWith('a');
-            expect(Store.instance.testStore.get).toBeCalledTimes(1);
-            expect(Store.instance.stepStore.get).toBeCalledWith('a');
-            expect(Store.instance.stepStore.get).toBeCalledTimes(1);
+        Store.instance.globalStore.put('a', 'b');
+        Store.instance.testStore.put('b', 'c');
 
-            expect(result).toBe('--#b#--');
-        });
+        expect(sut.replace('${test:a}')).toBe('b');
+        const result = sut.replace('--${store:${test:a}}--');
 
-        /**
-         *
-         */
-        it('replacement with multiple scoped (known for suite)', () => {
-            const replacer = new StoreReplacerMock();
-            replacer.scoped = ScopedType.multiple;
-            sut.add('store', replacer);
+        expect(result).toBe('--c--');
+    });
 
-            Store.instance.globalStore.put('a', '#b#');
-            const result = sut.replace('--${store:a}--');
+    /**
+     *
+     */
+    it('replace global value without store replacement', () => {
+        const replacer = new ValueReplacerMock();
+        sut.add('store', replacer);
 
-            expect(Store.instance.globalStore.get).toBeCalledWith('a');
-            expect(Store.instance.globalStore.get).toBeCalledTimes(1);
-            expect(Store.instance.localStore.get).toBeCalledWith('a');
-            expect(Store.instance.localStore.get).toBeCalledTimes(1);
-            expect(Store.instance.testStore.get).toBeCalledWith('a');
-            expect(Store.instance.testStore.get).toBeCalledTimes(1);
-            expect(Store.instance.stepStore.get).toBeCalledWith('a');
-            expect(Store.instance.stepStore.get).toBeCalledTimes(1);
+        const result = sut.replace('--${store:g:a}--');
 
-            expect(result).toBe('--#b#--');
-        });
+        expect(result).toBe('--#a#--');
+    });
 
-        /**
-         *
-         */
-        it('use multiple replacers with different identifiers', () => {
-            const replacer = new StoreReplacerMock();
-            replacer.scoped = ScopedType.multiple;
-            sut.add('store3', replacer);
-            sut.add('store', replacer);
-            sut.add('store2', replacer);
+    /**
+     *
+     */
+    it('replace global value with store replacement', () => {
+        Store.instance.globalStore.put('#store#:#a#', 'b');
 
-            Store.instance.testStore.put('a', '#b#');
-            const result = sut.replace('--${store:a}--');
+        const replacer = new ValueReplacerMock();
+        sut.add('store', replacer);
 
-            expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-            expect(Store.instance.testStore.get).toBeCalledWith('a');
-            expect(Store.instance.testStore.get).toBeCalledTimes(1);
-            expect(Store.instance.stepStore.get).toBeCalledWith('a');
-            expect(Store.instance.stepStore.get).toBeCalledTimes(1);
+        const result = sut.replace('--${store:g:a}--');
 
-            expect(result).toBe('--#b#--');
-        });
+        expect(result).toBe('--b--');
+    });
+});
 
-        /**
-         *
-         */
-        it('use multiple replacers with same identifier', () => {
-            const replacer = new StoreReplacerMock();
-            replacer.scoped = ScopedType.multiple;
-            sut.add('store', replacer);
+/**
+ *
+ */
+describe('check valueHandler (nullable)', () => {
+    /**
+     *
+     */
+    it('undefined must be allowed, when nullable and optional', () => {
+        const replacer = new NullableReplacerMock(undefined, false);
+        sut.add('store', replacer);
 
-            try {
-                sut.add('store', replacer);
-            } catch (error) {
-                expect(error.message).toBe(`valueReplacer 'store' already exists!`);
-                return;
-            }
+        const result = sut.replace('--${store?:x}--');
+        expect(result).toBe('--undefined--');
+    });
 
-            fail('if adding replacers with the same identifier, an error should thrown.');
-        });
+    /**
+     *
+     */
+    it('undefined must throw an error, when nullable but not optional', () => {
+        const replacer = new NullableReplacerMock(undefined, false);
+        sut.add('store', replacer);
 
-        /**
-         *
-         */
-        it('use multiple replacers with no match', () => {
-            const replacer = new StoreReplacerNoMatchMock();
-            replacer.scoped = ScopedType.multiple;
-            sut.add('store', replacer);
-            Store.instance.testStore.put('a', '#b#');
+        expect(() => {
+            sut.replace('--${store:x}--');
+        }).toThrowError("can't find value of 'store:x'");
+    });
 
-            try {
-                sut.replace('--${store:x}--');
-            } catch (error) {
-                expect(error.message).toBe(`can't find value of 'x'`);
-                return;
-            }
+    /**
+     *
+     */
+    it('null must be allowed, when nullable and optional', () => {
+        const replacer = new NullableReplacerMock(null, false);
+        sut.add('store', replacer);
 
-            fail('An error must be thrown if no value can be matched');
-        });
+        const result = sut.replace('--${store?:x}--');
+        expect(result).toBe('--null--');
+    });
 
-        /**
-         *
-         */
-        it('replace values recursively with same replacer', () => {
-            const replacer = new StoreReplacerNoMatchMock();
-            replacer.scoped = ScopedType.multiple;
-            sut.add('store', replacer);
+    /**
+     *
+     */
+    it('only null must be allowed, when nullable and optional', () => {
+        const replacer = new NullableReplacerMock(null, false);
+        sut.add('store', replacer);
 
-            Store.instance.testStore.put('a', 'b');
-            Store.instance.testStore.put('b', 'c');
-            const result = sut.replace('--${store:${store:a}}--');
+        const result = sut.replace('${store?:x}');
+        expect(result).toBeNull();
+    });
 
-            expect(result).toBe('--c--');
-        });
+    /**
+     *
+     */
+    it('only undefined must be allowed, when nullable and optional', () => {
+        const replacer = new NullableReplacerMock(undefined, false);
+        sut.add('store', replacer);
 
-        /**
-         *
-         */
-        it('replace values recursively with different replacers', () => {
-            const replacer = new StoreReplacerNoMatchMock();
-            replacer.scoped = ScopedType.multiple;
-            sut.add('store', replacer);
+        const result = sut.replace('${store?:x}');
+        expect(result).toBeUndefined();
+    });
 
-            const replacer2 = new StoreReplacerNoMatchMock();
-            replacer2.scoped = ScopedType.multiple;
-            sut.add('test', replacer2);
+    /**
+     *
+     */
+    it('null must throw an error, when nullable but not optional', () => {
+        const replacer = new NullableReplacerMock(null, false);
+        sut.add('store', replacer);
 
-            Store.instance.globalStore.put('a', 'b');
-            Store.instance.testStore.put('b', 'c');
+        expect(() => {
+            sut.replace('--${store:x}--');
+        }).toThrowError("can't find value of 'store:x'");
+    });
 
-            expect(sut.replace('${test:a}')).toBe('b');
-            const result = sut.replace('--${store:${test:a}}--');
+    /**
+     *
+     */
+    it('string must be allowed, when nullable and optional', () => {
+        const replacer = new NullableReplacerMock('aaa', false);
+        sut.add('store', replacer);
 
-            expect(result).toBe('--c--');
-        });
+        const result = sut.replace('--${store?:x}--');
+        expect(result).toBe('--aaa--');
+    });
 
-        /**
-         *
-         */
-        it('replace global value without store replacement', () => {
-            const replacer = new ValueReplacerMock();
-            sut.add('store', replacer);
+    /**
+     *
+     */
+    it('string must throw an error, when nullable but not optional', () => {
+        const replacer = new NullableReplacerMock('aaa', false);
+        sut.add('store', replacer);
 
-            const result = sut.replace('--${store:g:a}--');
-
-            expect(result).toBe('--#a#--');
-        });
-
-        /**
-         *
-         */
-        it('replace global value with store replacement', () => {
-            Store.instance.globalStore.put('#store#:#a#', 'b');
-
-            const replacer = new ValueReplacerMock();
-            sut.add('store', replacer);
-
-            const result = sut.replace('--${store:g:a}--');
-
-            expect(result).toBe('--b--');
-        });
+        const result = sut.replace('--${store:x}--');
+        expect(result).toBe('--aaa--');
     });
 });

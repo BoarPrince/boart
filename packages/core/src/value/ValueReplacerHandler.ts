@@ -128,6 +128,40 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     /**
      *
      */
+    private stringReplacer(r: ValueReplaceItem, optional: boolean, scope: string, property: string) {
+        const storeIdentifier = !r.replacer.getProperty ? `#${r.identifier}#:#${property}#` : r.replacer.getProperty(property);
+
+        switch (r.replacer.scoped) {
+            case ScopedType.false: {
+                const content = r.replacer.replace(property);
+                return ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property);
+            }
+            case ScopedType.true: {
+                const store = ValueReplacerHandler.getStore(scope);
+                let content = store.get(storeIdentifier)?.toString();
+                if (!content) {
+                    content = r.replacer.replace(property);
+                    ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property);
+                    store.put(storeIdentifier, content);
+                }
+                return content;
+            }
+            case ScopedType.multiple: {
+                for (const store of this.stores) {
+                    const storeContent = store.get(storeIdentifier)?.toString();
+                    if (!!storeContent) {
+                        return storeContent;
+                    }
+                }
+                const content = r.replacer.replace(property);
+                return ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property);
+            }
+        }
+    }
+
+    /**
+     *
+     */
     private replaceOnce(value: string): string {
         const replacedValue = this.valueReplacers.reduce((v, r) => {
             const re = new RegExp(`\\\${${r.identifier}(?<optional>[?]?):((?<scope>[glts]):)?(?<property>[^{}]+)}`, 'g');
@@ -137,36 +171,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
                 const scope = match.groups.scope;
                 const property = match.groups.property;
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                return v?.replace(re, (_matchedSubString: string) => {
-                    const storeIdentifier = !r.replacer.getProperty ? `#${r.identifier}#:#${property}#` : r.replacer.getProperty(property);
-
-                    switch (r.replacer.scoped) {
-                        case ScopedType.false: {
-                            const content = r.replacer.replace(property);
-                            return ValueReplacerHandler.checkNull(content, r.replacer.nullable, !!optional, r.identifier, property);
-                        }
-                        case ScopedType.true: {
-                            const store = ValueReplacerHandler.getStore(scope);
-                            let content = store.get(storeIdentifier)?.toString();
-                            if (!content) {
-                                const value = r.replacer.replace(property);
-                                content = ValueReplacerHandler.checkNull(value, r.replacer.nullable, !!optional, r.identifier, property);
-                                store.put(storeIdentifier, content);
-                            }
-                            return content;
-                        }
-                        case ScopedType.multiple: {
-                            for (const store of this.stores) {
-                                const storeContent = store.get(storeIdentifier)?.toString();
-                                if (!!storeContent) {
-                                    return storeContent;
-                                }
-                            }
-                            const content = r.replacer.replace(property);
-                            return ValueReplacerHandler.checkNull(content, r.replacer.nullable, !!optional, r.identifier, property);
-                        }
-                    }
-                });
+                return v?.replace(re, (_matchedSubString: string) => this.stringReplacer(r, !!optional, scope, property));
             } else {
                 return v;
             }
@@ -176,7 +181,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
             case 'null':
                 return null;
             case 'undefined':
-                return null;
+                return undefined;
             default:
                 return replacedValue;
         }
