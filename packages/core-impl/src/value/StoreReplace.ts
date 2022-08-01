@@ -6,6 +6,7 @@ import { ScopedType, ValueReplacer } from '@boart/core';
 export class StoreReplacer implements ValueReplacer {
     private static readonly re = /^(?<property>[^:]+)(:-(?<default>.*))?$/;
     readonly name = 'StoreReplacer';
+    readonly nullable = true;
 
     /**
      *

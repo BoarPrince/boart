@@ -4,9 +4,12 @@ import { ArraySubject } from './src/common/ArraySubject';
 import { EnvLoader } from './src/common/EnvLoader';
 import { JsonHelper } from './src/common/JsonHelper';
 import { TextLanguageHandler } from './src/common/TextLanguageHandler';
+import { Timer } from './src/common/Timer';
 import { UrlLoader } from './src/common/UrlLoader';
+import { ContentInstance } from './src/data/ContentInstance';
 import { ContentType } from './src/data/ContentType';
 import { DataContent } from './src/data/DataContent';
+import DataContentBase from './src/data/DataContentBase';
 import { DataContentHelper } from './src/data/DataContentHelper';
 import { NativeContent } from './src/data/NativeContent';
 import { NullContent } from './src/data/NullContent';
@@ -17,6 +20,7 @@ import { ExecutionEngine } from './src/execution/ExecutionEngine';
 import { ExecutionUnit } from './src/execution/ExecutionUnit';
 import { Generator } from './src/generator/Generator';
 import { GeneratorHandler } from './src/generator/GeneratorHandler';
+import { Store } from './src/store/Store';
 import { StoreWrapper } from './src/store/StoreWrapper';
 import { BaseRowMetaDefinition } from './src/table/BaseRowMetaDefinition';
 import { BaseRowType } from './src/table/BaseRowType';
@@ -33,6 +37,7 @@ import { ScopeType } from './src/types/ScopeType';
 import { ScopedType } from './src/types/ScopedType';
 import { SelectorType } from './src/types/SelectorType';
 import { ValueReplacer } from './src/value/ValueReplacer';
+import { ValueReplacerHandler } from './src/value/ValueReplacerHandler';
 
 /**
  *
@@ -41,8 +46,10 @@ export {
     ArraySubject,
     BaseRowMetaDefinition,
     BaseRowType,
+    ContentInstance,
     ContentType,
     DataContent,
+    DataContentBase,
     DataContentHelper,
     EnvLoader,
     ExecutionContext,
@@ -64,6 +71,7 @@ export {
     ScopedType,
     ScopeType,
     SelectorType,
+    Store,
     StoreWrapper,
     TableHandler,
     TableHandlerBaseImpl,
@@ -71,7 +79,9 @@ export {
     TableRowType,
     TextContent,
     TextLanguageHandler,
+    Timer,
     UrlLoader,
     value,
-    ValueReplacer
+    ValueReplacer,
+    ValueReplacerHandler
 };

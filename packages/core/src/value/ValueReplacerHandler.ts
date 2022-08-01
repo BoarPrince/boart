@@ -9,11 +9,16 @@ import { ValueReplacer } from './ValueReplacer';
 /**
  *
  */
+type ValueReplaceItem = {
+    readonly identifier: string;
+    readonly replacer: ValueReplacer;
+};
+
+/**
+ *
+ */
 export class ValueReplacerHandler implements Initializer<ValueReplacer> {
-    private valueReplacers: Array<{
-        readonly identifier: string;
-        readonly replacer: ValueReplacer;
-    }>;
+    private valueReplacers: Array<ValueReplaceItem>;
     private stores: Array<StoreWrapper> = [];
     private static _instance: ValueReplacerHandler;
 
@@ -52,14 +57,14 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
      *
      */
     public delete(name: string) {
-        this.valueReplacers = this.valueReplacers.filter(r => r.identifier !== name);
+        this.valueReplacers = this.valueReplacers.filter((r) => r.identifier !== name);
     }
 
     /**
      *
      */
     public add(name: string, item: ValueReplacer): Initializer<ValueReplacer> {
-        if (!!this.valueReplacers.find(r => r.identifier === name)) {
+        if (!!this.valueReplacers.find((r) => r.identifier === name)) {
             throw Error(`valueReplacer '${name}' already exists!`);
         }
         this.valueReplacers.push({ identifier: name, replacer: item });
@@ -72,7 +77,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
      *
      */
     addItems(replacer: readonly ValueReplacer[]): Initializer<ValueReplacer> {
-        replacer?.forEach(r => this.add(r.name, r));
+        replacer?.forEach((r) => this.add(r.name, r));
         return this;
     }
 
@@ -83,6 +88,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
         let replacedValue = this.replaceOnce(value);
         while (value !== replacedValue) {
             value = replacedValue;
+            // recursive replacement
             replacedValue = this.replaceOnce(value);
         }
         return value;
@@ -91,64 +97,88 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     /**
      *
      */
+    private static checkNull(value: string, nullable: boolean, optional: boolean, identifier: string, property: string): string {
+        if (!value && !(nullable && optional)) {
+            throw new Error(`can't find value of '${identifier}:${property}'`);
+        } else {
+            return value;
+        }
+    }
+
+    /**
+     *
+     */
+    private static getStore(scope: string): StoreWrapper {
+        switch (scope) {
+            case ScopeType.Global: {
+                return Store.instance.globalStore;
+            }
+            case ScopeType.Local: {
+                return Store.instance.localStore;
+            }
+            case ScopeType.Step: {
+                return Store.instance.stepStore;
+            }
+            default: {
+                return Store.instance.testStore;
+            }
+        }
+    }
+
+    /**
+     *
+     */
     private replaceOnce(value: string): string {
-        return this.valueReplacers.reduce((v, r) => {
-            const re = new RegExp(`\\\${${r.identifier}:((?<scope>[glts]):)?(?<property>[^{}]+)}`, 'g');
-            return v.replace(re, (_m_, _scope_, scope: string, property: string) => {
-                switch (r.replacer.scoped) {
-                    case ScopedType.false:
-                        scope = null;
-                        break;
-                    case ScopedType.multiple:
-                        scope = scope || ScopeType.ReadonlyMultiple;
-                }
+        const replacedValue = this.valueReplacers.reduce((v, r) => {
+            const re = new RegExp(`\\\${${r.identifier}(?<optional>[?]?):((?<scope>[glts]):)?(?<property>[^{}]+)}`, 'g');
+            const match = re.exec(v);
+            if (match) {
+                const optional = match.groups.optional;
+                const scope = match.groups.scope;
+                const property = match.groups.property;
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                return v?.replace(re, (_matchedSubString: string) => {
+                    const storeIdentifier = !r.replacer.getProperty ? `#${r.identifier}#:#${property}#` : r.replacer.getProperty(property);
 
-                const storeIdentifier = !r.replacer.getProperty ? `#${r.identifier}#:#${property}#` : r.replacer.getProperty(property);
-
-                let store: StoreWrapper;
-                switch (scope) {
-                    case ScopeType.Global: {
-                        store = Store.instance.globalStore;
-                        break;
-                    }
-                    case ScopeType.Local: {
-                        store = Store.instance.localStore;
-                        break;
-                    }
-                    case ScopeType.Test: {
-                        store = Store.instance.testStore;
-                        break;
-                    }
-                    case ScopeType.Step: {
-                        store = Store.instance.stepStore;
-                        break;
-                    }
-                    case ScopeType.ReadonlyMultiple: {
-                        for (store of this.stores) {
-                            const storeContent = store.get(storeIdentifier)?.toString();
-                            if (!!storeContent) {
-                                return storeContent;
+                    switch (r.replacer.scoped) {
+                        case ScopedType.false: {
+                            const content = r.replacer.replace(property);
+                            return ValueReplacerHandler.checkNull(content, r.replacer.nullable, !!optional, r.identifier, property);
+                        }
+                        case ScopedType.true: {
+                            const store = ValueReplacerHandler.getStore(scope);
+                            let content = store.get(storeIdentifier)?.toString();
+                            if (!content) {
+                                const value = r.replacer.replace(property);
+                                content = ValueReplacerHandler.checkNull(value, r.replacer.nullable, !!optional, r.identifier, property);
+                                store.put(storeIdentifier, content);
                             }
+                            return content;
                         }
-                        const multipleContent = r.replacer.replace(property);
-                        if (!multipleContent) {
-                            throw new Error(`can't find value of '${property}'`);
-                        } else {
-                            return multipleContent;
+                        case ScopedType.multiple: {
+                            for (const store of this.stores) {
+                                const storeContent = store.get(storeIdentifier)?.toString();
+                                if (!!storeContent) {
+                                    return storeContent;
+                                }
+                            }
+                            const content = r.replacer.replace(property);
+                            return ValueReplacerHandler.checkNull(content, r.replacer.nullable, !!optional, r.identifier, property);
                         }
                     }
-                    default: {
-                        return r.replacer.replace(property);
-                    }
-                }
-
-                let content = store.get(storeIdentifier)?.toString();
-                if (!content) {
-                    content = r.replacer.replace(property);
-                    store.put(storeIdentifier, content);
-                }
-                return content;
-            });
+                });
+            } else {
+                return v;
+            }
         }, value);
+
+        switch (replacedValue) {
+            case 'null':
+                return null;
+            case 'undefined':
+                return null;
+            default:
+                return replacedValue;
+        }
     }
 }
