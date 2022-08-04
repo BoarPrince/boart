@@ -97,8 +97,8 @@ describe('check binding', () => {
             paraType: ParaType,
             rowKey: string,
             expectedKey: string,
-            expectedPara: string,
-            expectedSelector: string
+            expectedPara: string | null,
+            expectedSelector: string | null
         ) => {
             const rowDefinitions = [
                 new RowDefinition({
@@ -252,8 +252,8 @@ describe('check binding with multiple definitions', () => {
 
         const rowWithDef = boundRows.find((def) => def.action === 'a2');
 
-        expect(rowWithDef.value1).toBe('b2');
-        expect(rowWithDef.data._metaDefinition.executionUnit.description).toBe('unit2');
+        expect(rowWithDef?.value1).toBe('b2');
+        expect(rowWithDef?.data._metaDefinition.executionUnit.description).toBe('unit2');
     });
 
     /**
@@ -275,8 +275,8 @@ describe('check binding with multiple definitions', () => {
             paraType: ParaType,
             rowKey: string,
             expectedKey: string,
-            expectedPara: string,
-            expectedSelector: string
+            expectedPara: string | null,
+            expectedSelector: string | null
         ) => {
             const rowDefinitions = [
                 new RowDefinition({
@@ -342,13 +342,21 @@ describe('check default value', () => {
      *
      */
     it.each([
-        ['b', null, null, 'b'],
-        ['b', 'c', Symbol('value1'), 'b'],
-        [null, 'c', Symbol('value1'), 'c'],
-        ['', 'c', Symbol('value1'), 'c']
+        ['1.', 'b', null, null, 'b'],
+        ['2.', 'b', 'c', Symbol('value1'), 'b']
+        // ['3.', null, 'c', Symbol('value1'), 'c'],
+        // ['4.', undefined, 'c', Symbol('value1'), 'c'],
+        // ['5.', '', 'c', Symbol('value1'), 'c'],
+        // ['6.', '', 'c', Symbol('value1'), 'c']
     ])(
-        `check key and para (defKey: '%s', paraType: '%p', key: '%s', expected key: '%s', expected para: '%s'`,
-        (rowValue: string, defaultValue: string, defaultValueColumn: symbol, expectedValue: string) => {
+        `%s: check default (key defined, but no value) (rowValue: '%s', defaultValue: '%p', defaultValueColumn: '%s', expected key: '%s'`,
+        (
+            _nr: string,
+            rowValue?: string | null,
+            defaultValue?: string | null,
+            defaultValueColumn?: symbol | null,
+            expectedValue?: string | null
+        ) => {
             const rowDefinitions = [
                 new RowDefinition({
                     key: Symbol('a:a'),
@@ -407,6 +415,7 @@ describe('check default value', () => {
                 parameterType: ParaType.Optional,
                 type: TableRowType.PostProcessing,
                 defaultValue: 'c',
+                defaultValueColumn: Symbol('value1'),
                 executionUnit: null,
                 validators: null
             }),
@@ -415,6 +424,7 @@ describe('check default value', () => {
                 parameterType: ParaType.Optional,
                 type: TableRowType.PostProcessing,
                 defaultValue: 'd',
+                defaultValueColumn: Symbol('value1'),
                 executionUnit: null,
                 validators: null
             })
@@ -425,9 +435,14 @@ describe('check default value', () => {
 
         const rows = sut.bind(RowWithOneValue);
         expect(rows).toBeDefined();
-        expect(rows[0].action).toBe('a:a');
-        expect(rows[0].value1).toBe('b');
+
+        expect(rows[0].action).toBe('a:b');
+        expect(rows[0].value1).toBe('d');
         expect(rows[0].actionPara).toBeNull();
+
+        expect(rows[1].action).toBe('a:a');
+        expect(rows[1].value1).toBe('b');
+        expect(rows[1].actionPara).toBeNull();
     });
 
     /**
@@ -440,6 +455,7 @@ describe('check default value', () => {
                 parameterType: ParaType.Optional,
                 type: TableRowType.PostProcessing,
                 defaultValue: 'c',
+                defaultValueColumn: Symbol('value1'),
                 executionUnit: null,
                 validators: null
             }),
@@ -448,6 +464,7 @@ describe('check default value', () => {
                 parameterType: ParaType.Optional,
                 type: TableRowType.PostProcessing,
                 defaultValue: 'd',
+                defaultValueColumn: Symbol('value1'),
                 executionUnit: null,
                 validators: null
             })
@@ -458,8 +475,13 @@ describe('check default value', () => {
 
         const rows = sut.bind(RowWithOneValue);
         expect(rows).toBeDefined();
-        expect(rows[0].action).toBe('a:a');
-        expect(rows[0].value1).toBe('b');
-        expect(rows[0].actionPara).toBe('para1');
+
+        expect(rows[0].action).toBe('a:b');
+        expect(rows[0].value1).toBe('d');
+        expect(rows[0].actionPara).toBeNull();
+
+        expect(rows[1].action).toBe('a:a');
+        expect(rows[1].value1).toBe('b');
+        expect(rows[1].actionPara).toBe('para1');
     });
 });

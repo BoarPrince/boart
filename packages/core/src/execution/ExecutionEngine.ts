@@ -11,7 +11,8 @@ export class ExecutionEngine<
     TExecutionContext extends ExecutionContext<object, object, object>,
     TRowType extends BaseRowType<TExecutionContext>
 > {
-    public readonly context: TExecutionContext;
+    public context: TExecutionContext;
+
     /**
      *
      */
@@ -19,6 +20,13 @@ export class ExecutionEngine<
         private readonly mainExecutionUnit: ExecutionUnit<TExecutionContext, TRowType>,
         private readonly executionContextGenerator: () => TExecutionContext
     ) {
+        this.initContext();
+    }
+
+    /**
+     *
+     */
+    public initContext(): void {
         this.context = this.executionContextGenerator();
     }
 

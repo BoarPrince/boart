@@ -1,6 +1,7 @@
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
+import { ValueReplacerHandler } from '../value/ValueReplacerHandler';
 
 import { BaseRowMetaDefinition } from './BaseRowMetaDefinition';
 import { BaseRowType } from './BaseRowType';
@@ -38,8 +39,70 @@ export class RowDefinitionBinder<
     /**
      *
      */
+    private bindDefaultValues(): ReadonlyArray<RowValue> {
+        // check if default column is correct
+        this.rowDefinitions //
+            ?.map((rowDef) => rowDef.defaultValueColumn?.description || '')
+            .filter((colName) => !!colName)
+            .filter((colName) => !this.columnMetaInfo.values.includes(colName))
+            .forEach((colName) => {
+                throw Error(`'${this.tableName}': default column name '${colName}' does not exists`);
+            });
+
+        // add default rows, if the row does not exists.
+        return this.rowDefinitions
+            ?.filter(
+                (row) =>
+                    !!row.defaultValue &&
+                    !this.rowsWithValues?.find(
+                        (rowWithValue) =>
+                            rowWithValue.key === row.key.description || //
+                            rowWithValue.key.startsWith(row.key.description || '' + ':')
+                    )
+            )
+            .map((row) => {
+                const column = row.defaultValueColumn.description;
+                const value = row.defaultValue.toString();
+
+                const values = {} as Record<string, string>;
+                values[column] = value;
+
+                const valuesReplaced = {} as Record<string, string>;
+                valuesReplaced[column] = ValueReplacerHandler.instance.replace(value);
+
+                return {
+                    key: row.key.description,
+                    values,
+                    values_replaced: valuesReplaced
+                } as RowValue;
+            })
+            .concat(this.rowsWithValues);
+    }
+
+    /**
+     *
+     */
+    private useDefaultValues(row: TRowType): TRowType {
+        const colName = row.data._metaDefinition.defaultValueColumn?.description;
+        if (!colName) {
+            return row;
+        }
+
+        if (!row.data.values[colName]) {
+            const defaultValue = row.data._metaDefinition.defaultValue;
+            row.data.values[colName] = defaultValue;
+            row.data.values_replaced[colName] = ValueReplacerHandler.instance.replace(defaultValue?.toString());
+        }
+        return row;
+    }
+
+    /**
+     *
+     */
     bind(type: new (def: BaseRowMetaDefinition<TExecutionContext, TRowType>) => TRowType): Array<TRowType> {
-        return this.rowsWithValues?.map((row) => {
+        const rows = this.bindDefaultValues();
+
+        return rows?.map((row) => {
             const rowDef = {
                 key: '',
                 para: null,
@@ -84,7 +147,7 @@ export class RowDefinitionBinder<
             // checks if the binding could be fullfilled
             this.checkBinding(row, rowDef);
 
-            const rows = new type({
+            return new type({
                 _metaDefinition: rowDef.definition,
                 key: rowDef.key,
                 keyPara: rowDef.para,
@@ -92,8 +155,6 @@ export class RowDefinitionBinder<
                 values: row.values,
                 values_replaced: row.values_replaced
             });
-
-            return this.bindDefaultValues(rows);
         });
     }
 
@@ -135,25 +196,5 @@ export class RowDefinitionBinder<
                 throwIf(!!rowDef.selector, `'${this.tableName}': key '${row.key}' cannot have a selector: '${rowDef.selector}'!`);
                 break;
         }
-    }
-
-    /**
-     *
-     */
-    private bindDefaultValues(row: TRowType): TRowType {
-        const colName = row.data._metaDefinition.defaultValueColumn?.description;
-        if (!colName) {
-            return row;
-        }
-
-        if (!this.columnMetaInfo.values.includes(colName)) {
-            throw Error(`'${this.tableName}': default column name '${colName}' does not exists`);
-        }
-
-        if (!row.data.values[colName]) {
-            row.data.values[colName] = row.data._metaDefinition.defaultValue;
-            row.data.values_replaced[colName] = row.data._metaDefinition.defaultValue;
-        }
-        return row;
     }
 }

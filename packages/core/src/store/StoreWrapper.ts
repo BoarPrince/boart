@@ -96,8 +96,8 @@ export class StoreWrapper {
         const firstKey = keys.shift();
         const contentValue = this.store.get(firstKey);
 
-        if (contentValue === undefined || contentValue === null) {
-            throw Error(`getting "${key}" not possible, because it does not exist`);
+        if (contentValue == null) {
+            return null;
         }
 
         if (keys.length > 0) {

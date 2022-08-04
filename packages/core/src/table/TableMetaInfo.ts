@@ -35,7 +35,8 @@ export class TableMetaInfo {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static readonly addMetaInfo = (target: any): MetaInfo => {
-        target._table_meta_info ??= new MetaInfo();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        target._table_meta_info = target._table_meta_info || new MetaInfo();
         return target._table_meta_info;
     };
 

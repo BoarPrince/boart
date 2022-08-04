@@ -80,7 +80,7 @@ describe('check store', () => {
         sut = new StoreWrapper(null, 'test');
         sut.put('a', 'b');
         sut.clear();
-        expect(() => sut.get('a')).toThrowError(`getting "a" not possible, because it does not exist`);
+        expect(sut.get('a')).toBeNull();
     });
 
     /**
@@ -260,14 +260,7 @@ describe('check store', () => {
      *
      */
     it('try getting none existing value', () => {
-        try {
-            sut.get('a');
-        } catch (error) {
-            expect(error.message).toBe(`getting "a" not possible, because it does not exist`);
-            return;
-        }
-
-        throw Error('error must occur');
+        expect(sut.get('a')).toBeNull();
     });
 
     /**
@@ -320,14 +313,7 @@ describe('check store', () => {
         expect(sut.get('a').toString()).toEqual('b');
 
         sut.clear();
-        try {
-            sut.get('a');
-        } catch (error) {
-            expect(error.message).toBe(`getting "a" not possible, because it does not exist`);
-            return;
-        }
-
-        throw Error('error must occur');
+        expect(sut.get('a')).toBeNull();
     });
 
     /**

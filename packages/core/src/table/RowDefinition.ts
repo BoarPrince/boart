@@ -18,7 +18,7 @@ interface RowDefinitionPara<
     readonly type: TableRowType;
     readonly defaultValue?: string | number | boolean;
     readonly defaultValueColumn?: symbol;
-    readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
+    readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType> | null;
     readonly parameterType?: ParaType;
     readonly selectorType?: SelectorType;
     readonly validators: ReadonlyArray<RowValidator> | null;

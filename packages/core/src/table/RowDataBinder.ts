@@ -1,3 +1,5 @@
+import { ValueReplacerHandler } from '../value/ValueReplacerHandler';
+
 import { MarkdownTableReader } from './MarkdownTableReader';
 import { RowValue } from './RowValue';
 import { MetaInfo } from './TableMetaInfo';
@@ -145,7 +147,7 @@ export class RowDataBinder {
         const rows = new Array<RowValue>();
         for (const cells of new CellsIterator(this.tableDefinition.rows)) {
             if (cells[0].startsWith('-')) {
-                // it's a comment. Do not further process
+                // it's a comment -> stop processing
                 continue;
             }
 
@@ -159,7 +161,7 @@ export class RowDataBinder {
                 return o;
             };
             const valuesReplaced = (o: Record<string, string>, c: string): Record<string, string> => {
-                o[c] = valueEntry[c];
+                o[c] = ValueReplacerHandler.instance.replace(valueEntry[c]);
                 return o;
             };
             rows.push({
