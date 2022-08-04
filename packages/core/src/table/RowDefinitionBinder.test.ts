@@ -344,10 +344,6 @@ describe('check default value', () => {
     it.each([
         ['1.', 'b', null, null, 'b'],
         ['2.', 'b', 'c', Symbol('value1'), 'b']
-        // ['3.', null, 'c', Symbol('value1'), 'c'],
-        // ['4.', undefined, 'c', Symbol('value1'), 'c'],
-        // ['5.', '', 'c', Symbol('value1'), 'c'],
-        // ['6.', '', 'c', Symbol('value1'), 'c']
     ])(
         `%s: check default (key defined, but no value) (rowValue: '%s', defaultValue: '%p', defaultValueColumn: '%s', expected key: '%s'`,
         (

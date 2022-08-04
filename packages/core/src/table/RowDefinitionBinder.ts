@@ -54,7 +54,7 @@ export class RowDefinitionBinder<
             ?.filter(
                 (row) =>
                     !!row.defaultValue &&
-                    !this.rowsWithValues?.find(
+                    !this.rowsWithValues.find(
                         (rowWithValue) =>
                             rowWithValue.key === row.key.description || //
                             rowWithValue.key.startsWith(row.key.description || '' + ':')
@@ -77,23 +77,6 @@ export class RowDefinitionBinder<
                 } as RowValue;
             })
             .concat(this.rowsWithValues);
-    }
-
-    /**
-     *
-     */
-    private useDefaultValues(row: TRowType): TRowType {
-        const colName = row.data._metaDefinition.defaultValueColumn?.description;
-        if (!colName) {
-            return row;
-        }
-
-        if (!row.data.values[colName]) {
-            const defaultValue = row.data._metaDefinition.defaultValue;
-            row.data.values[colName] = defaultValue;
-            row.data.values_replaced[colName] = ValueReplacerHandler.instance.replace(defaultValue?.toString());
-        }
-        return row;
     }
 
     /**
