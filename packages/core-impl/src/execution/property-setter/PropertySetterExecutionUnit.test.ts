@@ -317,6 +317,30 @@ it('check with selector - two changes', () => {
 /**
  *
  */
+it('check with selector - use object in context', () => {
+    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+    context.config.value = new ObjectContent();
+
+    const row = new RowTypePropValue<DataContext>({
+        key: 'param',
+        keyPara: undefined,
+        selector: 'c',
+        values: {
+            value: '1'
+        },
+        values_replaced: {
+            value: '1'
+        },
+        _metaDefinition: null
+    });
+
+    sut.execute(context, row);
+    expect(context.config['value'].toString()).toBe('{"c":1}');
+});
+
+/**
+ *
+ */
 it('check with actionPara (deep)', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: false });
 

@@ -30,4 +30,4 @@ if (!GroupRowDefinition.contains('basic')) {
     );
 }
 
-export default GroupRowDefinition.getInstance<DataContext, RowTypeValue<DataContext>>('basic');
+export default GroupRowDefinition.getInstance<DataContext, RowTypeValue<DataContext>>('basic-group-definition');

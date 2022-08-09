@@ -1,4 +1,4 @@
-import { ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@boart/core';
+import { DataContent, DataContentHelper, ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@boart/core';
 import { PDFContent, RowTypeValue } from '@boart/core-impl';
 import { RestHttp } from '@boart/execution';
 
@@ -13,21 +13,47 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
     /**
      *
      */
+    private parseJSON(payload: DataContent | string): Record<string, string> {
+        if (!payload || DataContentHelper.isNullOrUndefined(payload)) {
+            return {};
+        }
+
+        try {
+            return JSON.parse(payload.toString());
+        } catch (error) {
+            throw Error(`payload cannot be parsed as a valid json\n${payload.toString()}`);
+        }
+    }
+
+    /**
+     *
+     */
     private call(rest: RestHttp, context: RestCallContext): Promise<Response> {
         const preContext = context.preExecution;
+        const authentication = preContext.authentication?.toString();
+        const header = JSON.parse(preContext.header?.toJSON() || '{}') as Record<string, string>;
+
         switch (preContext.method) {
             case 'get':
-                return rest.get(preContext.authentication, preContext.header);
+                return rest.get(authentication, header);
             case 'post':
-                return rest.post(preContext.payload, preContext.authentication, preContext.header);
+                return rest.post(preContext.payload, authentication, header);
             case 'delete':
-                return rest.delete(preContext.authentication, preContext.header);
+                return rest.delete(authentication, header);
             case 'put':
-                return rest.put(preContext.payload, preContext.authentication, preContext.header);
+                return rest.put(preContext.payload, authentication, header);
             case 'form-data':
-                return rest.form_data(preContext.formData, preContext.authentication, preContext.header);
+                return rest.form_data(
+                    Object.assign(preContext.formData.getValue(), this.parseJSON(preContext.payload)),
+                    authentication,
+                    header
+                );
             case 'post-param':
-                return rest.post_param(preContext.param, preContext.authentication, preContext.header);
+                return rest.post_param(
+                    Object.assign(preContext.param.getValue(), this.parseJSON(preContext.payload)),
+                    authentication,
+                    header
+                );
         }
     }
 

@@ -1,4 +1,14 @@
-import { ContentType, GroupRowDefinition, ParaType, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
+import {
+    ContentType,
+    GroupRowDefinition,
+    ObjectContent,
+    ParaType,
+    RowDefinition,
+    SelectorType,
+    TableHandler,
+    TableHandlerBaseImpl,
+    TableRowType
+} from '@boart/core';
 import {
     DependsOnValidator,
     ParaValidator,
@@ -35,12 +45,12 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
         preExecution: {
             method: '',
             url: '',
-            payload: '',
-            query: '',
-            header: {},
-            param: {},
-            formData: {},
-            authentication: ''
+            payload: null,
+            query: null,
+            header: null,
+            param: new ObjectContent(),
+            formData: new ObjectContent(),
+            authentication: null
         },
         execution: {
             data: null,
@@ -66,12 +76,8 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 key: Symbol('form-data'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'formData', {
-                    defaultSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType => {
-                        (value as object)[para] = rowValue;
-                        return value;
-                    }
-                }),
+                selectorType: SelectorType.True,
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'formData'),
                 validators: [new DependsOnValidator(['method:form-data'])]
             })
         );
@@ -81,12 +87,8 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 key: Symbol('param'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'param', {
-                    defaultSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType => {
-                        (value as object)[para] = rowValue;
-                        return value;
-                    }
-                }),
+                selectorType: SelectorType.True,
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'param'),
                 validators: [new DependsOnValidator(['method:post-param'])]
             })
         );
@@ -135,7 +137,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                     'preExecution',
                     'authentication'
                 ),
-                defaultValue: '${store:authentication}',
+                defaultValue: '${store?:authentication}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
             })
