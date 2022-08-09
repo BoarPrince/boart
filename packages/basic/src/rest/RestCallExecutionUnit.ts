@@ -13,15 +13,15 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
     /**
      *
      */
-    private parseJSON(payload: DataContent | string): Record<string, string> {
-        if (!payload || DataContentHelper.isNullOrUndefined(payload)) {
+    private parseJSON(data: DataContent | string, type: string): Record<string, string> {
+        if (!data || DataContentHelper.isNullOrUndefined(data)) {
             return {};
         }
 
         try {
-            return JSON.parse(payload.toString());
+            return JSON.parse(data.toString());
         } catch (error) {
-            throw Error(`payload cannot be parsed as a valid json\n${payload.toString()}`);
+            throw Error(`${type} cannot be parsed as a valid json\n${data.toString()}`);
         }
     }
 
@@ -31,7 +31,7 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
     private call(rest: RestHttp, context: RestCallContext): Promise<Response> {
         const preContext = context.preExecution;
         const authentication = preContext.authentication?.toString();
-        const header = JSON.parse(preContext.header?.toJSON() || '{}') as Record<string, string>;
+        const header = this.parseJSON(preContext.header, 'header');
 
         switch (preContext.method) {
             case 'get':
@@ -44,13 +44,13 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
                 return rest.put(preContext.payload, authentication, header);
             case 'form-data':
                 return rest.form_data(
-                    Object.assign(preContext.formData.getValue(), this.parseJSON(preContext.payload)),
+                    Object.assign(preContext.formData.getValue(), this.parseJSON(preContext.payload, 'payload')),
                     authentication,
                     header
                 );
             case 'post-param':
                 return rest.post_param(
-                    Object.assign(preContext.param.getValue(), this.parseJSON(preContext.payload)),
+                    Object.assign(preContext.param.getValue(), this.parseJSON(preContext.payload, 'payload')),
                     authentication,
                     header
                 );

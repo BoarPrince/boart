@@ -173,6 +173,89 @@ it('default post', async () => {
 /**
  *
  */
+it('default post with structured payload', async () => {
+    fetchMock.doMock(JSON.stringify({ b: 2 }));
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value       |
+         |-------------|------------|
+         | method:post | http://xxx |
+         | payload#a     | 1        |`
+    );
+
+    await sut.handler.process(tableRows);
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                body: '{"a":1}',
+                headers: { 'Content-Type': 'application/json' },
+                method: 'POST',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
+});
+
+/**
+ *
+ */
+it('default post with object payload and structured payload', async () => {
+    fetchMock.doMock(JSON.stringify({ b: 2 }));
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value       |
+         |-------------|------------|
+         | method:post | http://xxx |
+         | payload     | {"a": 1}   |
+         | payload#b   | 2          |`
+    );
+
+    await sut.handler.process(tableRows);
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                body: '{"a":1,"b":2}',
+                headers: { 'Content-Type': 'application/json' },
+                method: 'POST',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
+});
+
+/**
+ *
+ */
+it('default post, override property', async () => {
+    fetchMock.doMock(JSON.stringify({ b: 2 }));
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value             |
+         |-------------|------------------|
+         | method:post | http://xxx       |
+         | payload     | {"a": 1, "b": 2} |
+         | payload#b   | {"c": 3}         |`
+    );
+
+    await sut.handler.process(tableRows);
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                body: '{"a":1,"b":{"c":3}}',
+                headers: { 'Content-Type': 'application/json' },
+                method: 'POST',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
+});
+
+/**
+ *
+ */
 it('default put', async () => {
     fetchMock.doMock(JSON.stringify({ b: 2 }));
     const tableRows = MarkdownTableReader.convert(
@@ -193,6 +276,115 @@ it('default put', async () => {
             headers: { 'content-type': 'text/plain;charset=UTF-8' }
         })
     );
+});
+
+/**
+ *
+ */
+it('default put with additional header', async () => {
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value       |
+         |-------------|------------|
+         | method:put  | http://xxx |
+         | header      | {"c": 1}   |
+         | payload     | {"a": 1}   |`
+    );
+
+    await sut.handler.process(tableRows);
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                body: '{"a":1}',
+                headers: { 'Content-Type': 'application/json', c: 1 },
+                method: 'PUT',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
+});
+
+/**
+ *
+ */
+it('default put with additional structured header', async () => {
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value       |
+         |-------------|------------|
+         | method:put  | http://xxx |
+         | header#c    | 1          |
+         | payload     | {"a": 1}   |`
+    );
+
+    await sut.handler.process(tableRows);
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                body: '{"a":1}',
+                headers: { 'Content-Type': 'application/json', c: 1 },
+                method: 'PUT',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
+});
+
+/**
+ *
+ */
+it('default put with additional structured header and object header', async () => {
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value       |
+         |-------------|------------|
+         | method:put  | http://xxx |
+         | header      | {"d": 2}   |
+         | header#c    | 1          |
+         | payload     | {"a": 1}   |`
+    );
+
+    await sut.handler.process(tableRows);
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                body: '{"a":1}',
+                headers: { 'Content-Type': 'application/json', c: 1, d: 2 },
+                method: 'PUT',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
+});
+
+/**
+ *
+ */
+it('default put with overridden header', async () => {
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value                    |
+         |-------------|-------------------------|
+         | method:put  | http://xxx              |
+         | header      | {"Content-Type": "x"}   |
+         | payload     | {"a": 1}                |`
+    );
+
+    await sut.handler.process(tableRows);
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                body: '{"a":1}',
+                headers: { 'Content-Type': 'x' },
+                method: 'PUT',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
 });
 
 /**
@@ -274,13 +466,13 @@ it('post-param with payload', async () => {
 /**
  *
  */
-it('post-param with payload and selector', async () => {
+it('post-param with payload and param selector', async () => {
     const tableRows = MarkdownTableReader.convert(
         `|action              |value       |
          |--------------------|------------|
          | method:post-param  | http://xxx |
          | payload            | { "a": 1}  |
-         | param#b            | 2  |`
+         | param#b            | 2          |`
     );
 
     await sut.handler.process(tableRows);
@@ -289,6 +481,68 @@ it('post-param with payload and selector', async () => {
             'http://xxx',
             {
                 body: new URLSearchParams({
+                    b: '2',
+                    a: '1'
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                method: 'POST',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
+});
+
+/**
+ *
+ */
+it('post-param with structured payload and param selector', async () => {
+    const tableRows = MarkdownTableReader.convert(
+        `|action              |value       |
+         |--------------------|------------|
+         | method:post-param  | http://xxx |
+         | payload#a          | 1          |
+         | param#b            | 2          |`
+    );
+
+    await sut.handler.process(tableRows);
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                body: new URLSearchParams({
+                    b: '2',
+                    a: '1'
+                }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                method: 'POST',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
+});
+
+/**
+ *
+ */
+it('post-param with payload, structured payload and param selector', async () => {
+    const tableRows = MarkdownTableReader.convert(
+        `|action              |value       |
+         |--------------------|------------|
+         | method:post-param  | http://xxx |
+         | payload            | {"b":2}    |
+         | payload#a          | 1          |
+         | param#c            | 3          |`
+    );
+
+    await sut.handler.process(tableRows);
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                body: new URLSearchParams({
+                    c: '3',
                     b: '2',
                     a: '1'
                 }),
@@ -425,7 +679,7 @@ it('form-data with structurd payload', async () => {
         `|action            |value       |
          |------------------|------------|
          | method:form-data | http://xxx |
-         | payload#a          | 1        |`
+         | payload#a        | 1          |`
     );
 
     await sut.handler.process(tableRows);

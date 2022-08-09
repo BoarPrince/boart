@@ -1,4 +1,4 @@
-import { DataContent, ExecutionContext } from '@boart/core';
+import { DataContent, ExecutionContext, ObjectContent } from '@boart/core';
 import { DataExecutionContext } from '@boart/core-impl';
 
 /**
@@ -16,9 +16,9 @@ export interface RestCallPreExecutionContext {
     method: string;
     payload: DataContent | null;
     query: DataContent | null;
-    param: DataContent;
-    header: DataContent | null;
-    formData: DataContent;
+    param: ObjectContent;
+    header: ObjectContent;
+    formData: ObjectContent;
     authentication: DataContent | null;
 }
 

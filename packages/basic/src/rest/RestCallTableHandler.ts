@@ -47,7 +47,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
             url: '',
             payload: null,
             query: null,
-            header: null,
+            header: new ObjectContent(),
             param: new ObjectContent(),
             formData: new ObjectContent(),
             authentication: null
@@ -98,12 +98,8 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 key: Symbol('header'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'header', {
-                    actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType => {
-                        (value as object)[para] = rowValue;
-                        return value;
-                    }
-                }),
+                selectorType: SelectorType.Optional,
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'header'),
                 validators: null
             })
         );
