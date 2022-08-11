@@ -1,4 +1,5 @@
 {
+  "name": "boart",
   "version": "1.0.0",
   "private": "true",
   "workspaces": [
@@ -12,7 +13,8 @@
     "compile": "npm run compile -ws",
     "format-all": "prettier --write 'packages/**/src/**/*.{ts,js,json}'",
     "lint": "eslint packages --ext .ts",
-    "lint:fix": "eslint packages --ext .ts --fix"
+    "lint:fix": "eslint packages --ext .ts --fix",
+    "publish": "npm publish -ws"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
