@@ -1,10 +1,13 @@
 {
   "name": "@boart/core-impl",
   "description": "",
+  "author": "kem@boarprince.net",
+  "version": "1.0.0-30",
   "files": [
-    "index.ts"
+    "dist"
   ],
-  "main": "index.js",
+  "main": "dist/packages/core-impl/src/index.js",
+  "types": "dist/packages/core-impl/src/index.d.ts",
   "scripts": {
     "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,23 +17,22 @@
     "url": "git+https://github.com/Kemark/boart.git"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"
   },
   "homepage": "https://github.com/Kemark/boart#readme",
   "dependencies": {
-    "@boart/core": "file:packages/core",
-    "@faker-js/faker": "^6.3.1",
+    "@boart/core": "*",
+    "@faker-js/faker": "^7.4.0",
     "iban": "^0.0.14",
     "json-logic-js": "^2.0.2",
     "jspath": "^0.4.0",
-    "pdfjs-dist": "^2.14.305",
+    "pdfjs-dist": "^2.15.349",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/json-logic-js": "^1.2.1",
+    "@types/json-logic-js": "^2.0.1",
     "@types/uuid": "^8.3.4"
   }
 }

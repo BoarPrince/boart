@@ -1,9 +1,9 @@
 import { ValueReplacerHandler } from '@boart/core';
 import { StoreReplacer } from '@boart/core-impl';
 
-import BasicDataGroupDefinition from './src/basicGroup/BasicDataGroupDefinition';
-import BasicGroupDefinition from './src/basicGroup/BasicGroupDefinition';
-import RestCallTableHandler from './src/rest/RestCallTableHandler';
+import BasicDataGroupDefinition from './basicGroup/BasicDataGroupDefinition';
+import BasicGroupDefinition from './basicGroup/BasicGroupDefinition';
+import RestCallTableHandler from './rest/RestCallTableHandler';
 
 export { BasicDataGroupDefinition, BasicGroupDefinition, RestCallTableHandler };
 

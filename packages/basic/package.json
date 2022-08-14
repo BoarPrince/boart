@@ -1,8 +1,10 @@
 {
   "name": "@boart/basic",
-  "version": "1.0.0",
+  "version": "1.0.0-25",
+  "author": "kem@boarprince.net",
   "description": "",
-  "main": "index.js",
+  "main": "dist/packages/basic/src/index.js",
+  "types": "dist/packages/basic/src/index.d.ts",
   "scripts": {
     "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,14 +14,13 @@
     "url": "git+https://github.com/Kemark/boart.git"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"
   },
   "homepage": "https://github.com/Kemark/boart#readme",
   "dependencies": {
-    "@boart/core": "file:packages/core",
-    "@boart/core-impl": "file:packages/core-impl"
+    "@boart/core": "*",
+    "@boart/core-impl": "*"
   }
 }

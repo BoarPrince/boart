@@ -117,7 +117,8 @@ describe('out store', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get('var')).toBeInstanceOf(NullContent);
+        const store = Store.instance.testStore;
+        expect(store.get('var').constructor.name).toBe('NullContent');
     });
 
     /**
@@ -165,7 +166,7 @@ describe('out store', () => {
 
         await sut.handler.process(tableDef);
         const result = Store.instance.testStore.get('var');
-        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"e":1}');
     });
 
@@ -184,7 +185,7 @@ describe('out store', () => {
         await sut.handler.process(tableDef);
 
         const result = Store.instance.testStore.get('var');
-        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"e":1,"f":2}');
     });
 
@@ -204,7 +205,7 @@ describe('out store', () => {
         await sut.handler.process(tableDef);
 
         const result = Store.instance.testStore.get('var');
-        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"e":1,"f":2,"g":3}');
     });
 
@@ -224,7 +225,7 @@ describe('out store', () => {
         await sut.handler.process(tableDef);
 
         const result = Store.instance.testStore.get('var');
-        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"e":{"h":1},"f":2,"g":3}');
     });
 
@@ -244,7 +245,7 @@ describe('out store', () => {
         await sut.handler.process(tableDef);
 
         const result = Store.instance.testStore.get('var');
-        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"e":{"h":1},"f":{"u":5},"g":3}');
     });
 });
@@ -308,7 +309,7 @@ describe('out store from payload', () => {
         await sut.handler.process(tableDef);
 
         const result = sut.handler.executionEngine.context.preExecution.payload;
-        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.constructor.name).toBe('ObjectContent');
         expect(result?.getValue()).toBeInstanceOf(Object);
 
         expect((result as ObjectContent).get('a')).toBeString();
@@ -330,7 +331,7 @@ describe('out store from payload', () => {
         await sut.handler.process(tableDef);
 
         const result = sut.handler.executionEngine.context.preExecution.payload;
-        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.constructor.name).toBe('ObjectContent');
         expect(result?.toString()).toBe('{"a":"1"}');
     });
 
@@ -348,7 +349,7 @@ describe('out store from payload', () => {
         await sut.handler.process(tableDef);
         const result = Store.instance.testStore.get('var');
 
-        expect(result).toBeInstanceOf(ObjectContent);
+        expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"a":1}');
     });
 

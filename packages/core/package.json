@@ -1,6 +1,7 @@
 {
   "name": "@boart/core",
-  "author": "",
+  "author": "kem@boarprince.net",
+  "version": "1.0.0-33",
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"
   },
@@ -9,22 +10,28 @@
   "keywords": [],
   "license": "ISC",
   "files": [
-    "index.ts"
+    "dist/**/*.js",
+    "*.d.ts"
   ],
-  "main": "index.js",
+  "main": "dist/packages/core/src/index.js",
+  "types": "dist/packages/core/src/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kemark/boart.git"
   },
   "scripts": {
-    "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepare": "npm run build",
+    "_prepublishOnly": "npm test && npm run lint",
+    "compile": "rm -rf ./dist/* && tsc -p tsconfig.pkg.json",
+    "_test": "echo \"Error: no test specified\" && exit 0",
+    "test": "jest --coverage",
+    "build": "echo \"Error: no build specified\" && exit 0"
   },
   "dependencies": {
     "compare-versions": "^4.1.3",
-    "dateformat": "^3.0.3",
+    "dateformat": "^5.0.3",
     "json-beautify": "^1.1.1",
-    "rxjs": "^7.5.5"
+    "rxjs": "^7.5.6"
   },
   "devDependencies": {
     "@types/dateformat": "^5.0.0"
