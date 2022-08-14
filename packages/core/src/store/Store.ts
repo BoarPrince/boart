@@ -8,8 +8,6 @@ import { StoreWrapper } from './StoreWrapper';
  *
  */
 export class Store {
-    private static _instance: Store;
-
     private readonly _globalStore = new StoreWrapper(gauge.dataStore.suiteStore, 'global store');
     private readonly _localStore = new StoreWrapper(gauge.dataStore.specStore, 'local store');
     private readonly _testStore = new StoreWrapper(gauge.dataStore.scenarioStore, 'test store');
@@ -26,10 +24,10 @@ export class Store {
      *
      */
     static get instance(): Store {
-        if (!Store._instance) {
-            Store._instance = new Store();
+        if (!globalThis._storeInstance) {
+            globalThis._storeInstance = new Store();
         }
-        return Store._instance;
+        return globalThis._storeInstance;
     }
 
     /**
