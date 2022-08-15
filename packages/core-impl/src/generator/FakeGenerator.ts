@@ -32,7 +32,7 @@ export class FakeGenerator implements Generator {
     generate(level1: string, level2: string, ...params: readonly string[]): string {
         try {
             if (!params || params.length === 0) {
-                return faker.fake(`{{${level1}.${level2}}}`);
+                return faker.helpers.fake(`{{${level1}.${level2}}}`);
             } else {
                 const paraObject = JSON.stringify(
                     params
@@ -45,7 +45,7 @@ export class FakeGenerator implements Generator {
                             return p;
                         }, {})
                 );
-                return faker.fake(`{{${level1}.${level2}(${paraObject})}}`);
+                return faker.helpers.fake(`{{${level1}.${level2}(${paraObject})}}`);
             }
         } catch (error) {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
