@@ -1,7 +1,7 @@
 {
   "name": "@boart/core",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-33",
+  "version": "1.0.0-47",
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"
   },
@@ -29,11 +29,7 @@
   },
   "dependencies": {
     "compare-versions": "^4.1.3",
-    "dateformat": "^5.0.3",
     "json-beautify": "^1.1.1",
     "rxjs": "^7.5.6"
-  },
-  "devDependencies": {
-    "@types/dateformat": "^5.0.0"
   }
 }

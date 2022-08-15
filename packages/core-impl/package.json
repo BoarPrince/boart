@@ -2,7 +2,7 @@
   "name": "@boart/core-impl",
   "description": "",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-30",
+  "version": "1.0.0-44",
   "files": [
     "dist"
   ],
@@ -25,6 +25,7 @@
   "dependencies": {
     "@boart/core": "*",
     "@faker-js/faker": "^7.4.0",
+    "dateformat": "^4.6.3",
     "iban": "^0.0.14",
     "json-logic-js": "^2.0.2",
     "jspath": "^0.4.0",
@@ -32,6 +33,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/dateformat": "^5.0.0",
     "@types/json-logic-js": "^2.0.1",
     "@types/uuid": "^8.3.4"
   }
