@@ -731,3 +731,38 @@ it('form-data with invalid payload', async () => {
         'payload cannot be parsed as a valid json\n{ "a": 1'
     );
 });
+
+/**
+ *
+ */
+it('default store', async () => {
+    fetchMock.doMock(JSON.stringify({ b: 2 }));
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value       |
+         |-------------|------------|
+         | method:get  | http://xxx |
+         | store       | resonse    |`
+    );
+
+    await sut.handler.process(tableRows);
+
+    const result = Store.instance.testStore.get('resonse');
+    expect(result.getValue()).toBe('{"b":2}');
+});
+
+/**
+ *
+ */
+it('default expected - wrong', async () => {
+    fetchMock.doMock(JSON.stringify({ b: 2 }));
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value       |
+         |-------------|------------|
+         | method:get  | http://xxx |
+         | expected    | xxx        |`
+    );
+
+    await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError(
+        'error: expected\n\texpected: xxx\n\tactual: {"b":2}'
+    );
+});
