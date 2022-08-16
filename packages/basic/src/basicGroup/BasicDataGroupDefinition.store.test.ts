@@ -309,7 +309,7 @@ describe('out store from payload', () => {
         await sut.handler.process(tableDef);
 
         const result = sut.handler.executionEngine.context.preExecution.payload;
-        expect(result.constructor.name).toBe('ObjectContent');
+        expect(result?.constructor.name).toBe('ObjectContent');
         expect(result?.getValue()).toBeInstanceOf(Object);
 
         expect((result as ObjectContent).get('a')).toBeString();
@@ -331,7 +331,7 @@ describe('out store from payload', () => {
         await sut.handler.process(tableDef);
 
         const result = sut.handler.executionEngine.context.preExecution.payload;
-        expect(result.constructor.name).toBe('ObjectContent');
+        expect(result?.constructor.name).toBe('ObjectContent');
         expect(result?.toString()).toBe('{"a":"1"}');
     });
 

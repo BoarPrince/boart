@@ -179,7 +179,7 @@ it('default post with structured payload', async () => {
         `|action       |value       |
          |-------------|------------|
          | method:post | http://xxx |
-         | payload#a     | 1        |`
+         | payload#a   | 1        |`
     );
 
     await sut.handler.process(tableRows);
