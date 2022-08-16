@@ -2,16 +2,17 @@
  *
  */
 import { StepStore } from './StepStore';
+import { StoreMap } from './StoreMap';
 import { StoreWrapper } from './StoreWrapper';
 
 /**
  *
  */
 export class Store {
-    private readonly _globalStore = new StoreWrapper(gauge.dataStore.suiteStore, 'global store');
-    private readonly _localStore = new StoreWrapper(gauge.dataStore.specStore, 'local store');
-    private readonly _testStore = new StoreWrapper(gauge.dataStore.scenarioStore, 'test store');
-    private readonly _stepStore = new StoreWrapper(new StepStore(), 'step store');
+    private _globalStore = new StoreWrapper({}, 'global store');
+    private _localStore = new StoreWrapper({}, 'local store');
+    private _testStore = new StoreWrapper({}, 'test store');
+    private _stepStore = new StoreWrapper(new StepStore(), 'step store');
 
     /**
      *
@@ -56,5 +57,26 @@ export class Store {
      */
     get stepStore(): StoreWrapper {
         return this._stepStore;
+    }
+
+    /**
+     *
+     */
+    initGlobalStore(store: StoreMap | object): void {
+        this._localStore = new StoreWrapper(store, 'local store');
+    }
+
+    /**
+     *
+     */
+    initLocalStore(store: StoreMap | object): void {
+        this._globalStore = new StoreWrapper(store, 'global store');
+    }
+
+    /**
+     *
+     */
+    initTestStore(store: StoreMap | object): void {
+        this._testStore = new StoreWrapper(store, 'test store');
     }
 }
