@@ -3,7 +3,7 @@
     "global.ts"
   ],
   "include": [
-    "./packages/**/*.ts"
+    "./src/packages/**/*.ts"
   ],
   "compilerOptions": {
     "target": "ES2019",
@@ -14,7 +14,7 @@
     "baseUrl": "./",
     "paths": {
       "@boart/*": [
-        "./packages/*/"
+        "./src/packages/*/"
       ]
     }
   }

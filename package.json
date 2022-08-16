@@ -4,10 +4,10 @@
   "version": "1.0.0-1",
   "private": "true",
   "workspaces": [
-    "./packages/core",
-    "./packages/core-impl",
-    "./packages/execution",
-    "./packages/basic"
+    "./src/packages/core",
+    "./src/packages/core-impl",
+    "./src/packages/execution",
+    "./src/packages/basic"
   ],
   "engines": {
     "node": ">=18.0.0"
@@ -15,9 +15,9 @@
   "scripts": {
     "test": "jest --coverage",
     "compile": "npm run compile -ws",
-    "format-all": "prettier --write 'packages/**/src/**/*.{ts,js,json}'",
-    "lint": "eslint packages --ext .ts",
-    "lint:fix": "eslint packages --ext .ts --fix",
+    "format-all": "prettier --write 'src/packages/**/src/**/*.{ts,js,json}'",
+    "lint": "eslint src/packages --ext .ts",
+    "lint:fix": "eslint src/packages --ext .ts --fix",
     "prepublish": "npm version prerelease -ws",
     "publish": "npm publish -ws"
   },

@@ -16,10 +16,10 @@
     "experimentalDecorators": true,
     "declaration": true,
     "composite": true,
-    "rootDir": ".",
+    "rootDir": "src",
     "paths": {
       "@boart/*": [
-        "./packages/*/"
+        "./src/packages/*/"
       ]
     }
   }

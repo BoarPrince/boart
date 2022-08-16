@@ -2,21 +2,12 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-    roots: ['packages'],
+    roots: ['src/packages'],
     preset: 'ts-jest',
     testEnvironment: 'node',
     verbose: false,
     automock: false,
     clearMocks: true,
-    globals: {
-        gauge: {
-            dataStore: {
-                specStore: {},
-                suiteStore: {},
-                scenarioStore: {}
-            }
-        }
-    },
     setupFilesAfterEnv: ['jest-extended/all'],
     coverageThreshold: {
         global: {
