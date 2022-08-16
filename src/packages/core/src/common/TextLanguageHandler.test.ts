@@ -107,8 +107,7 @@ describe('check text language handler', () => {
          *
          */
         beforeEach(() => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (TextLanguageHandler as any)._instance = null;
+            delete globalThis.globalThis._textLanguageHandlerInstance;
         });
 
         /**

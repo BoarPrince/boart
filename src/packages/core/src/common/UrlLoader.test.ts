@@ -24,7 +24,7 @@ describe('check url loader', () => {
      *
      */
     beforeEach(() => {
-        (UrlLoader as object)['_instance'] = null;
+        delete globalThis._urlLoaderInstance;
         (fs.readFileSync as jest.Mock).mockReturnValue(
             JSON.stringify({
                 path_mapping: {

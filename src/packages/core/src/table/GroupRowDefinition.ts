@@ -18,7 +18,13 @@ export class GroupRowDefinition<
     private readonly _definitions = new ArraySubject<RowDefinition<TExecutionContext, TRowType>>();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private static readonly singleton = new Map<string, GroupRowDefinition<any, any>>();
+    private static get instance(): Map<string, GroupRowDefinition<any, any>> {
+        if (!globalThis._groupDefinitionInstance) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            globalThis._groupDefinitionInstance = new Map<string, GroupRowDefinition<any, any>>();
+        }
+        return globalThis._groupDefinitionInstance;
+    }
 
     /**
      *
@@ -29,7 +35,7 @@ export class GroupRowDefinition<
      *
      */
     static contains(name: string): boolean {
-        return GroupRowDefinition.singleton.has(name);
+        return GroupRowDefinition.instance.has(name);
     }
 
     /**
@@ -38,11 +44,11 @@ export class GroupRowDefinition<
     static getInstance<TExecutionContext extends ExecutionContext<object, object, object>, TRowType extends BaseRowType<TExecutionContext>>(
         name: string
     ): GroupRowDefinition<TExecutionContext, TRowType> {
-        if (!GroupRowDefinition.singleton.has(name)) {
-            GroupRowDefinition.singleton.set(name, new GroupRowDefinition<TExecutionContext, TRowType>(name));
+        if (!GroupRowDefinition.instance.has(name)) {
+            GroupRowDefinition.instance.set(name, new GroupRowDefinition<TExecutionContext, TRowType>(name));
         }
 
-        return GroupRowDefinition.singleton.get(name);
+        return GroupRowDefinition.instance.get(name);
     }
 
     /**

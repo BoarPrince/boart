@@ -20,10 +20,10 @@ export class GeneratorHandler implements Initializer<Generator> {
      *
      */
     public static get instance(): GeneratorHandler {
-        if (!GeneratorHandler._instance) {
-            GeneratorHandler._instance = new GeneratorHandler();
+        if (!globalThis._generatorHandlerInstance) {
+            globalThis._generatorHandlerInstance = new GeneratorHandler();
         }
-        return GeneratorHandler._instance;
+        return globalThis._generatorHandlerInstance;
     }
 
     /**
@@ -55,7 +55,7 @@ export class GeneratorHandler implements Initializer<Generator> {
      *
      */
     addItems(generator: readonly Generator[]): Initializer<Generator> {
-        generator?.forEach(g => this.add(g.name, g));
+        generator?.forEach((g) => this.add(g.name, g));
         return this;
     }
 

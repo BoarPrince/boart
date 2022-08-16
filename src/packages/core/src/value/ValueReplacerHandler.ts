@@ -20,7 +20,6 @@ type ValueReplaceItem = {
 export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     private valueReplacers: Array<ValueReplaceItem>;
     private stores: Array<StoreWrapper> = [];
-    private static _instance: ValueReplacerHandler;
 
     /**
      *
@@ -33,11 +32,12 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
      *
      */
     public static get instance(): ValueReplacerHandler {
-        if (!ValueReplacerHandler._instance) {
-            ValueReplacerHandler._instance = new ValueReplacerHandler();
-            ValueReplacerHandler._instance.init();
+        if (!globalThis._valueReplaceHandlerInstance) {
+            const instance = new ValueReplacerHandler();
+            globalThis._valueReplaceHandlerInstance = instance;
+            instance.init();
         }
-        return ValueReplacerHandler._instance;
+        return globalThis._valueReplaceHandlerInstance;
     }
     /**
      *

@@ -18,7 +18,6 @@ export interface EnvironmentSettings {
  *
  */
 export class UrlLoader {
-    private static _instance: UrlLoader;
     private readonly pathMapping: Map<string, string>;
 
     /**
@@ -39,11 +38,12 @@ export class UrlLoader {
      *
      */
     static get instance(): UrlLoader {
-        if (!UrlLoader._instance) {
-            UrlLoader._instance = new UrlLoader();
-            UrlLoader._instance.initialize();
+        if (!globalThis._urlLoaderInstance) {
+            const instance = new UrlLoader();
+            globalThis._urlLoaderInstance = instance;
+            instance.initialize();
         }
-        return UrlLoader._instance;
+        return globalThis._urlLoaderInstance;
     }
 
     /**

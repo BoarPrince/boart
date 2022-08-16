@@ -25,13 +25,14 @@ interface JsonLogicOutput {
  *
  */
 export class JsonLogic {
-    private static readonly _instance = new JsonLogic();
-
     /**
      *
      */
     static get instance(): JsonLogic {
-        return JsonLogic._instance;
+        if (!globalThis._jsonLogicInstance) {
+            globalThis._jsonLogicInstance = new JsonLogic();
+        }
+        return globalThis._jsonLogicInstance;
     }
 
     /**

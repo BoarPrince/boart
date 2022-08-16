@@ -7,14 +7,17 @@ import { ExpectedOperator } from './ExpectedOperator';
  *
  */
 export class ExpectedOperatorInitializer {
-    private static readonly _instance = new ExpectedOperatorInitializer();
     private readonly _operators = new ArraySubject<ExpectedOperator>();
 
     /**
      *
      */
     static get instance(): ExpectedOperatorInitializer {
-        return ExpectedOperatorInitializer._instance;
+        if (!globalThis._expectedOperatorInitializer) {
+            globalThis._expectedOperatorInitializer = new ExpectedOperatorInitializer();
+        }
+
+        return globalThis._expectedOperatorInitializer;
     }
 
     /**

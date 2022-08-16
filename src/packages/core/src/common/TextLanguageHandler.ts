@@ -61,7 +61,6 @@ export class TextLanguageHandler {
     private readonly mappings: Record<string, MappingEntry>;
     private _defaultLanguage: string;
     private readonly _language: Subject<string>;
-    private static _instance: TextLanguageHandler;
 
     /**
      *
@@ -76,11 +75,12 @@ export class TextLanguageHandler {
      *
      */
     static get instance(): TextLanguageHandler {
-        if (!TextLanguageHandler._instance) {
-            TextLanguageHandler._instance = new TextLanguageHandler();
-            TextLanguageHandler._instance.readMapping();
+        if (!globalThis._textLanguageHandlerInstance) {
+            const instance = new TextLanguageHandler();
+            globalThis._textLanguageHandlerInstance = instance;
+            instance.readMapping();
         }
-        return TextLanguageHandler._instance;
+        return globalThis._textLanguageHandlerInstance;
     }
 
     /**
