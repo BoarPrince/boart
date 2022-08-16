@@ -1,4 +1,4 @@
-export enum GaugeEnvironment {
+export enum RuntimeEnvironment {
     Staging = 'staging',
     Local = 'local',
     Prod = 'prod',

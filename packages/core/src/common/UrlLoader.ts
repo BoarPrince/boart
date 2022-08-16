@@ -62,7 +62,7 @@ export class UrlLoader {
      */
     private readSettings(filename: string): Record<string, PathValue> {
         try {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
             const fileData: string = fs.readFileSync(filename, 'utf-8');
             const settings = JSON.parse(fileData) as EnvironmentSettings;
             return settings.path_mapping || {};

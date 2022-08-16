@@ -1,4 +1,3 @@
-import assert from 'assert';
 import fs from 'fs';
 import fsPath from 'path';
 
@@ -135,12 +134,13 @@ export class TextLanguageHandler {
     private readSettings(filename: string): TextMappingSettings {
         try {
             console.info(`language handler: load env file ${filename}`);
-            const fileData = fs.readFileSync(filename, 'utf8');
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+            const fileData: string = fs.readFileSync(filename, 'utf8');
             const settings = JSON.parse(fileData) as EnvironmentSettings;
             return settings.text_mapping;
         } catch (error) {
             console.log(error);
-            assert.fail(`can't read language settings from env [${filename}]: ${JSON.stringify(error)}`);
+            throw Error(`can't read language settings from env [${filename}]: ${JSON.stringify(error)}`);
         }
     }
 
@@ -161,7 +161,7 @@ export class TextLanguageHandler {
             return;
         }
 
-        mappings.forEach(entry => {
+        mappings.forEach((entry) => {
             const ident = entry['ident'];
             if (!ident) {
                 throw new Error(`identifier ${JSON.stringify(entry)} not defined in mapping`);
@@ -183,6 +183,7 @@ export class TextLanguageHandler {
      *
      */
     private readMapping() {
-        this.initMapping(this.readSettings(fsPath.join(process.env.GAUGE_PROJECT_ROOT, process.env.environment_project_location)));
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+        this.initMapping(this.readSettings(fsPath.join(process.env.environment_project_root, process.env.environment_project_location)));
     }
 }

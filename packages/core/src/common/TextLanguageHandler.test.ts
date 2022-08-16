@@ -19,7 +19,7 @@ const mockData: EnvironmentSettings = {
  */
 describe('check text language handler', () => {
     (fs.readFileSync as jest.Mock).mockReturnValue(JSON.stringify(mockData));
-    process.env.GAUGE_PROJECT_ROOT = '<root>';
+    process.env.environment_project_root = '<root>';
     process.env.environment_project_location = 'env';
 
     /**
@@ -114,11 +114,11 @@ describe('check text language handler', () => {
         /**
          *
          */
-        it('check setting default language', done => {
+        it('check setting default language', (done) => {
             let i = 0;
             const expectedResult = ['nl', 'en'];
             const sut = TextLanguageHandler.instance;
-            sut.language.subscribe(lang => {
+            sut.language.subscribe((lang) => {
                 expect(lang).toBe(expectedResult[i++]);
                 if (i === 2) {
                     done();

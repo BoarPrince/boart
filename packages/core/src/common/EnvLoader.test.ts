@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { GaugeEnvironment } from '../types/GaugeEnvironment';
+import { RuntimeEnvironment } from '../types/RuntimeEnvironment';
 
 import { EnvironmentSettings, EnvLoader } from './EnvLoader';
 
@@ -45,7 +45,7 @@ describe('check env loader', () => {
      *
      */
     beforeEach(() => {
-        process.env.GAUGE_PROJECT_ROOT = '<root>';
+        process.env.environment_project_root = '<root>';
         process.env.npm_package_version = '1.1.2';
         process.env.npm_package_name = 'p_name_env';
         process.env.environment_default_location = 'default.location';
@@ -55,8 +55,7 @@ describe('check env loader', () => {
     });
 
     afterEach(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (EnvLoader as any)._instance = null;
+        globalThis._envLoaderInstance = null;
         process.env = {};
     });
 
@@ -69,7 +68,8 @@ describe('check env loader', () => {
          */
         beforeEach(() => {
             (fs.readFileSync as jest.Mock).mockImplementation((path: string) => {
-                return path === process.env.GAUGE_PROJECT_ROOT + '/' + process.env.environment_default_location
+                // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+                return path === process.env.environment_project_root + '/' + process.env.environment_default_location
                     ? JSON.stringify(mockDataDefault)
                     : JSON.stringify(mockDataProject);
             });
@@ -90,7 +90,7 @@ describe('check env loader', () => {
 
             const sut = EnvLoader.instance;
 
-            expect(fs.readFileSync).toBeCalledWith('.', 'utf-8');
+            expect(fs.readFileSync).toBeCalledWith('env/environment.json', { encoding: 'utf-8' });
             expect(sut.get('valueNoEnv')).toBe('default-value');
             expect(sut.get('withStaging')).toBe('');
         });
@@ -149,7 +149,7 @@ describe('check env loader', () => {
         it('request environment', () => {
             const sut = EnvLoader.instance;
 
-            process.env.gauge_environment = 'dev';
+            process.env.runtime_environent = 'dev';
 
             const result = sut.getEnvironment();
 
@@ -171,7 +171,7 @@ describe('check env loader', () => {
          *
          */
         it('get staging environment', () => {
-            process.env.gauge_environment = GaugeEnvironment.Staging;
+            process.env.runtime_environent = RuntimeEnvironment.Staging;
             const sut = EnvLoader.instance;
 
             const result = sut.get('withStaging');
@@ -183,7 +183,7 @@ describe('check env loader', () => {
          *
          */
         it('get local environment', () => {
-            process.env.gauge_environment = GaugeEnvironment.Local;
+            process.env.runtime_environent = RuntimeEnvironment.Local;
             const sut = EnvLoader.instance;
 
             const result = sut.get('withLocal');
@@ -195,7 +195,7 @@ describe('check env loader', () => {
          *
          */
         it('get prod environment', () => {
-            process.env.gauge_environment = GaugeEnvironment.Prod;
+            process.env.runtime_environent = RuntimeEnvironment.Prod;
             const sut = EnvLoader.instance;
 
             const result = sut.get('withProd');
@@ -309,7 +309,7 @@ describe('check env loader', () => {
          *
          */
         it('map data path (path does not exist)', () => {
-            process.env.gauge_data_dir = '<data-dir>';
+            process.env.environment_data_dir = '<data-dir>';
             (fs.readFileSync as jest.Mock).mockImplementation(() => JSON.stringify({}));
             fs.existsSync = jest.fn(() => false);
             fs.mkdirSync = jest.fn();
@@ -326,7 +326,7 @@ describe('check env loader', () => {
          *
          */
         it('map data path (path already exists)', () => {
-            process.env.gauge_data_dir = '<data-dir>';
+            process.env.environment_data_dir = '<data-dir>';
             (fs.readFileSync as jest.Mock).mockImplementation(() => JSON.stringify({}));
             fs.existsSync = jest.fn(() => true);
             fs.mkdirSync = jest.fn();
@@ -343,7 +343,7 @@ describe('check env loader', () => {
          *
          */
         it('map data path (empty file name)', () => {
-            process.env.gauge_data_dir = '<data-dir>';
+            process.env.environment_data_dir = '<data-dir>';
             (fs.readFileSync as jest.Mock).mockImplementation(() => JSON.stringify({}));
             fs.existsSync = jest.fn(() => true);
             fs.mkdirSync = jest.fn();
@@ -364,7 +364,7 @@ describe('check env loader', () => {
          *
          */
         it('map report path', () => {
-            process.env.gauge_reports_data_dir = '<report-path>';
+            process.env.environment_reports_data_dir = '<report-path>';
             (fs.readFileSync as jest.Mock).mockImplementation(() => JSON.stringify({}));
             fs.existsSync = jest.fn(() => true);
             fs.mkdirSync = jest.fn();
@@ -374,6 +374,42 @@ describe('check env loader', () => {
             const result = sut.mapReportData('<report-file>');
 
             expect(result).toBe('<report-path>/<report-file>');
+        });
+
+        /**
+         *
+         */
+        it('no default location definition', () => {
+            delete process.env.environment_default_location;
+            // process.env.environment_project_location = undefined;
+
+            (fs.readFileSync as jest.Mock).mockImplementation(() => JSON.stringify({}));
+            fs.existsSync = jest.fn(() => true);
+            fs.mkdirSync = jest.fn();
+
+            const sut = EnvLoader.instance;
+
+            expect(sut.defaultLocation).toBe('env/environment.json');
+            expect(fs.readFileSync).toBeCalledTimes(2);
+            expect(fs.readFileSync).nthCalledWith(1, '<root>/env/environment.json', { encoding: 'utf-8' });
+            expect(fs.readFileSync).nthCalledWith(2, '<root>/project.location', { encoding: 'utf-8' });
+        });
+
+        /**
+         *
+         */
+        it('no project location definition', () => {
+            delete process.env.environment_project_location;
+
+            (fs.readFileSync as jest.Mock).mockImplementation(() => JSON.stringify({}));
+            fs.existsSync = jest.fn(() => true);
+            fs.mkdirSync = jest.fn();
+
+            const sut = EnvLoader.instance;
+
+            expect(sut.defaultLocation).toBe('default.location');
+            expect(fs.readFileSync).toBeCalledTimes(1);
+            expect(fs.readFileSync).nthCalledWith(1, '<root>/default.location', { encoding: 'utf-8' });
         });
 
         /**

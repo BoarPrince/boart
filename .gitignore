@@ -4,6 +4,4 @@ tsconfig.tsbuildinfo
 
 coverage
 
-packages/core/src/**/*.js
-packages/core/src/**/*.d.ts
-_*.*
+.DS_Store

@@ -1,6 +1,6 @@
 {
   "name": "@boart/basic",
-  "version": "1.0.0-39",
+  "version": "1.0.0-53",
   "author": "kem@boarprince.net",
   "description": "",
   "main": "dist/packages/basic/src/index.js",
@@ -15,6 +15,10 @@
   },
   "keywords": [],
   "license": "ISC",
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts"
+  ],
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"
   },

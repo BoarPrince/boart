@@ -1,7 +1,7 @@
 {
   "name": "@boart/execution",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-32",
+  "version": "1.0.0-46",
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"
   },
@@ -10,7 +10,8 @@
   "keywords": [],
   "license": "ISC",
   "files": [
-    "dist"
+    "dist/**/*.js",
+    "dist/**/*.d.ts"
   ],
   "main": "dist/packages/execution/src/index.js",
   "types": "dist/packages/execution/src/index.d.ts",

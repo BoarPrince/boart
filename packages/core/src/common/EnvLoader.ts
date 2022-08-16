@@ -3,9 +3,9 @@
 import fs from 'fs';
 import fsPath from 'path';
 
-import compareVersions from 'compare-versions';
+import { compare } from 'compare-versions';
 
-import { GaugeEnvironment } from '../types/GaugeEnvironment';
+import { RuntimeEnvironment } from '../types/RuntimeEnvironment';
 
 /**
  *
@@ -25,7 +25,6 @@ export interface EnvironmentSettings {
  */
 export class EnvLoader {
     private isDocker?: boolean;
-    private static _instance: EnvLoader;
 
     /**
      *
@@ -45,18 +44,19 @@ export class EnvLoader {
      *
      */
     static get instance(): EnvLoader {
-        if (!EnvLoader._instance) {
-            EnvLoader._instance = new EnvLoader(EnvLoader.version);
-            EnvLoader._instance.initialize();
+        if (!globalThis._envLoaderInstance) {
+            const instance = new EnvLoader(EnvLoader.version);
+            globalThis._envLoaderInstance = instance;
+            instance.initialize();
         }
-        return EnvLoader._instance;
+        return globalThis._envLoaderInstance;
     }
 
     /**
      *
      */
     public checkMinVersion(): string {
-        if (compareVersions(this.currentVersion, this.minVersion) < 0) {
+        if (compare(this.currentVersion, this.minVersion, '<')) {
             throw Error(`current version is ${this.currentVersion}, but it must be at least ${this.minVersion}`);
         }
         return this.minVersion;
@@ -72,8 +72,8 @@ export class EnvLoader {
     /**
      *
      */
-    public getEnvironment(): GaugeEnvironment {
-        return process.env.gauge_environment as GaugeEnvironment;
+    public getEnvironment(): RuntimeEnvironment {
+        return process.env.runtime_environent as RuntimeEnvironment;
     }
 
     /**
@@ -86,8 +86,44 @@ export class EnvLoader {
     /**
      *
      */
+    public get projectRoot(): string {
+        return process.env.environment_project_root || '.';
+    }
+
+    /**
+     *
+     */
+    public get defaultLocation(): string {
+        return process.env.environment_default_location || 'env/environment.json';
+    }
+
+    /**
+     *
+     */
+    public set defaultLocation(location: string) {
+        process.env['environment_default_location'] = location;
+    }
+
+    /**
+     *
+     */
+    public get projectLocation(): string {
+        return process.env.environment_project_location;
+    }
+
+    /**
+     *
+     */
+    public set projectLocation(location: string) {
+        process.env['environment_project_location'] = location;
+    }
+
+    /**
+     *
+     */
     private static readSettings(filename: string): Record<string, EnvironmentValue> {
-        const fileData = fs.readFileSync(filename, 'utf-8');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+        const fileData: string = fs.readFileSync(filename, { encoding: 'utf-8' });
         const settings = JSON.parse(fileData) as EnvironmentSettings;
         return { ...settings.system, ...settings.environment } as Record<string, EnvironmentValue>;
     }
@@ -97,14 +133,14 @@ export class EnvLoader {
      */
     private initialize() {
         // read default settings
-        this.initMapping(
-            EnvLoader.readSettings(fsPath.join(process.env.GAUGE_PROJECT_ROOT || '.', process.env.environment_default_location || ''))
-        );
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+        this.initMapping(EnvLoader.readSettings(fsPath.join(this.projectRoot, this.defaultLocation)));
 
         // add or override project specific settings
-        this.initMapping(
-            EnvLoader.readSettings(fsPath.join(process.env.GAUGE_PROJECT_ROOT || '.', process.env.environment_project_location || ''))
-        );
+        if (!!this.projectLocation) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+            this.initMapping(EnvLoader.readSettings(fsPath.join(this.projectRoot, this.projectLocation)));
+        }
     }
 
     /**
@@ -122,13 +158,13 @@ export class EnvLoader {
      *
      */
     public getValueIndex(): number {
-        switch (process.env.gauge_environment as GaugeEnvironment) {
-            case GaugeEnvironment.Staging:
+        switch (process.env.runtime_environent as RuntimeEnvironment) {
+            case RuntimeEnvironment.Staging:
                 return 1;
-            case GaugeEnvironment.Local:
+            case RuntimeEnvironment.Local:
                 return 2;
-            case GaugeEnvironment.Prod:
-            case GaugeEnvironment.Production:
+            case RuntimeEnvironment.Prod:
+            case RuntimeEnvironment.Production:
                 return 3;
             default:
                 return 0;
@@ -143,9 +179,8 @@ export class EnvLoader {
 
         Object.entries(settings)
             .map(([key, value]) => [key, Array.isArray(value) ? value[valueIndex] || value[0] : value])
-            .forEach(([key, value]) => {
-                process.env[key] = value;
-            });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            .forEach(([key, value]) => (process.env[key] = value));
     }
 
     /**
@@ -156,10 +191,13 @@ export class EnvLoader {
             throw new Error('filename must be defined');
         }
         const dataDir = this.get(dirVar);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         if (!fs.existsSync(dataDir)) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             fs.mkdirSync(dataDir, { recursive: true });
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         return fsPath.join(dataDir, filename);
     }
 
@@ -167,14 +205,14 @@ export class EnvLoader {
      *
      */
     public mapDataFileName(filename: string): string {
-        return this.mapPath(filename, 'gauge_data_dir');
+        return this.mapPath(filename, 'environment_data_dir');
     }
 
     /**
      *
      */
     public mapReportData(filename: string): string {
-        return this.mapPath(filename, 'gauge_reports_data_dir');
+        return this.mapPath(filename, 'environment_reports_data_dir');
     }
 
     /**
@@ -184,6 +222,7 @@ export class EnvLoader {
         if (!this.isDocker) {
             const hasDockerEnv = () => {
                 try {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                     fs.statSync('/.dockerenv');
                     return true;
                 } catch (_) {
@@ -193,6 +232,7 @@ export class EnvLoader {
 
             const hasDockerCGroup = (): boolean => {
                 try {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                     return fs.readFileSync('/proc/self/cgroup', 'utf8').includes('docker');
                 } catch (_) {
                     return false;
