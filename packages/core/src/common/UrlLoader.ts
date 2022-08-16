@@ -88,7 +88,13 @@ export class UrlLoader {
      *
      */
     getAbsoluteUrl(url: string): string {
-        if (!!url && !url.startsWith('<') && !url.startsWith('/')) {
+        if (
+            !!url &&
+            !url.startsWith('<') &&
+            !url.startsWith('/') &&
+            !url?.toLowerCase().startsWith('http://') &&
+            !url?.toLowerCase().startsWith('https://')
+        ) {
             url = '/' + url;
         }
 

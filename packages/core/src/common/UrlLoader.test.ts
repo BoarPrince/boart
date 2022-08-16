@@ -190,4 +190,20 @@ describe('check url loader', () => {
 
         throw Error('error must be thrown if environemnt cant be read');
     });
+
+    /**
+     *
+     */
+    it('check without mapping', () => {
+        (fs.readFileSync as jest.Mock).mockReturnValue(
+            JSON.stringify({
+                path_mapping: {}
+            })
+        );
+
+        const sut = UrlLoader.instance;
+
+        const path = sut.getAbsoluteUrl('http://api/a/b');
+        expect(path).toBe('http://api/a/b');
+    });
 });
