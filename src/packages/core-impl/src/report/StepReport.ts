@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { EnvLoader } from '@boart/core';
+import { EnvLoader, Timer } from '@boart/core';
 import { v1 as uuidv1 } from 'uuid';
 
 /**
@@ -9,34 +9,26 @@ import { v1 as uuidv1 } from 'uuid';
 export class StepReport {
     private _id = uuidv1();
     private _type: string;
-    private _startTime: string;
+    private _timer: Timer;
     private _descriptions = new Array<string>();
     private _result = new Map<string, string | ReadonlyArray<object>>();
     private _input = new Map<string, string | ReadonlyArray<object>>();
-    private stepContext: object;
-
-    private static _instance: StepReport;
 
     /**
      *
      */
-    private constructor(stepContext: object) {
-        this._startTime = new Date().toISOString();
-        this.stepContext = stepContext;
-    }
-
-    /**
-     *
-     */
-    public static create(stepContext: object): StepReport {
-        return (StepReport._instance = new StepReport(stepContext));
+    private constructor() {
+        this._timer = new Timer();
     }
 
     /**
      *
      */
     public static get instance(): StepReport {
-        return StepReport._instance;
+        if (!globalThis._stepReportInstance) {
+            globalThis._stepReportInstance = new StepReport();
+        }
+        return globalThis._stepReportInstance;
     }
 
     /**
@@ -60,7 +52,7 @@ export class StepReport {
         const data = JSON.stringify({
             id: this._id,
             type: this._type,
-            startTime: this._startTime,
+            startTime: this._timer,
             description: this._descriptions,
             input: fromEntries(this._input),
             result: fromEntries(this._result)
@@ -68,6 +60,7 @@ export class StepReport {
 
         const filename = EnvLoader.instance.mapReportData(`${this._id}.json`);
         console.message(`##report##${JSON.stringify({ id: this._id, filename })}`);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         fs.writeFile(EnvLoader.instance.mapReportData(`${this._id}.json`), data, 'utf-8', (writeErr) => {
             if (writeErr) return console.log(writeErr);
         });
@@ -195,6 +188,13 @@ export class StepReport {
      */
     public addDescription(value: string): void {
         this._descriptions.push(value);
+    }
+
+    /**
+     *
+     */
+    public get description(): string {
+        return this._descriptions.join('\n');
     }
 
     /**
