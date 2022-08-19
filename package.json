@@ -19,7 +19,8 @@
     "lint": "eslint src/packages --ext .ts",
     "lint:fix": "eslint src/packages --ext .ts --fix",
     "prepublish": "npm version prerelease -ws",
-    "publish": "npm publish -ws"
+    "publish": "npm publish -ws",
+    "compile:and:publish": "npm run compile && npm install && npm run publish"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",

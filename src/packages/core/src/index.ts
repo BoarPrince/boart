@@ -20,6 +20,9 @@ import { ExecutionEngine } from './execution/ExecutionEngine';
 import { ExecutionUnit } from './execution/ExecutionUnit';
 import { Generator } from './generator/Generator';
 import { GeneratorHandler } from './generator/GeneratorHandler';
+import { Runtime } from './runtime/Runtime';
+import { LocalContext, RuntimeContext, RuntimeResultContext, StepContext, TestContext } from './runtime/RuntimeContext';
+import { RuntimeStatus } from './runtime/RuntimeStatus';
 import { Store } from './store/Store';
 import { StoreWrapper } from './store/StoreWrapper';
 import { BaseRowMetaDefinition } from './table/BaseRowMetaDefinition';
@@ -61,6 +64,7 @@ export {
     GroupValidator,
     JsonHelper,
     key,
+    LocalContext,
     MarkdownTableReader,
     NativeContent,
     NullContent,
@@ -68,15 +72,21 @@ export {
     ParaType,
     RowDefinition,
     RowValidator,
+    Runtime,
+    RuntimeContext,
+    RuntimeResultContext,
+    RuntimeStatus,
     ScopedType,
     ScopeType,
     SelectorType,
+    StepContext,
     Store,
     StoreWrapper,
     TableHandler,
     TableHandlerBaseImpl,
     TableRows,
     TableRowType,
+    TestContext,
     TextContent,
     TextLanguageHandler,
     Timer,

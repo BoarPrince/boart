@@ -4,8 +4,22 @@
     "node_modules",
     "dist"
   ],
+  "paths": {
+    "@boart/core": [
+      "./src/packages/core/src/index.ts"
+    ],
+    "@boart/core-impl": [
+      "./src/packages/core-impl/src/index.ts"
+    ],
+    "@boart/basic": [
+      "./src/packages/basic/src/index.ts"
+    ],
+    "@boart/execution": [
+      "./src/packages/execution/src/index.ts"
+    ]
+  },
   "compilerOptions": {
-    "target": "ES2019",
+    "target": "es2018",
     "module": "commonjs",
     "strict": false,
     "strictNullChecks": false,
@@ -13,14 +27,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "declaration": true,
     "composite": true,
-    "rootDir": "src",
-    "paths": {
-      "@boart/*": [
-        "./src/packages/*/"
-      ]
-    }
+    "rootDir": "src"
   }
 }

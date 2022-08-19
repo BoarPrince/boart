@@ -12,7 +12,7 @@ import { PropertySetterExecutionUnit } from './execution/property-setter/Propert
 import { TransformJPathExecutionUnit } from './execution/transform/ExecutionUnit.TransformJPath';
 import { TransformJsonLogicExecutionUnit } from './execution/transform/ExecutionUnit.TransformJsonLogic';
 import { TransformResetExecutionUnit } from './execution/transform/ExecutionUnit.TransformReset';
-import { ScenarioReport } from './report/ScenarioReport';
+import { Report } from './report/Report';
 import { StepReport } from './report/StepReport';
 import { TestReport } from './report/TestReport';
 import { DependsOnValidator } from './validators/DependsOnValidator';
@@ -39,10 +39,10 @@ export {
     PropertySetterExecutionUnit,
     RequiredValidator,
     RowTypeValue,
-    ScenarioReport,
+    TestReport,
     StepReport,
     StoreReplacer,
-    TestReport,
+    Report,
     TransformJPathExecutionUnit,
     TransformJsonLogicExecutionUnit,
     TransformResetExecutionUnit,
