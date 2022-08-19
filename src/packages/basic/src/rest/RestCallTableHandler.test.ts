@@ -29,7 +29,7 @@ jest.mock('@boart/core', () => {
  */
 beforeEach(() => {
     const spy = jest.spyOn(process, 'hrtime');
-    spy.mockReturnValue([0, 2000000]);
+    spy.mockReturnValue([0, 2000000000]);
     sut.handler.executionEngine.initContext();
     Store.instance.localStore.clear();
 });
