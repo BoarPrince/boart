@@ -1,6 +1,14 @@
-# Getting Started with Gauge
+# 1. Getting Started with Gauge
 
-## Must list only active tasks
+tags: spec1
+
+## 1.1 Must list only active tasks
+
+tags: scenario1
+
+* concept number 1
+
+* Hallo
 
 * Rest call
 
@@ -8,3 +16,4 @@
    |----------|----------|
    |method:get|http://xxx|
    |store     |resonse   |
+
