@@ -3,7 +3,7 @@
  */
 export class Timer {
     private _duration: number;
-    private start: [number, number];
+    private start: bigint;
     private startTimeISO: string;
     private endTimeISO: string;
     /**
@@ -11,19 +11,18 @@ export class Timer {
      */
     constructor() {
         this._duration = null;
-        this.start = process.hrtime();
-        this.startTimeISO = new Date(this.start[0] * 1000 + this.start[1] / 1000000).toISOString();
+        this.start = process.hrtime.bigint();
+        this.startTimeISO = new Date().toISOString();
     }
 
     /**
      *
      */
     stop() {
-        const duration = process.hrtime(this.start);
-        this._duration = duration[0] + duration[1] / 1000000;
-
-        const end = process.hrtime();
-        this.endTimeISO = new Date(end[0] * 1000 + end[1] / 1000000).toISOString();
+        const end = process.hrtime.bigint();
+        const duration = end - this.start;
+        this._duration = Number(duration) / 1000 / 1000 / 1000;
+        this.endTimeISO = new Date().toISOString();
         return this;
     }
 
@@ -38,6 +37,9 @@ export class Timer {
      * calculates the iso time
      */
     get endTime(): string {
+        if (!this.endTimeISO) {
+            this.stop();
+        }
         return this.endTimeISO;
     }
 
@@ -45,6 +47,9 @@ export class Timer {
      *
      */
     get duration(): string {
+        if (!this._duration) {
+            this.stop();
+        }
         return this._duration.toFixed(2);
     }
 
