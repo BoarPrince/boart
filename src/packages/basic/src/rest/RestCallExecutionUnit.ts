@@ -1,5 +1,5 @@
 import { DataContent, DataContentHelper, ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@boart/core';
-import { PDFContent, RowTypeValue } from '@boart/core-impl';
+import { PDFContent, RowTypeValue, StepReport } from '@boart/core-impl';
 import { RestHttp } from '@boart/execution';
 
 import { RestCallContext } from './RestCallContext';
@@ -8,7 +8,8 @@ import { RestCallContext } from './RestCallContext';
  *
  */
 export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>> {
-    description = 'rest call - main';
+    public description = 'rest call - main';
+    private readonly restCallReportType = 'Rest call';
 
     /**
      *
@@ -42,18 +43,16 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
                 return rest.delete(authentication, header);
             case 'put':
                 return rest.put(preContext.payload, authentication, header);
-            case 'form-data':
-                return rest.form_data(
-                    Object.assign(preContext.formData.getValue(), this.parseJSON(preContext.payload, 'payload')),
-                    authentication,
-                    header
-                );
-            case 'post-param':
-                return rest.post_param(
-                    Object.assign(preContext.param.getValue(), this.parseJSON(preContext.payload, 'payload')),
-                    authentication,
-                    header
-                );
+            case 'form-data': {
+                const payload = Object.assign(preContext.formData.getValue(), this.parseJSON(preContext.payload, 'payload'));
+                StepReport.instance.getInputItems(this.restCallReportType).addData('formData', payload);
+                return rest.form_data(payload, authentication, header);
+            }
+            case 'post-param': {
+                const payload = Object.assign(preContext.param.getValue(), this.parseJSON(preContext.payload, 'payload'));
+                StepReport.instance.getInputItems(this.restCallReportType).addData('postParam', payload);
+                return rest.post_param(payload, authentication, header);
+            }
         }
     }
 
@@ -62,8 +61,10 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async execute(context: RestCallContext, _row: RowTypeValue<RestCallContext>): Promise<void> {
-        const timer = new Timer();
+        this.inputReport(context);
 
+        //#region rest call executing
+        const timer = new Timer();
         const rest = new RestHttp(UrlLoader.instance.getAbsoluteUrl(context.preExecution.url));
         let response: Response;
         try {
@@ -76,7 +77,9 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
                 duration: timer.stop().duration
             });
         }
+        //#endregion
 
+        //#region setting result to context
         context.execution.header.asDataContentObject().set('statusText', response.statusText);
         context.execution.header.asDataContentObject().set('status', response.status);
         context.execution.header.asDataContentObject().set('headers', Object.fromEntries(response.headers));
@@ -86,5 +89,30 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
             contentType === 'application/pdf'
                 ? await new PDFContent().setBufferAsync(await response.arrayBuffer())
                 : new TextContent(await response.text());
+        //#endregion
+
+        this.resultReport(context, response);
+    }
+
+    /**
+     *
+     */
+    private inputReport(context: RestCallContext) {
+        StepReport.instance.type = 'restCall';
+        const restCallInpurReport = StepReport.instance.getInputItems(this.restCallReportType);
+        restCallInpurReport.addData('query', context.preExecution.query);
+        restCallInpurReport.addData('payload', context.preExecution.payload);
+    }
+
+    /**
+     *
+     */
+    private resultReport(context: RestCallContext, response: Response) {
+        const restCallResultReport = StepReport.instance.getResultItems('Rest call result');
+        restCallResultReport.addData('result', {
+            status: response.status,
+            response: context.execution.data.getText(),
+            headers: Object.fromEntries(response.headers)
+        });
     }
 }
