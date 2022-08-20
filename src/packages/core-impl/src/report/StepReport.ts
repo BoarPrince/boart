@@ -1,26 +1,23 @@
 import fs from 'fs';
 
-import { EnvLoader, Timer } from '@boart/core';
-import { v1 as uuidv1 } from 'uuid';
+import { EnvLoader, Runtime } from '@boart/core';
 
-import { StepItems } from './StepItems';
+import { StepItem } from './StepItem';
 
 /**
  *
  */
 export class StepReport {
-    private _id = uuidv1();
     private _type: string;
-    private _timer: Timer;
     private _descriptions = new Array<string>();
-    private readonly resultItems = new Map<string, StepItems>();
-    private readonly inputItems = new Map<string, StepItems>();
+    private readonly resultItem = new Map<string, StepItem>();
+    private readonly inputItems = new Map<string, StepItem>();
 
     /**
      *
      */
     private constructor() {
-        this._timer = new Timer();
+        // it's a singleton
     }
 
     /**
@@ -42,7 +39,7 @@ export class StepReport {
             return;
         }
 
-        const fromEntries = (map: ReadonlyMap<string, StepItems>): object => {
+        const fromEntries = (map: ReadonlyMap<string, StepItem>): object => {
             const o = {};
             for (const entry of map.entries()) {
                 o[entry[0]] = entry[1];
@@ -50,21 +47,28 @@ export class StepReport {
             return o;
         };
 
+        const id = Runtime.instance.stepRuntime.current.id;
+        const input = fromEntries(this.inputItems);
+        const result = fromEntries(this.resultItem);
+
         // data output
         const data = JSON.stringify({
-            id: this._id,
+            id,
+            errorMessage: Runtime.instance.stepRuntime.current.errorMessage,
+            stackTrace: Runtime.instance.stepRuntime.current.stackTrace,
+            status: Runtime.instance.stepRuntime.current.status,
             type: this._type,
-            startTime: this._timer,
+            startTime: Runtime.instance.stepRuntime.current.startTime,
+            duration: Runtime.instance.stepRuntime.current.duration,
             description: this._descriptions,
-            input: fromEntries(this.inputItems),
-            result: fromEntries(this.resultItems)
+            input,
+            result
         });
 
-        const filename = EnvLoader.instance.mapReportData(`${this._id}.json`);
-        console.message(`##report##${JSON.stringify({ id: this._id, filename })}`);
-
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        const filename = EnvLoader.instance.mapReportData(`${id}.json`);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        fs.writeFile(EnvLoader.instance.mapReportData(`${this._id}.json`), data, 'utf-8', (writeErr) => {
+        fs.writeFile(filename, data, 'utf-8', (writeErr) => {
             if (writeErr) return console.log(writeErr);
         });
 
@@ -75,21 +79,31 @@ export class StepReport {
     /**
      *
      */
-    public getInputItems(type: string): StepItems {
-        if (!this.inputItems.has(type)) {
-            this.inputItems.set(type, new StepItems(type));
+    public addInputItem(description: string, type: string, data: object | string): void {
+        if (this.inputItems.has(description)) {
+            throw new Error(`report input type "${description}" already exists`);
         }
-        return this.inputItems.get(type);
+
+        this.inputItems.set(description, {
+            description,
+            type,
+            data
+        });
     }
 
     /**
      *
      */
-    public getResultItems(type: string): StepItems {
-        if (!this.resultItems.has(type)) {
-            this.resultItems.set(type, new StepItems(type));
+    public addResultItem(description: string, type: string, data: object | string): void {
+        if (this.resultItem.has(description)) {
+            throw new Error(`report result type "${description}" already exists`);
         }
-        return this.resultItems.get(type);
+
+        this.resultItem.set(description, {
+            description,
+            type,
+            data
+        });
     }
 
     /**
