@@ -286,8 +286,17 @@ export class RestHttp {
     /**
      *
      */
+    public getCurl(): string {
+        if (!this.executionInfo) {
+            return null;
+        }
+        return new CurlGenerator(this.executionInfo).generate();
+    }
+
+    /**
+     *
+     */
     public getExecutionInfo(): ExecutionInfo {
-        this.executionInfo.getCurl = () => new CurlGenerator(this.executionInfo).generate();
         return this.executionInfo;
     }
 }
