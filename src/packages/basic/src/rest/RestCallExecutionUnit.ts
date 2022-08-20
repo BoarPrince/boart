@@ -73,7 +73,7 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
         } finally {
             StepReport.instance.addInputItem('Rest call', 'json', rest.getExecutionInfo());
 
-            StepReport.instance.addInputItem('Rest call (curl)', 'text', rest.getExecutionInfo().getCurl());
+            StepReport.instance.addInputItem('Rest call (curl)', 'text', rest.getCurl());
 
             context.execution.header = new ObjectContent({
                 duration: timer.stop().duration

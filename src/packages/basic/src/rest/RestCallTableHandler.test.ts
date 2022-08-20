@@ -1,7 +1,11 @@
-import { RestCallTableHandler } from '@boart/basic';
-import { MarkdownTableReader } from '@boart/core';
+import fs from 'fs';
+
+import { MarkdownTableReader, Runtime } from '@boart/core';
+import { StepReport } from '@boart/core-impl';
 import { Store } from '@boart/core/src/store/Store';
 import fetchMock from 'jest-fetch-mock';
+
+import RestCallTableHandler from './RestCallTableHandler';
 
 fetchMock.enableMocks();
 const sut = new RestCallTableHandler();
@@ -20,9 +24,19 @@ jest.mock('@boart/core', () => {
             static instance = {
                 getAbsoluteUrl: (url: string) => url
             };
+        },
+        EnvLoader: class {
+            static instance = {
+                mapReportData: (filename: string) => filename
+            };
         }
     };
 });
+
+/**
+ *
+ */
+jest.mock('fs');
 
 /**
  *
@@ -32,6 +46,13 @@ beforeEach(() => {
     spy.mockReturnValue([0, 2000000000]);
     sut.handler.executionEngine.initContext();
     Store.instance.localStore.clear();
+});
+
+/**
+ *
+ */
+afterEach(() => {
+    StepReport.instance.report();
 });
 
 /**
@@ -764,5 +785,62 @@ it('default expected - wrong', async () => {
 
     await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError(
         'error: expected\n\texpected: xxx\n\tactual: {"b":2}'
+    );
+});
+
+/**
+ *
+ */
+it('report must be written', async () => {
+    fetchMock.doMock(JSON.stringify({ b: 2 }));
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value       |
+       |-------------|------------|
+       | method:get  | http://xxx |
+       | description | test desc  |`
+    );
+
+    await sut.handler.process(tableRows);
+
+    Runtime.instance.stepRuntime.current.id = 'id-id-id';
+    StepReport.instance.report();
+    expect(fs.writeFile).toBeCalledWith(
+        'id-id-id.json',
+        JSON.stringify({
+            id: 'id-id-id',
+            status: 2,
+            type: 'restCall',
+            description: ['test desc'],
+            input: {
+                'Rest call': {
+                    description: 'Rest call',
+                    type: 'json',
+                    data: {
+                        url: 'http://xxx',
+                        option: {
+                            method: 'GET',
+                            headers: { 'Content-Type': 'application/json' },
+                            mode: 'no-cors',
+                            referrerPolicy: 'unsafe-url'
+                        }
+                    }
+                },
+                'Rest call (curl)': {
+                    description: 'Rest call (curl)',
+                    type: 'text',
+                    data: "curl -i -X GET 'http://xxx' \\\n\t-H 'Content-Type: application/json'"
+                }
+            },
+            result: {
+                'Rest call result (header)': {
+                    description: 'Rest call result (header)',
+                    type: 'json',
+                    data: '{"duration":"2.00","statusText":"OK","status":200,"headers":{"content-type":"text/plain;charset=UTF-8"}}'
+                },
+                'Rest call result (paylaod)': { description: 'Rest call result (paylaod)', type: 'json', data: '{"b":2}' }
+            }
+        }),
+        'utf-8',
+        expect.any(Function)
     );
 });
