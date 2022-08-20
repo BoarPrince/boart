@@ -191,6 +191,10 @@ export class EnvLoader {
             throw new Error('filename must be defined');
         }
         const dataDir = this.get(dirVar);
+        if (!dataDir) {
+            throw new Error(`cannot map environment "${dirVar}"`);
+        }
+
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         if (!fs.existsSync(dataDir)) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
