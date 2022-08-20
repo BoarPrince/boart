@@ -4,7 +4,7 @@ import { RuntimeStatus } from './RuntimeStatus';
  *
  */
 export interface RuntimeResultContext {
-    id?: string;
+    id: string;
     startTime?: string;
     endTime?: string;
     duration?: string;
@@ -17,8 +17,11 @@ export interface RuntimeResultContext {
  *
  */
 export abstract class BaseRuntimeContext {
+    id: string;
     name: string;
-    id?: string;
+    startTime?: string;
+    endTime?: string;
+    duration?: string;
     location?: string;
     tags?: Array<string>;
     status = RuntimeStatus.notExecuted;
