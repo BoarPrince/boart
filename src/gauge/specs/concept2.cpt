@@ -7,4 +7,5 @@
    |action    |value     |
    |----------|----------|
    |method:get|http://yyy|
+   |description|a   |
    |store     |resonse   |

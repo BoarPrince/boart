@@ -4,7 +4,7 @@
   "scripts": {
     "test": "gauge run specs/",
     "update": "rm -rf node_modules/@boart && npm update",
-    "test:and:update": "npm run update && npm run test"
+    "update:and:test": "npm run update && npm run test"
   },
   "dependencies": {
     "@boart/basic": "*",
