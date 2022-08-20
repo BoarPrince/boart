@@ -34,6 +34,9 @@ export class StepReport {
      *
      */
     public report(): void {
+        // after reporting the step, reset singleton instance
+        delete globalThis._stepReportInstance;
+
         if (this._descriptions.length == 0) {
             // do nothing, if no description is defined
             return;
@@ -65,15 +68,11 @@ export class StepReport {
             result
         });
 
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         const filename = EnvLoader.instance.mapReportData(`${id}.json`);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         fs.writeFile(filename, data, 'utf-8', (writeErr) => {
             if (writeErr) return console.log(writeErr);
         });
-
-        // after reporting the step, reset singleton instance
-        delete globalThis._stepReportInstance;
     }
 
     /**

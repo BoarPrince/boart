@@ -1,10 +1,11 @@
 /* globals gauge*/
 'use strict';
 
-const { RestCallTableHandler } = require('@boart/basic');
+const { RestCallTableHandler, TestDescriptionTableHandler } = require('@boart/basic');
 const { Store, Runtime, RuntimeStatus } = require('@boart/core');
 
 const restcallTableHandler = new RestCallTableHandler();
+const testDescriptionTableHandler = new TestDescriptionTableHandler();
 
 /**
  *
@@ -105,6 +106,13 @@ afterStep((context) => {
  */
 step('Rest call <table>', async (table) => {
     await restcallTableHandler.handler.process(table);
+});
+
+/**
+ *
+ */
+step('Test description <table>', async (table) => {
+    await testDescriptionTableHandler.handler.process(table);
 });
 
 /**

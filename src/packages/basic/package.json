@@ -1,6 +1,6 @@
 {
   "name": "@boart/basic",
-  "version": "1.0.0-136",
+  "version": "1.0.0-151",
   "author": "kem@boarprince.net",
   "description": "",
   "main": "dist/packages/basic/src/index.js",

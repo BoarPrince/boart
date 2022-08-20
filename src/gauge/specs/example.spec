@@ -6,6 +6,13 @@ tags: spec1
 
 tags: scenario1
 
+* Test description
+
+      | action      | value                                            |
+      |-------------|--------------------------------------------------|
+      | description | This is a test description |
+      | priority    | medium                                           |
+
 * concept number 1
 
 * Hallo
