@@ -20,6 +20,8 @@ import { ParaValidator } from './validators/ParaValidator';
 import { RequiredValidator } from './validators/RequiredValidator';
 import { UniqueValidator } from './validators/UniqueValidator';
 import { ValueRequiredValidator } from './validators/ValueRequiredValidator';
+import { ValueValidator } from './validators/ValueValidator';
+import { XORValidator } from './validators/XORValidator';
 import { StoreReplacer } from './value/StoreReplace';
 
 /**
@@ -37,18 +39,20 @@ export {
     ParaValidator,
     PDFContent,
     PropertySetterExecutionUnit,
+    Report,
     RequiredValidator,
     RowTypeValue,
-    TestReport,
     StepReport,
     StoreReplacer,
-    Report,
+    TestReport,
     TransformJPathExecutionUnit,
     TransformJsonLogicExecutionUnit,
     TransformResetExecutionUnit,
     UniqueValidator,
     ValueRequiredValidator,
-    WaitExecutionUnit
+    ValueValidator,
+    WaitExecutionUnit,
+    XORValidator
 };
 
 // initialize
