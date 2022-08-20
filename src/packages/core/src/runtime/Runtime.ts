@@ -20,13 +20,7 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
     /**
      *
      */
-    constructor(context: TContext, private preserveCurrent = true) {
-        this.current = {
-            id: randomUUID(),
-            ...this.current,
-            ...context
-        };
-    }
+    constructor(private contextGenerator: () => TContext, private preserveCurrent = true) {}
 
     /**
      *
@@ -35,7 +29,8 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
         this.timer = new Timer();
         this.current = {
             startTime: this.timer.startTime,
-            ...this.current,
+            id: randomUUID(),
+            ...this.contextGenerator(),
             ...context
         };
         this.start.next(this.current);
@@ -61,10 +56,10 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
  *
  */
 export class Runtime {
-    public stepRuntime = new RuntimeNotifier<StepContext>(new StepContext());
-    public testRuntime = new RuntimeNotifier<TestContext>(new TestContext());
-    public localRuntime = new RuntimeNotifier<LocalContext>(new LocalContext());
-    public runtime = new RuntimeNotifier<RuntimeContext>(new RuntimeContext(), false);
+    public stepRuntime = new RuntimeNotifier<StepContext>(() => new StepContext());
+    public testRuntime = new RuntimeNotifier<TestContext>(() => new TestContext());
+    public localRuntime = new RuntimeNotifier<LocalContext>(() => new LocalContext());
+    public runtime = new RuntimeNotifier<RuntimeContext>(() => new RuntimeContext(), false);
 
     /**
      *
@@ -80,10 +75,6 @@ export class Runtime {
         this.localRuntime.onStart().subscribe((context) => this.runtime.current.localContext.push(context));
         this.testRuntime.onStart().subscribe((context) => this.localRuntime.current.testContext.push(context));
         this.stepRuntime.onStart().subscribe((context) => this.testRuntime.current.stepContext.push(context));
-
-        this.runtime.onEnd().subscribe(() => {
-            console.log('runtime', JSON.stringify(this.runtime.current, null, '  '));
-        });
     }
 
     /**

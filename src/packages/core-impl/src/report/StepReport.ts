@@ -3,6 +3,7 @@ import fs from 'fs';
 import { EnvLoader, Runtime } from '@boart/core';
 
 import { StepItem } from './StepItem';
+import { StepReportitem } from './StepReportitem';
 
 /**
  *
@@ -42,7 +43,7 @@ export class StepReport {
             return;
         }
 
-        const fromEntries = (map: ReadonlyMap<string, StepItem>): object => {
+        const fromEntries = (map: ReadonlyMap<string, StepItem>): Record<string, object | string> => {
             const o = {};
             for (const entry of map.entries()) {
                 o[entry[0]] = entry[1];
@@ -50,23 +51,23 @@ export class StepReport {
             return o;
         };
 
-        const id = Runtime.instance.stepRuntime.current.id;
-        const input = fromEntries(this.inputItems);
-        const result = fromEntries(this.resultItem);
+        const currentStepRuntime = Runtime.instance.stepRuntime.current;
+        const id = currentStepRuntime.id;
 
         // data output
-        const data = JSON.stringify({
+        const objectData: StepReportitem = {
             id,
-            errorMessage: Runtime.instance.stepRuntime.current.errorMessage,
-            stackTrace: Runtime.instance.stepRuntime.current.stackTrace,
-            status: Runtime.instance.stepRuntime.current.status,
+            errorMessage: currentStepRuntime.errorMessage,
+            stackTrace: currentStepRuntime.stackTrace,
+            status: currentStepRuntime.status,
             type: this._type,
-            startTime: Runtime.instance.stepRuntime.current.startTime,
-            duration: Runtime.instance.stepRuntime.current.duration,
-            description: this._descriptions,
-            input,
-            result
-        });
+            startTime: currentStepRuntime.startTime,
+            duration: currentStepRuntime.duration,
+            description: this.description,
+            input: fromEntries(this.inputItems),
+            result: fromEntries(this.resultItem)
+        };
+        const data = JSON.stringify(objectData);
 
         const filename = EnvLoader.instance.mapReportData(`${id}.json`);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call

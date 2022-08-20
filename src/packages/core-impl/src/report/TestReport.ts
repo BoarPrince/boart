@@ -2,6 +2,9 @@ import fs from 'fs';
 
 import { EnvLoader, Runtime } from '@boart/core';
 
+import { TestReportItem } from './TestReportItem';
+import { TicketItem } from './TicketItem';
+
 /**
  *
  */
@@ -32,7 +35,7 @@ export class TestReport {
     /**
      *
      */
-    public static extractTickets(ticketDefinition: string) {
+    public static extractTickets(ticketDefinition: string): TicketItem[] {
         return (ticketDefinition?.split(/[ ,;]/) || [])
             .filter((t) => !!t)
             .map((t) => {
@@ -61,24 +64,52 @@ export class TestReport {
     /**
      *
      */
+    private getNumber(location: string, name: string): string {
+        const nameMatch = name.match(/^([\d]+[\d.]*)/);
+        const nameNumber = !nameMatch ? '' : nameMatch[1].replace(/[.]$/, '');
+
+        const locationMatch = location.match(/^([\d])/);
+        if (!!locationMatch) {
+            const locationNumber = locationMatch[1].replace(/[.]$/, '');
+            return nameNumber.replace(/^\d+/, locationNumber);
+        }
+        return nameNumber;
+    }
+
+    /**
+     *
+     */
+    private getName(name: string): string {
+        return name.replace(/\d[\d.]+\W*/, '');
+    }
+
+    /**
+     *
+     */
     public report(): void {
         // after reporting the test, reset singleton instance
-        delete globalThis._stepReportInstance;
+        delete globalThis._testReportInstance;
 
-        const id = Runtime.instance.testRuntime.current.id;
+        const currentTestRuntime = Runtime.instance.testRuntime.current;
+        const id = currentTestRuntime.id;
+
         // data output
-        const data: string = JSON.stringify({
+        const objectData: TestReportItem = {
             id,
-            errorMessage: Runtime.instance.testRuntime.current.errorMessage,
-            stackTrace: Runtime.instance.testRuntime.current.stackTrace,
-            status: Runtime.instance.testRuntime.current.status,
+            number: this.getNumber(currentTestRuntime.location, currentTestRuntime.name),
+            name: this.getName(currentTestRuntime.name),
+            tags: currentTestRuntime.tags,
+            errorMessage: currentTestRuntime.errorMessage,
+            stackTrace: currentTestRuntime.stackTrace,
+            status: currentTestRuntime.status,
             priority: this.priority,
-            startTime: Runtime.instance.testRuntime.current.startTime,
-            duration: Runtime.instance.testRuntime.current.duration,
+            startTime: currentTestRuntime.startTime,
+            duration: currentTestRuntime.duration,
             tickets: TestReport.extractTickets(this.ticket),
             descriptions: this.descriptions,
             failureDescription: this.failureDescription
-        });
+        };
+        const data: string = JSON.stringify(objectData);
 
         const filename = EnvLoader.instance.mapReportData(`${id}.json`);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call

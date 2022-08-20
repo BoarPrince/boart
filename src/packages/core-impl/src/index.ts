@@ -12,6 +12,7 @@ import { PropertySetterExecutionUnit } from './execution/property-setter/Propert
 import { TransformJPathExecutionUnit } from './execution/transform/ExecutionUnit.TransformJPath';
 import { TransformJsonLogicExecutionUnit } from './execution/transform/ExecutionUnit.TransformJsonLogic';
 import { TransformResetExecutionUnit } from './execution/transform/ExecutionUnit.TransformReset';
+import { LocalReport } from './report/LocalReport';
 import { Report } from './report/Report';
 import { StepReport } from './report/StepReport';
 import { TestReport } from './report/TestReport';
@@ -35,6 +36,7 @@ export {
     DescriptionExecutionUnit,
     ExpectedDataExecutinoUnit,
     ExpectedJsonLogicExecutionUnit,
+    LocalReport,
     OutStoreExecutionUnit,
     ParaValidator,
     PDFContent,
