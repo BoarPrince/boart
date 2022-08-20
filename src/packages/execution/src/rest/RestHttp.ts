@@ -3,6 +3,7 @@ import { default as Form_Data } from 'form-data';
 import jwt_decode from 'jwt-decode';
 import { Subject } from 'rxjs';
 
+import { CurlGenerator } from './CurlGenerator';
 import { ExecutionInfo } from './ExecutionInfo';
 
 /**
@@ -286,6 +287,7 @@ export class RestHttp {
      *
      */
     public getExecutionInfo(): ExecutionInfo {
+        this.executionInfo.getCurl = () => new CurlGenerator(this.executionInfo).generate();
         return this.executionInfo;
     }
 }
