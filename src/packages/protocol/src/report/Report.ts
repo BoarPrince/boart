@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import { EnvLoader, Runtime } from '@boart/core';
 
-import { ReportItem } from './ReportItem';
+import { ReportItem } from '../report-item/ReportItem';
 
 /**
  *

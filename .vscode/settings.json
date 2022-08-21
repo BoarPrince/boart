@@ -46,6 +46,7 @@
   "jestTestExplorer.hideEmptyProjects": false,
   "jestTestExplorer.logpanel": true,
   "jestTestExplorer.pathToJest": "./node_modules/.bin/jest --coverage --runInBand",
+  "karmaTestExplorer.nonHeadlessModeEnabled": true,
   "search.exclude": {
     "**/coverage": true,
     "**/dist": true,
@@ -58,6 +59,6 @@
   "terminal.integrated.cursorWidth": 20,
   "testExplorer.addToEditorContextMenu": true,
   "testExplorer.useNativeTesting": false,
-  "window.title": "B O A R - T",
-  "karmaTestExplorer.nonHeadlessModeEnabled": true
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "window.title": "B O A R - T"
 }

@@ -1,9 +1,9 @@
 import fs from 'fs';
 
-import { EnvLoader, Runtime, RuntimePriority } from '@boart/core';
+import { EnvLoader, Runtime } from '@boart/core';
 
-import { TestReportItem } from './TestReportItem';
-import { TicketItem } from './TicketItem';
+import { TestReportItem } from '../report-item/TestReportItem';
+import { TicketItem } from '../report-item/TicketItem';
 
 /**
  *

@@ -2,16 +2,16 @@ import fs from 'fs';
 
 import { EnvLoader, Runtime } from '@boart/core';
 
-import { StepItem } from './StepItem';
-import { StepReportDataItem, StepReportItem } from './StepReportitem';
+import { StepReportDataItem } from '../report-item/StepReportDataItem';
+import { StepReportItem } from '../report-item/StepReportitem';
 
 /**
  *
  */
 export class StepReport {
     private _type: string;
-    private readonly resultItem = new Map<string, StepItem>();
-    private readonly inputItems = new Map<string, StepItem>();
+    private readonly resultItem = new Map<string, StepReportDataItem>();
+    private readonly inputItems = new Map<string, StepReportDataItem>();
 
     /**
      *
@@ -43,8 +43,8 @@ export class StepReport {
             return;
         }
 
-        const fromEntries = (map: ReadonlyMap<string, StepItem>): Record<string, StepReportDataItem> => {
-            const o = {};
+        const fromEntries = (map: ReadonlyMap<string, StepReportDataItem>): Record<string, StepReportDataItem> => {
+            const o: Record<string, StepReportDataItem> = {};
             for (const entry of map.entries()) {
                 o[entry[0]] = entry[1];
             }

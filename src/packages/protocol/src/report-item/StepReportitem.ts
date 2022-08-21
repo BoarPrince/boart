@@ -1,13 +1,6 @@
 import { RuntimeStatus } from '@boart/core';
 
-/**
- *
- */
-export interface StepReportDataItem {
-    description: string;
-    type: string;
-    data: string | object;
-}
+import { StepReportDataItem } from './StepReportDataItem';
 
 /**
  *
