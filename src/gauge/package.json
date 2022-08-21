@@ -10,6 +10,7 @@
     "@boart/basic": "*",
     "@boart/core": "*",
     "@boart/core-impl": "*",
+    "@boart/protocol": "*",
     "@boart/execution": "*"
   }
 }

@@ -1,8 +1,7 @@
 import fs from 'fs';
 
-import { EnvLoader, Runtime } from '@boart/core';
+import { EnvLoader, Runtime, RuntimePriority } from '@boart/core';
 
-import { ReportPriority } from './ReportPriority';
 import { TestReportItem } from './TestReportItem';
 import { TicketItem } from './TicketItem';
 
@@ -11,7 +10,6 @@ import { TicketItem } from './TicketItem';
  */
 
 export class TestReport {
-    private priority: ReportPriority;
     private ticket: string;
     private descriptions: string;
     private failureDescription: string;
@@ -103,7 +101,7 @@ export class TestReport {
             errorMessage: currentTestRuntime.errorMessage,
             stackTrace: currentTestRuntime.stackTrace,
             status: currentTestRuntime.status,
-            priority: this.priority,
+            priority: currentTestRuntime.priority,
             startTime: currentTestRuntime.startTime,
             duration: currentTestRuntime.duration,
             tickets: TestReport.extractTickets(this.ticket),
@@ -131,13 +129,6 @@ export class TestReport {
      */
     public setFailureDescription(value: string): void {
         this.failureDescription = value;
-    }
-
-    /**
-     *
-     */
-    public setPriority(priority: ReportPriority) {
-        this.priority = priority;
     }
 
     /**

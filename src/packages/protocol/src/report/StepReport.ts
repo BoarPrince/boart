@@ -10,7 +10,6 @@ import { StepReportDataItem, StepReportItem } from './StepReportitem';
  */
 export class StepReport {
     private _type: string;
-    private _descriptions = new Array<string>();
     private readonly resultItem = new Map<string, StepItem>();
     private readonly inputItems = new Map<string, StepItem>();
 
@@ -37,8 +36,9 @@ export class StepReport {
     public report(): void {
         // after reporting the step, reset singleton instance
         delete globalThis._stepReportInstance;
+        const currentStepRuntime = Runtime.instance.stepRuntime.current;
 
-        if (this._descriptions.length == 0) {
+        if (currentStepRuntime.descriptions?.length === 0) {
             // do nothing, if no description is defined
             return;
         }
@@ -51,7 +51,6 @@ export class StepReport {
             return o;
         };
 
-        const currentStepRuntime = Runtime.instance.stepRuntime.current;
         const id = currentStepRuntime.id;
 
         // data output
@@ -63,7 +62,7 @@ export class StepReport {
             type: this._type,
             startTime: currentStepRuntime.startTime,
             duration: currentStepRuntime.duration,
-            description: this.description,
+            description: currentStepRuntime.descriptions.join('\n'),
             input: fromEntries(this.inputItems),
             result: fromEntries(this.resultItem)
         };
@@ -104,20 +103,6 @@ export class StepReport {
             type,
             data
         });
-    }
-
-    /**
-     *
-     */
-    public addDescription(value: string): void {
-        this._descriptions.push(value);
-    }
-
-    /**
-     *
-     */
-    public get description(): string {
-        return this._descriptions.join('\n');
     }
 
     /**

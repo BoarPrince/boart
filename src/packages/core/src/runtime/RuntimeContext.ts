@@ -1,3 +1,4 @@
+import { RuntimePriority } from './RuntimePriority';
 import { RuntimeStatus } from './RuntimeStatus';
 
 /**
@@ -32,12 +33,15 @@ export abstract class BaseRuntimeContext {
 /**
  *
  */
-export class StepContext extends BaseRuntimeContext implements RuntimeResultContext {}
+export class StepContext extends BaseRuntimeContext implements RuntimeResultContext {
+    descriptions = new Array<string>();
+}
 
 /**
  *
  */
 export class TestContext extends BaseRuntimeContext implements RuntimeResultContext {
+    priority: RuntimePriority;
     stepContext = new Array<StepContext>();
 }
 

@@ -7,6 +7,7 @@
     "./src/packages/core",
     "./src/packages/core-impl",
     "./src/packages/execution",
+    "./src/packages/protocol",
     "./src/packages/basic"
   ],
   "engines": {

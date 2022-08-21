@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script
+            type="text/javascript"
+            language="javascript"
+            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"
+        ></script>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+            crossorigin="anonymous"
+        ></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" />
+        <style type="text/css">
+            body {
+                background-color: black;
+            }
+            td {
+                vertical-align: middle;
+            }
+            dd {
+                font-size: smaller;
+            }
+            dd small {
+                font-size: smaller;
+            }
+            dd small pre {
+                font-size: smaller;
+                font-family: 'Courier New', Courier, monospace;
+            }
+            dd span.duration {
+                position: absolute;
+                right: 1em;
+                font-size: x-small;
+            }
+            div[data-bs-toggle] {
+                height: 3em;
+                padding-top: 1em;
+                padding-bottom: 1em;
+                margin-top: -1em;
+                margin-bottom: -1em;
+            }
+            #protocol_table tbody tr.failed:hover,
+            #protocol_table tbody tr.passed:hover,
+            div[data-bs-toggle]:hover {
+                opacity: 0.6;
+                font-style: italic;
+                cursor: pointer;
+            }
+            td.status,
+            div.statistic .badge {
+                cursor: pointer;
+            }
+            td.details-control i {
+                font-size: xx-large;
+            }
+            tr:not(.shown) td.details-control .closed,
+            tr.shown td.details-control .opened {
+                display: initial;
+            }
+            tr:not(.shown) td.details-control .opened,
+            tr.shown td.details-control .closed {
+                display: none;
+            }
+            tr.group td {
+                padding: 20px 10px;
+                font-size: xx-large;
+            }
+            li.step {
+                padding: 1rem 0.5rem;
+                margin-left: 2rem;
+                margin-right: 1rem;
+            }
+            .step-header i {
+                position: absolute;
+                left: -2rem;
+                font-size: large;
+            }
+            .output-code,
+            .input-code {
+                position: relative;
+            }
+            .code-copy-icon {
+                position: absolute;
+                top: 0.5rem;
+                right: 2rem;
+                font-size: x-large;
+                color: lightgray;
+            }
+            .code-copy-icon:hover:active {
+                color: green;
+            }
+            .code-copy-icon:hover {
+                color: gray;
+                height: 0;
+            }
+            .card-text pre {
+                overflow-x: auto;
+                max-height: 25em;
+            }
+            ul .card:not(:first-child) {
+                margin-top: 0.5em;
+            }
+            ul .card:first-child {
+                margin-top: 1em;
+            }
+            img.screenshot {
+                width: 15em;
+                cursor: pointer;
+            }
+        </style>
+        <title>Test Report</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <figure>
+                <figcaption>
+                    <div class="h1 alert alert-dark" role="alert">
+                        Test Protocol (<span class="project-description"></span>)
+                    </div>
+                </figcaption>
+                <div class="alert alert-dark statistic" role="alert">
+                    <div class="row p-2 pt-4 pb-4 border-bottom border-dark border-4 fw-bold">
+                        <div class="col-2">
+                            Time
+                        </div>
+                        <div class="col-10 start-time"></div>
+                        <div class="col-2">
+                            Total Duration
+                        </div>
+                        <div class="col-10 complete-duration"></div>
+                    </div>
+                    <div class="row high p-2 border-bottom border-dark border-4">
+                        <div class="col-2 fw-bold">
+                            High
+                        </div>
+                        <div class="col-2">
+                            <div class="row-1">
+                                <div class="col-12 passed">
+                                    <span class="badge bg-success">Passed</span>
+                                    <small class="count"></small>
+                                </div>
+                                <div class="col-12 failed">
+                                    <span class="badge bg-danger">Failed</span>
+                                    <small class="count"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row medium p-2 border-bottom border-dark border-4">
+                        <div class="col-2 fw-bold">
+                            Medium
+                        </div>
+                        <div class="col-2">
+                            <div class="row-1">
+                                <div class="col-12 passed">
+                                    <span class="badge bg-success">Passed</span>
+                                    <small class="count"></small>
+                                </div>
+                                <div class="col-12 failed">
+                                    <span class="badge bg-danger">Failed</span>
+                                    <small class="count"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row low p-2">
+                        <div class="col-2 fw-bold">
+                            Low
+                        </div>
+                        <div class="col-2">
+                            <div class="row-1">
+                                <div class="col-12 passed">
+                                    <span class="badge bg-success">Passed</span>
+                                    <small class="count"></small>
+                                </div>
+                                <div class="col-12 failed">
+                                    <span class="badge bg-danger">Failed</span>
+                                    <small class="count"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="protocol_table" class="table table-dark table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <th scope="col">Test Group</th>
+                            <th scope="col">Test</th>
+                            <th scope="col"></th>
+                            <th scope="col">Ticket</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">Duration</th>
+                        </tr>
+                    </thead>
+                </table>
+            </figure>
+        </div>
+        <!-- ##################################################### -->
+        <!-- Render Table -->
+        <!-- ##################################################### -->
+        <script>
+            const groupColumn = 1;
+            $(document).ready(function() {
+                const table = $('#protocol_table').DataTable({
+                    paging: false,
+                    searching: false,
+                    ordering: false,
+                    info: false,
+                    autoWidht: true,
+                    columns: [
+                        {
+                            data: '',
+                            className: 'details-control',
+                            orderable: false,
+                            render: (data, type, row, meta) => {
+                                const textClass = row.status == 'failed' ? 'text-danger' : 'text-success';
+                                return `<button type="button" class="btn btn-outline-secondary border-0"><i class="${textClass} closed bi bi-plus-circle-fill"></i><i class="${textClass} opened bi bi-dash-circle-fill"></i></button>`;
+                            }
+                        },
+                        { data: 'topic' },
+                        { data: 'name' },
+                        { data: 'iteration' },
+                        { data: 'ticket' },
+                        {
+                            data: 'status',
+                            className: 'status',
+                            render: (data, type, row, meta) =>
+                                data == 'failed'
+                                    ? `<span class="badge bg-danger">${data}</span>`
+                                    : `<span class="badge bg-success">${data}</span>`
+                        },
+                        { data: 'priority' },
+                        {
+                            data: 'duration',
+                            render: (data, type, row, meta) =>
+                                `<small>${(data / 1000).toFixed(2).replace('.', ',')} sec</small>`
+                        }
+                    ],
+                    createdRow: function(row, data, dataIndex, cells) {
+                        $(row).addClass(data.status);
+                        $(row).addClass(`spec-${data.specId}`);
+                    },
+                    order: [[0, 'asc']],
+                    columnDefs: [{ visible: false, targets: groupColumn }],
+                    drawCallback: function(settings) {
+                        var api = this.api();
+                        var rows = api.rows({ page: 'current' }).nodes();
+                        var last = null;
+                        var data = api.data();
+
+                        api.column(groupColumn, { page: 'current' })
+                            .data()
+                            .each((group, i) => {
+                                if (last !== group) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before(
+                                            `<tr spec-id="${data[i].specId}" class="group"><td colspan="7">${group}</td></tr>`
+                                        );
+
+                                    last = group;
+                                }
+                            });
+                    },
+                    data: document.data.overview
+                });
+
+                // #####################################################
+                // Add event listener for opening and closing details
+                // #####################################################
+                $('#protocol_table tbody').on('click', 'tr', function() {
+                    const tr = $(this);
+                    const data = table.data();
+                    const row = table.row(tr);
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        const data = row.data();
+                        if (!data) {
+                            const specId = tr.attr('spec-id');
+                            const rows = $(`.spec-${specId}`);
+                            if (tr.hasClass('hide')) {
+                                rows.show();
+                                tr.removeClass('hide');
+                            } else {
+                                rows.hide();
+                                tr.addClass('hide');
+                            }
+                            return;
+                        }
+                        const scenario = document.data.scenarios[data.scenarioId];
+                        document.scenarioDatailPostActions = [];
+                        const childContent = document.formatScenarioDatail(scenario);
+                        row.child(childContent).show();
+                        document.scenarioDatailPostActions.forEach(action => action());
+                        tr.addClass('shown');
+                    }
+                });
+
+                const filterTable = (priority, status) => {
+                    table.clear().draw();
+                    const failedTests = document.data.overview.filter(
+                        test => test.status == status && test.priority == priority
+                    );
+                    failedTests.forEach(test => table.row.add(test).draw(false));
+                };
+
+                $('.project-description').text(`${document.data.projectName}, ${document.data.environment}`);
+
+                // #####################################################
+                // Add Statistic
+                // #####################################################
+                const statistic = document.data.statistic;
+                $('.statistic .high .passed .count').text(`(${statistic.high.passed})`);
+                $('.statistic .high .failed .count').text(`(${statistic.high.failed})`);
+                $('.statistic .medium .passed .count').text(`(${statistic.medium.passed})`);
+                $('.statistic .medium .failed .count').text(`(${statistic.medium.failed})`);
+                $('.statistic .low .passed .count').text(`(${statistic.low.passed})`);
+                $('.statistic .low .failed .count').text(`(${statistic.low.failed})`);
+
+                $('div.statistic').on('click', '.high .passed', () => filterTable('high', 'passed'));
+                $('div.statistic').on('click', '.high .failed', () => filterTable('high', 'failed'));
+                $('div.statistic').on('click', '.medium .passed', () => filterTable('medium', 'passed'));
+                $('div.statistic').on('click', '.medium .failed', () => filterTable('medium', 'failed'));
+                $('div.statistic').on('click', '.low .passed', () => filterTable('low', 'passed'));
+                $('div.statistic').on('click', '.low .failed', () => filterTable('low', 'failed'));
+
+                $('.start-time').text(document.data.startTimeFormatted);
+                $('.complete-duration').text(document.data.durationMin);
+            });
+        </script>
+
+        <script>
+            // #####################################################
+            // Copy code to clipboard
+            // #####################################################
+            function copyCodeToClipboard(self, code) {
+                //self.style.color = 'red';
+                if (!navigator.clipboard) {
+                    return;
+                }
+                navigator.clipboard.writeText(code);
+            }
+            // #####################################################
+            // Step Details
+            // #####################################################
+            const addStepDetails = step => {
+                const stepDetail = [];
+
+                // screenshots
+                if (!!step.screenshots && step.screenshots.length > 0) {
+                    stepDetail.push(`<div class="card">
+                        <p class="card-header">Screenshots</p>
+                        <div class="card-body input-code">`);
+
+                    step.screenshots.forEach(screenshot => {
+                        stepDetail.push(`<img class="screenshot" id="img-${screenshot}" loading="lazy"></img>`);
+                        document.scenarioDatailPostActions.push(() => {
+                            const image = $(`#img-${screenshot}`);
+                            image
+                                .on('load', function() {
+                                    this.src = document.data.screenshots[screenshot];
+                                    image.unbind('load');
+                                })
+                                .on('click', function() {
+                                    let pdfWindow = window.open('');
+                                    pdfWindow.document.write(
+                                        "<img width='100%' height='100%' src='" +
+                                            document.data.screenshots[screenshot] +
+                                            "'></img>"
+                                    );
+                                })
+                                .each(function() {
+                                    $(this).trigger('load');
+                                });
+                            $(`#img-${screenshot}`).removeAttr('id');
+                        });
+                    });
+                    stepDetail.push(`</div></div>`);
+                }
+
+                // Input
+                step.input.forEach(stepInput => {
+                    const code =
+                        stepInput.type === 'text' ? stepInput.data : JSON.stringify(stepInput.data, null, ' ') || '-';
+                    stepDetail.push(`<div class="card">
+                                        <p class="card-header">${stepInput.desc}</p>
+                                        <div class="card-body input-code">
+                                            <div class="card-text">
+                                                <i id="ic-${stepInput.id}" class="code-copy-icon bi bi-file-earmark-text-fill"></i>
+                                                <small><pre>${code}</pre></small></div>
+                                        </div>
+                                     </div>`);
+                    document.scenarioDatailPostActions.push(() => {
+                        $(`#ic-${stepInput.id}`).on('click', function() {
+                            copyCodeToClipboard(this, code);
+                        });
+                        $(`#ic-${stepInput.id}`).removeAttr('id');
+                    });
+                });
+
+                // Output
+                step.output
+                    .filter(stepOutput => !!stepOutput.desc)
+                    .forEach(stepOutput => {
+                        const code = JSON.stringify(stepOutput.data, null, ' ') || '-';
+                        stepDetail.push(`<div class="card">
+                            <p class="card-header">${stepOutput.desc}</p>
+                                <div class="card-body output-code">
+                                    <div class="card-text">
+                                        <i id="oc-${stepOutput.id}" class="code-copy-icon bi bi-file-earmark-text-fill"></i>
+                                        <small><pre>${code}</pre></small></div>
+                                </div>
+                            </div>`);
+                        document.scenarioDatailPostActions.push(() => {
+                            $(`#oc-${stepOutput.id}`).on('click', function() {
+                                copyCodeToClipboard(this, code);
+                            });
+                            $(`#oc-${stepOutput.id}`).removeAttr('id');
+                        });
+                    });
+
+                // Error Message
+                if (!!step.errorMessage) {
+                    stepDetail.push(`<div class="card">
+                                        <p class="card-header">Error Message</p>
+                                        <div class="card-body">
+                                            <div class="card-text"><small>${JSON.stringify(
+                                                step.errorMessage
+                                            )}</small></div>
+                                        </div>
+                                      </div>`);
+                }
+                return stepDetail.join('\n');
+            };
+
+            // #####################################################
+            // Step List
+            // #####################################################
+            const addSteps = steps => {
+                const stepDescItems = [];
+                stepDescItems.push('<ul class="list-group">');
+                steps.forEach(step => {
+                    stepDescItems.push(`<li class="list-group-item list-group-item-dark step">`);
+                    stepDescItems.push(`<div class="step-header" data-bs-toggle="collapse" href="#detail-${step.id}">`);
+
+                    switch (step.status) {
+                        case 'failed':
+                            stepDescItems.push('<i class="text-danger bi bi-emoji-frown-fill"></i>');
+                            break;
+                        case 'passed':
+                            stepDescItems.push('<i class="text-success bi bi-emoji-smile-fill"></i>');
+                            break;
+                        default:
+                            stepDescItems.push('<i class="text-secondary bi bi-emoji-neutral-fill"></i>');
+                    }
+
+                    stepDescItems.push(`${step.description[0]}`);
+                    stepDescItems.push(`<span class="duration">${step.durationSec}</span>`);
+                    stepDescItems.push('</div>');
+
+                    stepDescItems.push(`<div class="collapse" id="detail-${step.id}">`);
+                    stepDescItems.push(addStepDetails(step));
+                    stepDescItems.push(`</div>`);
+
+                    stepDescItems.push('</li>');
+                });
+                stepDescItems.push('</ul>');
+                return stepDescItems.join('\n');
+            };
+            const conditinallyAdd = (text_or_delegate, condition) => {
+                return condition ? (typeof text_or_delegate === 'string' ? text_or_delegate : text_or_delegate()) : '';
+            };
+
+            // #####################################################
+            // Scenario Detail
+            // #####################################################
+            document.formatScenarioDatail = sc => {
+                return (
+                    '<div class="container">' +
+                    // Execution Time
+                    '<dl class="row">' +
+                    ' <dt class="col-2">Time</dt>' +
+                    `  <dd class="col-10">${sc.startTimeFormatted}</dd>` +
+                    '</dl>' +
+                    // Duration
+                    '<dl class="row">' +
+                    ' <dt class="col-2">Duration</dt>' +
+                    `  <dd class="col-10">${sc.durationSec}</dd>` +
+                    '</dl>' +
+                    conditinallyAdd(
+                        // Tickets
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Tickets</dt>' +
+                            `  <dd class="col-10">${sc.tickets
+                                .map(t => '<a href="' + t.link + '" target="_">' + t.id + '@' + t.source + '</a>')
+                                .join(', ')}</dd>` +
+                            '</dl>',
+                        !!sc.tickets && sc.tickets.length > 0
+                    ) +
+                    conditinallyAdd(
+                        // Description
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Description</dt>' +
+                            `  <dd class="col-10">${sc.descriptions.join('<br>')}</dd>` +
+                            '</dl>',
+                        !!sc.descriptions && sc.descriptions.length > 0
+                    ) +
+                    conditinallyAdd(
+                        () =>
+                            // stepDescription
+                            '<dl class="row">' +
+                            ' <dt class="col-2">Steps</dt>' +
+                            `  <dd class="col-10">${addSteps(sc.steps)}</dd>` +
+                            '</dl>',
+                        !!sc.steps && sc.steps.length > 0
+                    ) +
+                    conditinallyAdd(
+                        // Failure Description
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Failure</dt>' +
+                            `  <dd class="col-10"><pre>${sc.errorMessage}</pre></dd>` +
+                            '</dl>',
+                        sc.status == 'failed' && !!sc.errorMessage
+                    ) +
+                    conditinallyAdd(
+                        // screenshot
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Screenshot</dt>' +
+                            `  <dd class="col-10"><img width="100%" src="${sc.screenshot}" alt="Red dot" /></dd>` +
+                            '</dl>',
+                        !!sc.screenshot
+                    ) +
+                    '</div>'
+                );
+            };
+        </script>
+        <!-- ##################################################### -->
+        <!-- Document Data -->
+        <!-- ##################################################### -->
+        <script>
+            document.data = ${protocol_data};
+        </script>
+    </body>
+</html>

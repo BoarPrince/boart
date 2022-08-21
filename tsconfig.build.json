@@ -11,11 +11,14 @@
     "@boart/core-impl": [
       "./src/packages/core-impl/src/index.ts"
     ],
-    "@boart/basic": [
-      "./src/packages/basic/src/index.ts"
-    ],
     "@boart/execution": [
       "./src/packages/execution/src/index.ts"
+    ],
+    "@boart/protocol": [
+      "./src/packages/protocol/src/index.ts"
+    ],
+    "@boart/basic": [
+      "./src/packages/basic/src/index.ts"
     ]
   },
   "compilerOptions": {

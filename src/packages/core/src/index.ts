@@ -22,6 +22,7 @@ import { Generator } from './generator/Generator';
 import { GeneratorHandler } from './generator/GeneratorHandler';
 import { Runtime } from './runtime/Runtime';
 import { LocalContext, RuntimeContext, RuntimeResultContext, StepContext, TestContext } from './runtime/RuntimeContext';
+import { RuntimePriority } from './runtime/RuntimePriority';
 import { RuntimeStatus } from './runtime/RuntimeStatus';
 import { Store } from './store/Store';
 import { StoreWrapper } from './store/StoreWrapper';
@@ -93,5 +94,6 @@ export {
     UrlLoader,
     value,
     ValueReplacer,
-    ValueReplacerHandler
+    ValueReplacerHandler,
+    RuntimePriority
 };

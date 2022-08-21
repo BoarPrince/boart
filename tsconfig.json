@@ -21,6 +21,9 @@
       "path": "./src/packages/execution/tsconfig.pkg.json"
     },
     {
+      "path": "./src/packages/protocol/tsconfig.pkg.json"
+    },
+    {
       "path": "./src/packages/basic/tsconfig.pkg.json"
     }
   ]

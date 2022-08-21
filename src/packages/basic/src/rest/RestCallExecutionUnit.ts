@@ -1,6 +1,7 @@
 import { DataContent, DataContentHelper, ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@boart/core';
-import { PDFContent, RowTypeValue, StepReport } from '@boart/core-impl';
+import { PDFContent, RowTypeValue } from '@boart/core-impl';
 import { RestHttp } from '@boart/execution';
+import { StepReport } from '@boart/protocol';
 
 import { RestCallContext } from './RestCallContext';
 

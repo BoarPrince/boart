@@ -1,8 +1,7 @@
-import { ExecutionUnit, ParaType } from '@boart/core';
+import { ExecutionUnit, ParaType, Runtime } from '@boart/core';
 
 import { AnyContext } from '../../AnyContext';
 import { RowTypeValue } from '../../RowTypeValue';
-import { StepReport } from '../../report/StepReport';
 import { UniqueValidator } from '../../validators/UniqueValidator';
 
 /**
@@ -19,6 +18,6 @@ export class DescriptionExecutionUnit implements ExecutionUnit<AnyContext, RowTy
      *
      */
     execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
-        StepReport.instance.addDescription(row.value.toString());
+        Runtime.instance.stepRuntime.current.descriptions.push(row.value.toString());
     }
 }

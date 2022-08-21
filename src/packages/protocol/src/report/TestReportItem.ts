@@ -1,6 +1,5 @@
-import { RuntimeStatus } from '@boart/core';
+import { RuntimePriority, RuntimeStatus } from '@boart/core';
 
-import { ReportPriority } from './ReportPriority';
 import { TicketItem } from './TicketItem';
 
 /**
@@ -15,7 +14,7 @@ export interface TestReportItem {
     errorMessage: string;
     stackTrace: string;
     status: RuntimeStatus;
-    priority: ReportPriority;
+    priority: RuntimePriority;
     startTime: string;
     duration: string;
     tickets: TicketItem[];

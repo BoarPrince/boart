@@ -5,7 +5,7 @@ import { EnvLoader, RuntimeStatus } from '@boart/core';
 import { LocalReportItem } from './LocalReportItem';
 import { DataItem, LocalItem, OverviewItem, ProtocolItem, StatisticItem, StatisticValueItem, StepItem, TestItem } from './Protocoltem';
 import { ReportItem } from './ReportItem';
-import { ReportPriority } from './ReportPriority';
+import { RuntimePriority } from '@boart/core';
 import { StepReportDataItem, StepReportItem } from './StepReportitem';
 import { TestReportItem } from './TestReportItem';
 
@@ -93,7 +93,7 @@ export class ProtocolGenerator {
      *
      */
     private generateStatistic(): StatisticItem {
-        const calculate = (priority: ReportPriority): StatisticValueItem => {
+        const calculate = (priority: RuntimePriority): StatisticValueItem => {
             return Array.from(this.testItems.values())
                 .filter((item) => item.priority === priority)
                 .reduce(
@@ -110,9 +110,9 @@ export class ProtocolGenerator {
         };
 
         return {
-            high: calculate(ReportPriority.high),
-            medium: calculate(ReportPriority.medium),
-            low: calculate(ReportPriority.low)
+            high: calculate(RuntimePriority.high),
+            medium: calculate(RuntimePriority.medium),
+            low: calculate(RuntimePriority.low)
         };
     }
 
@@ -130,7 +130,7 @@ export class ProtocolGenerator {
                 ticket: testItem.tickets.find(() => true)?.id,
                 tags: localItem.tags?.join(', '),
                 status: RuntimeStatus[testItem.status],
-                priority: ReportPriority[testItem.priority],
+                priority: RuntimePriority[testItem.priority],
                 duration: testItem.duration,
                 startTime: testItem.startTime,
                 localId: localItem.id,
@@ -209,7 +209,7 @@ export class ProtocolGenerator {
                 status: RuntimeStatus[testItem.status],
                 duration: testItem.duration,
                 startTime: testItem.startTime,
-                priority: ReportPriority[testItem.priority],
+                priority: RuntimePriority[testItem.priority],
                 descriptions: testItem.descriptions,
                 tickets: testItem.tickets,
                 steps: this.generateSteps(testItem.id)

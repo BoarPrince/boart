@@ -1,6 +1,6 @@
-import { ExecutionUnit } from '@boart/core';
-import { RowTypeValue, TestReport } from '@boart/core-impl';
-import { ReportPriority } from '@boart/core-impl/dist/packages/core-impl/src/report/ReportPriority';
+import { ExecutionUnit, Runtime, RuntimePriority } from '@boart/core';
+import { RowTypeValue } from '@boart/core-impl';
+import { TestReport } from '@boart/protocol';
 
 import { TestDescriptionContext } from './TestDescriptionContext';
 
@@ -18,6 +18,6 @@ export class TestDescriptionExecutionUnit implements ExecutionUnit<TestDescripti
         TestReport.instance.setDescription(context.config.description);
         TestReport.instance.setFailureDescription(context.config.failureDescription);
         TestReport.instance.setTicket(context.config.ticket);
-        TestReport.instance.setPriority(ReportPriority.priority(context.config.priority));
+        Runtime.instance.testRuntime.current.priority = RuntimePriority.priority(context.config.priority);
     }
 }
