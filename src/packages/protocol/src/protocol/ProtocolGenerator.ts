@@ -2,20 +2,19 @@ import fs from 'fs';
 
 import { EnvLoader, RuntimePriority, RuntimeStatus } from '@boart/core';
 
+import { DataItem } from '../protocol-item/DataItem';
+import { LocalItem } from '../protocol-item/LocalItem';
+import { OverviewItem } from '../protocol-item/OverviewItem';
+import { ProtocolItem } from '../protocol-item/Protocoltem';
+import { StatisticItem } from '../protocol-item/StatisticItem';
+import { StatisticValueItem } from '../protocol-item/StatisticValueItem';
+import { StepItem } from '../protocol-item/StepItem';
+import { TestItem } from '../protocol-item/TestItem';
 import { LocalReportItem } from '../report-item/LocalReportItem';
 import { ReportItem } from '../report-item/ReportItem';
 import { StepReportDataItem } from '../report-item/StepReportDataItem';
 import { StepReportItem } from '../report-item/StepReportitem';
 import { TestReportItem } from '../report-item/TestReportItem';
-
-import { DataItem } from './DataItem';
-import { LocalItem } from './LocalItem';
-import { OverviewItem } from './OverviewItem';
-import { ProtocolItem } from './Protocoltem';
-import { StatisticItem } from './StatisticItem';
-import { StatisticValueItem } from './StatisticValueItem';
-import { StepItem } from './StepItem';
-import { TestItem } from './TestItem';
 
 /**
  *

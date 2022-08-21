@@ -2,7 +2,7 @@
   "name": "@boart/core-impl",
   "description": "",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-197",
+  "version": "1.0.0-201",
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts"
