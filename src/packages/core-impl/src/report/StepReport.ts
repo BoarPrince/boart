@@ -3,7 +3,7 @@ import fs from 'fs';
 import { EnvLoader, Runtime } from '@boart/core';
 
 import { StepItem } from './StepItem';
-import { StepReportitem } from './StepReportitem';
+import { StepReportDataItem, StepReportItem } from './StepReportitem';
 
 /**
  *
@@ -43,7 +43,7 @@ export class StepReport {
             return;
         }
 
-        const fromEntries = (map: ReadonlyMap<string, StepItem>): Record<string, object | string> => {
+        const fromEntries = (map: ReadonlyMap<string, StepItem>): Record<string, StepReportDataItem> => {
             const o = {};
             for (const entry of map.entries()) {
                 o[entry[0]] = entry[1];
@@ -55,7 +55,7 @@ export class StepReport {
         const id = currentStepRuntime.id;
 
         // data output
-        const objectData: StepReportitem = {
+        const objectData: StepReportItem = {
             id,
             errorMessage: currentStepRuntime.errorMessage,
             stackTrace: currentStepRuntime.stackTrace,

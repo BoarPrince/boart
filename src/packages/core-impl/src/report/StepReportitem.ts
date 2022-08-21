@@ -3,8 +3,19 @@ import { RuntimeStatus } from '@boart/core';
 /**
  *
  */
-export interface StepReportitem {
+export interface StepReportDataItem {
+    description: string;
+    type: string;
+    data: string | object;
+}
+
+/**
+ *
+ */
+export interface StepReportItem {
     id: string;
+    localReportItemId?: string;
+    testReportItemId?: string;
     errorMessage: string;
     stackTrace: string;
     status: RuntimeStatus;
@@ -12,6 +23,6 @@ export interface StepReportitem {
     startTime: string;
     duration: string;
     description: string;
-    input: Record<string, object | string>;
-    result: Record<string, object | string>;
+    input: Record<string, StepReportDataItem>;
+    result: Record<string, StepReportDataItem>;
 }

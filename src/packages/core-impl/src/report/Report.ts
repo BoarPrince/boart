@@ -54,8 +54,6 @@ export class Report {
 
         const filename = EnvLoader.instance.mapReportData(`test-protocol-data.json`);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        fs.writeFile(filename, data, 'utf-8', (writeErr) => {
-            if (writeErr) return console.error(writeErr);
-        });
+        fs.writeFileSync(filename, data, 'utf-8');
     }
 }

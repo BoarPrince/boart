@@ -1,7 +1,7 @@
 /**
  *
  */
-interface TestItem {
+export interface ReportItemTest {
     id: string;
     stepItems: Array<string>;
 }
@@ -9,9 +9,9 @@ interface TestItem {
 /**
  *
  */
-interface LocalItem {
+export interface ReportItemLocal {
     id: string;
-    testItems: Array<TestItem>;
+    testItems: Array<ReportItemTest>;
 }
 
 /**
@@ -24,5 +24,5 @@ export interface ReportItem {
     errorMessage: string;
     stackTrace: string;
     duration: string;
-    localItems: Array<LocalItem>;
+    localItems: Array<ReportItemLocal>;
 }

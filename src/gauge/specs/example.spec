@@ -2,13 +2,13 @@
 
 tags: spec1
 
-## 1.1 First test
+## 1.1 First test (succeeding)
 
 tags: scenario1
 
 * Hallo "OK"
 
-## 1.1 Second test
+## 1.2 Second test (failing)
 
 tags: scenario2
 

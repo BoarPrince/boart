@@ -2,6 +2,7 @@ import fs from 'fs';
 
 import { EnvLoader, Runtime } from '@boart/core';
 
+import { ReportPriority } from './ReportPriority';
 import { TestReportItem } from './TestReportItem';
 import { TicketItem } from './TicketItem';
 
@@ -10,7 +11,7 @@ import { TicketItem } from './TicketItem';
  */
 
 export class TestReport {
-    private priority: string;
+    private priority: ReportPriority;
     private ticket: string;
     private descriptions: string;
     private failureDescription: string;
@@ -135,7 +136,7 @@ export class TestReport {
     /**
      *
      */
-    public setPriority(priority: string) {
+    public setPriority(priority: ReportPriority) {
         this.priority = priority;
     }
 

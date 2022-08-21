@@ -13,6 +13,7 @@ import { TransformJPathExecutionUnit } from './execution/transform/ExecutionUnit
 import { TransformJsonLogicExecutionUnit } from './execution/transform/ExecutionUnit.TransformJsonLogic';
 import { TransformResetExecutionUnit } from './execution/transform/ExecutionUnit.TransformReset';
 import { LocalReport } from './report/LocalReport';
+import { ProtocolGenerator } from './report/ProtocolGenerator';
 import { Report } from './report/Report';
 import { StepReport } from './report/StepReport';
 import { TestReport } from './report/TestReport';
@@ -51,6 +52,7 @@ export {
     TransformJsonLogicExecutionUnit,
     TransformResetExecutionUnit,
     UniqueValidator,
+    ProtocolGenerator,
     ValueRequiredValidator,
     ValueValidator,
     WaitExecutionUnit,
