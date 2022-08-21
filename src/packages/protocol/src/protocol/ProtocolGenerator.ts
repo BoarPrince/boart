@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { EnvLoader, RuntimePriority, RuntimeStatus } from '@boart/core';
+import { EnvLoader, RuntimeContext, RuntimePriority, RuntimeStatus } from '@boart/core';
 
 import { DataItem } from '../protocol-item/DataItem';
 import { LocalItem } from '../protocol-item/LocalItem';
@@ -11,7 +11,6 @@ import { StatisticValueItem } from '../protocol-item/StatisticValueItem';
 import { StepItem } from '../protocol-item/StepItem';
 import { TestItem } from '../protocol-item/TestItem';
 import { LocalReportItem } from '../report-item/LocalReportItem';
-import { ReportItem } from '../report-item/ReportItem';
 import { StepReportDataItem } from '../report-item/StepReportDataItem';
 import { StepReportItem } from '../report-item/StepReportitem';
 import { TestReportItem } from '../report-item/TestReportItem';
@@ -33,8 +32,8 @@ export class ProtocolGenerator {
     /**
      *
      */
-    private readReport(): ReportItem {
-        const filename = EnvLoader.instance.mapReportData(`test-protocol-data.json`);
+    private readReport(): RuntimeContext {
+        const filename = EnvLoader.instance.mapReportData(`boart-runtime-data.json`);
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         const fileContent: string = fs.readFileSync(filename, 'utf-8');
@@ -44,8 +43,8 @@ export class ProtocolGenerator {
     /**
      *
      */
-    private tryReadItems(reportItem: ReportItem): void {
-        reportItem.localItems.forEach((locaItem) => {
+    private tryReadItems(runtimeDefinition: RuntimeContext): void {
+        runtimeDefinition.localContext.forEach((locaItem) => {
             const filename = EnvLoader.instance.mapReportData(locaItem.id + '.json');
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -58,8 +57,8 @@ export class ProtocolGenerator {
             this.localItems.set(locaItem.id, JSON.parse(content) as LocalReportItem);
         });
 
-        reportItem.localItems.forEach((localItem) =>
-            localItem.testItems.forEach((testItem) => {
+        runtimeDefinition.localContext.forEach((localItem) =>
+            localItem.testContext.forEach((testItem) => {
                 const filename = EnvLoader.instance.mapReportData(testItem.id + '.json');
 
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -75,10 +74,10 @@ export class ProtocolGenerator {
             })
         );
 
-        reportItem.localItems.forEach((localItem) =>
-            localItem.testItems.forEach((testItem) =>
-                testItem.stepItems.forEach((stepId) => {
-                    const filename = EnvLoader.instance.mapReportData(stepId + '.json');
+        runtimeDefinition.localContext.forEach((localItem) =>
+            localItem.testContext.forEach((testItem) =>
+                testItem.stepContext.forEach((stepItem) => {
+                    const filename = EnvLoader.instance.mapReportData(stepItem.id + '.json');
 
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                     if (!fs.existsSync(filename)) {
@@ -90,7 +89,7 @@ export class ProtocolGenerator {
                     const item = JSON.parse(content) as StepReportItem;
                     item.localReportItemId = localItem.id;
                     item.testReportItemId = testItem.id;
-                    this.stepItems.set(stepId, item);
+                    this.stepItems.set(stepItem.id, item);
                 })
             )
         );
@@ -228,16 +227,16 @@ export class ProtocolGenerator {
     /**
      *
      */
-    private generateProtocol(reportItem: ReportItem): ProtocolItem {
+    private generateProtocol(runtimeDefinition: RuntimeContext): ProtocolItem {
         return {
             statistic: this.generateStatistic(),
             overview: this.generateOverviewItems(),
             locals: this.generateLocals(),
             tests: this.generateTests(),
-            projectName: reportItem.name,
-            environment: reportItem.environment,
-            durationMin: ProtocolGenerator.toDurationMin(reportItem.duration),
-            startTime: reportItem.startTime
+            projectName: runtimeDefinition.name,
+            environment: runtimeDefinition.environment,
+            durationMin: ProtocolGenerator.toDurationMin(runtimeDefinition.duration),
+            startTime: runtimeDefinition.startTime
         };
     }
 
@@ -245,10 +244,10 @@ export class ProtocolGenerator {
      *
      */
     public generate(): void {
-        const itemDefinition = this.readReport();
-        this.tryReadItems(itemDefinition);
+        const runtimeDefinition = this.readReport();
+        this.tryReadItems(runtimeDefinition);
 
-        const protocol = this.generateProtocol(itemDefinition);
+        const protocol = this.generateProtocol(runtimeDefinition);
         const filename = EnvLoader.instance.mapReportData('report-protocol.json');
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         fs.writeFileSync(filename, JSON.stringify(protocol), 'utf-8');

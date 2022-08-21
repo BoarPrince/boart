@@ -1,7 +1,9 @@
 import { randomUUID } from 'crypto';
+import fs from 'fs';
 
 import { Observable, Subject } from 'rxjs';
 
+import { EnvLoader } from '../common/EnvLoader';
 import { Timer } from '../common/Timer';
 
 import { LocalContext, RuntimeContext, RuntimeResultContext, StepContext, TestContext } from './RuntimeContext';
@@ -87,5 +89,15 @@ export class Runtime {
             instance.initialize();
         }
         return globalThis._runtimeInstance;
+    }
+
+    /**
+     *
+     */
+    save(filename?: string) {
+        const data: string = JSON.stringify(this.runtime.current);
+        filename = filename || EnvLoader.instance.mapReportData(`boart-runtime-data.json`);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        fs.writeFileSync(filename, data, 'utf-8');
     }
 }

@@ -1,3 +1,5 @@
+import { EnvLoader } from '../common/EnvLoader';
+
 import { RuntimePriority } from './RuntimePriority';
 import { RuntimeStatus } from './RuntimeStatus';
 
@@ -56,6 +58,8 @@ export class LocalContext extends BaseRuntimeContext implements RuntimeResultCon
  *
  */
 export class RuntimeContext extends BaseRuntimeContext implements RuntimeResultContext {
-    name: string;
+    name = EnvLoader.instance.getProjectName();
+    environment = EnvLoader.instance.getEnvironment()?.toString();
+
     localContext = Array<LocalContext>();
 }
