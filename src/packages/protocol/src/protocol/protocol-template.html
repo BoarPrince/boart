@@ -5,11 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script
-            type="text/javascript"
-            language="javascript"
-            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"
-        ></script>
+        <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -126,25 +122,17 @@
         <div class="container-fluid">
             <figure>
                 <figcaption>
-                    <div class="h1 alert alert-dark" role="alert">
-                        Test Protocol (<span class="project-description"></span>)
-                    </div>
+                    <div class="h1 alert alert-dark" role="alert">Test Protocol (<span class="project-description"></span>)</div>
                 </figcaption>
                 <div class="alert alert-dark statistic" role="alert">
                     <div class="row p-2 pt-4 pb-4 border-bottom border-dark border-4 fw-bold">
-                        <div class="col-2">
-                            Time
-                        </div>
+                        <div class="col-2">Time</div>
                         <div class="col-10 start-time"></div>
-                        <div class="col-2">
-                            Total Duration
-                        </div>
-                        <div class="col-10 complete-duration"></div>
+                        <div class="col-2">Total Duration</div>
+                        <div class="col-10"><span class="complete-duration"></span> min</div>
                     </div>
                     <div class="row high p-2 border-bottom border-dark border-4">
-                        <div class="col-2 fw-bold">
-                            High
-                        </div>
+                        <div class="col-2 fw-bold">High</div>
                         <div class="col-2">
                             <div class="row-1">
                                 <div class="col-12 passed">
@@ -159,9 +147,7 @@
                         </div>
                     </div>
                     <div class="row medium p-2 border-bottom border-dark border-4">
-                        <div class="col-2 fw-bold">
-                            Medium
-                        </div>
+                        <div class="col-2 fw-bold">Medium</div>
                         <div class="col-2">
                             <div class="row-1">
                                 <div class="col-12 passed">
@@ -176,9 +162,7 @@
                         </div>
                     </div>
                     <div class="row low p-2">
-                        <div class="col-2 fw-bold">
-                            Low
-                        </div>
+                        <div class="col-2 fw-bold">Low</div>
                         <div class="col-2">
                             <div class="row-1">
                                 <div class="col-12 passed">
@@ -193,13 +177,12 @@
                         </div>
                     </div>
                 </div>
-                <table id="protocol_table" class="table table-dark table-striped" style="width:100%">
+                <table id="protocol_table" class="table table-dark table-striped" style="width: 100%">
                     <thead>
                         <tr>
                             <td></td>
                             <th scope="col">Test Group</th>
                             <th scope="col">Test</th>
-                            <th scope="col"></th>
                             <th scope="col">Ticket</th>
                             <th scope="col">Status</th>
                             <th scope="col">Priority</th>
@@ -214,7 +197,7 @@
         <!-- ##################################################### -->
         <script>
             const groupColumn = 1;
-            $(document).ready(function() {
+            $(document).ready(function () {
                 const table = $('#protocol_table').DataTable({
                     paging: false,
                     searching: false,
@@ -233,7 +216,6 @@
                         },
                         { data: 'topic' },
                         { data: 'name' },
-                        { data: 'iteration' },
                         { data: 'ticket' },
                         {
                             data: 'status',
@@ -246,17 +228,16 @@
                         { data: 'priority' },
                         {
                             data: 'duration',
-                            render: (data, type, row, meta) =>
-                                `<small>${(data / 1000).toFixed(2).replace('.', ',')} sec</small>`
+                            render: (data, type, row, meta) => `<small>${formatDuration(data)} s</small>`
                         }
                     ],
-                    createdRow: function(row, data, dataIndex, cells) {
+                    createdRow: function (row, data, dataIndex, cells) {
                         $(row).addClass(data.status);
-                        $(row).addClass(`spec-${data.specId}`);
+                        $(row).addClass(`local-${data.localId}`);
                     },
                     order: [[0, 'asc']],
                     columnDefs: [{ visible: false, targets: groupColumn }],
-                    drawCallback: function(settings) {
+                    drawCallback: function (settings) {
                         var api = this.api();
                         var rows = api.rows({ page: 'current' }).nodes();
                         var last = null;
@@ -268,9 +249,7 @@
                                 if (last !== group) {
                                     $(rows)
                                         .eq(i)
-                                        .before(
-                                            `<tr spec-id="${data[i].specId}" class="group"><td colspan="7">${group}</td></tr>`
-                                        );
+                                        .before(`<tr local-id="${data[i].localId}" class="group"><td colspan="7">${group}</td></tr>`);
 
                                     last = group;
                                 }
@@ -282,7 +261,7 @@
                 // #####################################################
                 // Add event listener for opening and closing details
                 // #####################################################
-                $('#protocol_table tbody').on('click', 'tr', function() {
+                $('#protocol_table tbody').on('click', 'tr', function () {
                     const tr = $(this);
                     const data = table.data();
                     const row = table.row(tr);
@@ -293,8 +272,8 @@
                     } else {
                         const data = row.data();
                         if (!data) {
-                            const specId = tr.attr('spec-id');
-                            const rows = $(`.spec-${specId}`);
+                            const localId = tr.attr('local-id');
+                            const rows = $(`.local-${localId}`);
                             if (tr.hasClass('hide')) {
                                 rows.show();
                                 tr.removeClass('hide');
@@ -304,21 +283,19 @@
                             }
                             return;
                         }
-                        const scenario = document.data.scenarios[data.scenarioId];
+                        const scenario = document.data.tests[data.testId];
                         document.scenarioDatailPostActions = [];
-                        const childContent = document.formatScenarioDatail(scenario);
+                        const childContent = document.formTestDetail(scenario);
                         row.child(childContent).show();
-                        document.scenarioDatailPostActions.forEach(action => action());
+                        document.scenarioDatailPostActions.forEach((action) => action());
                         tr.addClass('shown');
                     }
                 });
 
                 const filterTable = (priority, status) => {
                     table.clear().draw();
-                    const failedTests = document.data.overview.filter(
-                        test => test.status == status && test.priority == priority
-                    );
-                    failedTests.forEach(test => table.row.add(test).draw(false));
+                    const failedTests = document.data.overview.filter((test) => test.status == status && test.priority == priority);
+                    failedTests.forEach((test) => table.row.add(test).draw(false));
                 };
 
                 $('.project-description').text(`${document.data.projectName}, ${document.data.environment}`);
@@ -341,8 +318,8 @@
                 $('div.statistic').on('click', '.low .passed', () => filterTable('low', 'passed'));
                 $('div.statistic').on('click', '.low .failed', () => filterTable('low', 'failed'));
 
-                $('.start-time').text(document.data.startTimeFormatted);
-                $('.complete-duration').text(document.data.durationMin);
+                $('.start-time').text(formatDate(document.data.startTime));
+                $('.complete-duration').text(formatDuration(document.data.durationMin));
             });
         </script>
 
@@ -358,9 +335,47 @@
                 navigator.clipboard.writeText(code);
             }
             // #####################################################
+            // Helpers
+            // #####################################################
+            const stringifyIfJSON = (data) => {
+                if (typeof data === 'string') {
+                    return data;
+                }
+                return JSON.stringify(data, null, ' ');
+            };
+
+            const formatDuration = (duration) => {
+                return duration?.replace('.', ',') || '';
+            };
+
+            const formatDate = (date) => {
+                const zeroPad = (num, places) => {
+                    return String(num).padStart(places, '0');
+                };
+
+                date = new Date(date);
+                return (
+                    zeroPad(date.getDate(), 2) +
+                    '.' +
+                    zeroPad(date.getMonth() + 1, 2) +
+                    '.' +
+                    date.getFullYear() +
+                    ', ' +
+                    zeroPad(date.getHours(), 2) +
+                    ':' +
+                    zeroPad(date.getMinutes(), 2) +
+                    ':' +
+                    zeroPad(date.getSeconds(), 2) +
+                    '.' +
+                    date.getMilliseconds()
+                );
+            };
+
+            // #####################################################
             // Step Details
             // #####################################################
-            const addStepDetails = step => {
+
+            const addStepDetails = (step) => {
                 const stepDetail = [];
 
                 // screenshots
@@ -369,24 +384,22 @@
                         <p class="card-header">Screenshots</p>
                         <div class="card-body input-code">`);
 
-                    step.screenshots.forEach(screenshot => {
+                    step.screenshots.forEach((screenshot) => {
                         stepDetail.push(`<img class="screenshot" id="img-${screenshot}" loading="lazy"></img>`);
                         document.scenarioDatailPostActions.push(() => {
                             const image = $(`#img-${screenshot}`);
                             image
-                                .on('load', function() {
+                                .on('load', function () {
                                     this.src = document.data.screenshots[screenshot];
                                     image.unbind('load');
                                 })
-                                .on('click', function() {
+                                .on('click', function () {
                                     let pdfWindow = window.open('');
                                     pdfWindow.document.write(
-                                        "<img width='100%' height='100%' src='" +
-                                            document.data.screenshots[screenshot] +
-                                            "'></img>"
+                                        "<img width='100%' height='100%' src='" + document.data.screenshots[screenshot] + "'></img>"
                                     );
                                 })
-                                .each(function() {
+                                .each(function () {
                                     $(this).trigger('load');
                                 });
                             $(`#img-${screenshot}`).removeAttr('id');
@@ -396,9 +409,8 @@
                 }
 
                 // Input
-                step.input.forEach(stepInput => {
-                    const code =
-                        stepInput.type === 'text' ? stepInput.data : JSON.stringify(stepInput.data, null, ' ') || '-';
+                step.input.forEach((stepInput) => {
+                    const code = stringifyIfJSON(stepInput.data) || '-';
                     stepDetail.push(`<div class="card">
                                         <p class="card-header">${stepInput.desc}</p>
                                         <div class="card-body input-code">
@@ -408,7 +420,7 @@
                                         </div>
                                      </div>`);
                     document.scenarioDatailPostActions.push(() => {
-                        $(`#ic-${stepInput.id}`).on('click', function() {
+                        $(`#ic-${stepInput.id}`).on('click', function () {
                             copyCodeToClipboard(this, code);
                         });
                         $(`#ic-${stepInput.id}`).removeAttr('id');
@@ -417,8 +429,8 @@
 
                 // Output
                 step.output
-                    .filter(stepOutput => !!stepOutput.desc)
-                    .forEach(stepOutput => {
+                    .filter((stepOutput) => !!stepOutput.desc)
+                    .forEach((stepOutput) => {
                         const code = JSON.stringify(stepOutput.data, null, ' ') || '-';
                         stepDetail.push(`<div class="card">
                             <p class="card-header">${stepOutput.desc}</p>
@@ -429,7 +441,7 @@
                                 </div>
                             </div>`);
                         document.scenarioDatailPostActions.push(() => {
-                            $(`#oc-${stepOutput.id}`).on('click', function() {
+                            $(`#oc-${stepOutput.id}`).on('click', function () {
                                 copyCodeToClipboard(this, code);
                             });
                             $(`#oc-${stepOutput.id}`).removeAttr('id');
@@ -441,9 +453,7 @@
                     stepDetail.push(`<div class="card">
                                         <p class="card-header">Error Message</p>
                                         <div class="card-body">
-                                            <div class="card-text"><small>${JSON.stringify(
-                                                step.errorMessage
-                                            )}</small></div>
+                                            <div class="card-text"><small>${stringifyIfJSON(step.errorMessage)}</small></div>
                                         </div>
                                       </div>`);
                 }
@@ -453,10 +463,10 @@
             // #####################################################
             // Step List
             // #####################################################
-            const addSteps = steps => {
+            const addSteps = (steps) => {
                 const stepDescItems = [];
                 stepDescItems.push('<ul class="list-group">');
-                steps.forEach(step => {
+                steps.forEach((step) => {
                     stepDescItems.push(`<li class="list-group-item list-group-item-dark step">`);
                     stepDescItems.push(`<div class="step-header" data-bs-toggle="collapse" href="#detail-${step.id}">`);
 
@@ -472,7 +482,7 @@
                     }
 
                     stepDescItems.push(`${step.description[0]}`);
-                    stepDescItems.push(`<span class="duration">${step.durationSec}</span>`);
+                    stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
                     stepDescItems.push('</div>');
 
                     stepDescItems.push(`<div class="collapse" id="detail-${step.id}">`);
@@ -489,63 +499,63 @@
             };
 
             // #####################################################
-            // Scenario Detail
+            // Test Detail
             // #####################################################
-            document.formatScenarioDatail = sc => {
+            document.formTestDetail = (test) => {
                 return (
                     '<div class="container">' +
                     // Execution Time
                     '<dl class="row">' +
                     ' <dt class="col-2">Time</dt>' +
-                    `  <dd class="col-10">${sc.startTimeFormatted}</dd>` +
+                    `  <dd class="col-10">${formatDate(test.startTime)}</dd>` +
                     '</dl>' +
                     // Duration
                     '<dl class="row">' +
                     ' <dt class="col-2">Duration</dt>' +
-                    `  <dd class="col-10">${sc.durationSec}</dd>` +
+                    `  <dd class="col-10">${formatDuration(test.duration)} s</dd>` +
                     '</dl>' +
                     conditinallyAdd(
                         // Tickets
                         '<dl class="row">' +
                             ' <dt class="col-2">Tickets</dt>' +
-                            `  <dd class="col-10">${sc.tickets
-                                .map(t => '<a href="' + t.link + '" target="_">' + t.id + '@' + t.source + '</a>')
+                            `  <dd class="col-10">${test.tickets
+                                .map((t) => '<a href="' + t.link + '" target="_">' + t.id + '@' + t.source + '</a>')
                                 .join(', ')}</dd>` +
                             '</dl>',
-                        !!sc.tickets && sc.tickets.length > 0
+                        !!test.tickets && test.tickets.length > 0
                     ) +
                     conditinallyAdd(
                         // Description
                         '<dl class="row">' +
                             ' <dt class="col-2">Description</dt>' +
-                            `  <dd class="col-10">${sc.descriptions.join('<br>')}</dd>` +
+                            `  <dd class="col-10">${test.descriptions.replace('\n', '<br>')}</dd>` +
                             '</dl>',
-                        !!sc.descriptions && sc.descriptions.length > 0
+                        !!test.descriptions
                     ) +
                     conditinallyAdd(
                         () =>
                             // stepDescription
                             '<dl class="row">' +
                             ' <dt class="col-2">Steps</dt>' +
-                            `  <dd class="col-10">${addSteps(sc.steps)}</dd>` +
+                            `  <dd class="col-10">${addSteps(test.steps)}</dd>` +
                             '</dl>',
-                        !!sc.steps && sc.steps.length > 0
+                        !!test.steps && test.steps.length > 0
                     ) +
                     conditinallyAdd(
                         // Failure Description
                         '<dl class="row">' +
                             ' <dt class="col-2">Failure</dt>' +
-                            `  <dd class="col-10"><pre>${sc.errorMessage}</pre></dd>` +
+                            `  <dd class="col-10"><pre>${test.errorMessage}</pre></dd>` +
                             '</dl>',
-                        sc.status == 'failed' && !!sc.errorMessage
+                        test.status == 'failed' && !!test.errorMessage
                     ) +
                     conditinallyAdd(
                         // screenshot
                         '<dl class="row">' +
                             ' <dt class="col-2">Screenshot</dt>' +
-                            `  <dd class="col-10"><img width="100%" src="${sc.screenshot}" alt="Red dot" /></dd>` +
+                            `  <dd class="col-10"><img width="100%" src="${test.screenshot}" alt="Red dot" /></dd>` +
                             '</dl>',
-                        !!sc.screenshot
+                        !!test.screenshot
                     ) +
                     '</div>'
                 );

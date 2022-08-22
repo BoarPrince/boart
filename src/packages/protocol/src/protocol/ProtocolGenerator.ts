@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 import { EnvLoader, RuntimeContext, RuntimePriority, RuntimeStatus } from '@boart/core';
 
@@ -133,7 +134,7 @@ export class ProtocolGenerator {
             return {
                 topic: `${localItem.number}. ${localItem.name}`,
                 name: `${testItem.number}. ${testItem.name}`,
-                ticket: testItem.tickets.find(() => true)?.id,
+                ticket: testItem.tickets.find(() => true)?.id || '',
                 tags: localItem.tags?.join(', '),
                 status: RuntimeStatus[testItem.status],
                 priority: RuntimePriority[testItem.priority],
@@ -243,13 +244,39 @@ export class ProtocolGenerator {
     /**
      *
      */
-    public generate(): void {
+    private generateData(): string {
         const runtimeDefinition = this.readReport();
         this.tryReadItems(runtimeDefinition);
 
         const protocol = this.generateProtocol(runtimeDefinition);
-        const filename = EnvLoader.instance.mapReportData('report-protocol.json');
+        const filename = EnvLoader.instance.mapReportData('test-protocol.json');
+        const protocolData = JSON.stringify(protocol);
+
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        fs.writeFileSync(filename, JSON.stringify(protocol), 'utf-8');
+        fs.writeFileSync(filename, protocolData, 'utf-8');
+        return protocolData;
+    }
+
+    /**
+     *
+     */
+    private generateHtml(protocolData: string): void {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+        const template: string = fs.readFileSync(path.resolve(__dirname, 'protocol-template.html'), 'utf-8');
+
+        const htmlContent = template.replace('${protocol_data}', protocolData);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+        const filename = EnvLoader.instance.mapReportData(path.join('..', 'test-protocol.html'));
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        fs.writeFileSync(filename, htmlContent, 'utf-8');
+    }
+
+    /**
+     *
+     */
+    public generate(): void {
+        const protocolData = this.generateData();
+        this.generateHtml(protocolData);
     }
 }
