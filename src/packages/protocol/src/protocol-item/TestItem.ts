@@ -8,7 +8,7 @@ import { StepItem } from './StepItem';
 
 export interface TestItem {
     id: string;
-    tags: string;
+    tags: Array<string>;
     name: string;
     status: string;
     duration: string;

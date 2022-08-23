@@ -2,7 +2,7 @@
   "name": "@boart/protocol",
   "description": "",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-232",
+  "version": "1.0.0-244",
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts",

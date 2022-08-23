@@ -183,8 +183,8 @@
                             <td></td>
                             <th scope="col">Test Group</th>
                             <th scope="col">Test</th>
-                            <th scope="col">Ticket</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Ticket</th>
                             <th scope="col">Priority</th>
                             <th scope="col">Duration</th>
                         </tr>
@@ -216,7 +216,6 @@
                         },
                         { data: 'topic' },
                         { data: 'name' },
-                        { data: 'ticket' },
                         {
                             data: 'status',
                             className: 'status',
@@ -225,6 +224,7 @@
                                     ? `<span class="badge bg-danger">${data}</span>`
                                     : `<span class="badge bg-success">${data}</span>`
                         },
+                        { data: 'ticket' },
                         { data: 'priority' },
                         {
                             data: 'duration',
@@ -292,10 +292,20 @@
                     }
                 });
 
-                const filterTable = (priority, status) => {
+                // #####################################################
+                // Filters
+                // #####################################################
+                const filterTableByPrioAndStatus = (priority, status) => {
                     table.clear().draw();
                     const failedTests = document.data.overview.filter((test) => test.status == status && test.priority == priority);
                     failedTests.forEach((test) => table.row.add(test).draw(false));
+                };
+
+                globalThis.filterTableByTag = (tag) => {
+                    table.clear().draw();
+                    const failedTests = document.data.overview.filter((test) => test.tags?.includes(tag));
+                    failedTests.forEach((test) => table.row.add(test).draw(false));
+                    return false;
                 };
 
                 $('.project-description').text(`${document.data.projectName}, ${document.data.environment}`);
@@ -311,12 +321,12 @@
                 $('.statistic .low .passed .count').text(`(${statistic.low.passed})`);
                 $('.statistic .low .failed .count').text(`(${statistic.low.failed})`);
 
-                $('div.statistic').on('click', '.high .passed', () => filterTable('high', 'passed'));
-                $('div.statistic').on('click', '.high .failed', () => filterTable('high', 'failed'));
-                $('div.statistic').on('click', '.medium .passed', () => filterTable('medium', 'passed'));
-                $('div.statistic').on('click', '.medium .failed', () => filterTable('medium', 'failed'));
-                $('div.statistic').on('click', '.low .passed', () => filterTable('low', 'passed'));
-                $('div.statistic').on('click', '.low .failed', () => filterTable('low', 'failed'));
+                $('div.statistic').on('click', '.high .passed', () => filterTableByPrioAndStatus('high', 'passed'));
+                $('div.statistic').on('click', '.high .failed', () => filterTableByPrioAndStatus('high', 'failed'));
+                $('div.statistic').on('click', '.medium .passed', () => filterTableByPrioAndStatus('medium', 'passed'));
+                $('div.statistic').on('click', '.medium .failed', () => filterTableByPrioAndStatus('medium', 'failed'));
+                $('div.statistic').on('click', '.low .passed', () => filterTableByPrioAndStatus('low', 'passed'));
+                $('div.statistic').on('click', '.low .failed', () => filterTableByPrioAndStatus('low', 'failed'));
 
                 $('.start-time').text(formatDate(document.data.startTime));
                 $('.complete-duration').text(formatDuration(document.data.durationMin));
@@ -350,13 +360,12 @@
 
             const formatDate = (dateISO) => {
                 const date = new Date(dateISO);
-                return new Intl.DateTimeFormat(null, { dateStyle: 'full', timeStyle: 'long' }).format(date);
+                return new Intl.DateTimeFormat('default', { dateStyle: 'full', timeStyle: 'long' }).format(date);
             };
 
             // #####################################################
             // Step Details
             // #####################################################
-
             const addStepDetails = (step) => {
                 const stepDetail = [];
 
@@ -505,6 +514,16 @@
                                 .join(', ')}</dd>` +
                             '</dl>',
                         !!test.tickets && test.tickets.length > 0
+                    ) +
+                    conditinallyAdd(
+                        // Tags
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Tags</dt>' +
+                            `  <dd class="col-10">${test.tags
+                                .map((t) => `<a href="#" onclick="filterTableByTag('${t}');">${t}</a>`)
+                                .join(', ')}</dd>` +
+                            '</dl>',
+                        !!test.tags && test.tags.length > 0
                     ) +
                     conditinallyAdd(
                         // Description

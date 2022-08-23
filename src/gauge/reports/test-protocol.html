@@ -183,8 +183,8 @@
                             <td></td>
                             <th scope="col">Test Group</th>
                             <th scope="col">Test</th>
-                            <th scope="col">Ticket</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Ticket</th>
                             <th scope="col">Priority</th>
                             <th scope="col">Duration</th>
                         </tr>
@@ -216,7 +216,6 @@
                         },
                         { data: 'topic' },
                         { data: 'name' },
-                        { data: 'ticket' },
                         {
                             data: 'status',
                             className: 'status',
@@ -225,6 +224,7 @@
                                     ? `<span class="badge bg-danger">${data}</span>`
                                     : `<span class="badge bg-success">${data}</span>`
                         },
+                        { data: 'ticket' },
                         { data: 'priority' },
                         {
                             data: 'duration',
@@ -292,10 +292,20 @@
                     }
                 });
 
-                const filterTable = (priority, status) => {
+                // #####################################################
+                // Filters
+                // #####################################################
+                const filterTableByPrioAndStatus = (priority, status) => {
                     table.clear().draw();
                     const failedTests = document.data.overview.filter((test) => test.status == status && test.priority == priority);
                     failedTests.forEach((test) => table.row.add(test).draw(false));
+                };
+
+                globalThis.filterTableByTag = (tag) => {
+                    table.clear().draw();
+                    const failedTests = document.data.overview.filter((test) => test.tags?.includes(tag));
+                    failedTests.forEach((test) => table.row.add(test).draw(false));
+                    return false;
                 };
 
                 $('.project-description').text(`${document.data.projectName}, ${document.data.environment}`);
@@ -311,12 +321,12 @@
                 $('.statistic .low .passed .count').text(`(${statistic.low.passed})`);
                 $('.statistic .low .failed .count').text(`(${statistic.low.failed})`);
 
-                $('div.statistic').on('click', '.high .passed', () => filterTable('high', 'passed'));
-                $('div.statistic').on('click', '.high .failed', () => filterTable('high', 'failed'));
-                $('div.statistic').on('click', '.medium .passed', () => filterTable('medium', 'passed'));
-                $('div.statistic').on('click', '.medium .failed', () => filterTable('medium', 'failed'));
-                $('div.statistic').on('click', '.low .passed', () => filterTable('low', 'passed'));
-                $('div.statistic').on('click', '.low .failed', () => filterTable('low', 'failed'));
+                $('div.statistic').on('click', '.high .passed', () => filterTableByPrioAndStatus('high', 'passed'));
+                $('div.statistic').on('click', '.high .failed', () => filterTableByPrioAndStatus('high', 'failed'));
+                $('div.statistic').on('click', '.medium .passed', () => filterTableByPrioAndStatus('medium', 'passed'));
+                $('div.statistic').on('click', '.medium .failed', () => filterTableByPrioAndStatus('medium', 'failed'));
+                $('div.statistic').on('click', '.low .passed', () => filterTableByPrioAndStatus('low', 'passed'));
+                $('div.statistic').on('click', '.low .failed', () => filterTableByPrioAndStatus('low', 'failed'));
 
                 $('.start-time').text(formatDate(document.data.startTime));
                 $('.complete-duration').text(formatDuration(document.data.durationMin));
@@ -350,13 +360,12 @@
 
             const formatDate = (dateISO) => {
                 const date = new Date(dateISO);
-                return new Intl.DateTimeFormat(null, { dateStyle: 'full', timeStyle: 'long' }).format(date);
+                return new Intl.DateTimeFormat('default', { dateStyle: 'full', timeStyle: 'long' }).format(date);
             };
 
             // #####################################################
             // Step Details
             // #####################################################
-
             const addStepDetails = (step) => {
                 const stepDetail = [];
 
@@ -507,6 +516,16 @@
                         !!test.tickets && test.tickets.length > 0
                     ) +
                     conditinallyAdd(
+                        // Tags
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Tags</dt>' +
+                            `  <dd class="col-10">${test.tags
+                                .map((t) => `<a href="#" onclick="filterTableByTag('${t}');">${t}</a>`)
+                                .join(', ')}</dd>` +
+                            '</dl>',
+                        !!test.tags && test.tags.length > 0
+                    ) +
+                    conditinallyAdd(
                         // Description
                         '<dl class="row">' +
                             ' <dt class="col-2">Description</dt>' +
@@ -547,7 +566,91 @@
         <!-- Document Data -->
         <!-- ##################################################### -->
         <script>
-            document.data = {"statistic":{"high":{"passed":0,"failed":0},"medium":{"passed":0,"failed":1},"low":{"passed":0,"failed":0}},"overview":[{"topic":"1. Getting Started with Gauge","name":"1.2. Second test (failing)","ticket":"","tags":"spec1","status":"failed","priority":"medium","duration":"1.71","startTime":"2022-08-23T09:23:34.308Z","localId":"e5b2e4d3-4c12-4ece-bcd4-15c741d9d4aa","testId":"d8b14175-424f-4e92-b7da-c0d12cef59a7"}],"locals":{"e5b2e4d3-4c12-4ece-bcd4-15c741d9d4aa":{"id":"e5b2e4d3-4c12-4ece-bcd4-15c741d9d4aa","tags":"spec1","duration":"1.75","status":"failed","name":"Getting Started with Gauge","number":"1"}},"tests":{"eb2d2e9a-4e32-4ea8-ba7c-ab8f16decfc8":{"id":"eb2d2e9a-4e32-4ea8-ba7c-ab8f16decfc8","tags":"scenario1","name":"1.1. First test (succeeding)","status":"succeeded","duration":"0.02","startTime":"2022-08-23T09:23:34.281Z","tickets":[],"steps":[]},"d8b14175-424f-4e92-b7da-c0d12cef59a7":{"id":"d8b14175-424f-4e92-b7da-c0d12cef59a7","tags":"scenario2","name":"1.2. Second test (failing)","status":"failed","duration":"1.71","startTime":"2022-08-23T09:23:34.308Z","priority":"medium","descriptions":"This is a test description","tickets":[],"steps":[{"id":"86b7479d-af93-4b53-99b8-e66ffd367b40","status":"failed","errorMessage":"FetchError: request to http://yyy/ failed, reason: getaddrinfo ENOTFOUND yyy","duration":"1.68","startTime":"2022-08-23T09:23:34.335Z","type":"restCall","description":"a","input":[{"id":"-","desc":"Rest call","data":{"url":"http://yyy","option":{"method":"GET","headers":{"Content-Type":"application/json"},"mode":"no-cors","referrerPolicy":"unsafe-url"}}},{"id":"-","desc":"Rest call (curl)","data":"curl -i -X GET 'http://yyy' \\\n\t-H 'Content-Type: application/json'"}],"output":[]}]}},"projectName":"gauge","durationMin":"0.03","startTime":"2022-08-23T09:23:34.255Z"};
+            document.data = {
+                statistic: { high: { passed: 0, failed: 0 }, medium: { passed: 0, failed: 1 }, low: { passed: 0, failed: 0 } },
+                overview: [
+                    {
+                        topic: '1. Getting Started with Gauge',
+                        name: '1.2. Second test (failing)',
+                        ticket: '',
+                        tags: ['scenario2', 'spec1'],
+                        status: 'failed',
+                        priority: 'medium',
+                        duration: '0.57',
+                        startTime: '2022-08-23T10:43:49.070Z',
+                        localId: '022baa3e-36dd-49df-bfd5-938fed7ee1c0',
+                        testId: 'cd4120d5-dbb3-41a9-9d57-21dbd82c4919'
+                    }
+                ],
+                locals: {
+                    '022baa3e-36dd-49df-bfd5-938fed7ee1c0': {
+                        id: '022baa3e-36dd-49df-bfd5-938fed7ee1c0',
+                        tags: ['spec1'],
+                        duration: '0.60',
+                        status: 'failed',
+                        name: 'Getting Started with Gauge',
+                        number: '1'
+                    }
+                },
+                tests: {
+                    '8642c48d-de7d-4385-93b5-f62055a93a8f': {
+                        id: '8642c48d-de7d-4385-93b5-f62055a93a8f',
+                        tags: ['scenario1', 'spec1'],
+                        name: '1.1. First test (succeeding)',
+                        status: 'succeeded',
+                        duration: '0.02',
+                        startTime: '2022-08-23T10:43:49.048Z',
+                        tickets: [],
+                        steps: []
+                    },
+                    'cd4120d5-dbb3-41a9-9d57-21dbd82c4919': {
+                        id: 'cd4120d5-dbb3-41a9-9d57-21dbd82c4919',
+                        tags: ['scenario2', 'spec1'],
+                        name: '1.2. Second test (failing)',
+                        status: 'failed',
+                        duration: '0.57',
+                        startTime: '2022-08-23T10:43:49.070Z',
+                        priority: 'medium',
+                        descriptions: 'This is a test description',
+                        tickets: [],
+                        steps: [
+                            {
+                                id: '6878be65-ed88-4c0e-811e-1728397343c3',
+                                status: 'failed',
+                                errorMessage: 'FetchError: request to http://yyy/ failed, reason: getaddrinfo ENOTFOUND yyy',
+                                duration: '0.54',
+                                startTime: '2022-08-23T10:43:49.091Z',
+                                type: 'restCall',
+                                description: 'a',
+                                input: [
+                                    {
+                                        id: '-',
+                                        desc: 'Rest call',
+                                        data: {
+                                            url: 'http://yyy',
+                                            option: {
+                                                method: 'GET',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                mode: 'no-cors',
+                                                referrerPolicy: 'unsafe-url'
+                                            }
+                                        }
+                                    },
+                                    {
+                                        id: '-',
+                                        desc: 'Rest call (curl)',
+                                        data: "curl -i -X GET 'http://yyy' \\\n\t-H 'Content-Type: application/json'"
+                                    }
+                                ],
+                                output: []
+                            }
+                        ]
+                    }
+                },
+                projectName: 'gauge',
+                durationMin: '0.01',
+                startTime: '2022-08-23T10:43:49.026Z'
+            };
         </script>
     </body>
 </html>

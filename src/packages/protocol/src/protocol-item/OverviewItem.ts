@@ -6,7 +6,7 @@ export interface OverviewItem {
     topic: string;
     name: string;
     ticket: string;
-    tags: string;
+    tags: Array<string>;
     status: string;
     priority: string;
     duration: string;

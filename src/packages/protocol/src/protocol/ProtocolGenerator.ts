@@ -58,6 +58,19 @@ export class ProtocolGenerator {
             this.localItems.set(locaItem.id, JSON.parse(content) as LocalReportItem);
         });
 
+        // concat and remove duplicates
+        const concatTags = (testTags: string[], localTags: string[]) => {
+            return testTags
+                ?.concat(localTags)
+                .sort()
+                .reduce((p, c) => {
+                    if (!p.includes(c)) {
+                        p.push(c);
+                    }
+                    return p;
+                }, new Array<string>());
+        };
+
         runtimeDefinition.localContext.forEach((localItem) =>
             localItem.testContext.forEach((testItem) => {
                 const filename = EnvLoader.instance.mapReportData(testItem.id + '.json');
@@ -70,6 +83,7 @@ export class ProtocolGenerator {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                 const content: string = fs.readFileSync(filename, 'utf-8');
                 const item = JSON.parse(content) as TestReportItem;
+                item.tags = concatTags(item.tags, localItem.tags);
                 item.localReportItemId = localItem.id;
                 this.testItems.set(testItem.id, item);
             })
@@ -135,7 +149,7 @@ export class ProtocolGenerator {
                 topic: `${localItem.number}. ${localItem.name}`,
                 name: `${testItem.number}. ${testItem.name}`,
                 ticket: testItem.tickets.find(() => true)?.id || '',
-                tags: localItem.tags?.join(', '),
+                tags: testItem.tags,
                 status: RuntimeStatus[testItem.status],
                 priority: RuntimePriority[testItem.priority],
                 duration: testItem.duration,
@@ -155,7 +169,7 @@ export class ProtocolGenerator {
         this.localItems.forEach((localItem) => {
             locals[localItem.id] = {
                 id: localItem.id,
-                tags: localItem.tags.join(', '),
+                tags: localItem.tags,
                 duration: localItem.duration,
                 status: RuntimeStatus[localItem.status],
                 name: localItem.name,
@@ -211,7 +225,7 @@ export class ProtocolGenerator {
         this.testItems.forEach((testItem) => {
             tests[testItem.id] = {
                 id: testItem.id,
-                tags: testItem.tags.join(', '),
+                tags: testItem.tags,
                 name: `${testItem.number}. ${testItem.name}`,
                 status: RuntimeStatus[testItem.status],
                 duration: testItem.duration,
