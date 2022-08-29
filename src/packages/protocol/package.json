@@ -2,7 +2,7 @@
   "name": "@boart/protocol",
   "description": "",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-244",
+  "version": "1.0.0-274",
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts",
@@ -12,7 +12,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json && npm run copy-move-files",
-    "copy-move-files": "mv dist/packages/protocol/src/** dist && cp src/protocol/protocol-template.html dist/protocol/protocol-template.html && rm -rf dist/packages",
+    "copy-move-files": "mv dist/src/** dist && rm -rf dist/src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +25,7 @@
     "url": "https://github.com/Kemark/boart/issues"
   },
   "homepage": "https://github.com/Kemark/boart#readme",
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@boart/core": "*"
+  }
 }
