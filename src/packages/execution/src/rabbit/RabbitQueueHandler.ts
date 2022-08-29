@@ -2,9 +2,9 @@ import { Runtime } from '@boart/core';
 import { connect, Connection, ConsumeMessage, Replies } from 'amqplib';
 import { Subject } from 'rxjs';
 
-import { Configuration } from './Configuration';
-import { QueueMessage } from './QueueMessage';
-import { QueueMessageConsumer } from './QueueMessageConsumer';
+import { RabbitConfiguration } from './RabbitConfiguration';
+import { RabbitQueueMessage } from './RabbitQueueMessage';
+import { RabbitQueueMessageConsumer } from './RabbitQueueMessageConsumer';
 
 /**
  *
@@ -31,14 +31,14 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    public static set config(config: Configuration) {
+    public static set config(config: RabbitConfiguration) {
         globalThis._rabbitQueueConfig = { ...RabbitQueueHandler.config, ...config };
     }
 
     /**
      *
      */
-    public static get config(): Configuration {
+    public static get config(): RabbitConfiguration {
         if (!globalThis._rabbitQueueConfig) {
             globalThis._rabbitQueueConfig = {
                 hostname: '',
@@ -46,7 +46,7 @@ export class RabbitQueueHandler {
                 password: '',
                 port: 5672,
                 vhost: '/'
-            } as Configuration;
+            } as RabbitConfiguration;
         }
         return globalThis._rabbitQueueConfig;
     }
@@ -91,7 +91,7 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async connect(config?: Configuration): Promise<Connection> {
+    async connect(config?: RabbitConfiguration): Promise<Connection> {
         try {
             this.connection = await connect(config || RabbitQueueHandler.config);
             this.connectionStatus = ConnectionStatus.Opened;
@@ -215,7 +215,7 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async consume(queueName: string): Promise<QueueMessageConsumer> {
+    async consume(queueName: string): Promise<RabbitQueueMessageConsumer> {
         const channel = await (await this.getConnection()).createChannel();
         await channel.checkQueue(queueName);
 
@@ -243,7 +243,7 @@ export class RabbitQueueHandler {
         };
 
         // consuming
-        const messageSubject = new Subject<QueueMessage>();
+        const messageSubject = new Subject<RabbitQueueMessage>();
         const startConsuming = async () => {
             try {
                 consumerTag = await channel.consume(
@@ -251,7 +251,7 @@ export class RabbitQueueHandler {
                     (msg: ConsumeMessage) => {
                         try {
                             const message = JSON.stringify(msg.content);
-                            const consumerMessage: QueueMessage = {
+                            const consumerMessage: RabbitQueueMessage = {
                                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                                 correlationId: msg.properties.correlationId,
                                 headers: msg.properties.headers,

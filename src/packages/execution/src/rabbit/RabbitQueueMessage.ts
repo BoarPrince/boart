@@ -3,7 +3,7 @@ import { ContentType } from '@boart/core';
 /**
  *
  */
-export interface QueueMessage {
+export interface RabbitQueueMessage {
     message: string;
     correlationId?: string;
     fields?: Record<string, ContentType>;
