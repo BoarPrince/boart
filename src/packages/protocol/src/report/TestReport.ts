@@ -64,10 +64,10 @@ export class TestReport {
      *
      */
     private getNumber(location: string, name: string): string {
-        const nameMatch = name.match(/^([\d]+[\d.]*)/);
+        const nameMatch = name?.match(/^([\d]+[\d.]*)/);
         const nameNumber = !nameMatch ? '' : nameMatch[1].replace(/[.]$/, '');
 
-        const locationMatch = location.match(/^([\d])/);
+        const locationMatch = location?.match(/^([\d])/);
         if (!!locationMatch) {
             const locationNumber = locationMatch[1].replace(/[.]$/, '');
             return nameNumber.replace(/^\d+/, locationNumber);
@@ -79,7 +79,7 @@ export class TestReport {
      *
      */
     private getName(name: string): string {
-        return name.replace(/\d[\d.]+\W*/, '');
+        return name?.replace(/\d[\d.]+\W*/, '') || '';
     }
 
     /**
