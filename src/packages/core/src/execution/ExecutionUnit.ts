@@ -15,7 +15,7 @@ export interface ExecutionUnit<
     /**
      *
      */
-    execute(context: TExecutionContext, row: TRowType): void | Promise<void>;
+    execute(context: TExecutionContext, row?: TRowType, inProcessing?: () => Promise<void>): void | Promise<void>;
 
     /**
      *

@@ -2,15 +2,16 @@
   "name": "@boart/core-impl",
   "description": "",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-251",
+  "version": "1.0.0-281",
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts"
   ],
-  "main": "dist/packages/core-impl/src/index.js",
-  "types": "dist/packages/core-impl/src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json",
+    "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json && npm run copy-move-files",
+    "copy-move-files": "mv dist/src/** dist && rm -rf dist/src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
