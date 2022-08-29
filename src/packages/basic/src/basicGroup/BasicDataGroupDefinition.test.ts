@@ -161,7 +161,7 @@ describe('check expected,expected:data', () => {
         );
 
         const context = await sut.handler.process(tableDef);
-        expect(context.execution.data.toString()).toBe('xyz');
+        expect(context.execution.data?.toString()).toBe('xyz');
     });
 
     /**
@@ -306,7 +306,7 @@ describe('check expected:header', () => {
         );
 
         const context = await sut.handler.process(tableDef);
-        expect(context.execution.header.toString()).toBe('xyz');
+        expect(context.execution.header?.toString()).toBe('xyz');
     });
 
     /**
@@ -407,7 +407,7 @@ describe('check expected:transformed', () => {
         );
 
         const context = await sut.handler.process(tableDef);
-        expect(context.execution.transformed.toString()).toBe('xyz');
+        expect(context.execution.transformed?.toString()).toBe('xyz');
     });
 
     /**
@@ -713,7 +713,7 @@ describe('check transformed jpath', () => {
 
         const result = await sut.handler.process(tableDef);
         expect(result.execution.transformed).toBeInstanceOf(TextContent);
-        expect(result.execution.transformed.toString()).toBe('e');
+        expect(result.execution.transformed?.toString()).toBe('e');
     });
 
     /**
@@ -729,7 +729,7 @@ describe('check transformed jpath', () => {
 
         const result = await sut.handler.process(tableDef);
         expect(result.execution.transformed).toBeInstanceOf(ObjectContent);
-        expect(result.execution.transformed.toJSON()).toBe('{"c":{"d":"e"}}');
+        expect(result.execution.transformed?.toJSON()).toBe('{"c":{"d":"e"}}');
     });
 
     /**
@@ -745,7 +745,7 @@ describe('check transformed jpath', () => {
 
         const result = await sut.handler.process(tableDef);
         expect(result.execution.transformed).toBeInstanceOf(TextContent);
-        expect(result.execution.transformed.toString()).toBe('e');
+        expect(result.execution.transformed?.toString()).toBe('e');
     });
 
     /**
@@ -920,7 +920,7 @@ describe('check transformed jsonLogic', () => {
 
         const result = await sut.handler.process(tableDef);
         expect(result.execution.transformed).toBeInstanceOf(TextContent);
-        expect(result.execution.transformed.toString()).toBe('e');
+        expect(result.execution.transformed?.toString()).toBe('e');
     });
 
     /**
@@ -936,7 +936,7 @@ describe('check transformed jsonLogic', () => {
 
         const result = await sut.handler.process(tableDef);
         expect(result.execution.transformed).toBeInstanceOf(ObjectContent);
-        expect(result.execution.transformed.toJSON()).toBe('{"c":{"d":"e"}}');
+        expect(result.execution.transformed?.toJSON()).toBe('{"c":{"d":"e"}}');
     });
 
     /**
@@ -952,7 +952,7 @@ describe('check transformed jsonLogic', () => {
 
         const result = await sut.handler.process(tableDef);
         expect(result.execution.transformed).toBeInstanceOf(TextContent);
-        expect(result.execution.transformed.toString()).toBe('e');
+        expect(result.execution.transformed?.toString()).toBe('e');
     });
 
     /**
