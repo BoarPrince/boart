@@ -1,7 +1,7 @@
 {
   "name": "@boart/execution",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-239",
+  "version": "1.0.0-270",
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"
   },
@@ -13,14 +13,16 @@
     "dist/**/*.js",
     "dist/**/*.d.ts"
   ],
-  "main": "dist/packages/execution/src/index.js",
-  "types": "dist/packages/execution/src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kemark/boart.git"
   },
   "scripts": {
+    "_compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json && npm run copy-move-files",
     "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json",
+    "copy-move-files": "mv dist/src/** dist && rm -rf dist/src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -35,6 +37,7 @@
     "rxjs": "^7.5.5"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.8.2",
     "jest-fetch-mock": "^3.0.3"
   }
 }

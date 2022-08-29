@@ -1,30 +1,3 @@
 {
-  // "extends": "./tsconfig.build.json",
   "extends": "./tsconfig.build.json",
-  "compilerOptions": {
-    "baseUrl": "./"
-    // "strict": false,
-    // "forceConsistentCasingInFileNames": true,
-    // "allowSyntheticDefaultImports": true
-  },
-  "include": [
-    "./src/packages/**/*.ts"
-  ],
-  "references": [
-    {
-      "path": "./src/packages/core/tsconfig.pkg.json"
-    },
-    {
-      "path": "./src/packages/core-impl/tsconfig.pkg.json"
-    },
-    {
-      "path": "./src/packages/execution/tsconfig.pkg.json"
-    },
-    {
-      "path": "./src/packages/protocol/tsconfig.pkg.json"
-    },
-    {
-      "path": "./src/packages/basic/tsconfig.pkg.json"
-    }
-  ]
 }

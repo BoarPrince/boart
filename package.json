@@ -14,13 +14,21 @@
     "node": ">=18.0.0"
   },
   "scripts": {
+    "tsc:help": "tsc --help",
     "test": "jest --coverage",
     "compile": "npm run compile -ws",
+    "compile:core": "npm run compile -w @boart/core",
+    "compile:core-impl": "npm run compile -w @boart/core-impl",
+    "compile:protocol": "npm run compile -w @boart/protocol",
+    "compile:execution": "npm run compile -w @boart/execution",
+    "compile:basic": "npm run compile -w @boart/basic",
     "format-all": "prettier --write 'src/packages/**/src/**/*.{ts,js,json}'",
     "lint": "eslint src/packages --ext .ts",
     "lint:fix": "eslint src/packages --ext .ts --fix",
     "prepublish": "npm version prerelease -ws",
     "publish": "npm publish -ws",
+    "publish:core": "npm version prerelease -w @boart/core && npm publish -w @boart/core",
+    "publish:execution": "npm version prerelease -w @boart/execution && npm publish -w @boart/execution",
     "compile:and:publish": "npm run compile && npm install && npm run publish"
   },
   "devDependencies": {

@@ -1,26 +1,12 @@
 {
   "exclude": [
-    "**/*.test.ts",
     "node_modules",
-    "dist"
+    "dist",
+    "coverage"
   ],
-  "paths": {
-    "@boart/core": [
-      "./src/packages/core/src/index.ts"
-    ],
-    "@boart/core-impl": [
-      "./src/packages/core-impl/src/index.ts"
-    ],
-    "@boart/execution": [
-      "./src/packages/execution/src/index.ts"
-    ],
-    "@boart/protocol": [
-      "./src/packages/protocol/src/index.ts"
-    ],
-    "@boart/basic": [
-      "./src/packages/basic/src/index.ts"
-    ]
-  },
+  "include": [
+    "**/src/**/*.ts"
+  ],
   "compilerOptions": {
     "target": "es2018",
     "module": "commonjs",
@@ -32,8 +18,35 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "declaration": true,
     "composite": true,
-    "rootDir": "src"
+    "outDir": "dist",
+    "rootDir": ".",
+    "rootDirs": [
+      "src/packages/core/src/",
+      "src/packages/core-impl/src/",
+      "src/packages/execution/src/",
+      "src/packages/protocol/src/",
+      "src/packages/basic/src/"
+    ],
+    "baseUrl": "src/packages/",
+    "paths": {
+      "@boart/core": [
+        "core/src/index.ts"
+      ],
+      "@boart/core-impl": [
+        "core-impl/src/index.ts"
+      ],
+      "@boart/execution": [
+        "execution/src/index.ts"
+      ],
+      "@boart/protocol": [
+        "protocol/src/index.ts"
+      ],
+      "@boart/basic": [
+        "basic/src/index.ts"
+      ]
+    }
   }
 }

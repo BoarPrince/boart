@@ -1,13 +1,6 @@
 {
   "extends": "../../../tsconfig.build.json",
-  "compilerOptions": {
-    "outDir": "./dist/"
-  },
-  "resolveJsonModule": true,
   "files": [
-    "src/global.ts"
-  ],
-  "include": [
-    "./**/*.ts"
+    "src/global.d.ts"
   ]
 }

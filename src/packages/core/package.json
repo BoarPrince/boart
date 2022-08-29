@@ -1,7 +1,7 @@
 {
   "name": "@boart/core",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-254",
+  "version": "1.0.0-286",
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"
   },
@@ -13,17 +13,16 @@
     "dist/**/*.js",
     "dist/**/*.d.ts"
   ],
-  "main": "dist/packages/core/src/index.js",
-  "types": "dist/packages/core/src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kemark/boart.git"
   },
   "scripts": {
     "prepare": "npm run build",
-    "_prepublishOnly": "npm test && npm run lint",
-    "compile": "rm -rf ./dist/* && tsc -p tsconfig.pkg.json",
-    "_test": "echo \"Error: no test specified\" && exit 0",
+    "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json && npm run copy-move-files",
+    "copy-move-files": "mv dist/src/** dist && rm -rf dist/src",
     "test": "jest --coverage",
     "build": "echo \"Error: no build specified\" && exit 0"
   },

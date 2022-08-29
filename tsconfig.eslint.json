@@ -1,7 +1,4 @@
 {
-  "files": [
-    "global.ts"
-  ],
   "include": [
     "./src/packages/**/*.ts"
   ],
@@ -11,10 +8,22 @@
     "strict": true,
     "experimentalDecorators": true,
     "declaration": true,
-    "baseUrl": "./",
+    "baseUrl": "src/packages/",
     "paths": {
-      "@boart/*": [
-        "./src/packages/*/"
+      "@boart/core": [
+        "core/src/index.ts"
+      ],
+      "@boart/core-impl": [
+        "core-impl/src/index.ts"
+      ],
+      "@boart/execution": [
+        "execution/src/index.ts"
+      ],
+      "@boart/protocol": [
+        "protocol/src/index.ts"
+      ],
+      "@boart/basic": [
+        "basic/src/index.ts"
       ]
     }
   }
