@@ -88,10 +88,17 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
         context.execution.header.asDataContentObject().set('headers', Object.fromEntries(response.headers));
 
         const contentType = response.headers.get('content-type');
-        context.execution.data =
-            contentType === 'application/pdf'
-                ? await new PDFContent().setBufferAsync(await response.arrayBuffer())
-                : new TextContent(await response.text());
+        switch (contentType) {
+            case 'application/pdf':
+                context.execution.data = await new PDFContent().setBufferAsync(await response.arrayBuffer());
+                break;
+            case 'application/json': {
+                context.execution.data = new ObjectContent(await response.text());
+                break;
+            }
+            default:
+                context.execution.data = new TextContent(await response.text());
+        }
         //#endregion
 
         StepReport.instance.addResultItem('Rest call result (header)', 'json', context.execution.header);

@@ -1,9 +1,8 @@
 import fs from 'fs';
 
-import { MarkdownTableReader, Runtime, RuntimeStatus } from '@boart/core';
-import { TestReport } from '@boart/core-impl';
-
-import TestDescriptionTableHandler from './TestDescriptionTableHandler';
+import { TestDescriptionTableHandler } from '@boart/basic';
+import { MarkdownTableReader, Runtime, TestContext } from '@boart/core';
+import { TestReport } from '@boart/protocol';
 
 const sut = new TestDescriptionTableHandler();
 
@@ -27,6 +26,14 @@ jest.mock('@boart/core', () => {
             };
         }
     };
+});
+
+/**
+ *
+ */
+beforeEach(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+    Runtime.instance.testRuntime.notifyStart({} as TestContext);
 });
 
 /**
@@ -165,8 +172,11 @@ it('with ticket - other provider - check report', async () => {
         'id-id-id.json',
         JSON.stringify({
             id: 'id-id-id',
+            number: '',
+            name: '',
             status: 2,
-            priority: 'medium',
+            priority: 1,
+            startTime: '2020-01-01T00:00:00.000Z',
             tickets: [{ id: 't-01', link: 'ticket_link_provider-x', source: 'Provider-x' }],
             descriptions: 'desc',
             failureDescription: ''
@@ -200,8 +210,11 @@ it('with ticket - check report', async () => {
         'id-id-id.json',
         JSON.stringify({
             id: 'id-id-id',
+            number: '',
+            name: '',
             status: 2,
-            priority: 'medium',
+            priority: 1,
+            startTime: '2020-01-01T00:00:00.000Z',
             tickets: [{ id: 't-01', link: 'ticket_link_default', source: 'ticket_source_default' }],
             descriptions: 'desc',
             failureDescription: ''
@@ -237,8 +250,11 @@ it('with multiple descriptions', async () => {
         'id-id-id.json',
         JSON.stringify({
             id: 'id-id-id',
+            number: '',
+            name: '',
             status: 2,
-            priority: 'medium',
+            priority: 1,
+            startTime: '2020-01-01T00:00:00.000Z',
             tickets: [],
             descriptions: 'desc1\ndesc2\ndesc3\ndesc4',
             failureDescription: ''

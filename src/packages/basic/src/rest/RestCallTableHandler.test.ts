@@ -1,11 +1,10 @@
 import fs from 'fs';
 
-import { MarkdownTableReader, Runtime } from '@boart/core';
-import { StepReport } from '@boart/core-impl';
+import { RestCallTableHandler } from '@boart/basic';
+import { MarkdownTableReader, Runtime, StepContext } from '@boart/core';
 import { Store } from '@boart/core/src/store/Store';
+import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
-
-import RestCallTableHandler from './RestCallTableHandler';
 
 fetchMock.enableMocks();
 const sut = new RestCallTableHandler();
@@ -27,7 +26,8 @@ jest.mock('@boart/core', () => {
         },
         EnvLoader: class {
             static instance = {
-                mapReportData: (filename: string) => filename
+                mapReportData: (filename: string) => filename,
+                get: (key: string) => key
             };
         }
     };
@@ -42,10 +42,16 @@ jest.mock('fs');
  *
  */
 beforeEach(() => {
-    const spy = jest.spyOn(process, 'hrtime');
-    spy.mockReturnValue([0, 2000000000]);
     sut.handler.executionEngine.initContext();
     Store.instance.localStore.clear();
+});
+
+/**
+ *
+ */
+beforeEach(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+    Runtime.instance.stepRuntime.notifyStart({} as StepContext);
 });
 
 /**
@@ -71,7 +77,7 @@ it('default get', async () => {
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
     expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
         JSON.stringify({
-            duration: '2.00', //
+            duration: '0.00', //
             statusText: 'OK',
             status: 200,
             headers: { 'content-type': 'text/plain;charset=UTF-8' }
@@ -183,7 +189,7 @@ it('default post', async () => {
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
     expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
         JSON.stringify({
-            duration: '2.00', //
+            duration: '0.00', //
             statusText: 'OK',
             status: 200,
             headers: { 'content-type': 'text/plain;charset=UTF-8' }
@@ -291,7 +297,7 @@ it('default put', async () => {
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
     expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
         JSON.stringify({
-            duration: '2.00', //
+            duration: '0.00', //
             statusText: 'OK',
             status: 200,
             headers: { 'content-type': 'text/plain;charset=UTF-8' }
@@ -424,7 +430,7 @@ it('default post-param', async () => {
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
     expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
         JSON.stringify({
-            duration: '2.00', //
+            duration: '0.00', //
             statusText: 'OK',
             status: 200,
             headers: { 'content-type': 'text/plain;charset=UTF-8' }
@@ -462,7 +468,7 @@ it('post-param with payload', async () => {
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
     expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
         JSON.stringify({
-            duration: '2.00', //
+            duration: '0.00', //
             statusText: 'OK',
             status: 200,
             headers: { 'content-type': 'text/plain;charset=UTF-8' }
@@ -592,7 +598,7 @@ it('default form-data', async () => {
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
     expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
         JSON.stringify({
-            duration: '2.00', //
+            duration: '0.00', //
             statusText: 'OK',
             status: 200,
             headers: { 'content-type': 'text/plain;charset=UTF-8' }
@@ -795,9 +801,9 @@ it('report must be written', async () => {
     fetchMock.doMock(JSON.stringify({ b: 2 }));
     const tableRows = MarkdownTableReader.convert(
         `|action       |value       |
-       |-------------|------------|
-       | method:get  | http://xxx |
-       | description | test desc  |`
+         |-------------|------------|
+         | method:get  | http://xxx |
+         | description | test desc  |`
     );
 
     await sut.handler.process(tableRows);
@@ -810,7 +816,8 @@ it('report must be written', async () => {
             id: 'id-id-id',
             status: 2,
             type: 'restCall',
-            description: ['test desc'],
+            startTime: '2020-01-01T00:00:00.000Z',
+            description: 'test desc',
             input: {
                 'Rest call': {
                     description: 'Rest call',
@@ -835,7 +842,7 @@ it('report must be written', async () => {
                 'Rest call result (header)': {
                     description: 'Rest call result (header)',
                     type: 'json',
-                    data: '{"duration":"2.00","statusText":"OK","status":200,"headers":{"content-type":"text/plain;charset=UTF-8"}}'
+                    data: '{"duration":"0.00","statusText":"OK","status":200,"headers":{"content-type":"text/plain;charset=UTF-8"}}'
                 },
                 'Rest call result (paylaod)': { description: 'Rest call result (paylaod)', type: 'json', data: '{"b":2}' }
             }
