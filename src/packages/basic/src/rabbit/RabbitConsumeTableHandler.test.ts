@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import { RabbitConsumeTableHandler } from '@boart/basic';
 import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, StepContext, TestContext } from '@boart/core';
-import { QueueMessage, QueueMessageConsumer, RabbitQueueHandler } from '@boart/execution';
+import { RabbitQueueHandler, RabbitQueueMessage, RabbitQueueMessageConsumer } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
 import { Subject } from 'rxjs';
 
@@ -40,7 +40,7 @@ jest.mock('@boart/execution', () => {
         RabbitQueueHandler: class {
             static instance = {
                 stop: jest.fn<Promise<void>, []>(),
-                consume: jest.fn<Promise<QueueMessageConsumer>, [string]>().mockResolvedValue({} as QueueMessageConsumer)
+                consume: jest.fn<Promise<RabbitQueueMessageConsumer>, [string]>().mockResolvedValue({} as RabbitQueueMessageConsumer)
             };
         }
     };
@@ -70,13 +70,13 @@ beforeEach(() => {
  *
  */
 type ConsumerMock = {
-    consumer: QueueMessageConsumer;
-    messages: Subject<QueueMessage>;
+    consumer: RabbitQueueMessageConsumer;
+    messages: Subject<RabbitQueueMessage>;
     start: {
         resolve: () => void;
         reject: (_: string) => void;
     };
-    generateMessages: (messages: Subject<QueueMessage>) => void;
+    generateMessages: (messages: Subject<RabbitQueueMessage>) => void;
 };
 let consumerMock: ConsumerMock;
 
@@ -85,7 +85,7 @@ let consumerMock: ConsumerMock;
  */
 beforeEach(async () => {
     const consumer = await RabbitQueueHandler.instance.consume('queue-name');
-    const messages = new Subject<QueueMessage>();
+    const messages = new Subject<RabbitQueueMessage>();
     consumer.messages = messages;
 
     consumerMock = {

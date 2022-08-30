@@ -255,8 +255,8 @@ export class RabbitQueueHandler {
                                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                                 correlationId: msg.properties.correlationId,
                                 headers: msg.properties.headers,
-                                fields: msg.fields,
-                                properties: msg.properties,
+                                fields: { ...msg.fields },
+                                properties: { ...msg.properties },
                                 receivedTime: Date.now(),
                                 message
                             };

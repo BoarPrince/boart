@@ -1,6 +1,6 @@
 import { DataContent, ExecutionUnit, ObjectContent } from '@boart/core';
 import { RowTypeValue } from '@boart/core-impl';
-import { QueueMessage, QueueMessageConsumer, RabbitQueueHandler } from '@boart/execution';
+import { RabbitQueueHandler, RabbitQueueMessage, RabbitQueueMessageConsumer } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
 
 import { RabbitConsumeContext } from './RabbitConsumeContext';
@@ -14,7 +14,7 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
     /**
      *
      */
-    private static createHeader(queueMessage: QueueMessage): ObjectContent {
+    private static createHeader(queueMessage: RabbitQueueMessage): ObjectContent {
         return new ObjectContent({
             correlationId: queueMessage.correlationId,
             fields: queueMessage.fields,
@@ -44,13 +44,13 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
     /**
      *
      */
-    private async startConsuming(context: RabbitConsumeContext, runInProcessing: () => Promise<void>): Promise<QueueMessageConsumer> {
+    private async startConsuming(context: RabbitConsumeContext, runInProcessing: () => Promise<void>): Promise<RabbitQueueMessageConsumer> {
         const consumer = await RabbitQueueHandler.instance.consume(context.config.name);
         const reveivedDataList = [];
         StepReport.instance.addResultItem('Rabbit consume (received message)', 'object', reveivedDataList);
 
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        consumer.messages.subscribe(async (queueMessage: QueueMessage) => {
+        consumer.messages.subscribe(async (queueMessage: RabbitQueueMessage) => {
             const receivedData = {
                 header: RabbitConsumeExecutionUnit.createHeader(queueMessage),
                 data: new ObjectContent(queueMessage.message)
