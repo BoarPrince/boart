@@ -19,6 +19,9 @@
       "@boart/execution": [
         "execution/src/index.ts"
       ],
+      "@boart/execution.mock": [
+        "execution/src/index.mock.ts"
+      ],
       "@boart/protocol": [
         "protocol/src/index.ts"
       ],

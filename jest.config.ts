@@ -27,11 +27,9 @@ const config: Config.InitialOptions = {
         '^@boart/core$': '<rootDir>/src/packages/core/src/index.ts',
         '^@boart/core-impl$': '<rootDir>/src/packages/core-impl/src/index.ts',
         '^@boart/execution$': '<rootDir>/src/packages/execution/src/index.ts',
+        '^@boart/execution.mock$': '<rootDir>/src/packages/execution/src/index.mock.ts',
         '^@boart/protocol$': '<rootDir>/src/packages/protocol/src/index.ts',
         '^@boart/basic$': '<rootDir>/src/packages/basic/src/index.ts'
     }
-    // setupFiles: [
-    //     './setupJest.js'
-    //   ]
 };
 export default config;

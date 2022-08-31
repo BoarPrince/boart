@@ -22,7 +22,7 @@
     "declaration": true,
     "composite": true,
     "outDir": "dist",
-    "rootDir": ".",
+    "rootDir": "src/packages",
     "rootDirs": [
       "src/packages/core/src/",
       "src/packages/core-impl/src/",
@@ -40,6 +40,9 @@
       ],
       "@boart/execution": [
         "execution/src/index.ts"
+      ],
+      "@boart/execution.mock": [
+        "execution/src/index.mock.ts"
       ],
       "@boart/protocol": [
         "protocol/src/index.ts"

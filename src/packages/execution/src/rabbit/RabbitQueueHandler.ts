@@ -216,7 +216,8 @@ export class RabbitQueueHandler {
      *
      */
     async consume(queueName: string): Promise<RabbitQueueMessageConsumer> {
-        const channel = await (await this.getConnection()).createChannel();
+        const connection = await this.getConnection();
+        const channel = await connection.createChannel();
         await channel.checkQueue(queueName);
 
         let resolver = (): void => null;
@@ -233,6 +234,7 @@ export class RabbitQueueHandler {
                 if (!!errorMessage) {
                     rejecter(errorMessage);
                 } else {
+                    // start is blocked and will resolved now
                     resolver();
                 }
             } catch (error) {

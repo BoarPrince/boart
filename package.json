@@ -16,7 +16,8 @@
   "scripts": {
     "tsc:help": "tsc --help",
     "test": "jest --coverage",
-    "compile": "npm run compile -ws",
+    "compile": "tsc -p tsconfig.build.json",
+    "compile:all": "npm run compile -ws",
     "compile:core": "npm run compile -w @boart/core",
     "compile:core-impl": "npm run compile -w @boart/core-impl",
     "compile:protocol": "npm run compile -w @boart/protocol",

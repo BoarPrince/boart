@@ -2,9 +2,8 @@ import fs from 'fs';
 
 import { RabbitConsumeTableHandler } from '@boart/basic';
 import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, StepContext, TestContext } from '@boart/core';
-import { RabbitQueueHandler, RabbitQueueMessage, RabbitQueueMessageConsumer } from '@boart/execution';
+import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
 import { StepReport } from '@boart/protocol';
-import { Subject } from 'rxjs';
 
 const sut = new RabbitConsumeTableHandler();
 
@@ -32,24 +31,16 @@ jest.mock('@boart/core', () => {
     };
 });
 
-/**
- *
- */
-jest.mock('@boart/execution', () => {
+jest.mock('amqplib', () => {
     return {
-        RabbitQueueHandler: class {
-            static instance = {
-                stop: jest.fn<Promise<void>, []>(),
-                consume: jest.fn<Promise<RabbitQueueMessageConsumer>, [string]>().mockResolvedValue({} as RabbitQueueMessageConsumer)
-            };
-        }
+        connect: jest.fn().mockImplementation(() => createAmqplibMock().connect())
     };
 });
 
 /**
- *
+ * mock fs
  */
-beforeEach(() => {
+beforeAll(() => {
     (fs.readFileSync as jest.Mock).mockImplementation(() => '{}');
 });
 
@@ -69,51 +60,6 @@ beforeEach(() => {
 /**
  *
  */
-type ConsumerMock = {
-    consumer: RabbitQueueMessageConsumer;
-    messages: Subject<RabbitQueueMessage>;
-    start: {
-        resolve: () => void;
-        reject: (_: string) => void;
-    };
-    generateMessages: (messages: Subject<RabbitQueueMessage>) => void;
-};
-let consumerMock: ConsumerMock;
-
-/**
- *
- */
-beforeEach(async () => {
-    const consumer = await RabbitQueueHandler.instance.consume('queue-name');
-    const messages = new Subject<RabbitQueueMessage>();
-    consumer.messages = messages;
-
-    consumerMock = {
-        consumer,
-        messages,
-        generateMessages: () => null,
-        start: {
-            resolve: null,
-            reject: null
-        }
-    };
-
-    consumer.start = () =>
-        new Promise<void>((resolve, reject) => {
-            consumerMock.start.resolve = resolve;
-            consumerMock.start.reject = reject;
-            consumerMock.generateMessages(consumerMock.messages);
-        });
-
-    consumer.stop = () => {
-        consumerMock.start.resolve();
-        return Promise.resolve();
-    };
-});
-
-/**
- *
- */
 afterEach(() => {
     StepReport.instance.report();
 });
@@ -121,12 +67,23 @@ afterEach(() => {
 /**
  *
  */
-it('default consume', (done) => {
-    consumerMock.generateMessages = (msg) => {
-        msg.next({
-            message: 'x-x-x'
+it('default consume 2', async () => {
+    getAmqplibMock()
+        .then((mockInstance) => {
+            mockInstance.setMessageGenerator((generator) => {
+                generator.send({
+                    fields: {},
+                    content: { a: 'x' },
+                    properties: {
+                        correlationId: '',
+                        headers: {}
+                    }
+                });
+            });
+        })
+        .catch((error) => {
+            throw error;
         });
-    };
 
     const tableRows = MarkdownTableReader.convert(
         `| action       | value          |
@@ -135,8 +92,7 @@ it('default consume', (done) => {
          | description  | Consume events |`
     );
 
-    void sut.handler.process(tableRows).then(() => {
-        expect(sut.handler.executionEngine.context.execution.data?.toString()).toEqual('x-x-x');
-        done();
-    });
+    await sut.handler.process(tableRows);
+
+    expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual({ a: 'x' });
 });
