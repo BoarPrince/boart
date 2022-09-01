@@ -4,9 +4,9 @@ import { connect } from 'amqplib';
  *
  */
 export interface ConsumeMessage {
-    fields: Record<string, string | number>;
+    fields?: Record<string, string | number>;
     content: any;
-    properties: {
+    properties?: {
         correlationId: string;
         headers: Record<string, string>;
     };
@@ -60,7 +60,15 @@ const channel = {
             consumerPromise.rejecter = reject;
 
             messageGeneratorStarter({
-                send: (msg: ConsumeMessage): void => consumer(msg)
+                send: (msg: ConsumeMessage): void =>
+                    consumer({
+                        fields: {},
+                        properties: {
+                            correlationId: '',
+                            headers: {}
+                        },
+                        ...msg
+                    })
             });
         });
     })
