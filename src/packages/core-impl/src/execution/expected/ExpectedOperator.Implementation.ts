@@ -68,7 +68,7 @@ export class ExpectedOperatorImplementation {
                     };
                 } else if (typeof baseValue === 'object') {
                     return {
-                        result: Object.keys(baseValue).includes(expectedValue)
+                        result: JSON.stringify(baseValue).includes(expectedValue)
                     };
                 } else if (typeof baseValue === 'string') {
                     return {
