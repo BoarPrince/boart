@@ -11,6 +11,8 @@ import { RabbitConsumeContext } from './RabbitConsumeContext';
 export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>> {
     public description = 'rabbit message queue - main';
 
+    private receivedMessage = 0;
+
     /**
      *
      */
@@ -49,8 +51,11 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
         const reveivedDataList = [];
         StepReport.instance.addResultItem('Rabbit consume (received message)', 'object', reveivedDataList);
 
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        consumer.messages.subscribe(async (queueMessage: RabbitQueueMessage) => {
+        /**
+         *
+         * @param queueMessage message from rabbit queue
+         */
+        const messageConsumer = async (queueMessage: RabbitQueueMessage) => {
             const receivedData = {
                 header: RabbitConsumeExecutionUnit.createHeader(queueMessage),
                 data: new ObjectContent(queueMessage.message)
@@ -71,10 +76,15 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
                 new ObjectContent(queueMessage.message)
             );
 
-            if (--context.config.messageCount === 0) {
+            if (++this.receivedMessage >= context.config.messageCount) {
                 // consuming can only be stopped if the message count fits
                 await consumer.stop();
             }
+        };
+
+        consumer.messages.subscribe((queueMessage: RabbitQueueMessage) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            messageConsumer(queueMessage).catch((error) => consumer.stop(error?.message || error));
         });
         return consumer;
     }
@@ -91,10 +101,17 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
         let timeoutHandler: NodeJS.Timeout;
         try {
             const consumer = await this.startConsuming(context, executor);
-            timeoutHandler = setTimeout(() => void consumer.stop('consumer timed out'), context.config.timeout);
+            timeoutHandler = setTimeout(
+                () =>
+                    void consumer.stop(
+                        `consumer timed out after ${context.config.timeout} seconds, ${context.config.messageCount} message(s) expected, ${this.receivedMessage} message(s) received`
+                    ),
+                context.config.timeout * 1000
+            );
             await consumer.start();
         } catch (error) {
-            throw error.message || error;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            throw Error(error?.message || error);
         } finally {
             clearTimeout(timeoutHandler);
             StepReport.instance.addResultItem('Rabbit consume (header)', 'json', context.execution.header);
