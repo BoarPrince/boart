@@ -21,7 +21,10 @@ export abstract class TableHandlerBaseImpl<
         if (!this.tableHandler) {
             this.tableHandler = new TableHandler<TExecutionContext, TRowType>(
                 this.rowType(),
-                new ExecutionEngine<TExecutionContext, TRowType>(this.mainExecutionUnit(), () => this.newContext())
+                new ExecutionEngine<TExecutionContext, TRowType>(
+                    () => this.mainExecutionUnit(),
+                    () => this.newContext()
+                )
             );
             this.init(this.tableHandler);
         }

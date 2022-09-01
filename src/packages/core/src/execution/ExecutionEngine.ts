@@ -17,7 +17,7 @@ export class ExecutionEngine<
      *
      */
     constructor(
-        private readonly mainExecutionUnit: ExecutionUnit<TExecutionContext, TRowType>,
+        private readonly mainExecutionUnit: () => ExecutionUnit<TExecutionContext, TRowType>,
         private readonly executionContextGenerator: () => TExecutionContext
     ) {
         this.initContext();
@@ -37,7 +37,7 @@ export class ExecutionEngine<
         await this.executeByType(rows, this.context, TableRowType.Configuration);
         await this.executeByType(rows, this.context, TableRowType.PreProcessing);
 
-        await this.mainExecutionUnit.execute(this.context, null, () => this.executeByType(rows, this.context, TableRowType.InProcessing));
+        await this.mainExecutionUnit().execute(this.context, null, () => this.executeByType(rows, this.context, TableRowType.InProcessing));
 
         await this.executeByType(rows, this.context, TableRowType.PostProcessing);
 
