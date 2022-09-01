@@ -15,7 +15,7 @@ export class ParaValidator implements RowValidator {
             throw Error(
                 `Parameter '${row.keyPara}' of key '${row.key}' is not defined. Allowed is ${this.allowedPara
                     .map((k) => `'${k}'`)
-                    .join(' or ')}`
+                    .join('\n or ')}`
             );
         }
     }
