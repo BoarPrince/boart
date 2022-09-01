@@ -47,7 +47,7 @@ class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<
      *
      */
     constructor() {
-        super(new ExecutionUnitMock(), RestCallExecutionEngine.initializer());
+        super(() => new ExecutionUnitMock(), RestCallExecutionEngine.initializer());
     }
 
     /**
@@ -78,7 +78,7 @@ class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<
 describe('check expected:data execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
 
-    const sut1 = new ExpectedDataExecutinoUnit('data');
+    const sut1 = new ExpectedDataExecutinoUnit<DataContext>('data');
     const sut2 = new ExpectedDataExecutinoUnit();
 
     tableHandler.addRowDefinition(
@@ -249,7 +249,7 @@ describe('check expected:data execution units', () => {
 describe('check expected:header execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
 
-    const sut = new ExpectedDataExecutinoUnit('header');
+    const sut = new ExpectedDataExecutinoUnit<DataContext>('header');
 
     tableHandler.addRowDefinition(
         new RowDefinition({
@@ -347,7 +347,7 @@ describe('check expected:header execution units', () => {
 describe('check expected:transformed execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
 
-    const sut = new ExpectedDataExecutinoUnit('transformed');
+    const sut = new ExpectedDataExecutinoUnit<DataContext>('transformed');
 
     tableHandler.addRowDefinition(
         new RowDefinition({
@@ -411,7 +411,7 @@ describe('check expected:data execution units with operators', () => {
      */
     it('add operator before', async () => {
         ExpectedOperatorInitializer.instance.addOperator(new TestOperator('op1'));
-        const sut = new ExpectedDataExecutinoUnit('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         tableHandler.addRowDefinition(
             new RowDefinition({
@@ -437,7 +437,7 @@ describe('check expected:data execution units with operators', () => {
      *
      */
     it('add operator after', async () => {
-        const sut = new ExpectedDataExecutinoUnit('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         tableHandler.addRowDefinition(
             new RowDefinition({
@@ -464,7 +464,7 @@ describe('check expected:data execution units with operators', () => {
      *
      */
     it('add operator and use negate', async () => {
-        const sut = new ExpectedDataExecutinoUnit('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         tableHandler.addRowDefinition(
             new RowDefinition({
@@ -531,7 +531,7 @@ describe('check expected:data execution units with operators', () => {
 
         const operator = new TestOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         const dataToCheck = new NativeContent(1);
         tableHandler.executionEngine.context.execution.data = dataToCheck;
@@ -567,7 +567,7 @@ describe('check expected:data execution units with operators', () => {
     it('ObjectContent value parameter', async () => {
         const operator = new TestOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         const dataToCheck = new ObjectContent({ a: 'b' });
         tableHandler.executionEngine.context.execution.data = dataToCheck;
@@ -630,7 +630,7 @@ describe('check expected:data execution units with operators', () => {
         });
 
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         tableHandler.executionEngine.context.execution.data = new NullContent();
         tableHandler.addRowDefinition(
@@ -678,7 +678,7 @@ describe('check expected:data execution units with operators', () => {
         };
 
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         tableHandler.executionEngine.context.execution.data = new NullContent();
         tableHandler.addRowDefinition(

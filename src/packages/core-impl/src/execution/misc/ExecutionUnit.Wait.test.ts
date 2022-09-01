@@ -1,6 +1,6 @@
 import 'jest-extended';
 
-import { ExecutionEngine, ExecutionUnit, NullContent, RowDefinition, TableHandler, TableRowType } from '@boart/core';
+import { ExecutionEngine, ExecutionUnit, RowDefinition, TableHandler, TableRowType } from '@boart/core';
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -31,7 +31,7 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
      *
      */
     constructor(mainExecutionUnit: ExecutionUnit<DataContext, RowTypeValue<DataContext>>) {
-        super(mainExecutionUnit, ExecutionEngineMock.initializer());
+        super(() => mainExecutionUnit, ExecutionEngineMock.initializer());
     }
 
     /**
@@ -63,7 +63,6 @@ describe('check wait:before execution units', () => {
     const sut = new WaitExecutionUnit();
 
     tableHandler.addRowDefinition(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         new RowDefinition({
             key: Symbol('wait:before'),
             type: TableRowType.PreProcessing,
@@ -224,7 +223,6 @@ describe('check wait:after execution units', () => {
     const sut = new WaitExecutionUnit();
 
     tableHandler.addRowDefinition(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         new RowDefinition({
             key: Symbol('wait:after'),
             type: TableRowType.PostProcessing,

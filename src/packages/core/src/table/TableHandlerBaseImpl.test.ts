@@ -24,7 +24,9 @@ export class TestRowType<TExecutionContext extends ExecutionContext<object, obje
  *
  */
 jest.mock('./TableHandler', () => ({
-    TableHandler: class MockHandler {}
+    TableHandler: class MockHandler {
+        process = jest.fn();
+    }
 }));
 
 /**
@@ -32,7 +34,7 @@ jest.mock('./TableHandler', () => ({
  */
 class TableHandlerTestImpl extends TableHandlerBaseImpl<TestExecutionContext, TestRowType<TestExecutionContext>> {
     rowType = jest.fn();
-    mainExecutionUnit = jest.fn();
+    mainExecutionUnit = jest.fn().mockImplementation(() => jest.fn());
     newContext = jest.fn();
     addGroupRowDefinition = jest.fn();
     addRowDefinition = jest.fn();
@@ -47,7 +49,6 @@ it('use handler the first time', () => {
     const handler = sut.handler;
 
     expect(sut.rowType).toBeCalledTimes(1);
-    expect(sut.mainExecutionUnit).toBeCalledTimes(1);
 
     expect(sut.addGroupRowDefinition).toBeCalledTimes(1);
     expect(sut.addGroupRowDefinition).toBeCalledWith(handler);

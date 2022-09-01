@@ -43,7 +43,7 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
      *
      */
     constructor() {
-        super(new ExecutionUnitMock(), ExecutionEngineMock.initializer());
+        super(() => new ExecutionUnitMock(), ExecutionEngineMock.initializer());
     }
 
     /**

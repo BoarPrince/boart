@@ -140,16 +140,20 @@ describe('check execution engine', () => {
         };
 
         const mainExecutionUnit = new ExecutionUnitMock();
-        const sut = new ExecutionEngine<TestExecutionContext, any>(mainExecutionUnit, contextGenerator);
+        const sut = new ExecutionEngine<TestExecutionContext, any>(() => mainExecutionUnit, contextGenerator);
         await sut.execute([rowDataPost, rowDataConfig, rowDataPre]);
 
-        expect(await rowDataConfig.data._metaDefinition.executionUnit.execute) //
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        expect(rowDataConfig.data._metaDefinition.executionUnit.execute) //
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/unbound-method, @typescript-eslint/no-explicit-any
             .toHaveBeenCalledBefore(rowDataPre.data._metaDefinition.executionUnit.execute as any);
 
-        expect(await rowDataPre.data._metaDefinition.executionUnit.execute) //
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        expect(rowDataPre.data._metaDefinition.executionUnit.execute) //
             .toHaveBeenCalledBefore(mainExecutionUnit.execute);
 
-        expect(await mainExecutionUnit.execute) //
+        expect(mainExecutionUnit.execute) //
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/unbound-method, @typescript-eslint/no-explicit-any
             .toHaveBeenCalledBefore(rowDataPost.data._metaDefinition.executionUnit.execute as any);
     });
 });

@@ -32,7 +32,7 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
      *
      */
     constructor() {
-        super(new ExecutionUnitMock(), ExecutionEngineMock.initializer());
+        super(() => new ExecutionUnitMock(), ExecutionEngineMock.initializer());
     }
 
     /**
@@ -124,7 +124,7 @@ describe('check expected:jsonLogic execution units', () => {
                 ]
             });
         } catch (error) {
-            expect(error.message).toBe("Parameter 'fals' of key 'expected:jsonLogic' is not defined. Allowed is 'true' or 'false'");
+            expect(error.message).toBe("Parameter 'fals' of key 'expected:jsonLogic' is not defined. Allowed is 'true'\n or 'false'");
             return;
         }
 
