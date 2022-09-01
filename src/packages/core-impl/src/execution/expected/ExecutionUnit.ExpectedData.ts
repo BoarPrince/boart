@@ -1,6 +1,5 @@
-import { DataContent, DataContentHelper, ExecutionUnit, ParaType, RowValidator, SelectorType } from '@boart/core';
+import { DataContent, DataContentHelper, ExecutionContext, ExecutionUnit, ParaType, RowValidator, SelectorType } from '@boart/core';
 
-import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
 import { ParaValidator } from '../../validators/ParaValidator';
 
@@ -13,7 +12,9 @@ import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
  * | expected:data     | xxxx  |
  * | expected:data#a.b | xxxx  |
  */
-export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<object, object, object>>
+    implements ExecutionUnit<DataContext, RowTypeValue<DataContext>>
+{
     readonly parameterType = ParaType.Optional;
     readonly selectorType = SelectorType.Optional;
     readonly operators = new Array<ExpectedOperator>();
@@ -21,7 +22,7 @@ export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, Row
     /**
      *
      */
-    constructor(private executionType?: 'data' | 'header' | 'transformed') {
+    constructor(private firstLevelType?: keyof DataContext['execution'], private secondLevelType?: string) {
         ExpectedOperatorInitializer.instance.operators.subscribe((operator) => {
             this.operators.push(operator);
             this.operators.push({
@@ -67,23 +68,19 @@ export class ExpectedDataExecutinoUnit implements ExecutionUnit<DataContext, Row
      *
      */
     get description(): string {
-        return !this.executionType ? 'expected' : `expected:${this.executionType}`;
+        return !this.firstLevelType ? 'expected' : `expected:${this.firstLevelType.toString()}`;
     }
 
     /**
      *
      */
     private getDataContent(context: DataContext): DataContent {
-        switch (this.executionType) {
-            case 'header':
-                return context.execution.header;
+        const firstLevelType = this.firstLevelType?.toString() || 'data';
+        const secondLevelType = this.secondLevelType?.toString();
 
-            case 'transformed':
-                return context.execution.transformed;
-
-            default:
-                return context.execution.data;
-        }
+        return !secondLevelType //
+            ? context.execution[firstLevelType]
+            : context.execution[firstLevelType][secondLevelType];
     }
 
     /**

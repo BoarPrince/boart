@@ -1,6 +1,5 @@
-import { DataContent, DataContentHelper, ExecutionUnit, ParaType } from '@boart/core';
+import { DataContent, DataContentHelper, ExecutionContext, ExecutionUnit, ParaType } from '@boart/core';
 
-import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
 import { JsonLogic } from '../../jsonlogic/JsonLogic';
 import { ParaValidator } from '../../validators/ParaValidator';
@@ -11,36 +10,34 @@ import { ParaValidator } from '../../validators/ParaValidator';
  * | expected:jsonLogic:true  | xxxx  |
  * | expected:jsonLogic:false | xxxx  |
  */
-export class ExpectedJsonLogicExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext<object, object, object>>
+    implements ExecutionUnit<DataContext, RowTypeValue<DataContext>>
+{
     readonly parameterType = ParaType.True;
     readonly validators = [new ParaValidator(['true', 'false'])];
 
     /**
      *
      */
-    constructor(private executionType?: 'data' | 'header' | 'transformed') {}
+    constructor(private firstLevelType?: keyof DataContext['execution'], private secondLevelType?: string) {}
 
     /**
      *
      */
     get description(): string {
-        return !this.executionType ? 'expected:jsonLogic' : `expected:jsonLogic:${this.executionType}`;
+        return !this.firstLevelType ? 'expected:jsonLogic' : `expected:jsonLogic:${this.firstLevelType.toString()}`;
     }
 
     /**
      *
      */
     private getDataContent(context: DataContext): DataContent {
-        switch (this.executionType) {
-            case 'header':
-                return context.execution.header;
+        const firstLevelType = this.firstLevelType?.toString() || 'data';
+        const secondLevelType = this.secondLevelType?.toString();
 
-            case 'transformed':
-                return context.execution.transformed;
-
-            default:
-                return context.execution.data;
-        }
+        return !secondLevelType //
+            ? context.execution[firstLevelType]
+            : context.execution[firstLevelType][secondLevelType];
     }
 
     /**
