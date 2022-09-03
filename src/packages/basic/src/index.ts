@@ -24,12 +24,6 @@ function initialize(): void {
     });
 
     ValueReplacerHandler.instance.add('store', new StoreReplacer());
-
-    RabbitQueueHandler.config = {
-        hostname: EnvLoader.instance.get('rabbit_hostname'),
-        username: EnvLoader.instance.get('rabbit_username'),
-        password: EnvLoader.instance.get('rabbit_password')
-    };
 }
 
 initialize();

@@ -18,6 +18,11 @@ export interface RabbitConsumeConfigContext {
     name: string;
     timeout: number;
     messageCount: number;
+    username: string;
+    password: string;
+    hostname: string;
+    port: number;
+    vhost: string;
 }
 
 /**

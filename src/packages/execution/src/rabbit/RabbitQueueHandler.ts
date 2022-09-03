@@ -1,4 +1,4 @@
-import { Runtime } from '@boart/core';
+import { Store } from '@boart/core';
 import { connect, Connection, ConsumeMessage, Replies } from 'amqplib';
 import { Subject } from 'rxjs';
 
@@ -20,6 +20,7 @@ enum ConnectionStatus {
 export class RabbitQueueHandler {
     private connectionStatus = ConnectionStatus.Closed;
     private connection: Connection;
+    private config: RabbitConfiguration;
 
     /**
      *
@@ -31,50 +32,32 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    public static set config(config: RabbitConfiguration) {
-        globalThis._rabbitQueueConfig = { ...RabbitQueueHandler.config, ...config };
-    }
-
-    /**
-     *
-     */
-    public static get config(): RabbitConfiguration {
-        if (!globalThis._rabbitQueueConfig) {
-            globalThis._rabbitQueueConfig = {
-                hostname: '',
-                username: '',
-                password: '',
-                port: 5672,
-                vhost: '/'
-            } as RabbitConfiguration;
-        }
-        return globalThis._rabbitQueueConfig;
+    private static getInstanceKeyId(config: RabbitConfiguration): string {
+        return (
+            '#RABBITMQ#' +
+            Object.values(config)
+                .map((v) => v)
+                .join('#')
+        );
     }
 
     /*
      *
      */
-    public static get instance(): RabbitQueueHandler {
-        if (!globalThis._rabbitQueueHandlerInstance) {
-            const instance = new RabbitQueueHandler();
-            globalThis._rabbitQueueHandlerInstance = instance;
-            const subscription = Runtime.instance.testRuntime.onEnd().subscribe(() => {
-                subscription.unsubscribe();
-                delete globalThis._rabbitQueueHandlerInstance;
-            });
-        }
-        return globalThis._rabbitQueueHandlerInstance;
-    }
+    public static getInstance(config: RabbitConfiguration): RabbitQueueHandler {
+        const instanceKey = RabbitQueueHandler.getInstanceKeyId(config);
 
-    /**
-     *
-     */
-    private tryParseJSON(content: string, failedContent = null): object {
-        try {
-            return JSON.parse(content);
-        } catch (error) {
-            return failedContent || content;
+        let instance = Store.instance.testStore.get(instanceKey) as RabbitQueueHandler;
+        if (!instance) {
+            instance = new RabbitQueueHandler();
+            instance.config = config;
+            Store.instance.testStore.put(instanceKey, instance);
+            // const subscription = Runtime.instance.testRuntime.onEnd().subscribe(() => {
+            //     subscription.unsubscribe();
+            //     delete globalThis._rabbitQueueHandlerInstance;
+            // });
         }
+        return instance;
     }
 
     /**
@@ -91,9 +74,9 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async connect(config?: RabbitConfiguration): Promise<Connection> {
+    async connect(): Promise<Connection> {
         try {
-            this.connection = await connect(config || RabbitQueueHandler.config);
+            this.connection = await connect(this.config);
             this.connectionStatus = ConnectionStatus.Opened;
             return this.connection;
         } catch (error) {
