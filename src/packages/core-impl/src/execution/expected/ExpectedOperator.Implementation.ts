@@ -19,6 +19,19 @@ export class ExpectedOperatorImplementation {
     /**
      *
      */
+    static get equals(): ExpectedOperator {
+        return {
+            name: 'equals',
+            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => ({
+                result: expectedValue.toString() == value.getText(),
+                errorMessage: `\n\texpected: ${expectedValue.toString()}\n\tactual: ${value.getText()}`
+            })
+        };
+    }
+
+    /**
+     *
+     */
     static get regexp(): ExpectedOperator {
         return {
             name: 'regexp',
@@ -282,6 +295,7 @@ export class ExpectedOperatorImplementation {
      *
      */
     static addAll(): void {
+        ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.equals);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.regexp);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.startsWith);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.contains);

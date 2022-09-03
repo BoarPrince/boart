@@ -7,7 +7,7 @@ export interface ConsumeMessage {
     fields?: Record<string, string | number>;
     content: any;
     properties?: {
-        correlationId: string;
+        correlationId?: string;
         headers: Record<string, string>;
     };
 }

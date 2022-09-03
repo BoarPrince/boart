@@ -4,6 +4,7 @@ import { RowTypeValue } from '../../RowTypeValue';
 import { ParaValidator } from '../../validators/ParaValidator';
 
 import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
+import { ExpectedOperatorImplementation } from './ExpectedOperator.Implementation';
 import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
 
 /**
@@ -36,13 +37,11 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
                 }
             });
         });
+
         // add default implementation
         this.operators.push({
             name: '',
-            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => ({
-                result: expectedValue.toString() == value.getText(),
-                errorMessage: `\n\texpected: ${expectedValue.toString()}\n\tactual: ${value.getText()}`
-            })
+            check: (value, expectedValue) => ExpectedOperatorImplementation.equals.check(value, expectedValue)
         });
         // add default negate
         this.operators.push({
