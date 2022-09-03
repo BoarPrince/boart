@@ -1,4 +1,4 @@
-import { DataContent, ExecutionUnit, ObjectContent } from '@boart/core';
+import { DataContent, DataContentHelper, ExecutionUnit, ObjectContent } from '@boart/core';
 import { RowTypeValue } from '@boart/core-impl';
 import { RabbitQueueHandler, RabbitQueueMessage, RabbitQueueMessageConsumer } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
@@ -28,7 +28,7 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
     /**
      *
      */
-    private static setOrPushData(contextData: DataContent, data: ObjectContent): DataContent {
+    private static setOrPushData(contextData: DataContent, data: DataContent): DataContent {
         const value = contextData?.getValue();
         if (!value) {
             // context data is empty
@@ -39,7 +39,7 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
             return contextData;
         } else {
             // context must be converted to an array
-            return new ObjectContent([value, data.getValue()]);
+            return DataContentHelper.create([value, data.getValue()]);
         }
     }
 
@@ -47,7 +47,9 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
      *
      */
     private async startConsuming(context: RabbitConsumeContext, runInProcessing: () => Promise<void>): Promise<RabbitQueueMessageConsumer> {
-        const consumer = await RabbitQueueHandler.instance.consume(context.config.name);
+        const handlerInstance = RabbitQueueHandler.getInstance(context.config);
+        const consumer = await handlerInstance.consume(context.config.name);
+
         const reveivedDataList = [];
         StepReport.instance.addResultItem('Rabbit consume (received message)', 'object', reveivedDataList);
 
@@ -58,14 +60,19 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
         const messageConsumer = async (queueMessage: RabbitQueueMessage) => {
             const receivedData = {
                 header: RabbitConsumeExecutionUnit.createHeader(queueMessage),
-                data: new ObjectContent(queueMessage.message)
+                data: DataContentHelper.create(queueMessage.message)
             };
             reveivedDataList.push(receivedData);
 
             context.execution.filter.header = receivedData.header;
             context.execution.filter.data = receivedData.data;
 
-            await runInProcessing();
+            try {
+                await runInProcessing();
+            } catch {
+                // filter does not match
+                return;
+            }
 
             context.execution.header = RabbitConsumeExecutionUnit.setOrPushData(
                 context.execution.header,
@@ -73,7 +80,7 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
             );
             context.execution.data = RabbitConsumeExecutionUnit.setOrPushData(
                 context.execution.data,
-                new ObjectContent(queueMessage.message)
+                DataContentHelper.create(queueMessage.message)
             );
 
             if (++this.receivedMessage >= context.config.messageCount) {
