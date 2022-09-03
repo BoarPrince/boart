@@ -87,7 +87,7 @@ export class StoreWrapper {
     /**
      *
      */
-    get(key: string): DataContent {
+    get(key: string): ContentType {
         const keys = DataContentHelper.splitKeys(key);
         if (keys.length === 0) {
             throw Error('name must be defined for getting value from storage');
