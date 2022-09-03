@@ -7,7 +7,6 @@ import { RuntimeStatus } from './RuntimeStatus';
  *
  */
 export interface RuntimeResultContext {
-    id: string;
     startTime?: string;
     endTime?: string;
     duration?: string;
