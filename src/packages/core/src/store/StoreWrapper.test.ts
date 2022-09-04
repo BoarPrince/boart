@@ -97,7 +97,7 @@ describe('check store', () => {
      */
     it('get object from store (first level)', () => {
         sut.put('a', { b: 'c' });
-        expect(sut.get('a').toJSON()).toBe('{"b":"c"}');
+        expect(JSON.stringify(sut.get('a'))).toBe('{"b":"c"}');
     });
 
     /**
@@ -106,7 +106,7 @@ describe('check store', () => {
     it('get object from store (first level), plain store', () => {
         sut = new StoreWrapper({}, 'test');
         sut.put('a', { b: 'c' });
-        expect(sut.get('a').toJSON()).toBe('{"b":"c"}');
+        expect(JSON.stringify(sut.get('a'))).toBe('{"b":"c"}');
     });
 
     /**
@@ -114,7 +114,7 @@ describe('check store', () => {
      */
     it('get object from store (second level)', () => {
         sut.put('a', { b: 'c' });
-        expect(sut.get('a#b').toJSON()).toBe('"c"');
+        expect(JSON.stringify(sut.get('a#b'))).toBe('"c"');
     });
 
     /**
@@ -122,7 +122,7 @@ describe('check store', () => {
      */
     it('get object from store (string, text content)', () => {
         sut.put('a', new TextContent('c'));
-        expect(sut.get('a').toJSON()).toBe('"c"');
+        expect(JSON.stringify(sut.get('a'))).toBe('"c"');
     });
 
     /**
@@ -130,7 +130,7 @@ describe('check store', () => {
      */
     it('get object from store (string, object content)', () => {
         sut.put('a', new ObjectContent('c'));
-        expect(sut.get('a').toString()).toBe('c');
+        expect(JSON.stringify(sut.get('a'))).toBe('c');
     });
 
     /**
@@ -180,8 +180,8 @@ describe('check store', () => {
 
         sut.put('a', valB);
 
-        expect(sut.get('a#b#c').getText()).toBe('hallo');
-        expect(sut.get('a').toJSON()).toBe('{"b":{"c":"hallo"}}');
+        expect(sut.get('a#b#c').toString()).toBe('hallo');
+        expect(JSON.stringify(sut.get('a'))).toBe('{"b":{"c":"hallo"}}');
     });
 
     /**
@@ -196,8 +196,8 @@ describe('check store', () => {
 
         sut.put('a', valB);
 
-        expect(sut.get('a#b#c').getText()).toBe('1');
-        expect(sut.get('a').toJSON()).toBe('{"b":{"c":1}}');
+        expect(sut.get('a#b#c').toString()).toBe('1');
+        expect(JSON.stringify(sut.get('a'))).toBe('{"b":{"c":1}}');
     });
 
     /**
@@ -212,8 +212,8 @@ describe('check store', () => {
 
         sut.put('a', valB);
 
-        expect(sut.get('a.b.c').getText()).toBe('true');
-        expect(sut.get('a').toJSON()).toBe('{"b":{"c":true}}');
+        expect(sut.get('a.b.c').toString()).toBe('true');
+        expect(JSON.stringify(sut.get('a'))).toBe('{"b":{"c":true}}');
     });
 
     /**
@@ -228,8 +228,8 @@ describe('check store', () => {
 
         sut.put('a', valB);
 
-        expect(sut.get('a#b#c').getText()).toBe('false');
-        expect(sut.get('a').toJSON()).toBe('{"b":{"c":false}}');
+        expect(sut.get('a#b#c').toString()).toBe('false');
+        expect(JSON.stringify(sut.get('a'))).toBe('{"b":{"c":false}}');
     });
 
     /**
@@ -239,7 +239,7 @@ describe('check store', () => {
         sut.put('var.a', new NativeContent(1));
         sut.put('var.b', new NativeContent(2));
 
-        expect(sut.get('var').getText()).toBe('{"a":1,"b":2}');
+        expect(sut.get('var').toString()).toBe('{"a":1,"b":2}');
     });
 
     /**

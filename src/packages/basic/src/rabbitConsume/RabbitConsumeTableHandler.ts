@@ -30,7 +30,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
      */
     newContext = (): RabbitConsumeContext => ({
         config: {
-            name: '',
+            queue: '',
             timeout: 10,
             messageCount: 1,
             username: '',
@@ -132,9 +132,9 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
          */
         tableHandler.addRowDefinition(
             new RowDefinition({
-                key: Symbol('name'),
+                key: Symbol('queue'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>('config', 'name'),
+                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>('config', 'queue'),
                 validators: null
             })
         );
@@ -224,6 +224,6 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
      *
      */
     addGroupValidation(tableHandler: TableHandler<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>) {
-        tableHandler.addGroupValidator(new RequiredValidator([Symbol('name')]));
+        tableHandler.addGroupValidator(new RequiredValidator([Symbol('queue')]));
     }
 }

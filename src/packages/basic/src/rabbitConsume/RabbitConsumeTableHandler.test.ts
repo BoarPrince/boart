@@ -47,7 +47,7 @@ jest.mock('@boart/core', () => {
  */
 jest.mock('amqplib', () => {
     return {
-        connect: jest.fn().mockImplementation(() => createAmqplibMock().connect())
+        connect: jest.fn().mockImplementation((config) => createAmqplibMock().connect(config))
     };
 });
 
@@ -99,7 +99,7 @@ describe('default', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action       | value    |
              |--------------|----------|
-             | name         | queue    |`
+             | queue        | queue    |`
         );
 
         await sut.handler.process(tableRows);
@@ -126,7 +126,7 @@ describe('default', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action       | value          |
              |--------------|----------------|
-             | name         | queue          |
+             | queue        | queue          |
              | count        | 2              |`
         );
 
@@ -152,7 +152,7 @@ describe('default', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action       | value  |
              |--------------|--------|
-             | name         | queue  |
+             | queue        | queue  |
              | count        | 2      |
              | timeout      | 2      |`
         );
@@ -160,6 +160,55 @@ describe('default', () => {
         await expect(sut.handler.process(tableRows)).rejects.toThrowError(
             'consumer timed out after 2 seconds, 2 message(s) expected, 1 message(s) received'
         );
+    });
+
+    /**
+     *
+     */
+    it('consume one event, using credentials', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: '1' } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action       | value |
+             |--------------|-------|
+             | queue        | queue |
+             | username     | u     |
+             | password     | p     |
+             | hostname     | p     |
+             | count        | 1     |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        expect(sut.handler.executionEngine.context.config).toEqual({
+            hostname: 'p',
+            messageCount: '1',
+            password: 'p',
+            port: 5672,
+            queue: 'queue',
+            timeout: 10,
+            username: 'u',
+            vhost: '/'
+        });
+
+        const mock = await getAmqplibMock();
+
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        expect(mock.connect).toHaveBeenNthCalledWith(2, {
+            hostname: 'p',
+            password: 'p',
+            port: 5672,
+            username: 'u',
+            vhost: '/'
+        });
     });
 });
 
@@ -184,7 +233,7 @@ describe('filter', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action                   | value |
              |--------------------------|-------|
-             | name                     | queue |
+             | queue                    | queue |
              | filter:expected:contains | x     |`
         );
 
@@ -217,7 +266,7 @@ describe('filter', () => {
             `| action                            | value |
              |-----------------------------------|-------|
              | filter:expected:header#headers.h1 | x     |
-             | name                              | queue |`
+             | queue                             | queue |`
         );
 
         await sut.handler.process(tableRows);
@@ -254,7 +303,7 @@ describe('filter', () => {
             `| action                            | value |
              |-----------------------------------|-------|
              | filter:expected:header#headers.h1 | x     |
-             | name                              | queue |`
+             | queue                             | queue |`
         );
 
         await sut.handler.process(tableRows);
@@ -284,7 +333,7 @@ describe('expected', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action                   | value |
              |--------------------------|-------|
-             | name                     | queue |
+             | queue                    | queue |
              | expected:contains        | x     |`
         );
 
@@ -310,7 +359,7 @@ describe('expected', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action     | value |
              |------------|-------|
-             | name       | queue |
+             | queue      | queue |
              | expected#a | x     |`
         );
 
@@ -336,7 +385,7 @@ describe('expected', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action            | value |
              |-------------------|-------|
-             | name              | queue |
+             | queue             | queue |
              | expected:equals#a | x     |`
         );
 
@@ -362,7 +411,7 @@ describe('expected', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action         | value |
              |----------------|-------|
-             | name           | queue |
+             | queue          | queue |
              | expected:not#a | x     |`
         );
 
@@ -386,7 +435,7 @@ describe('expected', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action   | value |
              |----------|-------|
-             | name     | queue |
+             | queue    | queue |
              | expected | y     |`
         );
 
@@ -415,7 +464,7 @@ describe('transform & output', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action          | value |
              |-----------------|-------|
-             | name            | queue |
+             | queue           | queue |
              | transform:jpath | .a    |`
         );
 
@@ -441,7 +490,7 @@ describe('transform & output', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action | value   |
              |--------|---------|
-             | name   | queue   |
+             | queue  | queue   |
              | store  | testout |`
         );
 
@@ -468,7 +517,7 @@ describe('transform & output', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action          | value   |
              |-----------------|---------|
-             | name            | queue   |
+             | queue           | queue   |
              | transform:jpath | .a      |
              | store           | testout |`
         );
@@ -501,7 +550,7 @@ describe('reports', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action       | value          |
              |--------------|----------------|
-             | name         | queue          |
+             | queue        | queue          |
              | description  | Consume events |`
         );
 
@@ -522,22 +571,37 @@ describe('reports', () => {
                 input: {
                     'Rabbit consume (configuration)': {
                         description: 'Rabbit consume (configuration)',
-                        type: 'json',
-                        data: '{"name":"queue","timeout":10,"messageCount":1,"port":5672,"vhost":"/"}'
+                        type: 'object',
+                        data: {
+                            queue: 'queue',
+                            timeout: 10,
+                            messageCount: 1,
+                            port: 5672,
+                            vhost: '/'
+                        }
                     }
                 },
                 result: {
                     'Rabbit consume (received message)': {
                         description: 'Rabbit consume (received message)',
                         type: 'object',
-                        data: [{ header: '{"correlationId":"","fields":{},"properties":{},"headers":{}}', data: '{"a":"x"}' }]
+                        data: [
+                            {
+                                header: '{"correlationId":"","fields":{},"properties":{},"headers":{}}',
+                                data: '{"a":"x"}'
+                            }
+                        ]
                     },
                     'Rabbit consume (header)': {
                         description: 'Rabbit consume (header)',
-                        type: 'json',
+                        type: 'object',
                         data: '{"correlationId":"","fields":{},"properties":{},"headers":{}}'
                     },
-                    'Rabbit consume (paylaod)': { description: 'Rabbit consume (paylaod)', type: 'json', data: '{"a":"x"}' }
+                    'Rabbit consume (data)': {
+                        description: 'Rabbit consume (data)',
+                        type: 'object',
+                        data: '{"a":"x"}'
+                    }
                 }
             }),
             'utf-8',
@@ -563,7 +627,7 @@ describe('reports', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action       | value          |
              |--------------|----------------|
-             | name         | queue          |
+             | queue        | queue          |
              | description  | Consume events |`
         );
 
@@ -597,7 +661,7 @@ describe('reports', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action       | value          |
              |--------------|----------------|
-             | name         | queue          |
+             | queue        | queue          |
              | count        | 2             |
              | description  | Consume events |`
         );
@@ -619,33 +683,48 @@ describe('reports', () => {
         delete reportData.duration;
 
         expect(reportData).toStrictEqual({
-            description: 'Consume events',
-            errorMessage: 'custom error...',
             id: 'id-id-id',
+            errorMessage: 'custom error...',
+            stackTrace: 'trace.trace.trace',
+            status: 0,
+            type: 'rabbitConsume',
+            startTime: '2020-01-01T00:00:00.000Z',
+            description: 'Consume events',
             input: {
                 'Rabbit consume (configuration)': {
-                    data: '{"name":"queue","timeout":10,"messageCount":"2","port":5672,"vhost":"/"}',
                     description: 'Rabbit consume (configuration)',
-                    type: 'json'
+                    type: 'object',
+                    data: {
+                        queue: 'queue',
+                        timeout: 10,
+                        messageCount: '2',
+                        port: 5672,
+                        vhost: '/'
+                    }
                 }
             },
             result: {
-                'Rabbit consume (header)': {
-                    data: '{"correlationId":"","fields":{},"properties":{},"headers":{}}',
-                    description: 'Rabbit consume (header)',
-                    type: 'json'
-                },
-                'Rabbit consume (paylaod)': { data: '{"a":1}', description: 'Rabbit consume (paylaod)', type: 'json' },
                 'Rabbit consume (received message)': {
-                    data: [{ data: '{"a":1}', header: '{"correlationId":"","fields":{},"properties":{},"headers":{}}' }],
                     description: 'Rabbit consume (received message)',
-                    type: 'object'
+                    type: 'object',
+                    data: [
+                        {
+                            header: '{"correlationId":"","fields":{},"properties":{},"headers":{}}',
+                            data: '{"a":1}'
+                        }
+                    ]
+                },
+                'Rabbit consume (header)': {
+                    description: 'Rabbit consume (header)',
+                    type: 'object',
+                    data: '{"correlationId":"","fields":{},"properties":{},"headers":{}}'
+                },
+                'Rabbit consume (data)': {
+                    description: 'Rabbit consume (data)',
+                    type: 'object',
+                    data: '{"a":1}'
                 }
-            },
-            stackTrace: 'trace.trace.trace',
-            startTime: '2020-01-01T00:00:00.000Z',
-            status: 0,
-            type: 'rabbitConsume'
+            }
         });
     });
 });

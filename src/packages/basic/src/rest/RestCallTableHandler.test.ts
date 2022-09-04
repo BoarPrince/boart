@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { RestCallTableHandler } from '@boart/basic';
-import { MarkdownTableReader, Runtime, StepContext } from '@boart/core';
+import { DataContent, MarkdownTableReader, Runtime, StepContext } from '@boart/core';
 import { Store } from '@boart/core/src/store/Store';
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
@@ -773,7 +773,7 @@ it('default store', async () => {
 
     await sut.handler.process(tableRows);
 
-    const result = Store.instance.testStore.get('resonse');
+    const result = Store.instance.testStore.get('resonse') as DataContent;
     expect(result.getValue()).toBe('{"b":2}');
 });
 

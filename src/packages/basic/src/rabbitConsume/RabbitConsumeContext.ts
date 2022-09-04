@@ -15,7 +15,7 @@ export interface RabbitConsumeDataExecutionContext extends DataExecutionContext 
  *
  */
 export interface RabbitConsumeConfigContext {
-    name: string;
+    queue: string;
     timeout: number;
     messageCount: number;
     username: string;

@@ -150,7 +150,7 @@ describe('out store', () => {
         await sut.handler.process(tableDef);
         const result = Store.instance.testStore.get('var');
         expect(result).toBeInstanceOf(NativeContent);
-        expect(result.getValue()).toBe(1);
+        expect(result.toString()).toBe('1');
     });
 
     /**
@@ -458,9 +458,9 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get('var') as string;
 
-        expect(result.getValue()).toMatchObject({ a: 1, b: ['b', 'c'] });
+        expect(JSON.parse(result)).toMatchObject({ a: 1, b: ['b', 'c'] });
         expect(result.toString()).toBe('{"a":1,"b":["b","c"]}');
     });
 
@@ -498,9 +498,9 @@ describe('out store from payload', () => {
 
         const payload = sut.handler.executionEngine.context.preExecution.payload;
         expect(payload).toBeInstanceOf(NativeContent);
-        expect(payload?.getValue()).toBeUndefined();
+        expect(payload.getValue()).toBeUndefined();
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get('var') as NativeContent;
         expect(result).toBeInstanceOf(NativeContent);
         expect(result.getValue()).toBeUndefined();
     });
@@ -523,9 +523,9 @@ describe('out store from payload', () => {
         expect(payload).toBeInstanceOf(TextContent);
         expect(payload?.getValue()).toBe('undefined');
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get('var') as TextContent;
         expect(result).toBeInstanceOf(TextContent);
-        expect(result?.getValue()).toBe('undefined');
+        expect(result.getValue()).toBe('undefined');
     });
 
     /**
@@ -542,8 +542,8 @@ describe('out store from payload', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
-        expect(result?.getValue()).toBe('"undefined"');
+        const result = Store.instance.testStore.get('var') as NativeContent;
+        expect(result.getValue()).toBe('"undefined"');
     });
 
     /**
@@ -559,7 +559,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get('var') as NullContent;
 
         expect(result).toBeInstanceOf(NullContent);
         expect(result.getValue()).toBeNull();
@@ -578,7 +578,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get('var') as TextContent;
 
         expect(result).toBeInstanceOf(TextContent);
         expect(result.getValue()).toBe('null');
@@ -597,7 +597,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get('var') as NativeContent;
 
         expect(result).toBeInstanceOf(NativeContent);
         expect(result.getValue()).toBe(1);
@@ -616,7 +616,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get('var') as TextContent;
 
         expect(result).toBeInstanceOf(TextContent);
         expect(result.getValue()).toBe('1');
@@ -654,7 +654,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get('var') as TextContent;
 
         expect(result).toBeInstanceOf(TextContent);
         expect(result.getValue()).toBe('true');

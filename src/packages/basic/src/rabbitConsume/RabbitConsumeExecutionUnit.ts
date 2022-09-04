@@ -48,7 +48,7 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
      */
     private async startConsuming(context: RabbitConsumeContext, runInProcessing: () => Promise<void>): Promise<RabbitQueueMessageConsumer> {
         const handlerInstance = RabbitQueueHandler.getInstance(context.config);
-        const consumer = await handlerInstance.consume(context.config.name);
+        const consumer = await handlerInstance.consume(context.config.queue);
 
         const reveivedDataList = [];
         StepReport.instance.addResultItem('Rabbit consume (received message)', 'object', reveivedDataList);
@@ -103,7 +103,8 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
         //#region start consuming
         StepReport.instance.type = 'rabbitConsume';
 
-        StepReport.instance.addInputItem('Rabbit consume (configuration)', 'json', JSON.stringify(context.config));
+        const handlerConfig = { ...context.config, passwort: undefined };
+        StepReport.instance.addInputItem('Rabbit consume (configuration)', 'object', handlerConfig);
 
         let timeoutHandler: NodeJS.Timeout;
         try {
@@ -121,8 +122,8 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
             throw Error(error?.message || error);
         } finally {
             clearTimeout(timeoutHandler);
-            StepReport.instance.addResultItem('Rabbit consume (header)', 'json', context.execution.header);
-            StepReport.instance.addResultItem('Rabbit consume (paylaod)', 'json', context.execution.data);
+            StepReport.instance.addResultItem('Rabbit consume (header)', 'object', context.execution.header);
+            StepReport.instance.addResultItem('Rabbit consume (data)', 'object', context.execution.data);
         }
         //#endregion
     }
