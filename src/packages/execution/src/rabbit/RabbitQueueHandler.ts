@@ -76,7 +76,13 @@ export class RabbitQueueHandler {
      */
     async connect(): Promise<Connection> {
         try {
-            this.connection = await connect(this.config);
+            this.connection = await connect({
+                username: this.config.username,
+                password: this.config.password,
+                hostname: this.config.hostname,
+                vhost: this.config.vhost,
+                port: this.config.port
+            });
             this.connectionStatus = ConnectionStatus.Opened;
             return this.connection;
         } catch (error) {
@@ -126,7 +132,7 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async addQueue(queueName: string, isDurable = false, deleteAfterUsage = true): Promise<void> {
+    async addQueue(queueName: string, isDurable = false): Promise<void> {
         const channel = await (await this.getConnection()).createChannel();
         try {
             await channel.assertQueue(queueName, { durable: isDurable });
@@ -138,10 +144,9 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async bindQueue(queueName: string, exchangeName: string, routing: string, isDurable = false, deleteAfterUsage = true): Promise<void> {
+    async bindQueue(queueName: string, exchangeName: string, routing: string): Promise<void> {
         const channel = await (await this.getConnection()).createChannel();
         try {
-            await channel.assertQueue(queueName, { durable: isDurable });
             await channel.bindQueue(queueName, exchangeName, routing);
         } finally {
             await channel.close();
