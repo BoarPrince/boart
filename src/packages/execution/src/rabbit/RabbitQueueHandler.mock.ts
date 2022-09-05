@@ -1,4 +1,6 @@
-import { connect } from 'amqplib';
+import { Observable, Subject } from 'rxjs';
+
+import { RabbitBindConfigContext } from '../rabbitBind/RabbitBindContext';
 
 /**
  *
@@ -27,16 +29,14 @@ export type MessageGeneratorStarter = (source: MessageGenerator) => void;
 /**
  *
  */
-export interface AmqplibMock {
-    connect(): Promise<any>;
-    setMessageGenerator(generatorStarter: MessageGeneratorStarter);
-}
-
 const consumerPromise = {
     resolver: null,
     rejecter: null
 };
 
+/**
+ *
+ */
 const consumerResult = {
     consumerTag: '-done-'
 };
@@ -44,14 +44,41 @@ const consumerResult = {
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 let messageGeneratorStarter: MessageGeneratorStarter = (): void => {};
 
+/**
+ *
+ */
+const on = {
+    deleteQueue: new Subject<string>(),
+    assertQueue: new Subject<Record<string, unknown>>()
+};
+
+/**
+ *
+ */
 const channel = {
     checkQueue: jest.fn<Promise<void>, [string]>(() => Promise.resolve()),
+    bindQueue: jest.fn<Promise<void>, [string, string, string]>(() => Promise.resolve()),
+    assertQueue: jest.fn<Promise<void>, [string, object]>((queueName, options) => {
+        on.assertQueue.next({
+            queueName,
+            options
+        });
+        return Promise.resolve();
+    }),
+    deleteQueue: jest.fn<Promise<void>, [string]>((queueName) => {
+        on.deleteQueue.next(queueName);
+        return Promise.resolve();
+    }),
     cancel: jest.fn<Promise<void>, [string]>(() => {
-        consumerPromise.resolver(consumerResult);
+        if (!!consumerPromise.resolver) {
+            consumerPromise.resolver(consumerResult);
+        }
         return Promise.resolve();
     }),
     close: jest.fn<Promise<void>, []>(() => {
-        consumerPromise.resolver(consumerResult);
+        if (!!consumerPromise.resolver) {
+            consumerPromise.resolver(consumerResult);
+        }
         return Promise.resolve();
     }),
     consume: jest.fn<Promise<typeof consumerResult>, [string, (msg: ConsumeMessage) => void]>((_, consumer) => {
@@ -74,35 +101,57 @@ const channel = {
     })
 };
 
-const connection = {
-    close: jest.fn<Promise<void>, []>().mockReturnValue(Promise.resolve()),
-    createChannel: jest.fn(() => Promise.resolve(channel)),
-    createConfirmChannel: jest.fn(),
-    connection: {
-        serverProperties: null
-    },
-    setMessageGenerator: (generatorStarter: MessageGeneratorStarter) => {
-        messageGeneratorStarter = generatorStarter;
-    }
+/**
+ *
+ */
+type Observe<T> = {
+    [Property in keyof T]: Observable<T>;
 };
 
 /**
  *
  */
-export function createAmqplibMock(): AmqplibMock {
+export interface AmqplibMock {
+    connect(config: RabbitBindConfigContext): Promise<unknown>;
+    setMessageGenerator(generatorStarter: MessageGeneratorStarter);
+    channel: typeof channel;
+    // on: Observe<typeof on>;
+    on: typeof on;
+}
+
+/**
+ *
+ */
+const connection = {
+    close: jest.fn<Promise<void>, []>().mockReturnValue(Promise.resolve()),
+    createChannel: jest.fn(() => Promise.resolve(channel)),
+    createConfirmChannel: jest.fn(),
+    connect: jest.fn<Promise<any>, []>(() => {
+        return Promise.resolve(connection);
+    })
+};
+
+/**
+ *
+ */
+export function createAmqplibMock() {
     return {
-        setMessageGenerator: (generatorStarter: MessageGeneratorStarter) => {
-            messageGeneratorStarter = generatorStarter;
-        },
-        connect: jest.fn(() => {
-            return Promise.resolve(connection);
-        })
-    } as AmqplibMock;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        connect: connection.connect
+    };
 }
 
 /**
  *
  */
 export function getAmqplibMock(): Promise<AmqplibMock> {
-    return connect('') as unknown as Promise<AmqplibMock>;
+    return Promise.resolve({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        connect: connection.connect,
+        setMessageGenerator: (generatorStarter: MessageGeneratorStarter) => {
+            messageGeneratorStarter = generatorStarter;
+        },
+        channel,
+        on
+    });
 }

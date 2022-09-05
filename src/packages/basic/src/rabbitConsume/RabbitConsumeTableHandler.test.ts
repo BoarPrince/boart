@@ -202,7 +202,7 @@ describe('default', () => {
         const mock = await getAmqplibMock();
 
         // eslint-disable-next-line @typescript-eslint/unbound-method
-        expect(mock.connect).toHaveBeenNthCalledWith(2, {
+        expect(mock.connect).toHaveBeenNthCalledWith(1, {
             hostname: 'p',
             password: 'p',
             port: 5672,
