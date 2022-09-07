@@ -9,6 +9,14 @@ import { PropertySetterExecutionUnit } from './PropertySetterExecutionUnit';
 /**
  *
  */
+enum ContextType {
+    Neither = 'neither',
+    Nor = 'nor'
+}
+
+/**
+ *
+ */
 type RestCallContext = {
     method: string;
     url: string;
@@ -20,9 +28,10 @@ type RestCallContext = {
 type DataContext = ExecutionContext<
     {
         value: ContentType;
+        type: ContextType;
         restCall?: RestCallContext;
     },
-    {},
+    null,
     DataExecutionContext
 >;
 
@@ -33,9 +42,10 @@ let context: DataContext;
 beforeEach(() => {
     context = {
         config: {
-            value: null
+            value: null,
+            type: ContextType.Neither
         },
-        preExecution: {},
+        preExecution: null,
         execution: {
             data: null,
             header: null,
@@ -479,7 +489,7 @@ it('check query style (actionParaSetter), three paras', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: false,
         actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-            `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString()}`
+            `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString() || ''}`
     });
 
     const row = new RowTypePropValue<DataContext>({
@@ -920,4 +930,29 @@ it('use default type converter', () => {
     sut.execute(context, row);
     expect(context.config.value).toBeInstanceOf(ObjectContent);
     expect(context.config.value?.toString()).toEqual('x');
+});
+
+/**
+ *
+ */
+it('use enum value', () => {
+    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'type');
+
+    const row = new RowTypePropValue<DataContext>({
+        key: 'method',
+        keyPara: undefined,
+        selector: undefined,
+        values: {
+            value: 'nor'
+        },
+        values_replaced: {
+            value: 'nor'
+        },
+        _metaDefinition: null
+    });
+
+    sut.execute(context, row);
+
+    expect(context.config.type).toEqual(ContextType.Nor);
+    expect(context.config.type).toBeString();
 });

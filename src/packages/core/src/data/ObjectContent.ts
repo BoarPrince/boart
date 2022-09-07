@@ -112,6 +112,13 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
     /**
      *
      */
+    getObject(): object {
+        return this.getValue() as object;
+    }
+
+    /**
+     *
+     */
     isObject() {
         return true;
     }

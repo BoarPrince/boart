@@ -11,6 +11,7 @@ import { ContentType } from './data/ContentType';
 import { DataContent } from './data/DataContent';
 import DataContentBase from './data/DataContentBase';
 import { DataContentHelper } from './data/DataContentHelper';
+import { DataType } from './data/DataType.enum';
 import { NativeContent } from './data/NativeContent';
 import { NullContent } from './data/NullContent';
 import { ObjectContent } from './data/ObjectContent';
@@ -55,6 +56,7 @@ export {
     DataContent,
     DataContentBase,
     DataContentHelper,
+    DataType,
     EnvLoader,
     ExecutionContext,
     ExecutionEngine,

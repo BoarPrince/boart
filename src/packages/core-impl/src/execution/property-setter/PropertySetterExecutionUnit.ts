@@ -1,4 +1,4 @@
-import { ContentType, DataContentHelper, ExecutionContext, ExecutionUnit, ObjectContent, ParaType } from '@boart/core';
+import { ContentType, DataContentHelper, DataType, ExecutionContext, ExecutionUnit, ObjectContent, ParaType } from '@boart/core';
 
 import { DataExecutionContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -6,10 +6,11 @@ import { RowTypeValue } from '../../RowTypeValue';
 type Config = {
     concat?: boolean;
     delimiter?: string;
+    resultType?: DataType;
     defaultModifier?: (rowValue: ContentType) => ContentType;
     actionSelectorModifier?: (rowValue: ContentType) => ContentType;
     defaultSetter?: (value: ContentType, rowValue: ContentType, para: string) => ContentType;
-    defaultTypeConverter?: (value: ContentType) => ContentType;
+    defaultTypeConverter?: (value: ContentType, type?: DataType) => ContentType;
     actionSelectorSetter?: (value: ContentType, rowValue: ContentType, selector: string) => ContentType;
 };
 
@@ -32,12 +33,10 @@ export class PropertySetterExecutionUnit<
         this.config.concat = this.config.concat || false;
         this.config.delimiter = this.config.delimiter || '\n';
         this.config.defaultModifier = this.config.defaultModifier || ((value: ContentType) => value);
-        this.config.actionSelectorModifier = this.config.actionSelectorModifier || this.config.defaultModifier;
-
         this.config.defaultSetter = this.config.defaultSetter || this.defaultSetter.bind(this);
-        this.config.defaultTypeConverter = this.config.defaultTypeConverter || ((value: ContentType) => value);
-
+        this.config.defaultTypeConverter = this.config.defaultTypeConverter || this.defaultTypeConverter.bind(this);
         this.config.actionSelectorSetter = this.config.actionSelectorSetter || this.defaultActionSelectorSetter.bind(this);
+        this.config.actionSelectorModifier = this.config.actionSelectorModifier || this.config.defaultModifier;
     }
 
     /**
@@ -60,6 +59,28 @@ export class PropertySetterExecutionUnit<
         return this.config.concat === false //
             ? rowValue
             : `${toString(value)}${delimiter.toString()}${toString(rowValue)}`;
+    }
+
+    /**
+     *
+     */
+    private defaultTypeConverter(value: ContentType, type?: DataType): ContentType {
+        if (!type || type === DataType.isNullOrUndefined || type === DataType.Unknown) {
+            return value;
+        }
+
+        switch (type) {
+            case DataType.DataContent:
+            case DataType.Array:
+                return DataContentHelper.create(value);
+            case DataType.Object:
+                return DataContentHelper.create(value).getValue();
+            case DataType.Boolean:
+            case DataType.Number:
+                return DataContentHelper.toNative(value as string);
+            default:
+                return value.toString();
+        }
     }
 
     /**
@@ -114,6 +135,6 @@ export class PropertySetterExecutionUnit<
             result.value = this.config.actionSelectorSetter(accessor.val, result.modifiedValue, row.data.selector);
         }
 
-        accessor.val = this.config.defaultTypeConverter(result.value);
+        accessor.val = this.config.defaultTypeConverter(result.value, this.config?.resultType || DataContentHelper.getType(accessor.val));
     }
 }

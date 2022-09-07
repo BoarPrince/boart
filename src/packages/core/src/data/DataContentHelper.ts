@@ -2,6 +2,7 @@ import { ContentInstance } from './ContentInstance';
 import { ContentType } from './ContentType';
 import { DataContent } from './DataContent';
 import { DataContentObject } from './DataContentObject';
+import { DataType } from './DataType.enum';
 import { NativeContent } from './NativeContent';
 import { NullContent } from './NullContent';
 import { ObjectContent } from './ObjectContent';
@@ -59,6 +60,29 @@ export class DataContentHelper {
             typeof variable === 'number' ||
             (typeof variable === 'string' && DataContentHelper.NATIVE_REGEXP.test(variable))
         );
+    }
+
+    /**
+     *
+     */
+    static getType(variable: ContentType): DataType {
+        if (variable == null) {
+            return DataType.isNullOrUndefined;
+        } else if (Array.isArray(variable)) {
+            return DataType.Array;
+        } else if (DataContentHelper.isContent(variable)) {
+            return DataType.DataContent;
+        } else if (typeof variable === 'object') {
+            return DataType.Object;
+        } else if (typeof variable === 'boolean') {
+            return DataType.Boolean;
+        } else if (typeof variable === 'number') {
+            return DataType.Number;
+        } else if (typeof variable === 'string') {
+            return DataType.String;
+        } else {
+            return DataType.Unknown;
+        }
     }
 
     /**
