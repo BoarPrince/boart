@@ -6,7 +6,7 @@ import {
     RequiredValidator,
     RowTypeValue
 } from '@boart/core-impl';
-import { IntValidator } from '@boart/core-impl/src/validators/IntValidator';
+import { IntValidator } from '@boart/core-impl';
 
 import { RabbitConsumeContext } from './RabbitConsumeContext';
 import { RabbitConsumeExecutionUnit } from './RabbitConsumeExecutionUnit';
