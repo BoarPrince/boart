@@ -12,7 +12,7 @@ export class DependsOnValueValidator implements RowValidator {
     /**
      *
      */
-    constructor(private readonly dependOn: { key: string; value: string; column?: string }) {}
+    constructor(private readonly dependOn: { key: string; value: string; column: string }) {}
 
     /**
      *

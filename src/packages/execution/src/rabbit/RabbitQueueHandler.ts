@@ -156,11 +156,11 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async publishExhange(
+    async sendToExchange(
         exchangName: string,
         routingKey: string,
         message: string,
-        headers: Record<string, string>,
+        headers: Record<string, unknown>,
         correlationId: string,
         messageId: string
     ): Promise<boolean> {
@@ -180,10 +180,10 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async publishQueue(
+    async sendToQueue(
         queueName: string,
         message: string,
-        headers: Record<string, string>,
+        headers: Record<string, unknown>,
         correlationId: string,
         messageId: string
     ): Promise<boolean> {

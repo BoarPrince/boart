@@ -81,6 +81,8 @@ const channel = {
         }
         return Promise.resolve();
     }),
+    sendToQueue: jest.fn<Promise<void>, [string, Buffer, object]>(() => Promise.resolve()),
+    publish: jest.fn<Promise<void>, [string, Buffer, object]>(() => Promise.resolve()),
     consume: jest.fn<Promise<typeof consumerResult>, [string, (msg: ConsumeMessage) => void]>((_, consumer) => {
         return new Promise((resolve, reject) => {
             consumerPromise.resolver = resolve;
@@ -126,7 +128,7 @@ const connection = {
     close: jest.fn<Promise<void>, []>().mockReturnValue(Promise.resolve()),
     createChannel: jest.fn(() => Promise.resolve(channel)),
     createConfirmChannel: jest.fn(),
-    connect: jest.fn<Promise<any>, []>(() => {
+    connect: jest.fn<Promise<unknown>, []>(() => {
         return Promise.resolve(connection);
     })
 };
@@ -134,7 +136,7 @@ const connection = {
 /**
  *
  */
-export function createAmqplibMock() {
+export function createAmqplibMock(): { connect(config: unknown): unknown } {
     return {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         connect: connection.connect
