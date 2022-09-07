@@ -13,6 +13,8 @@ import { TransformJPathExecutionUnit } from './execution/transform/ExecutionUnit
 import { TransformJsonLogicExecutionUnit } from './execution/transform/ExecutionUnit.TransformJsonLogic';
 import { TransformResetExecutionUnit } from './execution/transform/ExecutionUnit.TransformReset';
 import { DependsOnValidator } from './validators/DependsOnValidator';
+import { DependsOnValueValidator } from './validators/DependsOnValueValidator';
+import { IntValidator } from './validators/IntValidator';
 import { ParaValidator } from './validators/ParaValidator';
 import { RequiredValidator } from './validators/RequiredValidator';
 import { UniqueValidator } from './validators/UniqueValidator';
@@ -29,10 +31,12 @@ export {
     DataContext,
     DataExecutionContext,
     DependsOnValidator,
+    DependsOnValueValidator,
     DescriptionExecutionUnit,
     ExpectedDataExecutinoUnit,
     ExpectedJsonLogicExecutionUnit,
     OutStoreExecutionUnit,
+    IntValidator,
     ParaValidator,
     PDFContent,
     PropertySetterExecutionUnit,
