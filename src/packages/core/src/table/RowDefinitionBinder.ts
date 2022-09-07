@@ -62,7 +62,9 @@ export class RowDefinitionBinder<
             )
             .map((row) => {
                 const column = row.defaultValueColumn.description;
-                const value = row.defaultValue.toString();
+                const value = (
+                    typeof row.defaultValue === 'function' ? row.defaultValue(this.rowsWithValues) : row.defaultValue
+                )?.toString();
 
                 const values = {} as Record<string, string>;
                 values[column] = value;
