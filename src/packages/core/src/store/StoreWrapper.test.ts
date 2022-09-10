@@ -97,7 +97,9 @@ describe('check store', () => {
      */
     it('get object from store (first level)', () => {
         sut.put('a', { b: 'c' });
-        expect(JSON.stringify(sut.get('a'))).toBe('{"b":"c"}');
+        const value = sut.get('a').valueOf();
+        expect(value).toStrictEqual({ b: 'c' });
+        expect(JSON.stringify(value)).toBe('{"b":"c"}');
     });
 
     /**
@@ -106,7 +108,7 @@ describe('check store', () => {
     it('get object from store (first level), plain store', () => {
         sut = new StoreWrapper({}, 'test');
         sut.put('a', { b: 'c' });
-        expect(JSON.stringify(sut.get('a'))).toBe('{"b":"c"}');
+        expect(sut.get('a').valueOf()).toStrictEqual({ b: 'c' });
     });
 
     /**
@@ -114,7 +116,7 @@ describe('check store', () => {
      */
     it('get object from store (second level)', () => {
         sut.put('a', { b: 'c' });
-        expect(JSON.stringify(sut.get('a#b'))).toBe('"c"');
+        expect(sut.get('a#b').valueOf()).toStrictEqual('c');
     });
 
     /**
@@ -122,7 +124,7 @@ describe('check store', () => {
      */
     it('get object from store (string, text content)', () => {
         sut.put('a', new TextContent('c'));
-        expect(JSON.stringify(sut.get('a'))).toBe('"c"');
+        expect(sut.get('a').valueOf()).toStrictEqual('c');
     });
 
     /**
@@ -130,7 +132,7 @@ describe('check store', () => {
      */
     it('get object from store (string, object content)', () => {
         sut.put('a', new ObjectContent('c'));
-        expect(JSON.stringify(sut.get('a'))).toBe('c');
+        expect(sut.get('a').valueOf()).toStrictEqual('c');
     });
 
     /**
@@ -181,7 +183,7 @@ describe('check store', () => {
         sut.put('a', valB);
 
         expect(sut.get('a#b#c').toString()).toBe('hallo');
-        expect(JSON.stringify(sut.get('a'))).toBe('{"b":{"c":"hallo"}}');
+        expect(sut.get('a').valueOf()).toStrictEqual({ b: { c: 'hallo' } });
     });
 
     /**
@@ -197,7 +199,7 @@ describe('check store', () => {
         sut.put('a', valB);
 
         expect(sut.get('a#b#c').toString()).toBe('1');
-        expect(JSON.stringify(sut.get('a'))).toBe('{"b":{"c":1}}');
+        expect(sut.get('a').valueOf()).toStrictEqual({ b: { c: 1 } });
     });
 
     /**
@@ -213,7 +215,7 @@ describe('check store', () => {
         sut.put('a', valB);
 
         expect(sut.get('a.b.c').toString()).toBe('true');
-        expect(JSON.stringify(sut.get('a'))).toBe('{"b":{"c":true}}');
+        expect(sut.get('a').valueOf()).toStrictEqual({ b: { c: true } });
     });
 
     /**
@@ -229,7 +231,7 @@ describe('check store', () => {
         sut.put('a', valB);
 
         expect(sut.get('a#b#c').toString()).toBe('false');
-        expect(JSON.stringify(sut.get('a'))).toBe('{"b":{"c":false}}');
+        expect(sut.get('a').valueOf()).toStrictEqual({ b: { c: false } });
     });
 
     /**

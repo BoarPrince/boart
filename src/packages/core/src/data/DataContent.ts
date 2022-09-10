@@ -1,6 +1,6 @@
-import { ContentInstance } from "./ContentInstance";
-import { ContentType } from "./ContentType";
-import { DataContentObject } from "./DataContentObject";
+import { ContentInstance } from './ContentInstance';
+import { ContentType } from './ContentType';
+import { DataContentObject } from './DataContentObject';
 
 /**
  *
@@ -14,6 +14,10 @@ export interface DataContent {
      *
      */
     getValue(): ContentType;
+    /**
+     *
+     */
+    valueOf(): object | string | number | boolean;
     /**
      *
      */

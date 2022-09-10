@@ -23,13 +23,20 @@ export default abstract class DataContentBase implements DataContent {
     /**
      *
      */
-     
+
     abstract getValue(): ContentType;
 
     /**
      *
      */
     abstract getText(): string;
+
+    /**
+     *
+     */
+    valueOf(): object | string | number | boolean {
+        return this.getValue()?.valueOf();
+    }
 
     /**
      *
