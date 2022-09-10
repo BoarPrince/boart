@@ -241,11 +241,34 @@ export class RestHttp {
      *
      */
     public async put(body: DataContent | string, bearer_token?: string | null, headers?: Record<string, string> | null): Promise<Response> {
+        return this.put_patch('put', body, bearer_token, headers);
+    }
+
+    /**
+     *
+     */
+    public async patch(
+        body: DataContent | string,
+        bearer_token?: string | null,
+        headers?: Record<string, string> | null
+    ): Promise<Response> {
+        return this.put_patch('patch', body, bearer_token, headers);
+    }
+
+    /**
+     *
+     */
+    private async put_patch(
+        method: 'put' | 'patch',
+        body: DataContent | string,
+        bearer_token?: string | null,
+        headers?: Record<string, string> | null
+    ): Promise<Response> {
         throwIfNotOk(!!body, 'there is no body defined!');
 
         const info = this.addHeaderInfo(bearer_token, headers);
         return this.fetch(this.url, {
-            method: 'PUT',
+            method: method.toUpperCase(),
             body: !!(body as DataContent).toJSON ? (body as DataContent).toJSON() : (body as string),
             headers: info.headers,
             mode: info.mode,

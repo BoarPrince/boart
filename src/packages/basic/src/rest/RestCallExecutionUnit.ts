@@ -34,7 +34,7 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
         const authentication = preContext.authentication?.toString();
         const header = this.parseJSON(preContext.header, 'header');
 
-        switch (preContext.method) {
+        switch (preContext.method.type) {
             case 'get':
                 return rest.get(authentication, header);
             case 'post':
@@ -43,6 +43,8 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
                 return rest.delete(authentication, header);
             case 'put':
                 return rest.put(preContext.payload, authentication, header);
+            case 'patch':
+                return rest.patch(preContext.payload, authentication, header);
             case 'form-data': {
                 const payload = Object.assign(preContext.formData.getValue(), this.parseJSON(preContext.payload, 'payload'));
                 return rest.form_data(payload, authentication, header);
@@ -61,7 +63,7 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
     async execute(context: RestCallContext, _row: RowTypeValue<RestCallContext>): Promise<void> {
         //#region rest call executing
         const timer = new Timer();
-        const rest = new RestHttp(UrlLoader.instance.getAbsoluteUrl(context.preExecution.url));
+        const rest = new RestHttp(UrlLoader.instance.getAbsoluteUrl(context.preExecution.method.url));
 
         StepReport.instance.type = 'restCall';
 

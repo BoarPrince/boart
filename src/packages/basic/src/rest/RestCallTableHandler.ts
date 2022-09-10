@@ -18,7 +18,7 @@ import {
     UniqueValidator
 } from '@boart/core-impl';
 
-import { RestCallContext, RestCallPreExecutionContext } from './RestCallContext';
+import { ContextMethod, RestCallContext, RestCallPreExecutionContext } from './RestCallContext';
 import { RestCallExecutionUnit } from './RestCallExecutionUnit';
 
 /**
@@ -43,8 +43,10 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
             value: ''
         },
         preExecution: {
-            method: '',
-            url: '',
+            method: {
+                type: '',
+                url: ''
+            },
             payload: null,
             query: null,
             header: new ObjectContent(),
@@ -110,7 +112,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.Optional,
                 executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'payload'),
-                validators: [new DependsOnValidator(['method:post', 'method:put'])]
+                validators: [new DependsOnValidator(['method:post', 'method:put', 'method:patch'])]
             })
         );
 
@@ -144,18 +146,14 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 key: Symbol('method'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.True,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', null, {
-                    defaultSetter: (
-                        context: RestCallPreExecutionContext,
-                        rowValue: ContentType,
-                        para: string
-                    ): RestCallPreExecutionContext => {
-                        context.url = rowValue.toString();
-                        context.method = para;
-                        return context;
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'method', {
+                    defaultSetter: (method: ContextMethod, rowValue: ContentType, para: string): ContextMethod => {
+                        method.url = rowValue.toString();
+                        method.type = para;
+                        return method;
                     }
                 }),
-                validators: [new UniqueValidator(), new ParaValidator(['post', 'get', 'delete', 'put', 'form-data', 'post-param'])]
+                validators: [new UniqueValidator(), new ParaValidator(['post', 'get', 'delete', 'put', 'patch', 'form-data', 'post-param'])]
             })
         );
     }

@@ -11,9 +11,16 @@ export interface RestCallConfigContext {
 /**
  *
  */
-export interface RestCallPreExecutionContext {
+export type ContextMethod = {
     url: string;
-    method: string;
+    type: string;
+};
+
+/**
+ *
+ */
+export interface RestCallPreExecutionContext {
+    method: ContextMethod;
     payload: DataContent | null;
     query: DataContent | null;
     param: ObjectContent;
