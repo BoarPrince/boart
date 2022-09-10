@@ -54,11 +54,16 @@ export class PropertySetterExecutionUnit<
      *
      */
     private defaultSetter(value: ContentType, rowValue: ContentType): ContentType {
-        const delimiter = !value ? '' : this.config.delimiter;
-        const toString = (val: ContentType) => val?.toString() || '';
-        return this.config.concat === false //
-            ? rowValue
-            : `${toString(value)}${delimiter.toString()}${toString(rowValue)}`;
+        if (Array.isArray(value)) {
+            value.push(rowValue);
+            return value;
+        } else {
+            const delimiter = !value ? '' : this.config.delimiter;
+            const toString = (val: ContentType) => val?.toString() || '';
+            return this.config.concat === false //
+                ? rowValue
+                : `${toString(value)}${delimiter.toString()}${toString(rowValue)}`;
+        }
     }
 
     /**
@@ -71,10 +76,10 @@ export class PropertySetterExecutionUnit<
 
         switch (type) {
             case DataType.DataContent:
-            case DataType.Array:
                 return DataContentHelper.create(value);
+            case DataType.Array:
             case DataType.Object:
-                return DataContentHelper.create(value).getValue();
+                return value;
             case DataType.Boolean:
             case DataType.Number:
                 return DataContentHelper.toNative(value as string);
