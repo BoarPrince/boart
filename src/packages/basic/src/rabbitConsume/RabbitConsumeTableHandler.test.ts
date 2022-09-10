@@ -190,7 +190,7 @@ describe('default', () => {
 
         expect(sut.handler.executionEngine.context.config).toEqual({
             hostname: 'p',
-            messageCount: '1',
+            messageCount: 1,
             password: 'p',
             port: 5672,
             queue: 'queue',
@@ -697,7 +697,7 @@ describe('reports', () => {
                     data: {
                         queue: 'queue',
                         timeout: 10,
-                        messageCount: '2',
+                        messageCount: 2,
                         port: 5672,
                         vhost: '/'
                     }

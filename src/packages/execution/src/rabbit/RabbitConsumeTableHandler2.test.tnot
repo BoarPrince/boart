@@ -84,7 +84,7 @@ let consumerMock: ConsumerMock;
  *
  */
 beforeEach(async () => {
-    const consumer = await RabbitQueueHandler.instance.consume('queue-name');
+    const consumer = await RabbitQueueHandler.getInstance(null).consume('queue-name');
     const messages = new Subject<RabbitQueueMessage>();
     consumer.messages = messages;
 

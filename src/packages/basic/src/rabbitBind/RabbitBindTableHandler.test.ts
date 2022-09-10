@@ -100,6 +100,27 @@ describe('default', () => {
     /**
      *
      */
+    it('multiple routins are possible', async () => {
+        const tableRows = MarkdownTableReader.convert(
+            `| action   | value    |
+             |----------|----------|
+             | exchange | exchange |
+             | queue    | queue    |
+             | routing  | routing1 |
+             | routing  | routing2 |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        const mock = await getAmqplibMock();
+        expect(mock.channel.bindQueue).toBeCalledTimes(2);
+        expect(mock.channel.bindQueue).toBeCalledWith('queue', 'exchange', 'routing1');
+        expect(mock.channel.bindQueue).toBeCalledWith('queue', 'exchange', 'routing2');
+    });
+
+    /**
+     *
+     */
     it('default credentials', async () => {
         const tableRows = MarkdownTableReader.convert(
             `| action   | value    |
@@ -178,8 +199,9 @@ describe('default', () => {
         );
 
         void getAmqplibMock().then((mock) => {
-            mock.on.deleteQueue.subscribe(() => {
+            const subscription = mock.on.deleteQueue.subscribe(() => {
                 expect(mock.channel.deleteQueue).toHaveBeenCalled();
+                subscription.unsubscribe();
                 done();
             });
         });

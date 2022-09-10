@@ -1,5 +1,5 @@
 import { GroupRowDefinition, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
-import { PropertySetterExecutionUnit, RequiredValidator, RowTypeValue } from '@boart/core-impl';
+import { PropertySetterExecutionUnit, RequiredValidator, RowTypeValue, UniqueValidator } from '@boart/core-impl';
 import { BoolValidator } from '@boart/core-impl/src/validators/BoolValidator';
 import { IntValidator } from '@boart/core-impl/src/validators/IntValidator';
 
@@ -27,7 +27,7 @@ export default class RabbitBindTableHandler extends TableHandlerBaseImpl<RabbitB
         config: {
             queue: '',
             exchange: '',
-            routing: '',
+            routing: [],
             queue_create: true,
             queue_delete: true,
             username: '',
@@ -114,7 +114,7 @@ export default class RabbitBindTableHandler extends TableHandlerBaseImpl<RabbitB
                 key: Symbol('queue'),
                 type: TableRowType.Configuration,
                 executionUnit: new PropertySetterExecutionUnit<RabbitBindContext, RowTypeValue<RabbitBindContext>>('config', 'queue'),
-                validators: null
+                validators: [new UniqueValidator()]
             })
         );
 
@@ -123,7 +123,7 @@ export default class RabbitBindTableHandler extends TableHandlerBaseImpl<RabbitB
                 key: Symbol('exchange'),
                 type: TableRowType.Configuration,
                 executionUnit: new PropertySetterExecutionUnit<RabbitBindContext, RowTypeValue<RabbitBindContext>>('config', 'exchange'),
-                validators: null
+                validators: [new UniqueValidator()]
             })
         );
 
@@ -144,7 +144,7 @@ export default class RabbitBindTableHandler extends TableHandlerBaseImpl<RabbitB
                     'config',
                     'queue_create'
                 ),
-                validators: [new BoolValidator('value')]
+                validators: [new BoolValidator('value'), new UniqueValidator()]
             })
         );
 

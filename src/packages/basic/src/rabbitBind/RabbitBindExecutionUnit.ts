@@ -25,7 +25,13 @@ export class RabbitBindExecutionUnit implements ExecutionUnit<RabbitBindContext,
             await handlerInstance.addQueue(context.config.queue);
         }
 
-        await handlerInstance.bindQueue(context.config.queue, context.config.exchange, context.config.routing);
+        if (!context.config.routing) {
+            await handlerInstance.bindQueue(context.config.queue, context.config.exchange);
+        } else {
+            for (const routing of context.config.routing) {
+                await handlerInstance.bindQueue(context.config.queue, context.config.exchange, routing);
+            }
+        }
 
         if (context.config.queue_delete) {
             // eslint-disable-next-line @typescript-eslint/no-misused-promises

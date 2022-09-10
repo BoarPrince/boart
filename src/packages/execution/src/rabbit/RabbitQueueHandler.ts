@@ -144,7 +144,7 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async bindQueue(queueName: string, exchangeName: string, routing: string): Promise<void> {
+    async bindQueue(queueName: string, exchangeName: string, routing = ''): Promise<void> {
         const channel = await (await this.getConnection()).createChannel();
         try {
             await channel.bindQueue(queueName, exchangeName, routing);

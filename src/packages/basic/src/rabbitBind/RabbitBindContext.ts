@@ -6,7 +6,7 @@ import { ExecutionContext } from '@boart/core/src';
 export interface RabbitBindConfigContext {
     queue: string;
     exchange: string;
-    routing: string;
+    routing: string[];
     queue_create: boolean;
     queue_delete: boolean;
     username: string;
