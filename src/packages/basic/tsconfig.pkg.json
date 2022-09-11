@@ -1,6 +1,3 @@
 {
-  "extends": "../../../tsconfig.build.json",
-  "files": [
-    "src/global.d.ts"
-  ]
+  "extends": "../../../tsconfig.build.json"
 }

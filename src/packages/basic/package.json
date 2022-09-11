@@ -1,14 +1,14 @@
 {
   "name": "@boart/basic",
-  "version": "1.0.0-276",
+  "version": "1.0.0-281",
   "author": "kem@boarprince.net",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "_compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json && npm run copy-move-files",
-    "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json",
-    "copy-move-files": "mv dist/src/** dist && rm -rf dist/src",
+    "precompile": "ts-node ../../../build.ts -r -p basic",
+    "compile": "tsc -p tsconfig.pkg.json",
+    "postcompile": "ts-node ../../../build.ts -p basic",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

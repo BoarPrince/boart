@@ -1,7 +1,7 @@
 {
   "name": "@boart/core",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-286",
+  "version": "1.0.0-295",
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"
   },
@@ -20,10 +20,9 @@
     "url": "git+https://github.com/Kemark/boart.git"
   },
   "scripts": {
-    "prepare": "npm run build",
-    "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json && npm run copy-move-files",
-    "copy-move-files": "mv dist/src/** dist && rm -rf dist/src",
-    "test": "jest --coverage",
+    "precompile": "ts-node ../../../build.ts -r -p core",
+    "compile": "tsc -p tsconfig.pkg.json",
+    "postcompile": "ts-node ../../../build.ts -p core",
     "build": "echo \"Error: no build specified\" && exit 0"
   },
   "dependencies": {

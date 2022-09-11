@@ -2,7 +2,7 @@
   "name": "@boart/protocol",
   "description": "",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-274",
+  "version": "1.0.0-279",
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts",
@@ -11,9 +11,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "compile": "rm -rf dist/* && tsc -p tsconfig.pkg.json && npm run copy-move-files",
-    "copy-move-files": "mv dist/src/** dist && rm -rf dist/src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "precompile": "ts-node ../../../build.ts -r -p protocol",
+    "compile": "tsc -p tsconfig.pkg.json",
+    "postcompile": "ts-node ../../../build.ts -p protocol",
+    "build": "echo \"Error: no build specified\" && exit 0"
   },
   "repository": {
     "type": "git",
