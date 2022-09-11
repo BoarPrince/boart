@@ -26,7 +26,7 @@ export interface RestCallPreExecutionContext {
     param: ObjectContent;
     header: ObjectContent;
     formData: ObjectContent;
-    authentication: DataContent | null;
+    authorization: DataContent | null;
 }
 
 /**

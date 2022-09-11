@@ -31,27 +31,27 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
      */
     private call(rest: RestHttp, context: RestCallContext): Promise<Response> {
         const preContext = context.preExecution;
-        const authentication = preContext.authentication?.toString();
+        const authorization = preContext.authorization?.toString();
         const header = this.parseJSON(preContext.header, 'header');
 
         switch (preContext.method.type) {
             case 'get':
-                return rest.get(authentication, header);
+                return rest.get(authorization, header);
             case 'post':
-                return rest.post(preContext.payload, authentication, header);
+                return rest.post(preContext.payload, authorization, header);
             case 'delete':
-                return rest.delete(authentication, header);
+                return rest.delete(authorization, header);
             case 'put':
-                return rest.put(preContext.payload, authentication, header);
+                return rest.put(preContext.payload, authorization, header);
             case 'patch':
-                return rest.patch(preContext.payload, authentication, header);
+                return rest.patch(preContext.payload, authorization, header);
             case 'form-data': {
                 const payload = Object.assign(preContext.formData.getValue(), this.parseJSON(preContext.payload, 'payload'));
-                return rest.form_data(payload, authentication, header);
+                return rest.form_data(payload, authorization, header);
             }
             case 'post-param': {
                 const payload = Object.assign(preContext.param.getValue(), this.parseJSON(preContext.payload, 'payload'));
-                return rest.post_param(payload, authentication, header);
+                return rest.post_param(payload, authorization, header);
             }
         }
     }

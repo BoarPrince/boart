@@ -98,7 +98,7 @@ it('default get with bearer', async () => {
         `|action          |value       |
          |----------------|------------|
          | method:get     | http://xxx |
-         | authentication | aaa        |`
+         | authorization  | aaa        |`
     );
 
     await sut.handler.process(tableRows);
@@ -126,7 +126,7 @@ it('default get with bearer from store', async () => {
         `|action          |value             |
          |----------------|------------------|
          | method:get     | http://xxx       |
-         | authentication | $\{store:bearer} |`
+         | authorization  | $\{store:bearer} |`
     );
 
     await sut.handler.process(tableRows);

@@ -52,7 +52,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
             header: new ObjectContent(),
             param: new ObjectContent(),
             formData: new ObjectContent(),
-            authentication: null
+            authorization: null
         },
         execution: {
             data: null,
@@ -128,12 +128,12 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
 
         tableHandler.addRowDefinition(
             new RowDefinition({
-                key: Symbol('authentication'),
+                key: Symbol('authorization'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
                 executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>(
                     'preExecution',
-                    'authentication'
+                    'authorization'
                 ),
                 defaultValue: '${store?:authentication}',
                 defaultValueColumn: Symbol('value'),
