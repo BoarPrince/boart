@@ -1,6 +1,7 @@
 import 'jest-extended';
 
 import { BaseRowType } from '../table/BaseRowType';
+import { RowDefinition } from '../table/RowDefinition';
 import { TableRowType } from '../table/TableRowType';
 
 import { ExecutionContext } from './ExecutionContext';
@@ -40,6 +41,7 @@ class TestExecutionContext implements ExecutionContext<TestConfig, TestContextPr
 /**
  *
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 class ExecutionUnitMock implements ExecutionUnit<TestExecutionContext, any> {
     /**
      *
@@ -70,14 +72,14 @@ describe('check execution engine', () => {
                 values_replaced: {
                     value1: null
                 },
-                _metaDefinition: {
+                _metaDefinition: new RowDefinition<TestExecutionContext, BaseRowType<TestExecutionContext>>({
                     key: null,
                     type: TableRowType.Configuration,
                     executionUnit: new ExecutionUnitMock(),
                     parameterType: null,
                     selectorType: null,
                     validators: null
-                }
+                })
             }
         };
 
@@ -92,14 +94,14 @@ describe('check execution engine', () => {
                 values_replaced: {
                     value1: null
                 },
-                _metaDefinition: {
+                _metaDefinition: new RowDefinition<TestExecutionContext, BaseRowType<TestExecutionContext>>({
                     key: null,
                     type: TableRowType.PreProcessing,
                     executionUnit: new ExecutionUnitMock(),
                     parameterType: null,
                     selectorType: null,
                     validators: null
-                }
+                })
             }
         };
 
@@ -114,14 +116,14 @@ describe('check execution engine', () => {
                 values_replaced: {
                     value1: null
                 },
-                _metaDefinition: {
+                _metaDefinition: new RowDefinition<TestExecutionContext, BaseRowType<TestExecutionContext>>({
                     key: null,
                     type: TableRowType.PostProcessing,
                     executionUnit: new ExecutionUnitMock(),
                     parameterType: null,
                     selectorType: null,
                     validators: null
-                }
+                })
             }
         };
 

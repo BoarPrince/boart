@@ -1,5 +1,5 @@
- 
 import { AnyBaseRowType } from '../table/BaseRowType';
+import { RowDefinition } from '../table/RowDefinition';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
 
@@ -28,14 +28,14 @@ describe('check row validators', () => {
                     values_replaced: {
                         value1: 'a'
                     },
-                    _metaDefinition: {
+                    _metaDefinition: new RowDefinition({
                         key: null,
                         type: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         selectorType: SelectorType.Optional,
                         validators: null
-                    }
+                    })
                 }
             };
 
@@ -65,14 +65,14 @@ describe('check row validators', () => {
                     values_replaced: {
                         value1: 'a'
                     },
-                    _metaDefinition: {
+                    _metaDefinition: new RowDefinition({
                         key: null,
                         type: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         selectorType: SelectorType.Optional,
                         validators: [validator]
-                    }
+                    })
                 }
             };
 
@@ -109,14 +109,14 @@ describe('check row validators', () => {
                     values_replaced: {
                         value1: 'a'
                     },
-                    _metaDefinition: {
+                    _metaDefinition: new RowDefinition({
                         key: null,
                         type: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         selectorType: SelectorType.Optional,
                         validators: null
-                    }
+                    })
                 }
             };
 

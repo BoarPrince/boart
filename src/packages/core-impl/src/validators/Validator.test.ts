@@ -1,4 +1,4 @@
-import { GroupValidator, ParaType, RowValidator } from '@boart/core';
+import { GroupValidator, ParaType, RowDefinition, RowValidator } from '@boart/core';
 import { ValidationHandler } from '@boart/core/src/Validators/ValidationHandler';
 import { AnyBaseRowType } from '@boart/core/src/table/BaseRowType';
 
@@ -43,14 +43,14 @@ describe('check row validators', () => {
                     values_replaced: {
                         value1: 'a'
                     },
-                    _metaDefinition: {
+                    _metaDefinition: new RowDefinition({
                         key: null,
                         type: null,
                         selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: null
-                    }
+                    })
                 }
             };
 
@@ -96,14 +96,14 @@ describe('check row validators', () => {
                     values_replaced: {
                         value1: value
                     },
-                    _metaDefinition: {
+                    _metaDefinition: new RowDefinition({
                         key: null,
                         type: null,
                         selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: [new BoolValidator('value1'), new DoNotingValidator()]
-                    }
+                    })
                 }
             };
 
@@ -138,14 +138,14 @@ describe('check row validators', () => {
                         values_replaced: {
                             value1: value
                         },
-                        _metaDefinition: {
+                        _metaDefinition: new RowDefinition({
                             key: null,
                             type: null,
                             selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: [new BoolValidator(columnName)]
-                        }
+                        })
                     }
                 };
 
@@ -187,14 +187,14 @@ describe('check row validators', () => {
                     values_replaced: {
                         value1: value
                     },
-                    _metaDefinition: {
+                    _metaDefinition: new RowDefinition({
                         key: null,
                         type: null,
                         selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: [new IntValidator('value1')]
-                    }
+                    })
                 }
             };
 
@@ -229,14 +229,14 @@ describe('check row validators', () => {
                         values_replaced: {
                             value1: value
                         },
-                        _metaDefinition: {
+                        _metaDefinition: new RowDefinition({
                             key: null,
                             type: null,
                             selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: [new IntValidator(columnName)]
-                        }
+                        })
                     }
                 };
 
@@ -272,14 +272,14 @@ describe('check row validators', () => {
                     values_replaced: {
                         value1: null
                     },
-                    _metaDefinition: {
+                    _metaDefinition: new RowDefinition({
                         key: Symbol('a:a'),
                         type: null,
                         selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: [new DependsOnValidator(['b:b'])]
-                    }
+                    })
                 }
             };
 
@@ -294,14 +294,14 @@ describe('check row validators', () => {
                     values_replaced: {
                         value1: null
                     },
-                    _metaDefinition: {
+                    _metaDefinition: new RowDefinition({
                         key: null,
                         type: null,
                         selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: null
-                    }
+                    })
                 }
             };
 
@@ -324,14 +324,14 @@ describe('check row validators', () => {
                     values_replaced: {
                         value1: null
                     },
-                    _metaDefinition: {
+                    _metaDefinition: new RowDefinition({
                         key: Symbol('a:a'),
                         type: null,
                         selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: [new DependsOnValidator(['c:c'])]
-                    }
+                    })
                 }
             };
 
@@ -346,14 +346,14 @@ describe('check row validators', () => {
                     values_replaced: {
                         value1: null
                     },
-                    _metaDefinition: {
+                    _metaDefinition: new RowDefinition({
                         key: null,
                         type: null,
                         selectorType: null,
                         executionUnit: null,
                         parameterType: ParaType.False,
                         validators: null
-                    }
+                    })
                 }
             };
 
@@ -404,14 +404,14 @@ describe('check row validators', () => {
                         values_replaced: {
                             value1: null
                         },
-                        _metaDefinition: {
+                        _metaDefinition: new RowDefinition({
                             key: null,
                             type: null,
                             selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
-                        }
+                        })
                     }
                 },
                 {
@@ -425,14 +425,14 @@ describe('check row validators', () => {
                         values_replaced: {
                             value1: null
                         },
-                        _metaDefinition: {
+                        _metaDefinition: new RowDefinition({
                             key: null,
                             type: null,
                             selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
-                        }
+                        })
                     }
                 },
                 {
@@ -446,14 +446,14 @@ describe('check row validators', () => {
                         values_replaced: {
                             value1: null
                         },
-                        _metaDefinition: {
+                        _metaDefinition: new RowDefinition({
                             key: null,
                             type: null,
                             selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
-                        }
+                        })
                     }
                 }
             ];
@@ -509,14 +509,14 @@ describe('check row validators', () => {
                         values_replaced: {
                             value1: null
                         },
-                        _metaDefinition: {
+                        _metaDefinition: new RowDefinition({
                             key: null,
                             type: null,
                             selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
-                        }
+                        })
                     }
                 },
                 {
@@ -530,14 +530,14 @@ describe('check row validators', () => {
                         values_replaced: {
                             value1: null
                         },
-                        _metaDefinition: {
+                        _metaDefinition: new RowDefinition({
                             key: null,
                             type: null,
                             selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
-                        }
+                        })
                     }
                 },
                 {
@@ -551,14 +551,14 @@ describe('check row validators', () => {
                         values_replaced: {
                             value1: null
                         },
-                        _metaDefinition: {
+                        _metaDefinition: new RowDefinition({
                             key: null,
                             type: null,
                             selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: []
-                        }
+                        })
                     }
                 }
             ];
@@ -602,14 +602,14 @@ describe('check row validators', () => {
                         values_replaced: {
                             value1: null
                         },
-                        _metaDefinition: {
+                        _metaDefinition: new RowDefinition({
                             key: null,
                             type: null,
                             selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: [new UniqueValidator()]
-                        }
+                        })
                     }
                 },
                 {
@@ -623,14 +623,14 @@ describe('check row validators', () => {
                         values_replaced: {
                             value1: null
                         },
-                        _metaDefinition: {
+                        _metaDefinition: new RowDefinition({
                             key: null,
                             type: null,
                             selectorType: null,
                             executionUnit: null,
                             parameterType: ParaType.False,
                             validators: [new UniqueValidator()]
-                        }
+                        })
                     }
                 }
             ];
@@ -678,14 +678,14 @@ describe('check row validators', () => {
                             values_replaced: {
                                 value1: null
                             },
-                            _metaDefinition: {
+                            _metaDefinition: new RowDefinition({
                                 key: null,
                                 type: null,
                                 selectorType: null,
                                 executionUnit: null,
                                 parameterType: null,
                                 validators: [new ParaValidator(allowedParas)]
-                            }
+                            })
                         }
                     }
                 ];
@@ -740,14 +740,14 @@ describe('check row validators', () => {
                                 value1,
                                 value2
                             },
-                            _metaDefinition: {
+                            _metaDefinition: new RowDefinition({
                                 key: Symbol('xxx'),
                                 type: null,
                                 selectorType: null,
                                 executionUnit: null,
                                 parameterType: ParaType.False,
                                 validators: [new ValueRequiredValidator(requiredColumn)]
-                            }
+                            })
                         }
                     }
                 ];

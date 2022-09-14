@@ -1,6 +1,5 @@
 import { ContentType, DataContentHelper, DataType, ExecutionContext, ExecutionUnit, ObjectContent, ParaType } from '@boart/core';
 
-import { DataExecutionContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
 
 type Config = {
@@ -18,7 +17,7 @@ type Config = {
  *
  */
 export class PropertySetterExecutionUnit<
-    TExecutionContext extends ExecutionContext<object, object, DataExecutionContext>,
+    TExecutionContext extends ExecutionContext<object, object, object>,
     TRowType extends RowTypeValue<TExecutionContext>
 > implements ExecutionUnit<TExecutionContext, TRowType>
 {
