@@ -5,11 +5,11 @@ import {
     NullContent,
     ObjectContent,
     RowDefinition,
+    Store,
     StoreWrapper,
     TableHandler,
     TableRowType
 } from '@boart/core';
-import { Store } from '@boart/core/src/store/Store';
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';

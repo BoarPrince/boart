@@ -1,5 +1,5 @@
+import { Runtime, ValueReplacerHandler } from '@boart/core';
 import { StoreReplacer } from '@boart/core-impl';
-import { Runtime, ValueReplacerHandler } from '@boart/core/src';
 import { LocalReport, ProtocolGenerator, StepReport, TestReport } from '@boart/protocol';
 
 import BasicDataGroupDefinition from './basicGroup/BasicDataGroupDefinition';

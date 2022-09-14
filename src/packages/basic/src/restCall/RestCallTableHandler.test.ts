@@ -1,8 +1,7 @@
 import fs from 'fs';
 
 import { RestCallTableHandler } from '@boart/basic';
-import { DataContent, MarkdownTableReader, Runtime, StepContext } from '@boart/core';
-import { Store } from '@boart/core/src/store/Store';
+import { DataContent, MarkdownTableReader, Runtime, StepContext, Store } from '@boart/core';
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
 

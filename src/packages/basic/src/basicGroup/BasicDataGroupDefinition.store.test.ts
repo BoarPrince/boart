@@ -9,8 +9,8 @@ import {
     TableHandlerBaseImpl,
     TextContent
 } from '@boart/core';
+import { Store } from '@boart/core';
 import { DataContext, RowTypeValue } from '@boart/core-impl';
-import { Store } from '@boart/core/src/store/Store';
 
 import BasicGroupDefinition from './BasicDataGroupDefinition';
 

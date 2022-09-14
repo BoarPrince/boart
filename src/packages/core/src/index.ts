@@ -1,5 +1,6 @@
 import { GroupValidator } from './Validators/GroupValidator';
 import { RowValidator } from './Validators/RowValidator';
+import { ValidationHandler } from './Validators/ValidationHandler';
 import { ArraySubject } from './common/ArraySubject';
 import { EnvLoader } from './common/EnvLoader';
 import { JsonHelper } from './common/JsonHelper';
@@ -77,6 +78,7 @@ export {
     RowValidator,
     Runtime,
     RuntimeContext,
+    RuntimePriority,
     RuntimeResultContext,
     RuntimeStatus,
     ScopedType,
@@ -94,8 +96,8 @@ export {
     TextLanguageHandler,
     Timer,
     UrlLoader,
+    ValidationHandler,
     value,
     ValueReplacer,
-    ValueReplacerHandler,
-    RuntimePriority
+    ValueReplacerHandler
 };

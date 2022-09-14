@@ -2,8 +2,7 @@ import fs from 'fs';
 import { URLSearchParams } from 'url';
 
 import { RestAuthorizeTableHandler } from '@boart/basic';
-import { MarkdownTableReader, Runtime, StepContext } from '@boart/core';
-import { Store } from '@boart/core/src/store/Store';
+import { MarkdownTableReader, Runtime, StepContext, Store } from '@boart/core';
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
 

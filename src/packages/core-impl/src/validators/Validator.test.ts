@@ -1,6 +1,4 @@
-import { GroupValidator, ParaType, RowDefinition, RowValidator } from '@boart/core';
-import { ValidationHandler } from '@boart/core/src/Validators/ValidationHandler';
-import { AnyBaseRowType } from '@boart/core/src/table/BaseRowType';
+import { BaseRowType, GroupValidator, ParaType, RowDefinition, RowValidator, ValidationHandler } from '@boart/core';
 
 import { BoolValidator } from './BoolValidator';
 import { DependsOnValidator } from './DependsOnValidator';
@@ -32,7 +30,8 @@ describe('check row validators', () => {
          */
         it('check if row validator list is null, no error shall occur', () => {
             const sut = new ValidationHandler(null);
-            const rowData: AnyBaseRowType = {
+
+            const rowData: BaseRowType<null> = {
                 data: {
                     key: 'a:a',
                     keyPara: null,
@@ -85,7 +84,7 @@ describe('check row validators', () => {
             ['FALSE', false]
         ])(`check bool validator (value: '%s', expected: '%s'`, (value: string | boolean, exptectedValue: boolean) => {
             const sut = new ValidationHandler(null);
-            const rowData: AnyBaseRowType = {
+            const rowData: BaseRowType<null> = {
                 data: {
                     key: 'a:a',
                     keyPara: null,
@@ -127,7 +126,7 @@ describe('check row validators', () => {
             `check bool validator failure handling (value: '%s', column name: '%s', expected message: '%s'`,
             (value: string | number, columnName: string, expectedMessage: string) => {
                 const sut = new ValidationHandler(null);
-                const rowData: AnyBaseRowType = {
+                const rowData: BaseRowType<null> = {
                     data: {
                         key: 'a:a',
                         keyPara: null,
@@ -176,7 +175,7 @@ describe('check row validators', () => {
             ['0', 0]
         ])(`check int validator (value: '%s', expected: '%s'`, (value: string | number, exptectedValue: number) => {
             const sut = new ValidationHandler(null);
-            const rowData: AnyBaseRowType = {
+            const rowData: BaseRowType<null> = {
                 data: {
                     key: 'a:a',
                     keyPara: null,
@@ -218,7 +217,7 @@ describe('check row validators', () => {
             `check int validator failure handling (value: '%s', column name: '%s', expected message: '%s'`,
             (value: string, columnName: string, expectedMessage: string) => {
                 const sut = new ValidationHandler(null);
-                const rowData: AnyBaseRowType = {
+                const rowData: BaseRowType<null> = {
                     data: {
                         key: 'a:a',
                         keyPara: null,
@@ -261,7 +260,7 @@ describe('check row validators', () => {
          */
         it('check happy path', () => {
             const sut = new ValidationHandler(null);
-            const rowData: AnyBaseRowType = {
+            const rowData: BaseRowType<null> = {
                 data: {
                     key: 'a:a',
                     keyPara: null,
@@ -283,7 +282,7 @@ describe('check row validators', () => {
                 }
             };
 
-            const dependentRow: AnyBaseRowType = {
+            const dependentRow: BaseRowType<null> = {
                 data: {
                     key: 'b:b',
                     keyPara: null,
@@ -313,7 +312,7 @@ describe('check row validators', () => {
          */
         it('check failure', () => {
             const sut = new ValidationHandler(null);
-            const rowData: AnyBaseRowType = {
+            const rowData: BaseRowType<null> = {
                 data: {
                     key: 'a:a',
                     keyPara: null,
@@ -335,7 +334,7 @@ describe('check row validators', () => {
                 }
             };
 
-            const dependentRow: AnyBaseRowType = {
+            const dependentRow: BaseRowType<null> = {
                 data: {
                     key: 'b:b',
                     keyPara: null,
@@ -392,7 +391,7 @@ describe('check row validators', () => {
             [[Symbol('a:4'), Symbol('a:5')], `One of the following keys 'a:4, a:5' must exists, but no one exists`] //
         ])(`check xor happy path (keys: '%s', error message: 's'`, (keys: symbol[], errorMessage: string) => {
             const sut = new ValidationHandler([new XORValidator(keys)]);
-            const rowData: AnyBaseRowType[] = [
+            const rowData: BaseRowType<null>[] = [
                 {
                     data: {
                         key: 'a:1',
@@ -497,7 +496,7 @@ describe('check row validators', () => {
             [[Symbol('a:4'), Symbol('a:5')], `Key 'a:4' is required, but it's missing`] //
         ])(`check required happy path (keys: '%s', error message: 's'`, (keys: symbol[], errorMessage: string) => {
             const sut = new ValidationHandler([new RequiredValidator(keys)]);
-            const rowData: AnyBaseRowType[] = [
+            const rowData: BaseRowType<null>[] = [
                 {
                     data: {
                         key: 'a:1',
@@ -590,7 +589,7 @@ describe('check row validators', () => {
             [Symbol('a:1'), Symbol('a:1'), `Validator: 'UniqueValidator' => key 'a:1' occurs 2 times`]
         ])(`check xor happy path (keys: '%s', error message: 's'`, (key1: symbol, key2: symbol, errorMessage: string) => {
             const sut = new ValidationHandler(null);
-            const rowData: AnyBaseRowType[] = [
+            const rowData: BaseRowType<null>[] = [
                 {
                     data: {
                         key: key1.description,
@@ -666,7 +665,7 @@ describe('check row validators', () => {
             `check para validation (metaKey: '%s', key: '%s', allowed Paras: '%s', error message: '%s'`,
             (key: symbol, para: string, allowedParas: string[], errorMessage: string) => {
                 const sut = new ValidationHandler(null);
-                const rowData: AnyBaseRowType[] = [
+                const rowData: BaseRowType<null>[] = [
                     {
                         data: {
                             key: key.description,
@@ -726,7 +725,7 @@ describe('check row validators', () => {
             `check required value (column: '%s', value: '%s', error message: 's'`,
             (requiredColumn: string, value1: string, value2: string, errorMessage: string) => {
                 const sut = new ValidationHandler(null);
-                const rowData: AnyBaseRowType[] = [
+                const rowData: BaseRowType<null>[] = [
                     {
                         data: {
                             key: 'xxx',

@@ -1,4 +1,4 @@
-import { ExecutionContext } from '@boart/core/src';
+import { ExecutionContext } from '@boart/core';
 
 /**
  *
