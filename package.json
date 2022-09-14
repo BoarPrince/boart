@@ -16,8 +16,7 @@
   "scripts": {
     "tsc:help": "tsc --help",
     "test": "jest --coverage",
-    "compile": "tsc -p tsconfig.build.json",
-    "compile:all": "npm run compile -ws",
+    "compile": "npm run compile -ws",
     "compile:core": "npm run compile -w @boart/core",
     "compile:core-impl": "npm run compile -w @boart/core-impl",
     "compile:protocol": "npm run compile -w @boart/protocol",
@@ -30,11 +29,13 @@
     "publish": "npm publish -ws",
     "publish:core": "npm version prerelease -w @boart/core && npm publish -w @boart/core",
     "publish:execution": "npm version prerelease -w @boart/execution && npm publish -w @boart/execution",
+    "publish:start-server": "sinopia",
     "compile:and:publish": "npm run compile && npm install && npm run publish"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.30",
+    "@types/yargs": "^17.0.12",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
     "eslint": "^8.7.0",
@@ -51,6 +52,8 @@
     "prettier": ">=2.0.0",
     "ts-jest": "^28.0.7",
     "ts-node": "^10.9.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "yargs": "^17.5.1",
+    "sinopia": "^1.4.0"
   }
 }
