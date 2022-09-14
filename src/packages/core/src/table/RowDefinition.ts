@@ -11,6 +11,14 @@ import { TableRowType } from './TableRowType';
 /**
  *
  */
+type DefaultValue<TExecutionContext extends ExecutionContext<object, object, object>, TRowType extends BaseRowType<TExecutionContext>> = {
+    column: keyof TRowType;
+    value: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
+};
+
+/**
+ *
+ */
 interface RowDefinitionPara<
     TExecutionContext extends ExecutionContext<object, object, object>,
     TRowType extends BaseRowType<TExecutionContext>
@@ -19,6 +27,7 @@ interface RowDefinitionPara<
     readonly type: TableRowType;
     readonly defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
     readonly defaultValueColumn?: symbol;
+    readonly default?: DefaultValue<TExecutionContext, TRowType>;
     readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType> | null;
     readonly parameterType?: ParaType;
     readonly selectorType?: SelectorType;
@@ -34,8 +43,12 @@ export class RowDefinition<
 > {
     public readonly key: symbol;
     public readonly type: TableRowType;
-    public readonly defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
-    public readonly defaultValueColumn?: symbol;
+    public defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
+    public defaultValueColumn?: symbol;
+    public set default(d: DefaultValue<TExecutionContext, TRowType>) {
+        this.defaultValue = d?.value;
+        this.defaultValueColumn = !d ? undefined : Symbol(d.column as string);
+    }
     public readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
     public readonly parameterType: ParaType = ParaType.False;
     public readonly selectorType: SelectorType = SelectorType.False;
@@ -47,6 +60,7 @@ export class RowDefinition<
     constructor(value: RowDefinitionPara<TExecutionContext, TRowType>) {
         this.key = value.key || Symbol(value.executionUnit?.description);
         this.type = value.type;
+        this.default = value.default;
         this.defaultValue = value.defaultValue;
         this.defaultValueColumn = value.defaultValueColumn || this.defaultValueColumn;
         this.executionUnit = value.executionUnit;
