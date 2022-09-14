@@ -111,8 +111,9 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 key: Symbol('payload'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.Optional,
+                selectorType: SelectorType.Optional,
                 executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'payload'),
-                validators: [new DependsOnValidator(['method:post', 'method:put', 'method:patch'])]
+                validators: [new DependsOnValidator(['method:post', 'method:put', 'method:patch', 'method:post-param', 'method:form-data'])]
             })
         );
 
@@ -135,7 +136,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                     'preExecution',
                     'authorization'
                 ),
-                defaultValue: '${store?:authentication}',
+                defaultValue: '${store?:authorization}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
             })

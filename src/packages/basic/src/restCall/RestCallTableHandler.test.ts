@@ -147,7 +147,7 @@ it('default get with bearer from store', async () => {
  *
  */
 it('default get with bearer from default', async () => {
-    Store.instance.localStore.put('authentication', 'bbb');
+    Store.instance.localStore.put('authorization', 'bbb');
     fetchMock.doMock(JSON.stringify({ b: 2 }));
     const tableRows = MarkdownTableReader.convert(
         `|action          |value       |
@@ -322,7 +322,7 @@ it('default put with additional header', async () => {
         [
             'http://xxx',
             {
-                body: '{"a":1}',
+                body: '{"a": 1}',
                 headers: { 'Content-Type': 'application/json', c: 1 },
                 method: 'PUT',
                 mode: 'no-cors',
@@ -349,7 +349,7 @@ it('default put with additional structured header', async () => {
         [
             'http://xxx',
             {
-                body: '{"a":1}',
+                body: '{"a": 1}',
                 headers: { 'Content-Type': 'application/json', c: 1 },
                 method: 'PUT',
                 mode: 'no-cors',
@@ -377,7 +377,7 @@ it('default put with additional structured header and object header', async () =
         [
             'http://xxx',
             {
-                body: '{"a":1}',
+                body: '{"a": 1}',
                 headers: { 'Content-Type': 'application/json', c: 1, d: 2 },
                 method: 'PUT',
                 mode: 'no-cors',
@@ -404,7 +404,7 @@ it('default put with overridden header', async () => {
         [
             'http://xxx',
             {
-                body: '{"a":1}',
+                body: '{"a": 1}',
                 headers: { 'Content-Type': 'x' },
                 method: 'PUT',
                 mode: 'no-cors',

@@ -380,7 +380,7 @@ describe('error handling', () => {
         );
 
         expect(() => sut.handler.process(tableRows)).toThrowError(
-            "key 'exchange' depends on key: 'type', value: 'exchange', but it does not exist!"
+            "key 'exchange' depends on key: 'type -> value:exchange', but it does not exist!"
         );
     });
 
@@ -397,7 +397,7 @@ describe('error handling', () => {
         );
 
         expect(() => sut.handler.process(tableRows)).toThrowError(
-            "key 'queue' depends on key: 'type', value: 'queue', but it does not exist!"
+            "key 'queue' depends on key: 'type -> value:queue', but it does not exist!"
         );
     });
 
@@ -407,8 +407,8 @@ describe('error handling', () => {
     it('payload must be defined', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action    | value    |
-         |-----------|----------|
-         | queue     | queue    |`
+             |-----------|----------|
+             | queue     | queue    |`
         );
 
         expect(() => sut.handler.process(tableRows)).toThrowError("Key 'payload' is required, but it's missing");
@@ -420,13 +420,13 @@ describe('error handling', () => {
     it('routingKey can only be used with type => exchange', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action    | value |
-         |-----------|-------|
-         | queue     | queue |
-         | routing   | xxx   |`
+             |-----------|-------|
+             | queue     | queue |
+             | routing   | xxx   |`
         );
 
         expect(() => sut.handler.process(tableRows)).toThrowError(
-            "key 'routing' depends on key: 'type', value: 'exchange', but it does not exist!"
+            "key 'routing' depends on key: 'type -> value:exchange', but it does not exist!"
         );
     });
 
