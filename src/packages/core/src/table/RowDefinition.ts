@@ -68,4 +68,11 @@ export class RowDefinition<
         this.selectorType = value.executionUnit?.selectorType || value.selectorType || this.selectorType;
         this.validators = (value.executionUnit?.validators || []).concat(value.validators || []);
     }
+
+    /**
+     *
+     */
+    clone(): RowDefinition<TExecutionContext, TRowType> {
+        return new RowDefinition(this);
+    }
 }

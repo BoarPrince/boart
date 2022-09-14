@@ -20,7 +20,7 @@ export class TableHandler<
 > {
     private readonly columnMetaInfo: MetaInfo;
 
-    private readonly rowDefinitions = new Array<RowDefinition<TExecutionContext, TRowType>>();
+    private readonly rowDefinitions = new Map<string, RowDefinition<TExecutionContext, TRowType>>();
     private readonly groupValidations = new Array<TypedGroupValidator<TExecutionContext, TRowType>>();
 
     /**
@@ -37,8 +37,30 @@ export class TableHandler<
      *
      */
     addRowDefinition(definition: RowDefinition<TExecutionContext, TRowType>): this {
-        this.rowDefinitions.push(definition);
+        this.rowDefinitions.set(definition.key.description, definition.clone());
         return this;
+    }
+
+    /**
+     *
+     */
+    removeRowDefinition(key: string): this {
+        if (!this.rowDefinitions.has(key)) {
+            throw Error(`key: '{key}' cannot removed, because it does not exists`);
+        }
+        this.rowDefinitions.delete(key);
+        return this;
+    }
+
+    /**
+     *
+     */
+    getRowDefinition(key: string): RowDefinition<TExecutionContext, TRowType> {
+        if (!this.rowDefinitions.has(key)) {
+            throw Error(`key: '{key}' cannot retrieved, because it does not exists`);
+        }
+
+        return this.rowDefinitions.get(key);
     }
 
     /**
@@ -71,7 +93,7 @@ export class TableHandler<
         const definitionBinder = new RowDefinitionBinder<TExecutionContext, TRowType>(
             this.columnMetaInfo.tableName,
             this.columnMetaInfo,
-            this.rowDefinitions,
+            Array.from(this.rowDefinitions.values()),
             valueRows
         );
         const rows = definitionBinder.bind(this.rowType);
