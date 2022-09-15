@@ -12,5 +12,5 @@ export interface LocalReportItem {
     stackTrace: string;
     status: RuntimeStatus;
     startTime: string;
-    duration: string;
+    duration: number;
 }

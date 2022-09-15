@@ -45,11 +45,11 @@ export class Timer {
     /**
      *
      */
-    get duration(): string {
+    get duration(): number {
         if (!this._duration) {
             this.stop();
         }
-        return this._duration.toFixed(2);
+        return Number.parseFloat(this._duration.toFixed(2));
     }
 
     /**

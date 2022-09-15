@@ -16,7 +16,7 @@ export interface TestReportItem {
     status: RuntimeStatus;
     priority: RuntimePriority;
     startTime: string;
-    duration: string;
+    duration: number;
     tickets: TicketItem[];
     descriptions: string;
     failureDescription: string;

@@ -51,7 +51,7 @@ export class LocalReport {
      */
     public report(): void {
         // after reporting the local, reset singleton instance
-        delete globalThis._localReportInstance;
+        globalThis._localReportInstance = null;
 
         const currentLocalRuntime = Runtime.instance.localRuntime.current;
         const id = currentLocalRuntime.id;

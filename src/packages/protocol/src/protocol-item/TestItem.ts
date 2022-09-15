@@ -11,7 +11,7 @@ export interface TestItem {
     tags: Array<string>;
     name: string;
     status: string;
-    duration: string;
+    duration: number;
     startTime: string;
     priority: string;
     descriptions: string;

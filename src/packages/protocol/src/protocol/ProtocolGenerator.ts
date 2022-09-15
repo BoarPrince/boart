@@ -27,8 +27,8 @@ export class ProtocolGenerator {
     /**
      *
      */
-    private static toDurationMin(duration: string): string {
-        return (Number.parseFloat(duration) / 60).toFixed(2);
+    private static toDurationMin(duration: number): string {
+        return (duration / 60).toFixed(2);
     }
     /**
      *

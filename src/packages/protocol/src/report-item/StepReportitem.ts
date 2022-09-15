@@ -14,7 +14,7 @@ export interface StepReportItem {
     status: RuntimeStatus;
     type: string;
     startTime: string;
-    duration: string;
+    duration: number;
     description: string;
     input: Record<string, StepReportDataItem>;
     result: Record<string, StepReportDataItem>;

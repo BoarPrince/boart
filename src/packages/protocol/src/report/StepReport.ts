@@ -35,7 +35,7 @@ export class StepReport {
      */
     public report(): void {
         // after reporting the step, reset singleton instance
-        delete globalThis._stepReportInstance;
+        globalThis._stepReportInstance = null;
         const currentStepRuntime = Runtime.instance.stepRuntime.current;
 
         if (currentStepRuntime.descriptions?.length === 0) {
@@ -101,7 +101,7 @@ export class StepReport {
         this.resultItem.set(description, {
             description,
             type,
-            data
+            data: data.valueOf()
         });
     }
 

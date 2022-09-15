@@ -9,7 +9,7 @@ import { RuntimeStatus } from './RuntimeStatus';
 export interface RuntimeResultContext {
     startTime?: string;
     endTime?: string;
-    duration?: string;
+    duration?: number;
     stackTrace?: string;
     errorMessage?: string;
     status: RuntimeStatus;
@@ -23,7 +23,7 @@ export abstract class BaseRuntimeContext {
     name: string;
     startTime?: string;
     endTime?: string;
-    duration?: string;
+    duration?: number;
     location?: string;
     tags?: Array<string>;
     status = RuntimeStatus.notExecuted;

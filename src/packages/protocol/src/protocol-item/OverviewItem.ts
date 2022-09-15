@@ -9,7 +9,7 @@ export interface OverviewItem {
     tags: Array<string>;
     status: string;
     priority: string;
-    duration: string;
+    duration: number;
     startTime: string;
     localId: string;
     testId: string;

@@ -87,7 +87,7 @@ export class TestReport {
      */
     public report(): void {
         // after reporting the test, reset singleton instance
-        delete globalThis._testReportInstance;
+        globalThis._testReportInstance = null;
 
         const currentTestRuntime = Runtime.instance.testRuntime.current;
         const id = currentTestRuntime.id;

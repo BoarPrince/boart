@@ -8,7 +8,7 @@ export interface StepItem {
     id: string;
     status: string;
     errorMessage: string;
-    duration: string;
+    duration: number;
     startTime: string;
     type: string;
     description: string;
