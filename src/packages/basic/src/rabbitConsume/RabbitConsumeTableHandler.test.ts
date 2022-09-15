@@ -560,9 +560,11 @@ describe('reports', () => {
         Runtime.instance.stepRuntime.current.startTime = '2020-01-01T00:00:00.000Z';
 
         StepReport.instance.report();
-        expect(fs.writeFile).toBeCalledWith(
-            'id-id-id.json',
-            JSON.stringify({
+
+        const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
+        expect(writeFileMockCalls).toBe(1);
+        expect(
+            JSON.parse(writeFileMockCalls[0][1]).toBe({
                 id: 'id-id-id',
                 status: 2,
                 type: 'rabbitConsume',
@@ -572,40 +574,23 @@ describe('reports', () => {
                     'Rabbit consume (configuration)': {
                         description: 'Rabbit consume (configuration)',
                         type: 'object',
-                        data: {
-                            queue: 'queue',
-                            timeout: 10,
-                            messageCount: 1,
-                            port: 5672,
-                            vhost: '/'
-                        }
+                        data: { queue: 'queue', timeout: 10, messageCount: 1, port: 5672, vhost: '/' }
                     }
                 },
                 result: {
                     'Rabbit consume (received message)': {
                         description: 'Rabbit consume (received message)',
                         type: 'object',
-                        data: [
-                            {
-                                header: '{"correlationId":"","fields":{},"properties":{},"headers":{}}',
-                                data: '{"a":"x"}'
-                            }
-                        ]
+                        data: [{ header: '{"correlationId":"","fields":{},"properties":{},"headers":{}}', data: '{"a":"x"}' }]
                     },
                     'Rabbit consume (header)': {
                         description: 'Rabbit consume (header)',
                         type: 'object',
-                        data: '{"correlationId":"","fields":{},"properties":{},"headers":{}}'
+                        data: { correlationId: '', fields: {}, properties: {}, headers: {} }
                     },
-                    'Rabbit consume (data)': {
-                        description: 'Rabbit consume (data)',
-                        type: 'object',
-                        data: '{"a":"x"}'
-                    }
+                    'Rabbit consume (data)': { description: 'Rabbit consume (data)', type: 'object', data: { a: 'x' } }
                 }
-            }),
-            'utf-8',
-            expect.any(Function)
+            }))
         );
     });
 
@@ -709,20 +694,20 @@ describe('reports', () => {
                     type: 'object',
                     data: [
                         {
-                            header: '{"correlationId":"","fields":{},"properties":{},"headers":{}}',
-                            data: '{"a":1}'
+                            header: { correlationId: '', fields: {}, properties: {}, headers: {} },
+                            data: { a: 1 }
                         }
                     ]
                 },
                 'Rabbit consume (header)': {
                     description: 'Rabbit consume (header)',
                     type: 'object',
-                    data: '{"correlationId":"","fields":{},"properties":{},"headers":{}}'
+                    data: { correlationId: '', fields: {}, properties: {}, headers: {} }
                 },
                 'Rabbit consume (data)': {
                     description: 'Rabbit consume (data)',
                     type: 'object',
-                    data: '{"a":1}'
+                    data: { a: 1 }
                 }
             }
         });

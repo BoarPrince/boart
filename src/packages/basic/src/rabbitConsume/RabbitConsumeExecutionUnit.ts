@@ -62,7 +62,10 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
                 header: RabbitConsumeExecutionUnit.createHeader(queueMessage),
                 data: DataContentHelper.create(queueMessage.message)
             };
-            reveivedDataList.push(receivedData);
+            reveivedDataList.push({
+                header: receivedData.header.valueOf(),
+                data: receivedData.data.valueOf()
+            });
 
             context.execution.filter.header = receivedData.header;
             context.execution.filter.data = receivedData.data;
