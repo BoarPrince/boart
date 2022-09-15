@@ -2,8 +2,6 @@ import { ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@bo
 import { RowTypeValue } from '@boart/core-impl';
 import { RestHttp } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
-import { firstValueFrom, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
 
 import { RestAuthorizeContext } from './RestAuthorizeContext';
 
@@ -37,6 +35,7 @@ export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeCo
                     context.config.password
                 );
                 context.execution.data = new TextContent(token.accessToken);
+                context.execution.tokenDecoded = token.decoded;
                 const header = {
                     retries,
                     duration: timer.stop().duration,
@@ -54,6 +53,7 @@ export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeCo
         }
 
         StepReport.instance.addResultItem('Rest authorize (token)', 'json', context.execution.data);
+        StepReport.instance.addResultItem('Rest authorize (decoded)', 'json', context.execution.tokenDecoded);
         StepReport.instance.addResultItem('Rest authorize (header)', 'json', context.execution.header);
     }
 }

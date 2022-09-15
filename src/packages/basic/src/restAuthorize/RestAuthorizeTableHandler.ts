@@ -46,7 +46,8 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
         execution: {
             data: null,
             transformed: null,
-            header: null
+            header: null,
+            tokenDecoded: ''
         }
     });
 

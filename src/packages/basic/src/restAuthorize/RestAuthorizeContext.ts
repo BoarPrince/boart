@@ -19,4 +19,11 @@ export interface RestAuthorizeConfigContext {
 /**
  *
  */
-export type RestAuthorizeContext = ExecutionContext<RestAuthorizeConfigContext, object, DataExecutionContext>;
+export interface RestAuthorizeDataExecutionContext extends DataExecutionContext {
+    tokenDecoded: string;
+}
+
+/**
+ *
+ */
+export type RestAuthorizeContext = ExecutionContext<RestAuthorizeConfigContext, object, RestAuthorizeDataExecutionContext>;
