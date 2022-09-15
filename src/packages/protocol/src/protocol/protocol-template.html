@@ -422,7 +422,7 @@
                 step.output
                     .filter((stepOutput) => !!stepOutput.desc)
                     .forEach((stepOutput) => {
-                        const code = JSON.stringify(stepOutput.data, null, ' ') || '-';
+                        const code = stringifyIfObject(stepOutput.data);
                         stepDetail.push(`<div class="card">
                             <p class="card-header">${stepOutput.desc}</p>
                                 <div class="card-body output-code">

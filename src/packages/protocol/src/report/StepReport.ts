@@ -86,7 +86,7 @@ export class StepReport {
         this.inputItems.set(description, {
             description,
             type,
-            data
+            data: StepReport.tryConvertToObject(data.valueOf())
         });
     }
 
@@ -101,7 +101,7 @@ export class StepReport {
         this.resultItem.set(description, {
             description,
             type,
-            data: data.valueOf()
+            data: StepReport.tryConvertToObject(data.valueOf())
         });
     }
 
@@ -110,5 +110,18 @@ export class StepReport {
      */
     public set type(type: string) {
         this._type = type;
+    }
+
+    /**
+     *
+     */
+    private static tryConvertToObject(data): string | object {
+        if (typeof data === 'string') {
+            try {
+                return JSON.parse(data);
+            } catch (error) {
+                return data;
+            }
+        }
     }
 }
