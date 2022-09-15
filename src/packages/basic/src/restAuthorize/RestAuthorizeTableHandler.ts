@@ -201,7 +201,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
             new RowDefinition({
                 key: Symbol('password'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'username'),
+                executionUnit: new PropertySetterExecutionUnit('config', 'password'),
                 validators: [
                     new UniqueValidator(),
                     new DependsOnValueValidator({

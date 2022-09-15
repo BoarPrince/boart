@@ -74,14 +74,12 @@ it('default get', async () => {
     await sut.handler.process(tableRows);
 
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-    expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
-        JSON.stringify({
-            duration: '0.00', //
-            statusText: 'OK',
-            status: 200,
-            headers: { 'content-type': 'text/plain;charset=UTF-8' }
-        })
-    );
+    expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        duration: 0,
+        statusText: 'OK',
+        status: 200,
+        headers: { 'content-type': 'text/plain;charset=UTF-8' }
+    });
 
     expect(fetchMock.mock.calls).toEqual([
         ['http://xxx', { headers: { 'Content-Type': 'application/json' }, method: 'GET', mode: 'no-cors', referrerPolicy: 'unsafe-url' }]
@@ -186,14 +184,12 @@ it('default post', async () => {
     await sut.handler.process(tableRows);
 
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-    expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
-        JSON.stringify({
-            duration: '0.00', //
-            statusText: 'OK',
-            status: 200,
-            headers: { 'content-type': 'text/plain;charset=UTF-8' }
-        })
-    );
+    expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        duration: 0,
+        statusText: 'OK',
+        status: 200,
+        headers: { 'content-type': 'text/plain;charset=UTF-8' }
+    });
 });
 
 /**
@@ -294,14 +290,12 @@ it('default put', async () => {
     await sut.handler.process(tableRows);
 
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-    expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
-        JSON.stringify({
-            duration: '0.00', //
-            statusText: 'OK',
-            status: 200,
-            headers: { 'content-type': 'text/plain;charset=UTF-8' }
-        })
-    );
+    expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        duration: 0,
+        statusText: 'OK',
+        status: 200,
+        headers: { 'content-type': 'text/plain;charset=UTF-8' }
+    });
 });
 
 /**
@@ -427,14 +421,12 @@ it('default post-param', async () => {
 
     await sut.handler.process(tableRows);
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-    expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
-        JSON.stringify({
-            duration: '0.00', //
-            statusText: 'OK',
-            status: 200,
-            headers: { 'content-type': 'text/plain;charset=UTF-8' }
-        })
-    );
+    expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        duration: 0,
+        statusText: 'OK',
+        status: 200,
+        headers: { 'content-type': 'text/plain;charset=UTF-8' }
+    });
     expect(fetchMock.mock.calls).toEqual([
         [
             'http://xxx',
@@ -465,14 +457,12 @@ it('post-param with payload', async () => {
 
     await sut.handler.process(tableRows);
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-    expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
-        JSON.stringify({
-            duration: '0.00', //
-            statusText: 'OK',
-            status: 200,
-            headers: { 'content-type': 'text/plain;charset=UTF-8' }
-        })
-    );
+    expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        duration: 0,
+        statusText: 'OK',
+        status: 200,
+        headers: { 'content-type': 'text/plain;charset=UTF-8' }
+    });
     expect(fetchMock.mock.calls).toEqual([
         [
             'http://xxx',
@@ -595,14 +585,12 @@ it('default form-data', async () => {
 
     await sut.handler.process(tableRows);
     expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-    expect(sut.handler.executionEngine.context.execution.header?.toJSON()).toEqual(
-        JSON.stringify({
-            duration: '0.00', //
-            statusText: 'OK',
-            status: 200,
-            headers: { 'content-type': 'text/plain;charset=UTF-8' }
-        })
-    );
+    expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        duration: 0,
+        statusText: 'OK',
+        status: 200,
+        headers: { 'content-type': 'text/plain;charset=UTF-8' }
+    });
 
     expect(JSON.stringify(fetchMock.mock.calls[0]).replace(/[-]+\d+/g, '----1111')).toBe(
         JSON.stringify([
@@ -809,44 +797,42 @@ it('report must be written', async () => {
 
     Runtime.instance.stepRuntime.current.id = 'id-id-id';
     StepReport.instance.report();
-    expect(fs.writeFile).toBeCalledWith(
-        'id-id-id.json',
-        JSON.stringify({
-            id: 'id-id-id',
-            status: 2,
-            type: 'restCall',
-            startTime: '2020-01-01T00:00:00.000Z',
-            description: 'test desc',
-            input: {
-                'Rest call': {
-                    description: 'Rest call',
-                    type: 'json',
-                    data: {
-                        url: 'http://xxx',
-                        option: {
-                            method: 'GET',
-                            headers: { 'Content-Type': 'application/json' },
-                            mode: 'no-cors',
-                            referrerPolicy: 'unsafe-url'
-                        }
+
+    const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
+    expect(writeFileMockCalls.length).toBe(1);
+    expect(JSON.parse(writeFileMockCalls[0][1] as string)).toStrictEqual({
+        id: 'id-id-id',
+        status: 2,
+        type: 'restCall',
+        startTime: '2020-01-01T00:00:00.000Z',
+        description: 'test desc',
+        input: {
+            'Rest call': {
+                description: 'Rest call',
+                type: 'json',
+                data: {
+                    url: 'http://xxx',
+                    option: {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                        mode: 'no-cors',
+                        referrerPolicy: 'unsafe-url'
                     }
-                },
-                'Rest call (curl)': {
-                    description: 'Rest call (curl)',
-                    type: 'text',
-                    data: "curl -i -X GET 'http://xxx' \\\n\t-H 'Content-Type: application/json'"
                 }
             },
-            result: {
-                'Rest call result (header)': {
-                    description: 'Rest call result (header)',
-                    type: 'json',
-                    data: '{"duration":"0.00","statusText":"OK","status":200,"headers":{"content-type":"text/plain;charset=UTF-8"}}'
-                },
-                'Rest call result (paylaod)': { description: 'Rest call result (paylaod)', type: 'json', data: '{"b":2}' }
+            'Rest call (curl)': {
+                description: 'Rest call (curl)',
+                type: 'text',
+                data: "curl -i -X GET 'http://xxx' \\\n\t-H 'Content-Type: application/json'"
             }
-        }),
-        'utf-8',
-        expect.any(Function)
-    );
+        },
+        result: {
+            'Rest call result (header)': {
+                description: 'Rest call result (header)',
+                type: 'json',
+                data: { duration: 0, statusText: 'OK', status: 200, headers: { 'content-type': 'text/plain;charset=UTF-8' } }
+            },
+            'Rest call result (paylaod)': { description: 'Rest call result (paylaod)', type: 'json', data: '{"b":2}' }
+        }
+    });
 });

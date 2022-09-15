@@ -91,24 +91,23 @@ it('default password', async () => {
     expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual('T.O.K.E.N');
     expect(sut.handler.executionEngine.context.execution.header.getValue()).toEqual({
         decoded: '-- decoding not possible --',
-        duration: '0.00',
+        duration: 0,
         retries: 1,
-        trace: {
-            option: {
-                body: {
-                    client_id: 'c.l.i.e.n.t.I.d',
-                    grant_type: 'password',
-                    response_type: 'code id_token token',
-                    scope: 's.c.o.p.e',
-                    username: 'p.a.s.s.w.o.r.d'
-                },
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                method: 'POST',
-                mode: 'no-cors',
-                referrerPolicy: 'unsafe-url'
+        option: {
+            body: {
+                client_id: 'c.l.i.e.n.t.I.d',
+                grant_type: 'password',
+                password: 'p.a.s.s.w.o.r.d',
+                response_type: 'code id_token token',
+                scope: 's.c.o.p.e',
+                username: 'u.s.e.r.n.a.m.e'
             },
-            url: '/token'
-        }
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            method: 'POST',
+            mode: 'no-cors',
+            referrerPolicy: 'unsafe-url'
+        },
+        url: '/token'
     });
 
     expect(fetchMock.mock.calls).toEqual([
@@ -121,7 +120,8 @@ it('default password', async () => {
                     ['client_id', 'c.l.i.e.n.t.I.d'],
                     ['response_type', 'code id_token token'],
                     ['scope', 's.c.o.p.e'],
-                    ['username', 'p.a.s.s.w.o.r.d']
+                    ['username', 'u.s.e.r.n.a.m.e'],
+                    ['password', 'p.a.s.s.w.o.r.d']
                 ]),
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 mode: 'no-cors',
@@ -152,24 +152,22 @@ it('default client_credential', async () => {
     expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual('T.O.K.E.N');
     expect(sut.handler.executionEngine.context.execution.header.getValue()).toEqual({
         decoded: '-- decoding not possible --',
-        duration: '0.00',
+        duration: 0,
         retries: 1,
-        trace: {
-            option: {
-                body: {
-                    client_id: 'c.l.i.e.n.t.I.d',
-                    client_secret: 's.e.c.r.e.t',
-                    grant_type: 'client_credentials',
-                    response_type: 'code id_token token',
-                    scope: 's.c.o.p.e'
-                },
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                method: 'POST',
-                mode: 'no-cors',
-                referrerPolicy: 'unsafe-url'
+        option: {
+            body: {
+                client_id: 'c.l.i.e.n.t.I.d',
+                client_secret: 's.e.c.r.e.t',
+                grant_type: 'client_credentials',
+                response_type: 'code id_token token',
+                scope: 's.c.o.p.e'
             },
-            url: '/token'
-        }
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            method: 'POST',
+            mode: 'no-cors',
+            referrerPolicy: 'unsafe-url'
+        },
+        url: '/token'
     });
 
     expect(fetchMock.mock.calls).toEqual([

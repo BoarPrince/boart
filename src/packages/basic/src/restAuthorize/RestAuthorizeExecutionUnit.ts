@@ -19,14 +19,11 @@ export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeCo
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async execute(context: RestAuthorizeContext, _row: RowTypeValue<RestAuthorizeContext>): Promise<void> {
         const timer = new Timer();
-        const rest = new RestHttp(UrlLoader.instance.getAbsoluteUrl(context.config.url));
+        const url = UrlLoader.instance.getAbsoluteUrl(context.config.url);
+        const rest = new RestHttp(url);
 
         StepReport.instance.type = 'restAuthorize';
-
-        StepReport.instance.addInputItem('Rest authorize (config)', 'json', {
-            config: context.config,
-            url: rest.getCurl()
-        });
+        StepReport.instance.addInputItem('Rest authorize (config)', 'json', context.config);
 
         let retries = context.config.retryCount;
         while (retries--) {
@@ -40,20 +37,19 @@ export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeCo
                     context.config.password
                 );
                 context.execution.data = new TextContent(token.accessToken);
-                context.execution.header = new ObjectContent({
+                const header = {
                     retries,
                     duration: timer.stop().duration,
-                    trace: rest.getExecutionInfo(),
                     decoded: token.decoded
-                });
+                };
+                context.execution.header = new ObjectContent(Object.assign(header, rest.getExecutionInfo()));
 
                 break;
             } catch (error) {
                 if (retries === 0) {
                     throw error;
                 }
-
-                await firstValueFrom(of().pipe(delay(context.config.retryPause)));
+                await new Promise<void>((resolve) => setTimeout(() => resolve(), context.config.retryPause));
             }
         }
 
