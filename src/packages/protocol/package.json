@@ -2,10 +2,11 @@
   "name": "@boart/protocol",
   "description": "",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-279",
+  "version": "1.0.0-286",
   "files": [
     "dist/**/*.js",
     "dist/**/*.d.ts",
+    "dist/**/*.js.map",
     "dist/**/*.html"
   ],
   "main": "dist/index.js",
@@ -13,7 +14,7 @@
   "scripts": {
     "precompile": "ts-node ../../../build.ts -r -p protocol",
     "compile": "tsc -p tsconfig.pkg.json",
-    "postcompile": "ts-node ../../../build.ts -p protocol",
+    "postcompile": "ts-node ../../../build.ts -p protocol && cp src/protocol/protocol-template.html dist/protocol/protocol-template.html",
     "build": "echo \"Error: no build specified\" && exit 0"
   },
   "repository": {

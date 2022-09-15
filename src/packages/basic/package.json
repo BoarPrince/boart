@@ -1,6 +1,6 @@
 {
   "name": "@boart/basic",
-  "version": "1.0.0-281",
+  "version": "1.0.0-288",
   "author": "kem@boarprince.net",
   "description": "",
   "main": "dist/index.js",
@@ -19,7 +19,8 @@
   "license": "ISC",
   "files": [
     "dist/**/*.js",
-    "dist/**/*.d.ts"
+    "dist/**/*.d.ts",
+    "dist/**/*.js.map"
   ],
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"

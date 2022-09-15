@@ -1,7 +1,7 @@
 {
   "name": "@boart/execution",
   "author": "kem@boarprince.net",
-  "version": "1.0.0-275",
+  "version": "1.0.0-282",
   "bugs": {
     "url": "https://github.com/Kemark/boart/issues"
   },
@@ -11,7 +11,8 @@
   "license": "ISC",
   "files": [
     "dist/**/*.js",
-    "dist/**/*.d.ts"
+    "dist/**/*.d.ts",
+    "dist/**/*.js.map"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
