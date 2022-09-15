@@ -3,7 +3,7 @@
  */
 export enum RuntimeStatus {
     failed,
-    succeeded,
+    succeed,
     notExecuted
 }
 
@@ -13,7 +13,7 @@ export namespace RuntimeStatus {
         if (isFailed === true) {
             return RuntimeStatus.failed;
         } else if (isFailed === false) {
-            return RuntimeStatus.succeeded;
+            return RuntimeStatus.succeed;
         } else {
             return RuntimeStatus.notExecuted;
         }

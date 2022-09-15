@@ -136,7 +136,7 @@
                         <div class="col-2">
                             <div class="row-1">
                                 <div class="col-12 passed">
-                                    <span class="badge bg-success">Passed</span>
+                                    <span class="badge bg-success">Succeed</span>
                                     <small class="count"></small>
                                 </div>
                                 <div class="col-12 failed">
@@ -151,7 +151,7 @@
                         <div class="col-2">
                             <div class="row-1">
                                 <div class="col-12 passed">
-                                    <span class="badge bg-success">Passed</span>
+                                    <span class="badge bg-success">Succeed</span>
                                     <small class="count"></small>
                                 </div>
                                 <div class="col-12 failed">
@@ -166,7 +166,7 @@
                         <div class="col-2">
                             <div class="row-1">
                                 <div class="col-12 passed">
-                                    <span class="badge bg-success">Passed</span>
+                                    <span class="badge bg-success">Succeed</span>
                                     <small class="count"></small>
                                 </div>
                                 <div class="col-12 failed">
@@ -314,11 +314,11 @@
                 // Add Statistic
                 // #####################################################
                 const statistic = document.data.statistic;
-                $('.statistic .high .passed .count').text(`(${statistic.high.passed})`);
+                $('.statistic .high .passed .count').text(`(${statistic.high.succeed})`);
                 $('.statistic .high .failed .count').text(`(${statistic.high.failed})`);
-                $('.statistic .medium .passed .count').text(`(${statistic.medium.passed})`);
+                $('.statistic .medium .passed .count').text(`(${statistic.medium.succeed})`);
                 $('.statistic .medium .failed .count').text(`(${statistic.medium.failed})`);
-                $('.statistic .low .passed .count').text(`(${statistic.low.passed})`);
+                $('.statistic .low .passed .count').text(`(${statistic.low.succeed})`);
                 $('.statistic .low .failed .count').text(`(${statistic.low.failed})`);
 
                 $('div.statistic').on('click', '.high .passed', () => filterTableByPrioAndStatus('high', 'passed'));
@@ -465,14 +465,14 @@
                         case 'failed':
                             stepDescItems.push('<i class="text-danger bi bi-emoji-frown-fill"></i>');
                             break;
-                        case 'passed':
+                        case 'succeed':
                             stepDescItems.push('<i class="text-success bi bi-emoji-smile-fill"></i>');
                             break;
                         default:
                             stepDescItems.push('<i class="text-secondary bi bi-emoji-neutral-fill"></i>');
                     }
 
-                    stepDescItems.push(`${step.description[0]}`);
+                    stepDescItems.push(`${step.description}`);
                     stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
                     stepDescItems.push('</div>');
 
@@ -566,91 +566,7 @@
         <!-- Document Data -->
         <!-- ##################################################### -->
         <script>
-            document.data = {
-                statistic: { high: { passed: 0, failed: 0 }, medium: { passed: 0, failed: 1 }, low: { passed: 0, failed: 0 } },
-                overview: [
-                    {
-                        topic: '1. Getting Started with Gauge',
-                        name: '1.2. Second test (failing)',
-                        ticket: '',
-                        tags: ['scenario2', 'spec1'],
-                        status: 'failed',
-                        priority: 'medium',
-                        duration: '0.57',
-                        startTime: '2022-08-23T10:43:49.070Z',
-                        localId: '022baa3e-36dd-49df-bfd5-938fed7ee1c0',
-                        testId: 'cd4120d5-dbb3-41a9-9d57-21dbd82c4919'
-                    }
-                ],
-                locals: {
-                    '022baa3e-36dd-49df-bfd5-938fed7ee1c0': {
-                        id: '022baa3e-36dd-49df-bfd5-938fed7ee1c0',
-                        tags: ['spec1'],
-                        duration: '0.60',
-                        status: 'failed',
-                        name: 'Getting Started with Gauge',
-                        number: '1'
-                    }
-                },
-                tests: {
-                    '8642c48d-de7d-4385-93b5-f62055a93a8f': {
-                        id: '8642c48d-de7d-4385-93b5-f62055a93a8f',
-                        tags: ['scenario1', 'spec1'],
-                        name: '1.1. First test (succeeding)',
-                        status: 'succeeded',
-                        duration: '0.02',
-                        startTime: '2022-08-23T10:43:49.048Z',
-                        tickets: [],
-                        steps: []
-                    },
-                    'cd4120d5-dbb3-41a9-9d57-21dbd82c4919': {
-                        id: 'cd4120d5-dbb3-41a9-9d57-21dbd82c4919',
-                        tags: ['scenario2', 'spec1'],
-                        name: '1.2. Second test (failing)',
-                        status: 'failed',
-                        duration: '0.57',
-                        startTime: '2022-08-23T10:43:49.070Z',
-                        priority: 'medium',
-                        descriptions: 'This is a test description',
-                        tickets: [],
-                        steps: [
-                            {
-                                id: '6878be65-ed88-4c0e-811e-1728397343c3',
-                                status: 'failed',
-                                errorMessage: 'FetchError: request to http://yyy/ failed, reason: getaddrinfo ENOTFOUND yyy',
-                                duration: '0.54',
-                                startTime: '2022-08-23T10:43:49.091Z',
-                                type: 'restCall',
-                                description: 'a',
-                                input: [
-                                    {
-                                        id: '-',
-                                        desc: 'Rest call',
-                                        data: {
-                                            url: 'http://yyy',
-                                            option: {
-                                                method: 'GET',
-                                                headers: { 'Content-Type': 'application/json' },
-                                                mode: 'no-cors',
-                                                referrerPolicy: 'unsafe-url'
-                                            }
-                                        }
-                                    },
-                                    {
-                                        id: '-',
-                                        desc: 'Rest call (curl)',
-                                        data: "curl -i -X GET 'http://yyy' \\\n\t-H 'Content-Type: application/json'"
-                                    }
-                                ],
-                                output: []
-                            }
-                        ]
-                    }
-                },
-                projectName: 'gauge',
-                durationMin: '0.01',
-                startTime: '2022-08-23T10:43:49.026Z'
-            };
+            document.data = {"statistic":{"high":{"succeed":0,"failed":0},"medium":{"succeed":1,"failed":0},"low":{"succeed":0,"failed":0}},"overview":[{"topic":"1. Getting Started with Gauge","name":"1.2. Second test","ticket":"","tags":["scenario2","spec1"],"status":"succeed","priority":"medium","duration":0.69,"startTime":"2022-09-15T12:23:30.982Z","localId":"d9567ca6-b0e0-4297-ad14-bfa95323f6a5","testId":"cbc079c2-eaca-4754-bf13-d3fa5b82af6c"}],"locals":{"d9567ca6-b0e0-4297-ad14-bfa95323f6a5":{"id":"d9567ca6-b0e0-4297-ad14-bfa95323f6a5","tags":["spec1"],"duration":0.73,"status":"succeed","name":"Getting Started with Gauge","number":"1"}},"tests":{"86c238fa-2483-43fc-adfa-97ffdb8fb298":{"id":"86c238fa-2483-43fc-adfa-97ffdb8fb298","tags":["scenario1","spec1"],"name":"1.1. First test","status":"succeed","duration":0.02,"startTime":"2022-09-15T12:23:30.959Z","tickets":[],"steps":[]},"cbc079c2-eaca-4754-bf13-d3fa5b82af6c":{"id":"cbc079c2-eaca-4754-bf13-d3fa5b82af6c","tags":["scenario2","spec1"],"name":"1.2. Second test","status":"succeed","duration":0.69,"startTime":"2022-09-15T12:23:30.982Z","priority":"medium","descriptions":"This is a test description","tickets":[],"steps":[{"id":"9dca54f2-6385-4e43-8cd4-c3bb534dbd21","status":"succeed","errorMessage":"","duration":0.67,"startTime":"2022-09-15T12:23:31.000Z","type":"restAuthorize","description":"asdfafasdfads","input":[{"id":"-","desc":"Rest authorize (config)","data":{"url":"https://keycloak.dev.jitpay.eu/auth/realms/jitpay/protocol/openid-connect/token","grantType":"password","retryCount":2,"retryPause":5,"clientId":"jitfleet_portal","clientSecret":"","scope":"openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api","username":"demo@jitpay.eu","password":"demoJITpay#123"}}],"output":[{"id":"-","desc":"Rest authorize (token)","data":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2X0FjVnoyaU4tSnZ1eldsZVh1a0RTekpjbVBybE5DLUVYS01ybzBmNktFIn0.eyJleHAiOjE2NjMyNjYyMTEsImlhdCI6MTY2MzI0NDYxMSwianRpIjoiMDlhZTQxYjktNDdiZS00YzA1LWE2OWMtMTFiNDVmYzgzMTIyIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5kZXYuaml0cGF5LmV1L2F1dGgvcmVhbG1zL2ppdHBheSIsImF1ZCI6WyJmbGVldF9hcGkiLCJsb2NhdGlvbnNfYXBpIiwiYXBwX2FwaSIsImRzX2FwaSIsInRvdXJoaXN0b3J5X2FwaSIsIm1vYmlsZXVzZXJwcm9maWxlX2FwaSIsIm1vYmlsZWZpbGVhZ2dfYXBpIiwiaml0cGF5YXBpIiwiaWRnZW5fYXBpIiwiYWNjb3VudCJdLCJzdWIiOiIxOWM2NGFhMi02ZmM0LTRjNGItYTcwOS0zOTU0ZDczNTdjMTIiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJqaXRmbGVldF9wb3J0YWwiLCJzZXNzaW9uX3N0YXRlIjoiMjQzZGQ3NjctZWE3Yi00OGMyLTk4MDItMGNmNTI0MjVhMjA2IiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkppdHBheUFkbWluIiwib2ZmbGluZV9hY2Nlc3MiLCJDYXJyaWVyQWRtaW4iLCJ1bWFfYXV0aG9yaXphdGlvbiIsIkpwQ29tcGFueUVkaXRvciIsImRlZmF1bHQtcm9sZXMtaml0cGF5Il19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJsb2NhdGlvbnNfYXBpIG1hcHBpbmctYXR0cmlidXRlLXNjb3BlIG1vYmlsZXVzZXJwcm9maWxlX2FwaSB0b3VyaGlzdG9yeV9hcGkgZW1haWwgZmxlZXRfcm9sZSBwcm9maWxlIG1vYmlsZWZpbGVhZ2dfYXBpIGRzX2FwaSBmbGVldF9hcGlzY29wZSBqaXRwYXkucm9sZSBmbGVldF9hcGkgYXBwX2FwaSBvZmZsaW5lX2FjY2VzcyBvcGVuaWQgZmxlZXRfcHJvZmlsZSBpZGdlbl9hcGkiLCJzaWQiOiIyNDNkZDc2Ny1lYTdiLTQ4YzItOTgwMi0wY2Y1MjQyNWEyMDYiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicm9sZSI6WyJKaXRwYXlBZG1pbiIsIm9mZmxpbmVfYWNjZXNzIiwiQ2FycmllckFkbWluIiwidW1hX2F1dGhvcml6YXRpb24iLCJKcENvbXBhbnlFZGl0b3IiLCJkZWZhdWx0LXJvbGVzLWppdHBheSJdLCJyb2xlSWQiOiIyIiwibGVnaXRpbWF0aW9uU3RhdHVzIjoiTGVnaW1pdGF0aW9uQ29tcGxldGVkIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiZGVtb0BqaXRwYXkuZXUiLCJsb2NhbGUiOiJkZSIsInByaW9yaXR5IjoiMTAwMCIsImdpdmVuX25hbWUiOiJEZW1vIiwiaXNkZWxldGVkIjoiRmFsc2UiLCJ1c2VySWQiOiIzN2JhYjc3My0wMTdmLTRkMjktOTM4ZS1lNjI1OTMzNmQwYTQiLCJkcml2ZXJJZCI6IjIwOSIsIm5hbWUiOiJEZW1vIFVzZXIiLCJzdWJzaWRpYXJ5SWQiOiIyNzQiLCJhY3RpdmF0aW9uQ29kZSI6IjEyMzQ1Njc4IiwiZmlyc3RUaW1lTG9nZ2VkSW4iOiJmYWxzZSIsImZhbWlseV9uYW1lIjoiVXNlciIsImVtYWlsIjoiZGVtb0BqaXRwYXkuZXUiLCJ1c2VybmFtZSI6ImRlbW9Aaml0cGF5LmV1In0.CYvpvT6AZiLXWYHmOTAgdBJOAWwRs0IOcDFMHN1bOkPJbW_u_z4HXz-6UjdyccqoEsksblSdZY_tcZN0vCknL8qVwOaV1z91Q2MSf4GWFbE1OxTBqq158rA1fznwP1k_zkjd1P4rAQsYZD8K-ykXYJ9kHz300_nnRXtcUfHX9fBUuzmscx49xF1sMPQFKk_uFmRt8QjRXFmwb__FGpChCeHoxFuLzyFeMq3DDbBEkwan6oUZVoK2R7lCWI6FThj-85olj7TSwiwwQiQFWeyTs4mkZ6bj1lFq6_awbnPP0cTnPG-fJMz7DlEclZLkdKQ911voZDxEq3--5iH7QVqFuw"},{"id":"-","desc":"Rest authorize (header)","data":{"retries":1,"duration":0.66,"decoded":{"exp":1663266211,"iat":1663244611,"jti":"09ae41b9-47be-4c05-a69c-11b45fc83122","iss":"https://keycloak.dev.jitpay.eu/auth/realms/jitpay","aud":["fleet_api","locations_api","app_api","ds_api","tourhistory_api","mobileuserprofile_api","mobilefileagg_api","jitpayapi","idgen_api","account"],"sub":"19c64aa2-6fc4-4c4b-a709-3954d7357c12","typ":"Bearer","azp":"jitfleet_portal","session_state":"243dd767-ea7b-48c2-9802-0cf52425a206","realm_access":{"roles":["JitpayAdmin","offline_access","CarrierAdmin","uma_authorization","JpCompanyEditor","default-roles-jitpay"]},"resource_access":{"account":{"roles":["manage-account","manage-account-links","view-profile"]}},"scope":"locations_api mapping-attribute-scope mobileuserprofile_api tourhistory_api email fleet_role profile mobilefileagg_api ds_api fleet_apiscope jitpay.role fleet_api app_api offline_access openid fleet_profile idgen_api","sid":"243dd767-ea7b-48c2-9802-0cf52425a206","email_verified":true,"role":["JitpayAdmin","offline_access","CarrierAdmin","uma_authorization","JpCompanyEditor","default-roles-jitpay"],"roleId":"2","legitimationStatus":"LegimitationCompleted","preferred_username":"demo@jitpay.eu","locale":"de","priority":"1000","given_name":"Demo","isdeleted":"False","userId":"37bab773-017f-4d29-938e-e6259336d0a4","driverId":"209","name":"Demo User","subsidiaryId":"274","activationCode":"12345678","firstTimeLoggedIn":"false","family_name":"User","email":"demo@jitpay.eu","username":"demo@jitpay.eu"},"url":"https://keycloak.dev.jitpay.eu/auth/realms/jitpay/protocol/openid-connect/token","option":{"method":"POST","body":{"grant_type":"password","client_id":"jitfleet_portal","response_type":"code id_token token","scope":"openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api","username":"demo@jitpay.eu","password":"demoJITpay#123"},"headers":{"Content-Type":"application/x-www-form-urlencoded"},"mode":"no-cors","referrerPolicy":"unsafe-url"}}}]}]}},"projectName":"gauge","durationMin":"0.01","startTime":"2022-09-15T12:23:30.936Z"};
         </script>
     </body>
 </html>

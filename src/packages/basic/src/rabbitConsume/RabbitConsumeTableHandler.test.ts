@@ -562,36 +562,34 @@ describe('reports', () => {
         StepReport.instance.report();
 
         const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
-        expect(writeFileMockCalls).toBe(1);
-        expect(
-            JSON.parse(writeFileMockCalls[0][1]).toBe({
-                id: 'id-id-id',
-                status: 2,
-                type: 'rabbitConsume',
-                startTime: '2020-01-01T00:00:00.000Z',
-                description: 'Consume events',
-                input: {
-                    'Rabbit consume (configuration)': {
-                        description: 'Rabbit consume (configuration)',
-                        type: 'object',
-                        data: { queue: 'queue', timeout: 10, messageCount: 1, port: 5672, vhost: '/' }
-                    }
-                },
-                result: {
-                    'Rabbit consume (received message)': {
-                        description: 'Rabbit consume (received message)',
-                        type: 'object',
-                        data: [{ header: '{"correlationId":"","fields":{},"properties":{},"headers":{}}', data: '{"a":"x"}' }]
-                    },
-                    'Rabbit consume (header)': {
-                        description: 'Rabbit consume (header)',
-                        type: 'object',
-                        data: { correlationId: '', fields: {}, properties: {}, headers: {} }
-                    },
-                    'Rabbit consume (data)': { description: 'Rabbit consume (data)', type: 'object', data: { a: 'x' } }
+        expect(writeFileMockCalls.length).toBe(1);
+        expect(JSON.parse(writeFileMockCalls[0][1] as string)).toStrictEqual({
+            id: 'id-id-id',
+            status: 2,
+            type: 'rabbitConsume',
+            startTime: '2020-01-01T00:00:00.000Z',
+            description: 'Consume events',
+            input: {
+                'Rabbit consume (configuration)': {
+                    description: 'Rabbit consume (configuration)',
+                    type: 'object',
+                    data: { queue: 'queue', timeout: 10, messageCount: 1, port: 5672, vhost: '/' }
                 }
-            }))
-        );
+            },
+            result: {
+                'Rabbit consume (received message)': {
+                    description: 'Rabbit consume (received message)',
+                    type: 'object',
+                    data: [{ header: { correlationId: '', fields: {}, properties: {}, headers: {} }, data: { a: 'x' } }]
+                },
+                'Rabbit consume (header)': {
+                    description: 'Rabbit consume (header)',
+                    type: 'object',
+                    data: { correlationId: '', fields: {}, properties: {}, headers: {} }
+                },
+                'Rabbit consume (data)': { description: 'Rabbit consume (data)', type: 'object', data: { a: 'x' } }
+            }
+        });
     });
 
     /**
@@ -623,8 +621,8 @@ describe('reports', () => {
         const reportData = JSON.parse((fs.writeFile as any).mock.calls[0][1]);
 
         expect(reportData['result']['Rabbit consume (received message)']['data']).toStrictEqual([
-            { data: '{"a":1}', header: '{"correlationId":"","fields":{},"properties":{},"headers":{}}' },
-            { data: '{"a":2}', header: '{"correlationId":"","fields":{},"properties":{},"headers":{}}' }
+            { data: { a: 1 }, header: { correlationId: '', fields: {}, properties: {}, headers: {} } },
+            { data: { a: 2 }, header: { correlationId: '', fields: {}, properties: {}, headers: {} } }
         ]);
     });
 

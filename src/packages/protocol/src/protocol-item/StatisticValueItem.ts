@@ -3,6 +3,6 @@
  */
 
 export interface StatisticValueItem {
-    passed: number;
+    succeed: number;
     failed: number;
 }

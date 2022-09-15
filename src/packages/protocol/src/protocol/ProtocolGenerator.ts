@@ -120,11 +120,11 @@ export class ProtocolGenerator {
                 .reduce(
                     (p, c) => {
                         p.failed += c.status === RuntimeStatus.failed ? 1 : 0;
-                        p.passed += c.status === RuntimeStatus.succeeded ? 1 : 0;
+                        p.succeed += c.status === RuntimeStatus.succeed ? 1 : 0;
                         return p;
                     },
                     {
-                        passed: 0,
+                        succeed: 0,
                         failed: 0
                     }
                 );

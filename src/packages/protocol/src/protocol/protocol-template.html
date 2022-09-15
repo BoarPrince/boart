@@ -136,7 +136,7 @@
                         <div class="col-2">
                             <div class="row-1">
                                 <div class="col-12 passed">
-                                    <span class="badge bg-success">Passed</span>
+                                    <span class="badge bg-success">Succeed</span>
                                     <small class="count"></small>
                                 </div>
                                 <div class="col-12 failed">
@@ -151,7 +151,7 @@
                         <div class="col-2">
                             <div class="row-1">
                                 <div class="col-12 passed">
-                                    <span class="badge bg-success">Passed</span>
+                                    <span class="badge bg-success">Succeed</span>
                                     <small class="count"></small>
                                 </div>
                                 <div class="col-12 failed">
@@ -166,7 +166,7 @@
                         <div class="col-2">
                             <div class="row-1">
                                 <div class="col-12 passed">
-                                    <span class="badge bg-success">Passed</span>
+                                    <span class="badge bg-success">Succeed</span>
                                     <small class="count"></small>
                                 </div>
                                 <div class="col-12 failed">
@@ -314,11 +314,11 @@
                 // Add Statistic
                 // #####################################################
                 const statistic = document.data.statistic;
-                $('.statistic .high .passed .count').text(`(${statistic.high.passed})`);
+                $('.statistic .high .passed .count').text(`(${statistic.high.succeed})`);
                 $('.statistic .high .failed .count').text(`(${statistic.high.failed})`);
-                $('.statistic .medium .passed .count').text(`(${statistic.medium.passed})`);
+                $('.statistic .medium .passed .count').text(`(${statistic.medium.succeed})`);
                 $('.statistic .medium .failed .count').text(`(${statistic.medium.failed})`);
-                $('.statistic .low .passed .count').text(`(${statistic.low.passed})`);
+                $('.statistic .low .passed .count').text(`(${statistic.low.succeed})`);
                 $('.statistic .low .failed .count').text(`(${statistic.low.failed})`);
 
                 $('div.statistic').on('click', '.high .passed', () => filterTableByPrioAndStatus('high', 'passed'));
@@ -465,14 +465,14 @@
                         case 'failed':
                             stepDescItems.push('<i class="text-danger bi bi-emoji-frown-fill"></i>');
                             break;
-                        case 'passed':
+                        case 'succeed':
                             stepDescItems.push('<i class="text-success bi bi-emoji-smile-fill"></i>');
                             break;
                         default:
                             stepDescItems.push('<i class="text-secondary bi bi-emoji-neutral-fill"></i>');
                     }
 
-                    stepDescItems.push(`${step.description[0]}`);
+                    stepDescItems.push(`${step.description}`);
                     stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
                     stepDescItems.push('</div>');
 

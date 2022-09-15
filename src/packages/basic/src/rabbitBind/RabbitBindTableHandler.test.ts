@@ -207,7 +207,7 @@ describe('default', () => {
         });
 
         void sut.handler.process(tableRows).then(() => {
-            Runtime.instance.testRuntime.notifyEnd({ status: RuntimeStatus.succeeded });
+            Runtime.instance.testRuntime.notifyEnd({ status: RuntimeStatus.succeed });
         });
     });
 });
