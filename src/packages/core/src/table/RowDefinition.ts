@@ -45,10 +45,6 @@ export class RowDefinition<
     public readonly type: TableRowType;
     public defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
     public defaultValueColumn?: symbol;
-    public set default(d: DefaultValue<TExecutionContext, TRowType>) {
-        this.defaultValue = d?.value;
-        this.defaultValueColumn = !d ? undefined : Symbol(d.column as string);
-    }
     public readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
     public readonly parameterType: ParaType = ParaType.False;
     public readonly selectorType: SelectorType = SelectorType.False;
@@ -60,9 +56,9 @@ export class RowDefinition<
     constructor(value: RowDefinitionPara<TExecutionContext, TRowType>) {
         this.key = value.key || Symbol(value.executionUnit?.description);
         this.type = value.type;
-        this.default = value.default;
-        this.defaultValue = value.defaultValue;
-        this.defaultValueColumn = value.defaultValueColumn || this.defaultValueColumn;
+        this.defaultValue = value.defaultValue || value.default?.value || this.defaultValue;
+        this.defaultValueColumn =
+            value.defaultValueColumn || (!value.default ? null : Symbol(value.default.value as string)) || this.defaultValueColumn;
         this.executionUnit = value.executionUnit;
         this.parameterType = value.executionUnit?.parameterType || value.parameterType || this.parameterType;
         this.selectorType = value.executionUnit?.selectorType || value.selectorType || this.selectorType;
