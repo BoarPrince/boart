@@ -832,7 +832,7 @@ it('report must be written', async () => {
                 type: 'json',
                 data: { duration: 0, statusText: 'OK', status: 200, headers: { 'content-type': 'text/plain;charset=UTF-8' } }
             },
-            'Rest call result (paylaod)': { description: 'Rest call result (paylaod)', type: 'json', data: '{"b":2}' }
+            'Rest call result (paylaod)': { description: 'Rest call result (paylaod)', type: 'json', data: { b: 2 } }
         }
     });
 });
