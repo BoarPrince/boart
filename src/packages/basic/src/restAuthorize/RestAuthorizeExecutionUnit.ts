@@ -34,12 +34,13 @@ export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeCo
                     context.config.username,
                     context.config.password
                 );
-                context.execution.data = new TextContent(token.accessToken);
-                context.execution.tokenDecoded = token.decoded;
+
+                context.execution.token = token.accessToken;
+                context.execution.data = new ObjectContent(token.decoded);
+
                 const header = {
                     retries,
-                    duration: timer.stop().duration,
-                    decoded: token.decoded
+                    duration: timer.stop().duration
                 };
                 context.execution.header = new ObjectContent(Object.assign(header, rest.getExecutionInfo()));
 
@@ -52,8 +53,9 @@ export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeCo
             }
         }
 
-        StepReport.instance.addResultItem('Rest authorize (token)', 'json', context.execution.data);
-        StepReport.instance.addResultItem('Rest authorize (decoded)', 'json', context.execution.tokenDecoded);
         StepReport.instance.addResultItem('Rest authorize (header)', 'json', context.execution.header);
+        StepReport.instance.addResultItem('Rest authorize (curl)', 'text', rest.getCurl());
+        StepReport.instance.addResultItem('Rest authorize (token)', 'json', context.execution.token);
+        StepReport.instance.addResultItem('Rest authorize (data - token)', 'json', context.execution.data);
     }
 }

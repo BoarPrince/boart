@@ -21,7 +21,11 @@ import { UniqueValidator } from './validators/UniqueValidator';
 import { ValueRequiredValidator } from './validators/ValueRequiredValidator';
 import { ValueValidator } from './validators/ValueValidator';
 import { XORValidator } from './validators/XORValidator';
+import { EnvironmentReplacer } from './value/EnvironmentReplacer';
+import { GenerateReplacer } from './value/GenerateReplacer';
+import { ReferenceReplacer } from './value/ReferenceReplacer';
 import { StoreReplacer } from './value/StoreReplace';
+import { TextReplacer } from './value/TextReplacer';
 
 /**
  *
@@ -33,16 +37,20 @@ export {
     DependsOnValidator,
     DependsOnValueValidator,
     DescriptionExecutionUnit,
+    EnvironmentReplacer,
     ExpectedDataExecutinoUnit,
     ExpectedJsonLogicExecutionUnit,
-    OutStoreExecutionUnit,
+    GenerateReplacer,
     IntValidator,
+    OutStoreExecutionUnit,
     ParaValidator,
     PDFContent,
     PropertySetterExecutionUnit,
+    ReferenceReplacer,
     RequiredValidator,
     RowTypeValue,
     StoreReplacer,
+    TextReplacer,
     TransformJPathExecutionUnit,
     TransformJsonLogicExecutionUnit,
     TransformResetExecutionUnit,

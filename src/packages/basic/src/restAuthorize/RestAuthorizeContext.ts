@@ -1,5 +1,6 @@
 import { ExecutionContext } from '@boart/core';
-import { DataExecutionContext } from 'core-impl/dist';
+import { DataExecutionContext } from '@boart/core-impl';
+import { DataPreExecutionContext } from '@boart/core-impl/src/DataExecutionContext';
 
 /**
  *
@@ -20,10 +21,10 @@ export interface RestAuthorizeConfigContext {
  *
  */
 export interface RestAuthorizeDataExecutionContext extends DataExecutionContext {
-    tokenDecoded: string;
+    token: string;
 }
 
 /**
  *
  */
-export type RestAuthorizeContext = ExecutionContext<RestAuthorizeConfigContext, object, RestAuthorizeDataExecutionContext>;
+export type RestAuthorizeContext = ExecutionContext<RestAuthorizeConfigContext, DataPreExecutionContext, RestAuthorizeDataExecutionContext>;

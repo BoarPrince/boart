@@ -2,6 +2,7 @@ import { GroupRowDefinition, RowDefinition, TableHandler, TableHandlerBaseImpl, 
 import {
     DependsOnValidator,
     DependsOnValueValidator,
+    OutStoreExecutionUnit,
     PropertySetterExecutionUnit,
     RequiredValidator,
     RowTypeValue,
@@ -47,7 +48,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
             data: null,
             transformed: null,
             header: null,
-            tokenDecoded: ''
+            token: ''
         }
     });
 
@@ -59,17 +60,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
 
         tableHandler.removeRowDefinition('payload');
-        tableHandler.removeRowDefinition('expected');
-        tableHandler.removeRowDefinition('expected:data');
-        tableHandler.removeRowDefinition('expected:jsonLogic');
-        tableHandler.removeRowDefinition('expected:jsonLogic:data');
-
-        tableHandler.removeRowDefinition('store:data');
-        const storeDefinition = tableHandler.getRowDefinition('store');
-        storeDefinition.default = {
-            column: 'value',
-            value: 'authorization'
-        };
+        tableHandler.removeRowDefinition('store');
     }
 
     /**
@@ -211,6 +202,21 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
                         column: 'value'
                     })
                 ]
+            })
+        );
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('store'),
+                type: TableRowType.PostProcessing,
+                executionUnit: new OutStoreExecutionUnit('token'),
+                defaultValue: 'authorization',
+                defaultValueColumn: Symbol('value'),
+                // default: {
+                //     column: 'value',
+                //     value: 'authorization'
+                // },
+                validators: null
             })
         );
     }
