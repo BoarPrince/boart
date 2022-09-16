@@ -55,6 +55,14 @@ export class TableHandler<
     /**
      *
      */
+    removeAllRowDefinitions(): this {
+        this.rowDefinitions.clear();
+        return this;
+    }
+
+    /**
+     *
+     */
     getRowDefinition(key: string): RowDefinition<TExecutionContext, TRowType> {
         if (!this.rowDefinitions.has(key)) {
             throw Error(`key: '{key}' cannot retrieved, because it does not exists`);

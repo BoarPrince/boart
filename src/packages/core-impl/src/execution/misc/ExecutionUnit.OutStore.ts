@@ -1,4 +1,4 @@
-import { DataContent, DataContentHelper, ExecutionUnit, ParaType, ScopeType, SelectorType, StoreWrapper } from '@boart/core';
+import { DataContent, DataContentHelper, ExecutionUnit, key, ParaType, ScopeType, SelectorType, StoreWrapper } from '@boart/core';
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -30,7 +30,8 @@ import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator'
  * |--------------------|------|
  * | out:store:header:l | xxx  |
  */
-export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+export class OutStoreExecutionUnit<StoreContext extends DataContext> implements ExecutionUnit<StoreContext, RowTypeValue<StoreContext>> {
+    private _key: string;
     readonly selectorType = SelectorType.Optional;
     readonly parameterType = ParaType.Optional;
     readonly validators = [
@@ -41,43 +42,54 @@ export class OutStoreExecutionUnit implements ExecutionUnit<DataContext, RowType
     /**
      *
      */
-    constructor(private executionType?: 'data' | 'header' | 'transformed' | 'payload') {}
+    constructor();
+    constructor(executionType: 'payload');
+    constructor(executionType: keyof StoreContext['execution']);
+    constructor(executionType: keyof StoreContext['execution'], executionKey: StoreContext['execution'][keyof StoreContext['execution']]);
+    constructor(private executionType?: string, private executionKey?: string) {}
 
-    /** */
+    /**
+     *
+     */
     get description(): string {
-        return !this.executionType ? 'store' : `store:${this.executionType}`;
+        return this._key || !this.executionType ? 'store' : `store:${this.executionType}`;
     }
 
     /**
      *
      */
-    private getDataContent(context: DataContext): DataContent {
+    set key(key: string) {
+        this._key = key;
+    }
+
+    /**
+     *
+     */
+    private getDataContent(context: StoreContext): DataContent {
         const nonNullValue = (value: DataContent, nullValue?: DataContent) =>
             DataContentHelper.isNullOrUndefined(value) && nullValue !== undefined ? nullValue : value;
 
-        switch (this.executionType) {
-            case 'data':
-                return context.execution.data;
-
-            case 'header':
-                return context.execution.header;
-
-            case 'payload':
-                return context.preExecution.payload;
-
-            default:
-                return (
-                    nonNullValue(context.execution.transformed, null) ||
-                    nonNullValue(context.execution.data, null) ||
-                    nonNullValue(context.preExecution.payload)
-                );
+        if (this.executionType === 'payload') {
+            return context.preExecution.payload;
         }
+
+        if (!!this.executionType) {
+            return !this.executionKey
+                ? context.execution[this.executionType] //
+                : context.execution[this.executionType][this.executionKey];
+        }
+
+        return (
+            nonNullValue(context.execution.transformed, null) ||
+            nonNullValue(context.execution.data, null) ||
+            nonNullValue(context.preExecution.payload)
+        );
     }
 
     /**
      *
      */
-    execute(context: DataContext, row: RowTypeValue<DataContext>): void {
+    execute(context: StoreContext, row: RowTypeValue<DataContext>): void {
         const storeNameAndSelector = row.value.toString();
 
         const value = this.getDataContent(context);
