@@ -13,8 +13,7 @@ import {
     TableRowType,
     TextContent
 } from '@boart/core';
-import { DataExecutionContext, PropertySetterExecutionUnit, RowTypeValue } from '@boart/core-impl';
-import { DataPreExecutionContext } from '@boart/core-impl/src/DataExecutionContext';
+import { DataExecutionContext, DataPreExecutionContext, PropertySetterExecutionUnit, RowTypeValue } from '@boart/core-impl';
 
 import BasicGroupDefinition from './BasicDataGroupDefinition';
 

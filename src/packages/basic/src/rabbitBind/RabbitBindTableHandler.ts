@@ -1,7 +1,12 @@
 import { GroupRowDefinition, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
-import { PropertySetterExecutionUnit, RequiredValidator, RowTypeValue, UniqueValidator } from '@boart/core-impl';
-import { BoolValidator } from '@boart/core-impl/src/validators/BoolValidator';
-import { IntValidator } from '@boart/core-impl/src/validators/IntValidator';
+import {
+    BoolValidator,
+    IntValidator,
+    PropertySetterExecutionUnit,
+    RequiredValidator,
+    RowTypeValue,
+    UniqueValidator
+} from '@boart/core-impl';
 
 import { RabbitBindContext } from './RabbitBindContext';
 import { RabbitBindExecutionUnit } from './RabbitBindExecutionUnit';

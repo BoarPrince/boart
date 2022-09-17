@@ -1,6 +1,5 @@
 import { ExecutionContext } from '@boart/core';
-import { DataExecutionContext } from '@boart/core-impl';
-import { DataPreExecutionContext } from '@boart/core-impl/src/DataExecutionContext';
+import { DataExecutionContext, DataPreExecutionContext } from '@boart/core-impl';
 
 /**
  *
