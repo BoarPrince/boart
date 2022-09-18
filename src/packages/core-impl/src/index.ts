@@ -1,5 +1,5 @@
 import { AnyContext } from './AnyContext';
-import { DataContext, DataExecutionContext } from './DataExecutionContext';
+import { DataContext, DataExecutionContext, DataPreExecutionContext } from './DataExecutionContext';
 import { RowTypeValue } from './RowTypeValue';
 import { PDFContent } from './data/PDFContent';
 import { ExpectedDataExecutinoUnit } from './execution/expected/ExecutionUnit.ExpectedData';
@@ -12,6 +12,7 @@ import { PropertySetterExecutionUnit } from './execution/property-setter/Propert
 import { TransformJPathExecutionUnit } from './execution/transform/ExecutionUnit.TransformJPath';
 import { TransformJsonLogicExecutionUnit } from './execution/transform/ExecutionUnit.TransformJsonLogic';
 import { TransformResetExecutionUnit } from './execution/transform/ExecutionUnit.TransformReset';
+import { BoolValidator } from './validators/BoolValidator';
 import { DependsOnValidator } from './validators/DependsOnValidator';
 import { DependsOnValueValidator } from './validators/DependsOnValueValidator';
 import { IntValidator } from './validators/IntValidator';
@@ -42,6 +43,7 @@ export {
     ExpectedJsonLogicExecutionUnit,
     GenerateReplacer,
     IntValidator,
+    BoolValidator,
     OutStoreExecutionUnit,
     ParaValidator,
     PDFContent,
@@ -50,6 +52,7 @@ export {
     RequiredValidator,
     RowTypeValue,
     StoreReplacer,
+    DataPreExecutionContext,
     TextReplacer,
     TransformJPathExecutionUnit,
     TransformJsonLogicExecutionUnit,

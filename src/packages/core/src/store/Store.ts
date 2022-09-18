@@ -63,20 +63,20 @@ export class Store {
      *
      */
     initGlobalStore(store: StoreMap | object): void {
-        this._localStore = new StoreWrapper(store, 'local store');
+        this._globalStore = new StoreWrapper(store, 'global store, init');
     }
 
     /**
      *
      */
     initLocalStore(store: StoreMap | object): void {
-        this._globalStore = new StoreWrapper(store, 'global store');
+        this._localStore = new StoreWrapper(store, 'local store, init');
     }
 
     /**
      *
      */
     initTestStore(store: StoreMap | object): void {
-        this._testStore = new StoreWrapper(store, 'test store');
+        this._testStore = new StoreWrapper(store, 'test store, init');
     }
 }
