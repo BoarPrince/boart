@@ -172,6 +172,36 @@ it('default get with bearer from default', async () => {
 /**
  *
  */
+it('get with bearer, when store was initialized', async () => {
+    // change store implementation
+    Store.instance.initTestStore({});
+
+    Store.instance.testStore.put('authorization', 't.o.k.e.n');
+
+    fetchMock.doMock(JSON.stringify({ b: 2 }));
+    const tableRows = MarkdownTableReader.convert(
+        `|action          |value       |
+         |----------------|------------|
+         | method:get     | http://xxx |`
+    );
+
+    await sut.handler.process(tableRows);
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                headers: { Authorization: 'Bearer t.o.k.e.n', 'Content-Type': 'application/json' },
+                method: 'GET',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
+});
+
+/**
+ *
+ */
 it('default post', async () => {
     fetchMock.doMock(JSON.stringify({ b: 2 }));
     const tableRows = MarkdownTableReader.convert(

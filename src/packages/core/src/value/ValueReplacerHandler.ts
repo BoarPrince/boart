@@ -19,7 +19,7 @@ type ValueReplaceItem = {
  */
 export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     private valueReplacers: Array<ValueReplaceItem>;
-    private stores: Array<StoreWrapper> = [];
+    private stores: Array<ScopeType> = [];
 
     /**
      *
@@ -43,7 +43,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
      *
      */
     private init(): void {
-        this.stores = [Store.instance.stepStore, Store.instance.testStore, Store.instance.localStore, Store.instance.globalStore];
+        this.stores = [ScopeType.Step, ScopeType.Test, ScopeType.Local, ScopeType.Global];
     }
 
     /**
@@ -148,7 +148,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
             }
             case ScopedType.multiple: {
                 for (const store of this.stores) {
-                    const storeContent = store.get(storeIdentifier)?.toString();
+                    const storeContent = ValueReplacerHandler.getStore(store).get(storeIdentifier)?.toString();
                     if (!!storeContent) {
                         return storeContent;
                     }
