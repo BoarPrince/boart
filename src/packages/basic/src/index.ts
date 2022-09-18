@@ -1,5 +1,5 @@
 import { Runtime, ValueReplacerHandler } from '@boart/core';
-import { StoreReplacer } from '@boart/core-impl';
+import { EnvironmentReplacer, GenerateReplacer, ReferenceReplacer, StoreReplacer, TextReplacer } from '@boart/core-impl';
 import { LocalReport, ProtocolGenerator, StepReport, TestReport } from '@boart/protocol';
 
 import BasicDataGroupDefinition from './basicGroup/BasicDataGroupDefinition';
@@ -31,6 +31,10 @@ function initialize(): void {
     });
 
     ValueReplacerHandler.instance.add('store', new StoreReplacer());
+    ValueReplacerHandler.instance.add('env', new EnvironmentReplacer());
+    ValueReplacerHandler.instance.add('text', new TextReplacer());
+    ValueReplacerHandler.instance.add('generate', new GenerateReplacer());
+    ValueReplacerHandler.instance.add('ref', new ReferenceReplacer());
 }
 
 initialize();
