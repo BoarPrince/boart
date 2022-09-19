@@ -41,10 +41,10 @@ export class RowDefinition<
     TExecutionContext extends ExecutionContext<object, object, object>,
     TRowType extends BaseRowType<TExecutionContext>
 > {
-    public readonly key: symbol;
-    public readonly type: TableRowType;
+    public key: symbol;
     public defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
     public defaultValueColumn?: symbol;
+    public readonly type: TableRowType;
     public readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
     public readonly parameterType: ParaType = ParaType.False;
     public readonly selectorType: SelectorType = SelectorType.False;

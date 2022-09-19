@@ -210,12 +210,10 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
                 key: Symbol('store'),
                 type: TableRowType.PostProcessing,
                 executionUnit: new OutStoreExecutionUnit('token'),
-                defaultValue: 'authorization',
-                defaultValueColumn: Symbol('value'),
-                // default: {
-                //     column: 'value',
-                //     value: 'authorization'
-                // },
+                default: {
+                    column: 'value',
+                    value: 'authorization'
+                },
                 validators: null
             })
         );
