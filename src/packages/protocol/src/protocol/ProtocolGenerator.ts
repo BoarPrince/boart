@@ -27,9 +27,17 @@ export class ProtocolGenerator {
     /**
      *
      */
+    private get stepItemsWithDescription(): Array<StepReportItem> {
+        return Array.from(this.stepItems.values()).filter((stepItem) => stepItem.description?.length > 0);
+    }
+
+    /**
+     *
+     */
     private static toDurationMin(duration: number): string {
         return (duration / 60).toFixed(2);
     }
+
     /**
      *
      */
@@ -141,23 +149,24 @@ export class ProtocolGenerator {
      *
      */
     private generateOverviewItems(): Array<OverviewItem> {
-        return Array.from(this.stepItems.values()).map((stepItem) => {
-            const testItem = this.testItems.get(stepItem.testReportItemId);
-            const localItem = this.localItems.get(stepItem.localReportItemId);
+        return Array.from(this.testItems.values())
+            .filter((testItem) => !!this.stepItemsWithDescription.find((stepItem) => stepItem.testReportItemId === testItem.id))
+            .map((testItem) => {
+                const localItem = this.localItems.get(testItem.localReportItemId);
 
-            return {
-                topic: `${localItem.number}. ${localItem.name}`,
-                name: `${testItem.number}. ${testItem.name}`,
-                ticket: testItem.tickets.find(() => true)?.id || '',
-                tags: testItem.tags,
-                status: RuntimeStatus[testItem.status],
-                priority: RuntimePriority[testItem.priority],
-                duration: testItem.duration,
-                startTime: testItem.startTime,
-                localId: localItem.id,
-                testId: testItem.id
-            };
-        });
+                return {
+                    topic: `${localItem.number}. ${localItem.name}`,
+                    name: `${testItem.number}. ${testItem.name}`,
+                    ticket: testItem.tickets.find(() => true)?.id || '',
+                    tags: testItem.tags,
+                    status: RuntimeStatus[testItem.status],
+                    priority: RuntimePriority[testItem.priority],
+                    duration: testItem.duration,
+                    startTime: testItem.startTime,
+                    localId: localItem.id,
+                    testId: testItem.id
+                };
+            });
     }
 
     /**
@@ -199,7 +208,7 @@ export class ProtocolGenerator {
      *
      */
     private generateSteps(testItemId: string): Array<StepItem> {
-        const testItems = Array.from(this.stepItems.values()).filter((stepItem) => stepItem.testReportItemId === testItemId);
+        const testItems = this.stepItemsWithDescription.filter((stepItem) => stepItem.testReportItemId === testItemId);
 
         return testItems.map((stepItem) => {
             return {
