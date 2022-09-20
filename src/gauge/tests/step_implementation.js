@@ -1,7 +1,14 @@
 /* globals gauge*/
 'use strict';
 
-const { RestCallTableHandler, TestDescriptionTableHandler, RestAuthorizeTableHandler } = require('@boart/basic');
+const {
+    RestCallTableHandler,
+    TestDescriptionTableHandler,
+    RestAuthorizeTableHandler,
+    RabbitBindTableHandler,
+    RabbitPublishTableHandler,
+    RabbitConsumeTableHandler
+} = require('@boart/basic');
 const { Store, Runtime, RuntimeStatus } = require('@boart/core');
 
 /**
@@ -106,12 +113,56 @@ step('Rest call <table>', async (table) => {
     await restcallTableHandler.handler.process(table);
 });
 
+step('Rest call, continue <table>', { continueOnFailure: true }, async (table) => {
+    await restcallTableHandler.handler.process(table);
+});
+
 /**
  *
  */
 const restauthorizeTableHandler = new RestAuthorizeTableHandler();
 step('Rest authorize <table>', async (table) => {
     await restauthorizeTableHandler.handler.process(table);
+});
+
+step('Rest authorize, continue <table>', { continueOnFailure: true }, async (table) => {
+    await restauthorizeTableHandler.handler.process(table);
+});
+
+/**
+ *
+ */
+const rabbitBindTableHandler = new RabbitBindTableHandler();
+step('RabbitMQ bind <table>', async (table) => {
+    await rabbitBindTableHandler.handler.process(table);
+});
+
+step('RabbitMQ bind, continue <table>', { continueOnFailure: true }, async (table) => {
+    await rabbitBindTableHandler.handler.process(table);
+});
+
+/**
+ *
+ */
+const rabbitPublishTableHandler = new RabbitPublishTableHandler();
+step('RabbitMQ publish <table>', async (table) => {
+    await rabbitPublishTableHandler.handler.process(table);
+});
+
+step('RabbitMQ publish, continue <table>', { continueOnFailure: true }, async (table) => {
+    await rabbitPublishTableHandler.handler.process(table);
+});
+
+/**
+ *
+ */
+const rabbitConsumeTableHandler = new RabbitConsumeTableHandler();
+step('RabbitMQ consume <table>', async (table) => {
+    await rabbitConsumeTableHandler.handler.process(table);
+});
+
+step('RabbitMQ consume, continue <table>', { continueOnFailure: true }, async (table) => {
+    await rabbitConsumeTableHandler.handler.process(table);
 });
 
 /**
@@ -125,13 +176,8 @@ step('Test description <table>', async (table) => {
 /**
  *
  */
-step('Hallo', () => {
-    console.log('hallo');
-});
-
-/**
- *
- */
-step('Hallo <number>', (number) => {
-    console.log('hallo', number);
+step('Check store', () => {
+    gauge.dataStore.scenarioStore;
+    console.log(Object.keys(gauge.dataStore.scenarioStore.store));
+    console.log('test store', gauge.dataStore.scenarioStore);
 });

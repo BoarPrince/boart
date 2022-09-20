@@ -5,7 +5,9 @@ import { LocalReport, ProtocolGenerator, StepReport, TestReport } from '@boart/p
 import BasicDataGroupDefinition from './basicGroup/BasicDataGroupDefinition';
 import BasicGroupDefinition from './basicGroup/BasicGroupDefinition';
 import DataTableHandler from './data/DataTableHandler';
+import RabbitBindTableHandler from './rabbitBind/RabbitBindTableHandler';
 import RabbitConsumeTableHandler from './rabbitConsume/RabbitConsumeTableHandler';
+import RabbitPublishTableHandler from './rabbitPublish/RabbitPublishTableHandler';
 import RestAuthorizeTableHandler from './restAuthorize/RestAuthorizeTableHandler';
 import RestCallTableHandler from './restCall/RestCallTableHandler';
 import TestDescriptionTableHandler from './testDescription/TestDescriptionTableHandler';
@@ -14,6 +16,8 @@ export {
     BasicDataGroupDefinition,
     BasicGroupDefinition,
     RabbitConsumeTableHandler,
+    RabbitBindTableHandler,
+    RabbitPublishTableHandler,
     RestAuthorizeTableHandler,
     RestCallTableHandler,
     TestDescriptionTableHandler,
