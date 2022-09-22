@@ -7,7 +7,7 @@ export class IbanGenerator implements Generator {
     /**
      *
      */
-    readonly name = 'IbanGenerator';
+    readonly name = 'iban';
 
     /**
      *

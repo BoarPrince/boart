@@ -12,6 +12,15 @@ import { PropertySetterExecutionUnit } from './execution/property-setter/Propert
 import { TransformJPathExecutionUnit } from './execution/transform/ExecutionUnit.TransformJPath';
 import { TransformJsonLogicExecutionUnit } from './execution/transform/ExecutionUnit.TransformJsonLogic';
 import { TransformResetExecutionUnit } from './execution/transform/ExecutionUnit.TransformReset';
+import { CharGenerator } from './generator/CharGenerator';
+import { DateTimeGenerator } from './generator/DateTimeGenerator';
+import { FakeGenerator } from './generator/FakeGenerator';
+import { HexGenerator } from './generator/HexGenerator';
+import { ISODateGenerator } from './generator/ISODateGenerator';
+import { IbanGenerator } from './generator/IbanGenerator';
+import { RandomGenerator } from './generator/RandomGenerator';
+import { TimestampGenerator } from './generator/TimestampGenerator';
+import { UUIDGenerator } from './generator/UUIDGenerator';
 import { BoolValidator } from './validators/BoolValidator';
 import { DependsOnValidator } from './validators/DependsOnValidator';
 import { DependsOnValueValidator } from './validators/DependsOnValueValidator';
@@ -33,31 +42,40 @@ import { TextReplacer } from './value/TextReplacer';
  */
 export {
     AnyContext,
+    BoolValidator,
+    CharGenerator,
     DataContext,
     DataExecutionContext,
+    DataPreExecutionContext,
+    DateTimeGenerator,
     DependsOnValidator,
     DependsOnValueValidator,
     DescriptionExecutionUnit,
     EnvironmentReplacer,
     ExpectedDataExecutinoUnit,
     ExpectedJsonLogicExecutionUnit,
+    FakeGenerator,
     GenerateReplacer,
+    HexGenerator,
+    IbanGenerator,
     IntValidator,
-    BoolValidator,
+    ISODateGenerator,
     OutStoreExecutionUnit,
     ParaValidator,
     PDFContent,
     PropertySetterExecutionUnit,
+    RandomGenerator,
     ReferenceReplacer,
     RequiredValidator,
     RowTypeValue,
     StoreReplacer,
-    DataPreExecutionContext,
     TextReplacer,
+    TimestampGenerator,
     TransformJPathExecutionUnit,
     TransformJsonLogicExecutionUnit,
     TransformResetExecutionUnit,
     UniqueValidator,
+    UUIDGenerator,
     ValueRequiredValidator,
     ValueValidator,
     WaitExecutionUnit,

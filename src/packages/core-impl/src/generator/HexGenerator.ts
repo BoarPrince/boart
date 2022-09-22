@@ -7,7 +7,7 @@ export class HexGenerator implements Generator {
     /**
      *
      */
-    readonly name = 'HexGenerator';
+    readonly name = 'hex';
 
     /**
      *

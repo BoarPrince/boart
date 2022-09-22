@@ -8,7 +8,7 @@ export class ISODateGenerator implements Generator {
     /**
      *
      */
-    readonly name = 'ISODateGenerator';
+    readonly name = 'date.iso';
 
     /**
      *

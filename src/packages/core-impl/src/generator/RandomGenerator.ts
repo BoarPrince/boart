@@ -7,7 +7,7 @@ export class RandomGenerator implements Generator {
     /**
      *
      */
-    readonly name = 'RandomGenerator';
+    readonly name = 'random';
 
     /**
      *

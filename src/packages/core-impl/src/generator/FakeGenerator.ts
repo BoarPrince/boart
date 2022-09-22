@@ -8,7 +8,7 @@ export class FakeGenerator implements Generator {
     /**
      *
      */
-    readonly name = 'FakeGenerator';
+    readonly name = 'fake';
 
     /**
      *

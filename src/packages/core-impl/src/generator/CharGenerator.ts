@@ -7,7 +7,7 @@ export class CharGenerator implements Generator {
     /**
      *
      */
-    readonly name = 'CharGenerator';
+    readonly name = 'char';
 
     /**
      *

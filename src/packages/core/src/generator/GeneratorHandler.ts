@@ -7,7 +7,6 @@ import { Generator } from './Generator';
  */
 export class GeneratorHandler implements Initializer<Generator> {
     private readonly generators: Map<string, Generator>;
-    private static _instance;
 
     /**
      *

@@ -9,7 +9,7 @@ export class UUIDGenerator implements Generator {
     /**
      *
      */
-    readonly name = 'UUIDGenerator';
+    readonly name = 'uuid';
 
     /**
      *

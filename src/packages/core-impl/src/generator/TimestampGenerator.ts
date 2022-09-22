@@ -10,7 +10,7 @@ export class TimestampGenerator implements Generator {
     /**
      *
      */
-    readonly name = 'TimestampGenerator';
+    readonly name = 'timestamp';
 
     /**
      *

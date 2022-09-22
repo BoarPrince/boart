@@ -65,7 +65,7 @@ export default class RabbitBindTableHandler extends TableHandlerBaseImpl<RabbitB
                 key: Symbol('username'),
                 type: TableRowType.PreProcessing,
                 executionUnit: new PropertySetterExecutionUnit<RabbitBindContext, RowTypeValue<RabbitBindContext>>('config', 'username'),
-                defaultValue: '${store?:rabbitmq_username}',
+                defaultValue: '${env?:rabbitmq_username}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
             })
@@ -76,7 +76,7 @@ export default class RabbitBindTableHandler extends TableHandlerBaseImpl<RabbitB
                 key: Symbol('password'),
                 type: TableRowType.PreProcessing,
                 executionUnit: new PropertySetterExecutionUnit<RabbitBindContext, RowTypeValue<RabbitBindContext>>('config', 'password'),
-                defaultValue: '${store?:rabbitmq_password}',
+                defaultValue: '${env?:rabbitmq_password}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
             })
@@ -87,7 +87,7 @@ export default class RabbitBindTableHandler extends TableHandlerBaseImpl<RabbitB
                 key: Symbol('hostname'),
                 type: TableRowType.PreProcessing,
                 executionUnit: new PropertySetterExecutionUnit<RabbitBindContext, RowTypeValue<RabbitBindContext>>('config', 'hostname'),
-                defaultValue: '${store?:rabbitmq_hostname}',
+                defaultValue: '${env?:rabbitmq_hostname}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
             })

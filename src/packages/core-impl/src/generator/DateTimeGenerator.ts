@@ -8,7 +8,7 @@ export class DateTimeGenerator implements Generator {
     /**
      *
      */
-    readonly name = 'DateTimeGenerator';
+    readonly name = 'datetime.iso';
 
     /**
      *
