@@ -102,7 +102,8 @@ export class StoreWrapper {
 
         if (keys.length > 0) {
             try {
-                return DataContentHelper.getByPath(keys, contentValue);
+                const dataContentValue = DataContentHelper.create(contentValue);
+                return DataContentHelper.getByPath(keys, dataContentValue);
             } catch (error) {
                 throw Error(`getting "${key}" not possible, because it's not an object or an array`);
             }

@@ -1,7 +1,7 @@
-import { DataContent } from '../data/DataContent';
+import { ContentType } from '../data/ContentType';
 
 export interface StoreMap {
-    put(key: string, value: DataContent): void;
-    get(key: string | undefined): DataContent;
+    put(key: string, value: ContentType): void;
+    get(key: string | undefined): ContentType;
     clear(): void;
 }
