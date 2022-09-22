@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 import { RuntimeEnvironment } from '../types/RuntimeEnvironment';
 
@@ -45,7 +46,8 @@ describe('check env loader', () => {
      *
      */
     beforeEach(() => {
-        process.env.environment_project_root = '<root>';
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+        process.env.environment_project_root = path.resolve('.');
         process.env.npm_package_version = '1.1.2';
         process.env.npm_package_name = 'p_name_env';
         process.env.environment_default_location = 'default.location';
@@ -90,7 +92,8 @@ describe('check env loader', () => {
 
             const sut = EnvLoader.instance;
 
-            expect(fs.readFileSync).toBeCalledWith('env/environment.json', { encoding: 'utf-8' });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            expect(fs.readFileSync).toBeCalledWith(path.resolve('env/environment.json'), { encoding: 'utf-8' });
             expect(sut.get('valueNoEnv')).toBe('default-value');
             expect(sut.get('withStaging')).toBe('');
         });
@@ -391,14 +394,16 @@ describe('check env loader', () => {
 
             expect(sut.defaultLocation).toBe('env/environment.json');
             expect(fs.readFileSync).toBeCalledTimes(2);
-            expect(fs.readFileSync).nthCalledWith(1, '<root>/env/environment.json', { encoding: 'utf-8' });
-            expect(fs.readFileSync).nthCalledWith(2, '<root>/project.location', { encoding: 'utf-8' });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            expect(fs.readFileSync).nthCalledWith(1, path.resolve('env/environment.json'), { encoding: 'utf-8' });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            expect(fs.readFileSync).nthCalledWith(2, path.resolve('project.location'), { encoding: 'utf-8' });
         });
 
         /**
          *
          */
-        it('no project location definition', () => {
+        it('no default location definition', () => {
             delete process.env.environment_project_location;
 
             (fs.readFileSync as jest.Mock).mockImplementation(() => JSON.stringify({}));
@@ -409,7 +414,8 @@ describe('check env loader', () => {
 
             expect(sut.defaultLocation).toBe('default.location');
             expect(fs.readFileSync).toBeCalledTimes(1);
-            expect(fs.readFileSync).nthCalledWith(1, '<root>/default.location', { encoding: 'utf-8' });
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            expect(fs.readFileSync).nthCalledWith(1, path.resolve('default.location'), { encoding: 'utf-8' });
         });
 
         /**

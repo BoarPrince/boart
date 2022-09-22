@@ -87,7 +87,14 @@ export class EnvLoader {
      *
      */
     public get projectRoot(): string {
-        return process.env.environment_project_root || '.';
+        const path = process.env.environment_project_root || '.';
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        if (fsPath.isAbsolute(path)) {
+            return path;
+        } else {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            return fsPath.resolve(path);
+        }
     }
 
     /**
