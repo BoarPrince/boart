@@ -45,6 +45,7 @@
                 padding-top: 1em;
                 padding-bottom: 1em;
                 margin-top: -1em;
+                transition: margin-bottom 1s;
                 margin-bottom: -1em;
             }
             #protocol_table tbody tr.failed:hover,
@@ -73,15 +74,26 @@
                 padding: 20px 10px;
                 font-size: xx-large;
             }
+            li.group-step li {
+                margin-right: 0;
+                background-color: darkseagreen;
+            }
+            li.group-step,
             li.step {
                 padding: 1rem 0.5rem;
                 margin-left: 2rem;
                 margin-right: 1rem;
             }
+            .step-header.group:not(.collapsed) {
+                margin-bottom: 0;
+            }
             .step-header i {
                 position: absolute;
                 left: -2rem;
                 font-size: large;
+            }
+            .step-header.group i {
+                font-weight: bold;
             }
             .output-code,
             .input-code {
@@ -455,30 +467,49 @@
             // Step List
             // #####################################################
             const addSteps = (steps) => {
+                const statusIcon = (status) => {
+                    switch (status) {
+                        case 'failed':
+                            return '<i class="text-danger bi bi-emoji-frown-fill"></i>';
+                        case 'succeed':
+                            return '<i class="text-success bi bi-emoji-smile-fill"></i>';
+                        default:
+                            return '<i class="text-secondary bi bi-emoji-neutral-fill"></i>';
+                    }
+                };
+
                 const stepDescItems = [];
                 stepDescItems.push('<ul class="list-group">');
                 steps.forEach((step) => {
-                    stepDescItems.push(`<li class="list-group-item list-group-item-dark step">`);
-                    stepDescItems.push(`<div class="step-header" data-bs-toggle="collapse" href="#detail-${step.id}">`);
+                    if (step.type === 'group') {
+                        stepDescItems.push(`<li class="list-group-item list-group-item-dark group-step">`);
+                        stepDescItems.push(`<div class="step-header group collapsed" data-bs-toggle="collapse" href="#detail-${step.id}">`);
+                        stepDescItems.push(statusIcon(step.status));
 
-                    switch (step.status) {
-                        case 'failed':
-                            stepDescItems.push('<i class="text-danger bi bi-emoji-frown-fill"></i>');
-                            break;
-                        case 'succeed':
-                            stepDescItems.push('<i class="text-success bi bi-emoji-smile-fill"></i>');
-                            break;
-                        default:
-                            stepDescItems.push('<i class="text-secondary bi bi-emoji-neutral-fill"></i>');
+                        stepDescItems.push(`${step.description}`);
+                        stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
+                        stepDescItems.push(`</div>`);
+
+                        stepDescItems.push(`<div class="collapse" id="detail-${step.id}">`);
+                        stepDescItems.push('<ul class="list-group">');
+                        stepDescItems.push(addSteps(step.steps));
+                        stepDescItems.push('</ul>');
+                        stepDescItems.push('</div>');
+
+                        stepDescItems.push('</li>');
+                    } else {
+                        stepDescItems.push(`<li class="list-group-item list-group-item-dark step">`);
+                        stepDescItems.push(`<div class="step-header" data-bs-toggle="collapse" href="#detail-${step.id}">`);
+
+                        stepDescItems.push(statusIcon(step.status));
+                        stepDescItems.push(`${step.description}`);
+                        stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
+                        stepDescItems.push('</div>');
+
+                        stepDescItems.push(`<div class="collapse" id="detail-${step.id}">`);
+                        stepDescItems.push(addStepDetails(step));
+                        stepDescItems.push(`</div>`);
                     }
-
-                    stepDescItems.push(`${step.description}`);
-                    stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
-                    stepDescItems.push('</div>');
-
-                    stepDescItems.push(`<div class="collapse" id="detail-${step.id}">`);
-                    stepDescItems.push(addStepDetails(step));
-                    stepDescItems.push(`</div>`);
 
                     stepDescItems.push('</li>');
                 });

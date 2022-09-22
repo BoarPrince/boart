@@ -45,6 +45,7 @@
                 padding-top: 1em;
                 padding-bottom: 1em;
                 margin-top: -1em;
+                transition: margin-bottom 1s;
                 margin-bottom: -1em;
             }
             #protocol_table tbody tr.failed:hover,
@@ -73,15 +74,26 @@
                 padding: 20px 10px;
                 font-size: xx-large;
             }
+            li.group-step li {
+                margin-right: 0;
+                background-color: darkseagreen;
+            }
+            li.group-step,
             li.step {
                 padding: 1rem 0.5rem;
                 margin-left: 2rem;
                 margin-right: 1rem;
             }
+            .step-header.group:not(.collapsed) {
+                margin-bottom: 0;
+            }
             .step-header i {
                 position: absolute;
                 left: -2rem;
                 font-size: large;
+            }
+            .step-header.group i {
+                font-weight: bold;
             }
             .output-code,
             .input-code {
@@ -455,30 +467,49 @@
             // Step List
             // #####################################################
             const addSteps = (steps) => {
+                const statusIcon = (status) => {
+                    switch (status) {
+                        case 'failed':
+                            return '<i class="text-danger bi bi-emoji-frown-fill"></i>';
+                        case 'succeed':
+                            return '<i class="text-success bi bi-emoji-smile-fill"></i>';
+                        default:
+                            return '<i class="text-secondary bi bi-emoji-neutral-fill"></i>';
+                    }
+                };
+
                 const stepDescItems = [];
                 stepDescItems.push('<ul class="list-group">');
                 steps.forEach((step) => {
-                    stepDescItems.push(`<li class="list-group-item list-group-item-dark step">`);
-                    stepDescItems.push(`<div class="step-header" data-bs-toggle="collapse" href="#detail-${step.id}">`);
+                    if (step.type === 'group') {
+                        stepDescItems.push(`<li class="list-group-item list-group-item-dark group-step">`);
+                        stepDescItems.push(`<div class="step-header group collapsed" data-bs-toggle="collapse" href="#detail-${step.id}">`);
+                        stepDescItems.push(statusIcon(step.status));
 
-                    switch (step.status) {
-                        case 'failed':
-                            stepDescItems.push('<i class="text-danger bi bi-emoji-frown-fill"></i>');
-                            break;
-                        case 'succeed':
-                            stepDescItems.push('<i class="text-success bi bi-emoji-smile-fill"></i>');
-                            break;
-                        default:
-                            stepDescItems.push('<i class="text-secondary bi bi-emoji-neutral-fill"></i>');
+                        stepDescItems.push(`${step.description}`);
+                        stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
+                        stepDescItems.push(`</div>`);
+
+                        stepDescItems.push(`<div class="collapse" id="detail-${step.id}">`);
+                        stepDescItems.push('<ul class="list-group">');
+                        stepDescItems.push(addSteps(step.steps));
+                        stepDescItems.push('</ul>');
+                        stepDescItems.push('</div>');
+
+                        stepDescItems.push('</li>');
+                    } else {
+                        stepDescItems.push(`<li class="list-group-item list-group-item-dark step">`);
+                        stepDescItems.push(`<div class="step-header" data-bs-toggle="collapse" href="#detail-${step.id}">`);
+
+                        stepDescItems.push(statusIcon(step.status));
+                        stepDescItems.push(`${step.description}`);
+                        stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
+                        stepDescItems.push('</div>');
+
+                        stepDescItems.push(`<div class="collapse" id="detail-${step.id}">`);
+                        stepDescItems.push(addStepDetails(step));
+                        stepDescItems.push(`</div>`);
                     }
-
-                    stepDescItems.push(`${step.description}`);
-                    stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
-                    stepDescItems.push('</div>');
-
-                    stepDescItems.push(`<div class="collapse" id="detail-${step.id}">`);
-                    stepDescItems.push(addStepDetails(step));
-                    stepDescItems.push(`</div>`);
 
                     stepDescItems.push('</li>');
                 });
@@ -566,184 +597,7 @@
         <!-- Document Data -->
         <!-- ##################################################### -->
         <script>
-            document.data = {
-                statistic: { high: { succeed: 0, failed: 0 }, medium: { succeed: 1, failed: 0 }, low: { succeed: 0, failed: 0 } },
-                overview: [
-                    {
-                        topic: '1. Getting Started with Gauge',
-                        name: '1.2. Second test',
-                        ticket: '',
-                        tags: ['scenario2', 'spec1'],
-                        status: 'succeed',
-                        priority: 'medium',
-                        duration: 0.95,
-                        startTime: '2022-09-15T13:12:19.736Z',
-                        localId: '5db5ea5d-9282-4041-8632-b0bba7f7d3cf',
-                        testId: '88c7401b-fba1-4d8b-9de0-0ad212060467'
-                    }
-                ],
-                locals: {
-                    '5db5ea5d-9282-4041-8632-b0bba7f7d3cf': {
-                        id: '5db5ea5d-9282-4041-8632-b0bba7f7d3cf',
-                        tags: ['spec1'],
-                        duration: 1,
-                        status: 'succeed',
-                        name: 'Getting Started with Gauge',
-                        number: '1'
-                    }
-                },
-                tests: {
-                    '0b2aa64f-4f2f-4dc2-8a08-9e51573582af': {
-                        id: '0b2aa64f-4f2f-4dc2-8a08-9e51573582af',
-                        tags: ['scenario1', 'spec1'],
-                        name: '1.1. First test',
-                        status: 'succeed',
-                        duration: 0.02,
-                        startTime: '2022-09-15T13:12:19.706Z',
-                        tickets: [],
-                        steps: []
-                    },
-                    '88c7401b-fba1-4d8b-9de0-0ad212060467': {
-                        id: '88c7401b-fba1-4d8b-9de0-0ad212060467',
-                        tags: ['scenario2', 'spec1'],
-                        name: '1.2. Second test',
-                        status: 'succeed',
-                        duration: 0.95,
-                        startTime: '2022-09-15T13:12:19.736Z',
-                        priority: 'medium',
-                        descriptions: 'This is a test description',
-                        tickets: [],
-                        steps: [
-                            {
-                                id: 'b2b479cc-3090-441d-b528-83dda30a84d8',
-                                status: 'succeed',
-                                errorMessage: '',
-                                duration: 0.93,
-                                startTime: '2022-09-15T13:12:19.755Z',
-                                type: 'restAuthorize',
-                                description: 'asdfafasdfads',
-                                input: [
-                                    {
-                                        id: '-',
-                                        desc: 'Rest authorize (config)',
-                                        data: {
-                                            url: 'https://keycloak.dev.jitpay.eu/auth/realms/jitpay/protocol/openid-connect/token',
-                                            grantType: 'password',
-                                            retryCount: 2,
-                                            retryPause: 5,
-                                            clientId: 'jitfleet_portal',
-                                            clientSecret: '',
-                                            scope: 'openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api',
-                                            username: 'demo@jitpay.eu',
-                                            password: 'demoJITpay#123'
-                                        }
-                                    }
-                                ],
-                                output: [
-                                    {
-                                        id: '-',
-                                        desc: 'Rest authorize (token)',
-                                        data: 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ2X0FjVnoyaU4tSnZ1eldsZVh1a0RTekpjbVBybE5DLUVYS01ybzBmNktFIn0.eyJleHAiOjE2NjMyNjkxNDAsImlhdCI6MTY2MzI0NzU0MCwianRpIjoiOGJjMTg0NjAtMmNhNC00NWRhLWIxM2UtNDJiMGRiYTAzOThhIiwiaXNzIjoiaHR0cHM6Ly9rZXljbG9hay5kZXYuaml0cGF5LmV1L2F1dGgvcmVhbG1zL2ppdHBheSIsImF1ZCI6WyJmbGVldF9hcGkiLCJsb2NhdGlvbnNfYXBpIiwiYXBwX2FwaSIsImRzX2FwaSIsInRvdXJoaXN0b3J5X2FwaSIsIm1vYmlsZXVzZXJwcm9maWxlX2FwaSIsIm1vYmlsZWZpbGVhZ2dfYXBpIiwiaml0cGF5YXBpIiwiaWRnZW5fYXBpIiwiYWNjb3VudCJdLCJzdWIiOiIxOWM2NGFhMi02ZmM0LTRjNGItYTcwOS0zOTU0ZDczNTdjMTIiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJqaXRmbGVldF9wb3J0YWwiLCJzZXNzaW9uX3N0YXRlIjoiZDQzOGI3ZmUtYzAzYS00MjA5LWFmMGYtZDM5NzM1NzVlNzA4IiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIkppdHBheUFkbWluIiwib2ZmbGluZV9hY2Nlc3MiLCJDYXJyaWVyQWRtaW4iLCJ1bWFfYXV0aG9yaXphdGlvbiIsIkpwQ29tcGFueUVkaXRvciIsImRlZmF1bHQtcm9sZXMtaml0cGF5Il19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJsb2NhdGlvbnNfYXBpIG1hcHBpbmctYXR0cmlidXRlLXNjb3BlIG1vYmlsZXVzZXJwcm9maWxlX2FwaSB0b3VyaGlzdG9yeV9hcGkgZW1haWwgZmxlZXRfcm9sZSBwcm9maWxlIG1vYmlsZWZpbGVhZ2dfYXBpIGRzX2FwaSBmbGVldF9hcGlzY29wZSBqaXRwYXkucm9sZSBmbGVldF9hcGkgYXBwX2FwaSBvZmZsaW5lX2FjY2VzcyBvcGVuaWQgZmxlZXRfcHJvZmlsZSBpZGdlbl9hcGkiLCJzaWQiOiJkNDM4YjdmZS1jMDNhLTQyMDktYWYwZi1kMzk3MzU3NWU3MDgiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicm9sZSI6WyJKaXRwYXlBZG1pbiIsIm9mZmxpbmVfYWNjZXNzIiwiQ2FycmllckFkbWluIiwidW1hX2F1dGhvcml6YXRpb24iLCJKcENvbXBhbnlFZGl0b3IiLCJkZWZhdWx0LXJvbGVzLWppdHBheSJdLCJyb2xlSWQiOiIyIiwibGVnaXRpbWF0aW9uU3RhdHVzIjoiTGVnaW1pdGF0aW9uQ29tcGxldGVkIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiZGVtb0BqaXRwYXkuZXUiLCJsb2NhbGUiOiJkZSIsInByaW9yaXR5IjoiMTAwMCIsImdpdmVuX25hbWUiOiJEZW1vIiwiaXNkZWxldGVkIjoiRmFsc2UiLCJ1c2VySWQiOiIzN2JhYjc3My0wMTdmLTRkMjktOTM4ZS1lNjI1OTMzNmQwYTQiLCJkcml2ZXJJZCI6IjIwOSIsIm5hbWUiOiJEZW1vIFVzZXIiLCJzdWJzaWRpYXJ5SWQiOiIyNzQiLCJhY3RpdmF0aW9uQ29kZSI6IjEyMzQ1Njc4IiwiZmlyc3RUaW1lTG9nZ2VkSW4iOiJmYWxzZSIsImZhbWlseV9uYW1lIjoiVXNlciIsImVtYWlsIjoiZGVtb0BqaXRwYXkuZXUiLCJ1c2VybmFtZSI6ImRlbW9Aaml0cGF5LmV1In0.cEzIamPLSd9_4FrxAKnKXO34zb84adSFzG22Yl8C79Rw0OCCKT2rI8H5ZP9R0FtXZFEQMjxjfc0lDpYyiQ-jXWq3q8uqYPT7y4pS8cX8N3nIQpv_yK0LktObXe0EeJQnx5QeUHuYi3JEmcwujx85Gtz5nDZAN1JfhbTnUKqyZ4xmDpkoSJQKtqwy-CFVoo0y3FVEBsWcemvY0a8-caxU86azr1Y6ioCTCxeviQNkF0iglzWcAHaf5BCPort8Ppk5AUQXJbZ-v6cEMk5LyOOLj--J7X_ylLEpFoSRZVRbGmjCcXWgSe5iLZ5xci__eV_mSoxPSPrRsIz1JgjKhVgeCQ'
-                                    },
-                                    {
-                                        id: '-',
-                                        desc: 'Rest authorize (decoded)',
-                                        data: '{"exp":1663269140,"iat":1663247540,"jti":"8bc18460-2ca4-45da-b13e-42b0dba0398a","iss":"https://keycloak.dev.jitpay.eu/auth/realms/jitpay","aud":["fleet_api","locations_api","app_api","ds_api","tourhistory_api","mobileuserprofile_api","mobilefileagg_api","jitpayapi","idgen_api","account"],"sub":"19c64aa2-6fc4-4c4b-a709-3954d7357c12","typ":"Bearer","azp":"jitfleet_portal","session_state":"d438b7fe-c03a-4209-af0f-d3973575e708","realm_access":{"roles":["JitpayAdmin","offline_access","CarrierAdmin","uma_authorization","JpCompanyEditor","default-roles-jitpay"]},"resource_access":{"account":{"roles":["manage-account","manage-account-links","view-profile"]}},"scope":"locations_api mapping-attribute-scope mobileuserprofile_api tourhistory_api email fleet_role profile mobilefileagg_api ds_api fleet_apiscope jitpay.role fleet_api app_api offline_access openid fleet_profile idgen_api","sid":"d438b7fe-c03a-4209-af0f-d3973575e708","email_verified":true,"role":["JitpayAdmin","offline_access","CarrierAdmin","uma_authorization","JpCompanyEditor","default-roles-jitpay"],"roleId":"2","legitimationStatus":"LegimitationCompleted","preferred_username":"demo@jitpay.eu","locale":"de","priority":"1000","given_name":"Demo","isdeleted":"False","userId":"37bab773-017f-4d29-938e-e6259336d0a4","driverId":"209","name":"Demo User","subsidiaryId":"274","activationCode":"12345678","firstTimeLoggedIn":"false","family_name":"User","email":"demo@jitpay.eu","username":"demo@jitpay.eu"}'
-                                    },
-                                    {
-                                        id: '-',
-                                        desc: 'Rest authorize (header)',
-                                        data: {
-                                            retries: 1,
-                                            duration: 0.92,
-                                            decoded: {
-                                                exp: 1663269140,
-                                                iat: 1663247540,
-                                                jti: '8bc18460-2ca4-45da-b13e-42b0dba0398a',
-                                                iss: 'https://keycloak.dev.jitpay.eu/auth/realms/jitpay',
-                                                aud: [
-                                                    'fleet_api',
-                                                    'locations_api',
-                                                    'app_api',
-                                                    'ds_api',
-                                                    'tourhistory_api',
-                                                    'mobileuserprofile_api',
-                                                    'mobilefileagg_api',
-                                                    'jitpayapi',
-                                                    'idgen_api',
-                                                    'account'
-                                                ],
-                                                sub: '19c64aa2-6fc4-4c4b-a709-3954d7357c12',
-                                                typ: 'Bearer',
-                                                azp: 'jitfleet_portal',
-                                                session_state: 'd438b7fe-c03a-4209-af0f-d3973575e708',
-                                                realm_access: {
-                                                    roles: [
-                                                        'JitpayAdmin',
-                                                        'offline_access',
-                                                        'CarrierAdmin',
-                                                        'uma_authorization',
-                                                        'JpCompanyEditor',
-                                                        'default-roles-jitpay'
-                                                    ]
-                                                },
-                                                resource_access: {
-                                                    account: { roles: ['manage-account', 'manage-account-links', 'view-profile'] }
-                                                },
-                                                scope: 'locations_api mapping-attribute-scope mobileuserprofile_api tourhistory_api email fleet_role profile mobilefileagg_api ds_api fleet_apiscope jitpay.role fleet_api app_api offline_access openid fleet_profile idgen_api',
-                                                sid: 'd438b7fe-c03a-4209-af0f-d3973575e708',
-                                                email_verified: true,
-                                                role: [
-                                                    'JitpayAdmin',
-                                                    'offline_access',
-                                                    'CarrierAdmin',
-                                                    'uma_authorization',
-                                                    'JpCompanyEditor',
-                                                    'default-roles-jitpay'
-                                                ],
-                                                roleId: '2',
-                                                legitimationStatus: 'LegimitationCompleted',
-                                                preferred_username: 'demo@jitpay.eu',
-                                                locale: 'de',
-                                                priority: '1000',
-                                                given_name: 'Demo',
-                                                isdeleted: 'False',
-                                                userId: '37bab773-017f-4d29-938e-e6259336d0a4',
-                                                driverId: '209',
-                                                name: 'Demo User',
-                                                subsidiaryId: '274',
-                                                activationCode: '12345678',
-                                                firstTimeLoggedIn: 'false',
-                                                family_name: 'User',
-                                                email: 'demo@jitpay.eu',
-                                                username: 'demo@jitpay.eu'
-                                            },
-                                            url: 'https://keycloak.dev.jitpay.eu/auth/realms/jitpay/protocol/openid-connect/token',
-                                            option: {
-                                                method: 'POST',
-                                                body: {
-                                                    grant_type: 'password',
-                                                    client_id: 'jitfleet_portal',
-                                                    response_type: 'code id_token token',
-                                                    scope: 'openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api',
-                                                    username: 'demo@jitpay.eu',
-                                                    password: 'demoJITpay#123'
-                                                },
-                                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                                mode: 'no-cors',
-                                                referrerPolicy: 'unsafe-url'
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                projectName: 'gauge',
-                durationMin: '0.02',
-                startTime: '2022-09-15T13:12:19.681Z'
-            };
+            document.data = {"statistic":{"high":{"succeed":0,"failed":1},"medium":{"succeed":0,"failed":0},"low":{"succeed":0,"failed":0}},"overview":[{"topic":"1. Onboarding Fleet --10.2--","name":"1.1. Read Event from Onboarding Service once the first time","ticket":"","tags":["env-all","env-local","ob-10.2","ob-10.2-1","onboarding","queue"],"status":"failed","priority":"high","duration":2.56,"startTime":"2022-09-21T20:25:29.138Z","localId":"ab4a487f-ab98-48ab-9714-5f4897f2f60e","testId":"bd3858ec-f28c-43bf-a2f6-e6a271de1128"}],"locals":{"ab4a487f-ab98-48ab-9714-5f4897f2f60e":{"id":"ab4a487f-ab98-48ab-9714-5f4897f2f60e","tags":["env-all","queue","onboarding","ob-10.2"],"duration":2.57,"status":"failed","name":"Onboarding Fleet --10.2--","number":"1"}},"tests":{"bd3858ec-f28c-43bf-a2f6-e6a271de1128":{"id":"bd3858ec-f28c-43bf-a2f6-e6a271de1128","tags":["env-all","env-local","ob-10.2","ob-10.2-1","onboarding","queue"],"name":"1.1. Read Event from Onboarding Service once the first time","status":"failed","duration":2.56,"startTime":"2022-09-21T20:25:29.138Z","priority":"high","descriptions":"Check that onboarding event can be consumed while creating","tickets":[],"steps":[{"id":"488cc668-6c79-4347-af41-6244704f9171","status":"succeed","errorMessage":"","duration":2.23,"startTime":"2022-09-21T20:25:29.159Z","type":"rabbitBind","description":"Bind all queues","input":[],"output":[{"id":"-","desc":"Rabbit bind (config)","data":{"queue":"test.fleet.masterdata.error","exchange":"fleet.masterdata.error.exchange","routing":["fleet.masterdata.company.error","fleet.masterdata.carrier.error","fleet.masterdata.user.error"],"queue_create":true,"queue_delete":true,"username":"jitpay","password":"JITpaySYS#19","hostname":"192.168.50.250","port":5672,"vhost":"/"}}]}]}},"projectName":"gauge","durationMin":"0.04","startTime":"2022-09-21T20:25:29.117Z"};
         </script>
     </body>
 </html>
