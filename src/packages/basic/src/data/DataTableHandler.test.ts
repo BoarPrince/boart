@@ -22,9 +22,17 @@ jest.mock('@boart/core', () => {
             };
         },
         EnvLoader: class {
+            readMapping: () => void;
             static instance = {
                 mapReportData: (filename: string) => filename,
                 get: (key: string) => key
+            };
+        },
+        TextLanguageHandler: class {
+            static instance = {
+                language: {
+                    subscribe: () => null
+                }
             };
         }
     };

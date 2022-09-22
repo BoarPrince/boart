@@ -38,6 +38,13 @@ jest.mock('@boart/core', () => {
                 mapReportData: (filename: string) => filename,
                 get: (env_var: string) => env_var
             };
+        },
+        TextLanguageHandler: class {
+            static instance = {
+                language: {
+                    subscribe: () => null
+                }
+            };
         }
     };
 });
@@ -573,7 +580,16 @@ describe('reports', () => {
                 'Rabbit consume (configuration)': {
                     description: 'Rabbit consume (configuration)',
                     type: 'object',
-                    data: { queue: 'queue', timeout: 10, messageCount: 1, port: 5672, vhost: '/' }
+                    data: {
+                        queue: 'queue',
+                        timeout: 10,
+                        hostname: 'rabbitmq_hostname',
+                        password: 'rabbitmq_password',
+                        messageCount: 1,
+                        port: 5672,
+                        username: 'rabbitmq_username',
+                        vhost: '/'
+                    }
                 }
             },
             result: {
@@ -645,7 +661,7 @@ describe('reports', () => {
             `| action       | value          |
              |--------------|----------------|
              | queue        | queue          |
-             | count        | 2             |
+             | count        | 2              |
              | description  | Consume events |`
         );
 
@@ -678,10 +694,13 @@ describe('reports', () => {
                     description: 'Rabbit consume (configuration)',
                     type: 'object',
                     data: {
+                        hostname: 'rabbitmq_hostname',
+                        messageCount: 2,
+                        password: 'rabbitmq_password',
+                        port: 5672,
                         queue: 'queue',
                         timeout: 10,
-                        messageCount: 2,
-                        port: 5672,
+                        username: 'rabbitmq_username',
                         vhost: '/'
                     }
                 }

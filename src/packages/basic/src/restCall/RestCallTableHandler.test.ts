@@ -28,6 +28,13 @@ jest.mock('@boart/core', () => {
                 mapReportData: (filename: string) => filename,
                 get: (key: string) => key
             };
+        },
+        TextLanguageHandler: class {
+            static instance = {
+                language: {
+                    subscribe: () => null
+                }
+            };
         }
     };
 });
@@ -43,6 +50,7 @@ jest.mock('fs');
 beforeEach(() => {
     sut.handler.executionEngine.initContext();
     Store.instance.localStore.clear();
+    Store.instance.testStore.clear();
 });
 
 /**

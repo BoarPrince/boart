@@ -1,5 +1,20 @@
-import { Runtime, ValueReplacerHandler } from '@boart/core';
-import { EnvironmentReplacer, GenerateReplacer, ReferenceReplacer, StoreReplacer, TextReplacer } from '@boart/core-impl';
+import { GeneratorHandler, Runtime, ValueReplacerHandler } from '@boart/core';
+import {
+    CharGenerator,
+    DateTimeGenerator,
+    EnvironmentReplacer,
+    FakeGenerator,
+    GenerateReplacer,
+    HexGenerator,
+    IbanGenerator,
+    ISODateGenerator,
+    RandomGenerator,
+    ReferenceReplacer,
+    StoreReplacer,
+    TextReplacer,
+    TimestampGenerator,
+    UUIDGenerator
+} from '@boart/core-impl';
 import { LocalReport, ProtocolGenerator, StepReport, TestReport } from '@boart/protocol';
 
 import BasicDataGroupDefinition from './basicGroup/BasicDataGroupDefinition';
@@ -41,6 +56,18 @@ function initialize(): void {
     ValueReplacerHandler.instance.add('text', new TextReplacer());
     ValueReplacerHandler.instance.add('generate', new GenerateReplacer());
     ValueReplacerHandler.instance.add('ref', new ReferenceReplacer());
+
+    GeneratorHandler.instance.addItems([
+        new CharGenerator(),
+        new DateTimeGenerator(),
+        new FakeGenerator(),
+        new HexGenerator(),
+        new IbanGenerator(),
+        new ISODateGenerator(),
+        new RandomGenerator(),
+        new TimestampGenerator(),
+        new UUIDGenerator()
+    ]);
 }
 
 initialize();

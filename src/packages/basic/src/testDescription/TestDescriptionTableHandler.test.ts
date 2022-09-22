@@ -24,6 +24,13 @@ jest.mock('@boart/core', () => {
             static readSettings = (): Record<string, string> => {
                 return {};
             };
+        },
+        TextLanguageHandler: class {
+            static instance = {
+                language: {
+                    subscribe: () => null
+                }
+            };
         }
     };
 });
