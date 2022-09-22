@@ -75,7 +75,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
                     'config',
                     'username'
                 ),
-                defaultValue: '${store?:rabbitmq_username}',
+                defaultValue: '${env?:rabbitmq_username}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
             })
@@ -89,7 +89,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
                     'config',
                     'password'
                 ),
-                defaultValue: '${store?:rabbitmq_password}',
+                defaultValue: '${env?:rabbitmq_password}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
             })
@@ -103,7 +103,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
                     'config',
                     'hostname'
                 ),
-                defaultValue: '${store?:rabbitmq_hostname}',
+                defaultValue: '${env?:rabbitmq_hostname}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
             })

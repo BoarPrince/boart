@@ -37,7 +37,6 @@ jest.mock('@boart/core', () => {
  */
 jest.mock('amqplib', () => {
     return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         connect: jest.fn().mockImplementation((config) => createAmqplibMock().connect(config))
     };
 });
@@ -134,9 +133,9 @@ describe('default', () => {
         const mock = await getAmqplibMock();
         // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(mock.connect).toHaveBeenNthCalledWith(1, {
-            hostname: '${store?:rabbitmq_hostname}',
-            password: '${store?:rabbitmq_password}',
-            username: '${store?:rabbitmq_username}',
+            hostname: '${env?:rabbitmq_hostname}',
+            password: '${env?:rabbitmq_password}',
+            username: '${env?:rabbitmq_username}',
             port: 5672,
             vhost: '/'
         });
