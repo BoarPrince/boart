@@ -1,5 +1,5 @@
 import { Store } from '@boart/core';
-import { connect, Connection, ConsumeMessage, Replies } from 'amqplib';
+import { Channel, connect, Connection, ConsumeMessage, Replies } from 'amqplib';
 import { Subject } from 'rxjs';
 
 import { RabbitConfiguration } from './RabbitConfiguration';
@@ -41,21 +41,34 @@ export class RabbitQueueHandler {
         );
     }
 
+    /**
+     *
+     */
+    private async execute<TReturnType>(runable: (channel: Channel) => Promise<TReturnType>): Promise<TReturnType> {
+        const connection = await this.getConnection();
+        const channel = await connection.createChannel();
+
+        return new Promise((resolve, reject) => {
+            connection.on('error', (error) => reject(error));
+            runable(channel)
+                .then((rValue: TReturnType) => resolve(rValue))
+                .catch((error) => {
+                    channel.close().finally(() => reject(error));
+                });
+        });
+    }
+
     /*
      *
      */
     public static getInstance(config: RabbitConfiguration): RabbitQueueHandler {
         const instanceKey = RabbitQueueHandler.getInstanceKeyId(config);
 
-        let instance = Store.instance.testStore.get(instanceKey) as RabbitQueueHandler;
+        let instance = Store.instance.testStore.store.get(instanceKey) as RabbitQueueHandler;
         if (!instance) {
             instance = new RabbitQueueHandler();
             instance.config = config;
-            Store.instance.testStore.put(instanceKey, instance);
-            // const subscription = Runtime.instance.testRuntime.onEnd().subscribe(() => {
-            //     subscription.unsubscribe();
-            //     delete globalThis._rabbitQueueHandlerInstance;
-            // });
+            Store.instance.testStore.store.put(instanceKey, instance);
         }
         return instance;
     }
@@ -133,24 +146,18 @@ export class RabbitQueueHandler {
      *
      */
     async addQueue(queueName: string, isDurable = false): Promise<void> {
-        const channel = await (await this.getConnection()).createChannel();
-        try {
+        await this.execute(async (channel) => {
             await channel.assertQueue(queueName, { durable: isDurable });
-        } finally {
-            await channel.close();
-        }
+        });
     }
 
     /**
      *
      */
     async bindQueue(queueName: string, exchangeName: string, routing = ''): Promise<void> {
-        const channel = await (await this.getConnection()).createChannel();
-        try {
+        await this.execute(async (channel) => {
             await channel.bindQueue(queueName, exchangeName, routing);
-        } finally {
-            await channel.close();
-        }
+        });
     }
 
     /**
@@ -164,17 +171,15 @@ export class RabbitQueueHandler {
         correlationId: string,
         messageId: string
     ): Promise<boolean> {
-        const channel = await (await this.getConnection()).createChannel();
-        try {
+        // eslint-disable-next-line @typescript-eslint/require-await
+        return await this.execute(async (channel) => {
             return channel.publish(exchangName, routingKey, Buffer.from(message), {
                 persistent: false,
                 headers,
                 correlationId,
                 messageId
             });
-        } finally {
-            await channel.close();
-        }
+        });
     }
 
     /**
@@ -187,30 +192,31 @@ export class RabbitQueueHandler {
         correlationId: string,
         messageId: string
     ): Promise<boolean> {
-        const channel = await (await this.getConnection()).createChannel();
-        try {
+        // eslint-disable-next-line @typescript-eslint/require-await
+        return await this.execute(async (channel) => {
             return channel.sendToQueue(queueName, Buffer.from(message), {
                 persistent: false,
                 headers,
                 correlationId,
                 messageId
             });
-        } finally {
-            await channel.close();
-        }
+        });
     }
 
     /**
      *
      */
     async consume(queueName: string): Promise<RabbitQueueMessageConsumer> {
+        let resolver = (): void => null;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        let rejecter = (_: string | unknown): void => null;
+
         const connection = await this.getConnection();
         const channel = await connection.createChannel();
         await channel.checkQueue(queueName);
 
-        let resolver = (): void => null;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        let rejecter = (_: string): void => null;
+        // add amqplib specific error handling
+        connection.on('error', (error) => rejecter(error));
 
         // finisher
         let consumerTag: Replies.Consume;

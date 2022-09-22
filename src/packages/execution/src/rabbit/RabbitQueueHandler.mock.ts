@@ -106,13 +106,6 @@ const channel = {
 /**
  *
  */
-type Observe<T> = {
-    [Property in keyof T]: Observable<T>;
-};
-
-/**
- *
- */
 export interface AmqplibMock {
     connect(config: RabbitBindConfigContext): Promise<unknown>;
     setMessageGenerator(generatorStarter: MessageGeneratorStarter);
@@ -125,6 +118,7 @@ export interface AmqplibMock {
  *
  */
 const connection = {
+    on: jest.fn<void, [string, (unknown) => void]>(),
     close: jest.fn<Promise<void>, []>().mockReturnValue(Promise.resolve()),
     createChannel: jest.fn(() => Promise.resolve(channel)),
     createConfirmChannel: jest.fn(),
