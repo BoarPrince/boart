@@ -58,7 +58,7 @@ export class RowDefinition<
         this.type = value.type;
         this.defaultValue = value.defaultValue || value.default?.value || this.defaultValue;
         this.defaultValueColumn =
-            value.defaultValueColumn || (!value.default ? null : Symbol(value.default.value as string)) || this.defaultValueColumn;
+            value.defaultValueColumn || (!value.default ? null : Symbol(value.default.column?.toString())) || this.defaultValueColumn;
         this.executionUnit = value.executionUnit;
         this.parameterType = value.executionUnit?.parameterType || value.parameterType || this.parameterType;
         this.selectorType = value.executionUnit?.selectorType || value.selectorType || this.selectorType;

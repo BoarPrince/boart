@@ -375,6 +375,42 @@ describe('check default value', () => {
     /**
      *
      */
+    it.each([
+        ['1.', 'b', null, null, 'b'],
+        ['2.', 'b', 'c', Symbol('value1'), 'b']
+    ])(
+        `%s: check default-structured (key defined, but no value) (rowValue: '%s', defaultValue: '%p', defaultValueColumn: '%s', expected key: '%s'`,
+        (
+            _nr: string,
+            rowValue?: string | null,
+            defaultValue?: string | null,
+            defaultValueColumn?: symbol | null,
+            expectedValue?: string | null
+        ) => {
+            const rowDefinitions = [
+                new RowDefinition({
+                    key: Symbol('a:a'),
+                    parameterType: ParaType.False,
+                    type: TableRowType.PostProcessing,
+                    default: {
+                        column: defaultValueColumn?.description as never,
+                        value: defaultValue
+                    },
+                    executionUnit: null,
+                    validators: null
+                })
+            ];
+            const rawRows = [{ key: 'a:a', values: { value1: rowValue }, values_replaced: { value1: rowValue } }];
+
+            const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
+            const rows = sut.bind(RowWithOneValue);
+            expect(rows[0].value1).toBe(expectedValue);
+        }
+    );
+
+    /**
+     *
+     */
     it('check wrong default value column', () => {
         const rowDefinitions = [
             new RowDefinition({
