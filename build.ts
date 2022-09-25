@@ -7,13 +7,35 @@ import yargs from 'yargs/yargs';
  */
 interface CommandLineOptions {
     /**
+     * action
+     */
+    a: string;
+    /**
      * package name
      */
-    p: string;
+    p: Array<string>;
     /**
      * remove parent dist folder for specified package
      */
     r: boolean;
+    /**
+     * ressource file
+     */
+    f?: string;
+}
+
+/**
+ *
+ */
+enum Actions {
+    // prepare dist
+    CopyToPackageDist = 'cpd',
+    // copy to node modules
+    CopyToNodeModules = 'cnm',
+    // copy a ressource file from dist package to node modules
+    CopyRessourceToNodeModules = 'crnm',
+    // remove root dist
+    RemoveRootDist = 'rrd'
 }
 
 /**
@@ -29,7 +51,7 @@ class CommandLineReader {
     /**
      *
      */
-    get packageName(): string {
+    get packageNames(): Array<string> {
         return this.options.p;
     }
 
@@ -43,15 +65,37 @@ class CommandLineReader {
     /**
      *
      */
+    get ressourceFile(): string | undefined {
+        return this.options.f;
+    }
+
+    /**
+     *
+     */
+    get action(): string {
+        return this.options.a;
+    }
+
+    /**
+     *
+     */
     static parse(): CommandLineReader {
         const options = yargs(process.argv.slice(2))
             .options({
+                a: {
+                    type: 'string',
+                    choices: Object.values(Actions),
+                    alias: 'action',
+                    require: true,
+                    desc: 'Action that shall be executed'
+                },
                 p: {
                     type: 'string',
+                    array: true,
                     choices: ['core', 'core-impl', 'basic', 'protocol', 'execution'],
                     alias: 'packageName',
                     require: true,
-                    desc: 'Name of the package'
+                    desc: 'Name of the package(s)'
                 },
                 r: {
                     boolean: true,
@@ -59,6 +103,12 @@ class CommandLineReader {
                     default: false,
                     implies: 'p',
                     desc: 'Remove the root dist folder of the package'
+                },
+                f: {
+                    type: 'string',
+                    alias: 'ressourceFile',
+                    implies: 'p',
+                    desc: 'ressource file '
                 }
             })
             .parseSync();
@@ -80,39 +130,121 @@ class BuildHelper {
     /**
      * dir name of the root package dist folder
      */
-    private get rootPackageDistDir(): string {
-        return path.resolve(__dirname, 'dist', this.commandLine.packageName);
+    private getRootPackageDistDir(packageName: string): string {
+        return path.resolve(__dirname, 'dist', packageName);
     }
 
     /**
      * dir name of the root package dist folder
      */
-    private get packageDistDir(): string {
-        return path.resolve(__dirname, 'src', 'packages', this.commandLine.packageName, 'dist');
+    private getNodeModulesPackgeDir(packageName: string): string {
+        return path.resolve(__dirname, 'src', 'gauge', 'node_modules', '@boart', packageName);
+    }
+
+    /**
+     * dir name of the root package dist folder
+     */
+    private getPackageDistDir(packageName: string): string {
+        return path.resolve(__dirname, 'src', 'packages', packageName, 'dist');
+    }
+
+    /**
+     * dir name of the source package folder
+     */
+    private getPackageSourceDir(packageName: string): string {
+        return path.resolve(__dirname, 'src', 'packages', packageName);
     }
 
     /**
      *
      */
     removeRootDist(): void {
-        fs.rmSync(this.rootPackageDistDir, { recursive: true, force: true });
+        this.commandLine.packageNames.forEach((packageName) => {
+            fs.rmSync(this.getRootPackageDistDir(packageName), { recursive: true, force: true });
+        });
     }
 
     /**
      *
      */
     copyToPackageDist(): void {
-        fs.cpSync(path.resolve(this.rootPackageDistDir, 'src'), this.packageDistDir, { recursive: true });
+        this.commandLine.packageNames.forEach((packageName) => {
+            fs.cpSync(path.resolve(this.getRootPackageDistDir(packageName), 'src'), this.getPackageDistDir(packageName), {
+                recursive: true
+            });
+        });
+    }
+
+    /**
+     *
+     */
+    removeNodeModulesPackage(): void {
+        this.commandLine.packageNames.forEach((packageName) => {
+            fs.rmSync(this.getNodeModulesPackgeDir(packageName), { recursive: true, force: true });
+        });
+    }
+
+    /**
+     *
+     */
+    copyToNodeModulesPackage(): void {
+        this.commandLine.packageNames.forEach((packageName) => {
+            fs.cpSync(this.getRootPackageDistDir(packageName), this.getNodeModulesPackgeDir(packageName), {
+                recursive: true
+            });
+        });
+    }
+
+    /**
+     *
+     */
+    copyRessourceToNodeModulesPackage(): void {
+        const ressourceFile = this.commandLine.ressourceFile;
+        if (!ressourceFile) {
+            return;
+        }
+
+        this.commandLine.packageNames.forEach((packageName) => {
+            fs.cpSync(
+                path.join(this.getPackageSourceDir(packageName), ressourceFile),
+                path.join(this.getNodeModulesPackgeDir(packageName), ressourceFile)
+            );
+        });
+    }
+
+    /**
+     *
+     */
+    addPackageJsonToNodeModulesPackage(): void {
+        this.commandLine.packageNames.forEach((packageName) => {
+            fs.writeFileSync(
+                path.resolve(this.getNodeModulesPackgeDir(packageName), 'package.json'),
+                `{
+            "name": "@boart/${packageName}",
+            "main": "src/index.js",
+            "types": "src/index.d.ts"
+          }`
+            );
+        });
     }
 }
-
-console.log(process.env['npm_package_json']);
 
 const args = CommandLineReader.parse();
 const helper = new BuildHelper(args);
 
-if (args.removeParentDist) {
-    helper.removeRootDist();
-} else {
-    helper.copyToPackageDist();
+switch (args.action) {
+    case Actions.CopyToPackageDist:
+        helper.copyToPackageDist();
+        break;
+    case Actions.RemoveRootDist:
+        helper.removeRootDist();
+        break;
+    case Actions.CopyToNodeModules:
+        helper.removeNodeModulesPackage();
+        helper.copyToNodeModulesPackage();
+        helper.addPackageJsonToNodeModulesPackage();
+        break;
+    case Actions.CopyRessourceToNodeModules:
+        helper.copyRessourceToNodeModulesPackage();
+        break;
 }
