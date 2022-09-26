@@ -41,6 +41,15 @@ jest.mock('@boart/core', () => {
 /**
  *
  */
+jest.mock('crypto', () => {
+    return {
+        randomUUID: () => 'x-x-x'
+    };
+});
+
+/**
+ *
+ */
 jest.mock('fs');
 
 /**
@@ -304,4 +313,77 @@ it('use store as input and use transformation', async () => {
 
     const result = Store.instance.testStore.get('out');
     expect(result.valueOf()).toStrictEqual({ d: 3 });
+});
+
+/**
+ *
+ */
+it('with generator - uuid', async () => {
+    const tableRows = MarkdownTableReader.convert(
+        `| action  | value             |
+         |---------|-------------------|
+         | in#uuid | \${generate:uuid} |
+         | store   | out               |`
+    );
+
+    await sut.handler.process(tableRows);
+
+    const result = Store.instance.testStore.get('out');
+    expect(result.valueOf()).toStrictEqual({ uuid: 'x-x-x' });
+});
+
+/**
+ *
+ */
+it('with generator - random', async () => {
+    jest.spyOn(global.Math, 'floor').mockReturnValue(5);
+
+    const tableRows = MarkdownTableReader.convert(
+        `| action    | value               |
+         |-----------|---------------------|
+         | in#random | \${generate:random} |
+         | store     | out                 |`
+    );
+
+    await sut.handler.process(tableRows);
+
+    const result = Store.instance.testStore.get('out');
+    expect(result.valueOf()).toStrictEqual({ random: 5555 });
+});
+
+/**
+ *
+ */
+it('with generator - random - string', async () => {
+    jest.spyOn(global.Math, 'floor').mockReturnValue(5);
+
+    const tableRows = MarkdownTableReader.convert(
+        `| action    | value                 |
+         |-----------|-----------------------|
+         | in#random | -\${generate:random}- |
+         | store     | out                   |`
+    );
+
+    await sut.handler.process(tableRows);
+
+    const result = Store.instance.testStore.get('out');
+    expect(result.valueOf()).toStrictEqual({ random: '-5555-' });
+});
+/**
+ *
+ */
+it('with generator - random - with size', async () => {
+    jest.spyOn(global.Math, 'floor').mockReturnValue(5);
+
+    const tableRows = MarkdownTableReader.convert(
+        `| action    | value                 |
+         |-----------|-----------------------|
+         | in#random | \${generate:random:10} |
+         | store     | out                   |`
+    );
+
+    await sut.handler.process(tableRows);
+
+    const result = Store.instance.testStore.get('out');
+    expect(result.valueOf()).toStrictEqual({ random: 5555555555 });
 });
