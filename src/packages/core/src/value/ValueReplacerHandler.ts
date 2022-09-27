@@ -138,11 +138,11 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
             }
             case ScopedType.true: {
                 const store = ValueReplacerHandler.getStore(scope);
-                let content = store.get(storeIdentifier)?.toString();
+                let content = store.store.get(storeIdentifier)?.toString();
                 if (!content) {
                     content = r.replacer.replace(property);
                     ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property);
-                    store.put(storeIdentifier, content);
+                    store.store.put(storeIdentifier, content);
                 }
                 return content;
             }
