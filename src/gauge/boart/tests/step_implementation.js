@@ -7,7 +7,8 @@ const {
     RestAuthorizeTableHandler,
     RabbitBindTableHandler,
     RabbitPublishTableHandler,
-    RabbitConsumeTableHandler
+    RabbitConsumeTableHandler,
+    DataTableHandler
 } = require('@boart/basic');
 const { Store, Runtime, RuntimeStatus } = require('@boart/core');
 
@@ -176,8 +177,25 @@ step('Test description <table>', async (table) => {
 /**
  *
  */
-step('Check store', () => {
+const dataTableHandler = new DataTableHandler();
+step('Data manage <table>', async (table) => {
+    await dataTableHandler.handler.process(table);
+});
+
+/**
+ *
+ */
+step('Print store', () => {
     gauge.dataStore.scenarioStore;
-    console.log(Object.keys(gauge.dataStore.scenarioStore.store));
-    console.log('test store', gauge.dataStore.scenarioStore);
+    const keys = Object.keys(gauge.dataStore.scenarioStore.store);
+    console.log('key', keys);
+    console.log(' ');
+
+    keys.forEach((key) => {
+        if (key === 'company_event_after_onboarding') {
+            console.log('\t', key, ':', JSON.stringify(gauge.dataStore.scenarioStore.get(key)));
+        } else {
+            console.log('\t', key, ':', gauge.dataStore.scenarioStore.get(key));
+        }
+    });
 });

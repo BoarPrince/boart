@@ -3,6 +3,8 @@
 
 # Gauge - log files dir
 logs
+boart/.logs
+
 
 # Gauge - reports dir
 reports

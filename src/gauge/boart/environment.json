@@ -1,0 +1,38 @@
+{
+  "environment": {
+    "admin_login_user": "demo@jitpay.eu",
+    "admin_login_password": "demoJITpay#123",
+    "rabbitmq_hostname": [
+      "192.168.50.250",
+      "192.168.50.249",
+      "localhost"
+    ],
+    "rabbitmq_password": [
+      "JITpaySYS#19",
+      "JITpaySYS#19",
+      "guest"
+    ],
+    "rabbitmq_username": [
+      "jitpay",
+      "jitpay",
+      "guest"
+    ]
+  },
+  "path_mapping": {
+    "/token": [
+      "https://keycloak.dev.jitpay.eu/auth/realms/jitpay/protocol/openid-connect",
+      "https://keycloak.stage.jitpay.eu/auth/realms/jitpay/protocol/openid-connect"
+    ],
+    "/api": [
+      "https://master-data.dev.jitpay.eu",
+      "https://master-data.stage.jitpay.eu",
+      "http://localhost:8090"
+    ],
+    "/api/masterdata": [
+      "https://jitfleet-master.dev.jitpay.eu",
+      "https://jitfleet-master.stage.jitpay.eu",
+      "http://localhost:8090"
+    ]
+  },
+  "environment_reports_data_dir": "./reports"
+}

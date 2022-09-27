@@ -1,0 +1,13 @@
+# request admin bearer
+
+* Rest authorize
+
+    | action     | value                                                                                                                                    |
+    |------------|------------------------------------------------------------------------------------------------------------------------------------------|
+    | url        | /token                                                                                                                                   |
+    | grantType | password                                                                                                                                 |
+    | scope      | openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api |
+    | clientId  | jitfleet_portal                                                                                                                          |
+    | username   | ${env:admin_login_user}                                                                                                                  |
+    | password   | ${env:admin_login_password}                                                                                                              |
+    | retry:count      | 2                                                                                                                                        |
