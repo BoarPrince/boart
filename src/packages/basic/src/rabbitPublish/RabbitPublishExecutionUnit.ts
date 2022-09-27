@@ -19,21 +19,20 @@ export class RabbitPublishExecutionUnit implements ExecutionUnit<RabbitPublishCo
         //#region start consuming
         StepReport.instance.type = 'rabbitPublish';
 
-        const handlerConfig = { ...context.config, passwort: undefined };
-        StepReport.instance.addInputItem('Rabbit publish (configuration)', 'object', handlerConfig);
+        const config = { ...context.config, password: undefined };
+        StepReport.instance.addInputItem('Rabbit publish (configuration)', 'json', config);
 
         if (!context.preExecution.header.isObject()) {
             throw Error(`header must key valued, but it's not`);
         }
 
         const handlerInstance = RabbitQueueHandler.getInstance(context.config);
+        const headers = context.preExecution.header.getObject();
 
-        const headers = Object.entries(context.preExecution.header.getObject()).reduce((p, c) => {
-            p[c[0]] = c[1];
-            return p;
-        }, {} as Record<string, unknown>);
+        StepReport.instance.addInputItem('Rabbit publish (header)', 'object', { ...context.preExecution, payload: undefined });
 
         if (context.config.type === PublishType.Queue) {
+            StepReport.instance.addInputItem('Rabbit publish to queue (payload)', 'json', context.preExecution.payload);
             await handlerInstance.sendToQueue(
                 context.config.queue_or_exhange,
                 context.preExecution.payload.toJSON(),
@@ -42,9 +41,10 @@ export class RabbitPublishExecutionUnit implements ExecutionUnit<RabbitPublishCo
                 context.preExecution.messageId
             );
         } else {
+            StepReport.instance.addInputItem('Rabbit publish to exchange (payload)', 'json', context.preExecution.payload);
             await handlerInstance.sendToExchange(
                 context.config.queue_or_exhange,
-                context.preExecution.routingKey,
+                context.preExecution.routing,
                 context.preExecution.payload.toJSON(),
                 headers,
                 context.preExecution.correlationId,

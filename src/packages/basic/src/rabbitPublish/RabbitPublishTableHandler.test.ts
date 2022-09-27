@@ -1,10 +1,9 @@
 import fs from 'fs';
 
+import { RabbitPublishTableHandler } from '@boart/basic';
 import { LocalContext, MarkdownTableReader, ObjectContent, Runtime, RuntimeContext, StepContext, Store, TestContext } from '@boart/core';
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
 import { StepReport } from '@boart/protocol';
-
-import RabbitPublishTableHandler from './RabbitPublishTableHandler';
 
 const sut = new RabbitPublishTableHandler();
 
@@ -12,6 +11,23 @@ const sut = new RabbitPublishTableHandler();
  *
  */
 jest.mock('fs');
+
+/**
+ *
+ */
+beforeEach(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+    sut.handler.executionEngine.initContext();
+    Store.instance.testStore.clear();
+    Runtime.instance.stepRuntime.notifyStart({} as StepContext);
+});
+
+/**
+ *
+ */
+afterEach(() => {
+    StepReport.instance.report();
+});
 
 /**
  *
@@ -27,6 +43,13 @@ jest.mock('@boart/core', () => {
             static instance = {
                 mapReportData: (filename: string) => filename,
                 get: (env_var: string) => env_var
+            };
+        },
+        TextLanguageHandler: class {
+            static instance = {
+                language: {
+                    subscribe: () => null
+                }
             };
         }
     };
@@ -274,9 +297,9 @@ describe('data', () => {
         it('default publish - exchange', async () => {
             const tableRows = MarkdownTableReader.convert(
                 `| action   | value    |
-           |----------|----------|
-           | exchange | ex       |
-           | payload  | {"a": 1} |`
+                 |----------|----------|
+                 | exchange | ex       |
+                 | payload  | {"a": 1} |`
             );
 
             await sut.handler.process(tableRows);
@@ -296,10 +319,10 @@ describe('data', () => {
         it('exchange with messageid', async () => {
             const tableRows = MarkdownTableReader.convert(
                 `| action    | value    |
-           |-----------|----------|
-           | exchange  | ex       |
-           | messageId | m        |
-           | payload   | {"a": 1} |`
+                 |-----------|----------|
+                 | exchange  | ex       |
+                 | messageId | m        |
+                 | payload   | {"a": 1} |`
             );
 
             await sut.handler.process(tableRows);
@@ -319,10 +342,10 @@ describe('data', () => {
         it('exchange with correlationId', async () => {
             const tableRows = MarkdownTableReader.convert(
                 `| action        | value    |
-           |---------------|----------|
-           | exchange      | ex       |
-           | correlationId | c        |
-           | payload       | {"a": 1} |`
+                 |---------------|----------|
+                 | exchange      | ex       |
+                 | correlationId | c        |
+                 | payload       | {"a": 1} |`
             );
 
             await sut.handler.process(tableRows);
@@ -359,6 +382,132 @@ describe('data', () => {
                 messageId: '',
                 persistent: false
             });
+        });
+    });
+});
+
+/**
+ *
+ */
+describe('reporting', () => {
+    /**
+     *
+     */
+    it('report queue', async () => {
+        const tableRows = MarkdownTableReader.convert(
+            `| action      | value     |
+             |-------------|-----------|
+             | queue       | queue     |
+             | description | test desc |
+             | payload     | {"a": 1}  |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        Runtime.instance.stepRuntime.current.id = 'id-id-id';
+        StepReport.instance.report();
+
+        const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
+        // expect(writeFileMockCalls.length).toBe(1);
+        expect(JSON.parse(writeFileMockCalls[0][1] as string)).toStrictEqual({
+            description: 'test desc',
+            id: 'id-id-id',
+            input: {
+                'Rabbit publish (configuration)': {
+                    data: {
+                        hostname: 'rabbitmq_hostname',
+                        port: 5672,
+                        queue_or_exhange: 'queue',
+                        type: 'queue',
+                        username: 'rabbitmq_username',
+                        vhost: '/'
+                    },
+                    description: 'Rabbit publish (configuration)',
+                    type: 'json'
+                },
+                'Rabbit publish (header)': {
+                    data: {
+                        correlationId: '',
+                        header: '{}',
+                        messageId: '',
+                        routing: ''
+                    },
+                    description: 'Rabbit publish (header)',
+                    type: 'object'
+                },
+                'Rabbit publish to queue (payload)': {
+                    data: {
+                        a: 1
+                    },
+                    description: 'Rabbit publish to queue (payload)',
+                    type: 'json'
+                }
+            },
+            result: {},
+            startTime: '2020-01-01T00:00:00.000Z',
+            status: 2,
+            type: 'rabbitPublish'
+        });
+    });
+
+    /**
+     *
+     */
+    it('report exchange', async () => {
+        const tableRows = MarkdownTableReader.convert(
+            `| action      | value     |
+             |-------------|-----------|
+             | exchange    | exchange  |
+             | routing     | r1        |
+             | description | test desc |
+             | payload     | {"a": 1}  |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        Runtime.instance.stepRuntime.current.id = 'id-id-id';
+        StepReport.instance.report();
+
+        const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
+        // expect(writeFileMockCalls.length).toBe(1);
+        expect(JSON.parse(writeFileMockCalls[0][1] as string)).toStrictEqual({
+            description: 'test desc',
+            id: 'id-id-id',
+            input: {
+                'Rabbit publish (configuration)': {
+                    data: {
+                        hostname: 'rabbitmq_hostname',
+                        port: 5672,
+                        queue_or_exhange: 'exchange',
+                        type: 'exchange',
+                        username: 'rabbitmq_username',
+                        vhost: '/'
+                    },
+                    description: 'Rabbit publish (configuration)',
+                    type: 'json'
+                },
+                'Rabbit publish (header)': {
+                    data: {
+                        correlationId: '',
+                        header: '{}',
+                        messageId: '',
+                        routing: 'r1'
+                    },
+                    description: 'Rabbit publish (header)',
+                    type: 'object'
+                },
+                'Rabbit publish to exchange (payload)': {
+                    data: {
+                        a: 1
+                    },
+                    description: 'Rabbit publish to exchange (payload)',
+                    type: 'json'
+                }
+            },
+            result: {},
+            startTime: '2020-01-01T00:00:00.000Z',
+            status: 2,
+            type: 'rabbitPublish'
         });
     });
 });

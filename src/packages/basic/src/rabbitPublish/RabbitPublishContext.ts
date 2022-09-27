@@ -23,7 +23,7 @@ export interface RabbitPublishPreExecutionContext {
     header: ObjectContent;
     correlationId: string;
     messageId: string;
-    routingKey: string;
+    routing: string;
 }
 
 /**

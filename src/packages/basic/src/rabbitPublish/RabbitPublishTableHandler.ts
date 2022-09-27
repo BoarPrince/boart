@@ -50,7 +50,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             header: new ObjectContent(),
             correlationId: '',
             messageId: '',
-            routingKey: ''
+            routing: ''
         },
         execution: null
     });
@@ -174,7 +174,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
                 type: TableRowType.Configuration,
                 executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
                     'preExecution',
-                    'routingKey'
+                    'routing'
                 ),
                 validators: [
                     new DependsOnValueValidator({
