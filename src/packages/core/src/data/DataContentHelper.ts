@@ -223,7 +223,7 @@ export class DataContentHelper {
          */
         const getDataContentObject = (contentObject: DataContent): DataContentObject => {
             if (!DataContentHelper.isObject(contentObject)) {
-                throw Error(`cannot set value to an '${ContentInstance[contentObject.type]}' value`);
+                throw Error(`cannot set value to an '${ContentInstance[contentObject.type]}' value, selector: ${JSON.stringify(selector)}`);
             }
             return contentObject.asDataContentObject();
         };

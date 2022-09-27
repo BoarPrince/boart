@@ -112,8 +112,8 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
     /**
      *
      */
-    getObject(): object {
-        return this.getValue() as object;
+    getObject(): Record<string, unknown> {
+        return this.getValue() as Record<string, unknown>;
     }
 
     /**

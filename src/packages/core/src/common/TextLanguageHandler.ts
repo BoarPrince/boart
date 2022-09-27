@@ -183,7 +183,9 @@ export class TextLanguageHandler {
      *
      */
     private readMapping() {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
-        this.initMapping(this.readSettings(fsPath.join(process.env.environment_project_root, process.env.environment_project_location)));
+        this.initMapping(
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+            this.readSettings(fsPath.join(process.env.environment_project_root || '', process.env.environment_project_location || ''))
+        );
     }
 }
