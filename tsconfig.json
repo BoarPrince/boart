@@ -1,3 +1,14 @@
 {
   "extends": "./tsconfig.build.json",
+  "include": [
+    "src/packages/**/*.ts"
+  ],
+  "compilerOptions": {
+    "composite": false,
+    "declarationMap": true,
+    "declaration": true,
+    "inlineSourceMap": false,
+    "sourceMap": true,
+    "mapRoot": "src/packages"
+  }
 }
