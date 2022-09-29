@@ -1,4 +1,4 @@
-import { DataContent, DataContentHelper, ExecutionUnit, ObjectContent } from '@boart/core';
+import { DataContent, DataContentHelper, ExecutionUnit, ExecutionUnitValidation, ObjectContent } from '@boart/core';
 import { RowTypeValue } from '@boart/core-impl';
 import { RabbitQueueHandler, RabbitQueueMessage, RabbitQueueMessageConsumer } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
@@ -8,7 +8,9 @@ import { RabbitConsumeContext } from './RabbitConsumeContext';
 /**
  *
  */
-export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>> {
+export class RabbitConsumeExecutionUnit
+    implements ExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>, ExecutionUnitValidation<RabbitConsumeContext>
+{
     public description = 'rabbit message queue - main';
 
     private receivedMessage = 0;
@@ -28,7 +30,7 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
     /**
      *
      */
-    private static setOrPushData(contextData: DataContent, data: DataContent): DataContent {
+    private static addData(contextData: DataContent, data: DataContent): DataContent {
         const value = contextData?.getValue();
         if (!value) {
             // context data is empty
@@ -51,7 +53,7 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
         const consumer = await handlerInstance.consume(context.config.queue);
 
         const reveivedDataList = [];
-        StepReport.instance.addResultItem('Rabbit consume (received message)', 'object', reveivedDataList);
+        StepReport.instance.addResultItem('Rabbit consume (received messages)', 'object', reveivedDataList);
 
         /**
          *
@@ -77,26 +79,44 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
                 return;
             }
 
-            context.execution.header = RabbitConsumeExecutionUnit.setOrPushData(
+            context.execution.header = RabbitConsumeExecutionUnit.addData(
                 context.execution.header,
-                RabbitConsumeExecutionUnit.createHeader(queueMessage)
+                RabbitConsumeExecutionUnit.createHeader({ ...queueMessage, message: undefined })
             );
-            context.execution.data = RabbitConsumeExecutionUnit.setOrPushData(
+            context.execution.data = RabbitConsumeExecutionUnit.addData(
                 context.execution.data,
                 DataContentHelper.create(queueMessage.message)
             );
 
-            if (++this.receivedMessage >= context.config.messageCount) {
-                // consuming can only be stopped if the message count fits
-                await consumer.stop();
+            ++this.receivedMessage;
+
+            if (context.config.count_max != null) {
+                if (this.receivedMessage > context.config.count_max) {
+                    // consuming can only be stopped if the message count fits
+                    await consumer.stop(
+                        `maximum ${context.config.count_max} message(s) expected, but ${this.receivedMessage} message(s) received`
+                    );
+                }
+            } else {
+                if (this.receivedMessage >= context.config.count_min) {
+                    // consuming can only be stopped if the message count fits
+                    await consumer.stop();
+                }
             }
         };
 
-        consumer.messages.subscribe((queueMessage: RabbitQueueMessage) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            messageConsumer(queueMessage).catch((error) => consumer.stop(error?.message || error));
-        });
+        consumer.messageHandler = (queueMessage: RabbitQueueMessage) => messageConsumer(queueMessage);
         return consumer;
+    }
+
+    /**
+     *
+     */
+    validate(context: RabbitConsumeContext): void {
+        // rule 1: one count must be at least defined
+        if (context.config.count_min === 0 && context.config.count_max == null) {
+            throw Error(`minimum message count can't be 0 if no maximum count is defined`);
+        }
     }
 
     /**
@@ -107,7 +127,7 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
         StepReport.instance.type = 'rabbitConsume';
 
         const handlerConfig = { ...context.config, passwort: undefined };
-        StepReport.instance.addInputItem('Rabbit consume (configuration)', 'object', handlerConfig);
+        StepReport.instance.addInputItem('Rabbit consume (configuration)', 'object', { ...handlerConfig, password: undefined });
 
         let timeoutHandler: NodeJS.Timeout;
         try {
@@ -115,7 +135,9 @@ export class RabbitConsumeExecutionUnit implements ExecutionUnit<RabbitConsumeCo
             timeoutHandler = setTimeout(
                 () =>
                     void consumer.stop(
-                        `consumer timed out after ${context.config.timeout} seconds, ${context.config.messageCount} message(s) expected, ${this.receivedMessage} message(s) received`
+                        this.receivedMessage < context.config.count_min
+                            ? `consumer timed out after ${context.config.timeout} seconds, minimum ${context.config.count_min} message(s) expected, ${this.receivedMessage} message(s) received`
+                            : undefined
                     ),
                 context.config.timeout * 1000
             );

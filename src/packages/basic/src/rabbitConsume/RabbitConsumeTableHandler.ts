@@ -32,7 +32,8 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
         config: {
             queue: '',
             timeout: 10,
-            messageCount: 1,
+            count_min: 1,
+            count_max: null,
             username: '',
             password: '',
             hostname: '',
@@ -147,7 +148,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
                     'config',
                     'timeout'
                 ),
-                validators: null
+                validators: [new IntValidator('value')]
             })
         );
 
@@ -157,9 +158,33 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
                 type: TableRowType.Configuration,
                 executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>(
                     'config',
-                    'messageCount'
+                    'count_min'
                 ),
-                validators: null
+                validators: [new IntValidator('value')]
+            })
+        );
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('count:min'),
+                type: TableRowType.Configuration,
+                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>(
+                    'config',
+                    'count_min'
+                ),
+                validators: [new IntValidator('value')]
+            })
+        );
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('count:max'),
+                type: TableRowType.Configuration,
+                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>(
+                    'config',
+                    'count_max'
+                ),
+                validators: [new IntValidator('value')]
             })
         );
 

@@ -145,33 +145,6 @@ describe('default', () => {
     /**
      *
      */
-    it('consume one event, but two events expected', async () => {
-        getAmqplibMock()
-            .then((mockInstance) => {
-                mockInstance.setMessageGenerator((generator) => {
-                    generator.send({ content: { a: '1' } });
-                });
-            })
-            .catch((error) => {
-                throw error;
-            });
-
-        const tableRows = MarkdownTableReader.convert(
-            `| action       | value  |
-             |--------------|--------|
-             | queue        | queue  |
-             | count        | 2      |
-             | timeout      | 2      |`
-        );
-
-        await expect(sut.handler.process(tableRows)).rejects.toThrowError(
-            'consumer timed out after 2 seconds, 2 message(s) expected, 1 message(s) received'
-        );
-    });
-
-    /**
-     *
-     */
     it('consume one event, using credentials', async () => {
         getAmqplibMock()
             .then((mockInstance) => {
@@ -196,8 +169,9 @@ describe('default', () => {
         await sut.handler.process(tableRows);
 
         expect(sut.handler.executionEngine.context.config).toEqual({
+            count_max: null,
+            count_min: 1,
             hostname: 'p',
-            messageCount: 1,
             password: 'p',
             port: 5672,
             queue: 'queue',
@@ -310,6 +284,7 @@ describe('filter', () => {
             `| action                            | value |
              |-----------------------------------|-------|
              | filter:expected:header#headers.h1 | x     |
+             | count                             | 2     |
              | queue                             | queue |`
         );
 
@@ -453,6 +428,339 @@ describe('expected', () => {
 /**
  *
  */
+describe('count', () => {
+    /**
+     *
+     */
+    it('expect mininum 2 messages', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: 1 } });
+                    generator.send({ content: { a: 2 } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action | value |
+             |--------|-------|
+             | queue  | queue |
+             | count  | 2     |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { a: 2 }]);
+    });
+
+    /**
+     *
+     */
+    it('expect mininum 2 messages, but 3 message sent', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: 1 } });
+                    generator.send({ content: { a: 2 } });
+                    generator.send({ content: { a: 3 } });
+                    generator.send({ content: { a: 4 } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action | value |
+             |--------|-------|
+             | queue  | queue |
+             | count  | 2     |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { a: 2 }]);
+    });
+
+    /**
+     *
+     */
+    it('expect mininum 2 messages, but only 1 received', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: '1' } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action       | value  |
+             |--------------|--------|
+             | queue        | queue  |
+             | count        | 2      |
+             | timeout      | 2      |`
+        );
+
+        await expect(sut.handler.process(tableRows)).rejects.toThrowError(
+            'consumer timed out after 2 seconds, minimum 2 message(s) expected, 1 message(s) received'
+        );
+    });
+
+    /**
+     *
+     */
+    it('zero min count without max count definition not possible', async () => {
+        const tableRows = MarkdownTableReader.convert(
+            `| action | value |
+             |--------|-------|
+             | queue  | queue |
+             | count  | 0     |`
+        );
+
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
+            `minimum message count can't be 0 if no maximum count is defined`
+        );
+    });
+
+    /**
+     *
+     */
+    it('max count with one message', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: 1 } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action    | value |
+             |-----------|-------|
+             | queue     | queue |
+             | timeout   | 2     |
+             | count:max | 1     |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual({ a: 1 });
+    });
+
+    /**
+     *
+     */
+    it('max count with two message', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: 1 } });
+                    generator.send({ content: { b: 2 } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action    | value |
+             |-----------|-------|
+             | queue     | queue |
+             | timeout   | 2     |
+             | count:max | 2     |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { b: 2 }]);
+    });
+
+    /**
+     *
+     */
+    it('max count with two message, but only one received', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: 1 } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action    | value |
+             |-----------|-------|
+             | queue     | queue |
+             | timeout   | 2     |
+             | count:max | 2     |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual({ a: 1 });
+    });
+
+    /**
+     *
+     */
+    it('max count with one message, but two consumed', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: 1 } });
+                    generator.send({ content: { b: 2 } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action    | value |
+             |-----------|-------|
+             | queue     | queue |
+             | timeout   | 2     |
+             | count:max | 1     |`
+        );
+
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(`maximum 1 message(s) expected, but 2 message(s) received`);
+    });
+
+    /**
+     *
+     */
+    it('exactly one message expected', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: 1 } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action    | value |
+             |-----------|-------|
+             | queue     | queue |
+             | timeout   | 2     |
+             | count:max | 1     |
+             | count:min | 1     |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual({ a: 1 });
+    });
+
+    /**
+     *
+     */
+    it('min 1 and max 3 message expected', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: 1 } });
+                    generator.send({ content: { b: 2 } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action    | value |
+             |-----------|-------|
+             | queue     | queue |
+             | timeout   | 2     |
+             | count:max | 3     |
+             | count:min | 1     |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { b: 2 }]);
+    });
+
+    /**
+     *
+     */
+    it('min 2 and max 3 message expected, but only one received', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: 1 } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action    | value |
+             |-----------|-------|
+             | queue     | queue |
+             | timeout   | 2     |
+             | count:max | 3     |
+             | count:min | 2     |`
+        );
+
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
+            `consumer timed out after 2 seconds, minimum 2 message(s) expected, 1 message(s) received`
+        );
+    });
+
+    /**
+     *
+     */
+    it('min 1 and max 2 message expected, but three messages received', async () => {
+        getAmqplibMock()
+            .then((mockInstance) => {
+                mockInstance.setMessageGenerator((generator) => {
+                    generator.send({ content: { a: 1 } });
+                    generator.send({ content: { b: 2 } });
+                    generator.send({ content: { c: 3 } });
+                });
+            })
+            .catch((error) => {
+                throw error;
+            });
+
+        const tableRows = MarkdownTableReader.convert(
+            `| action    | value |
+             |-----------|-------|
+             | queue     | queue |
+             | timeout   | 2     |
+             | count:max | 2     |
+             | count:min | 1     |`
+        );
+
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(`maximum 2 message(s) expected, but 3 message(s) received`);
+        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { b: 2 }, { c: 3 }]);
+    });
+});
+
+/**
+ *
+ */
 describe('transform & output', () => {
     /**
      *
@@ -581,11 +889,11 @@ describe('reports', () => {
                     description: 'Rabbit consume (configuration)',
                     type: 'object',
                     data: {
+                        count_max: null,
+                        count_min: 1,
                         queue: 'queue',
                         timeout: 10,
                         hostname: 'rabbitmq_hostname',
-                        password: 'rabbitmq_password',
-                        messageCount: 1,
                         port: 5672,
                         username: 'rabbitmq_username',
                         vhost: '/'
@@ -593,8 +901,8 @@ describe('reports', () => {
                 }
             },
             result: {
-                'Rabbit consume (received message)': {
-                    description: 'Rabbit consume (received message)',
+                'Rabbit consume (received messages)': {
+                    description: 'Rabbit consume (received messages)',
                     type: 'object',
                     data: [{ header: { correlationId: '', fields: {}, properties: {}, headers: {} }, data: { a: 'x' } }]
                 },
@@ -627,6 +935,7 @@ describe('reports', () => {
             `| action       | value          |
              |--------------|----------------|
              | queue        | queue          |
+             | count        | 2              |
              | description  | Consume events |`
         );
 
@@ -636,7 +945,7 @@ describe('reports', () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
         const reportData = JSON.parse((fs.writeFile as any).mock.calls[0][1]);
 
-        expect(reportData['result']['Rabbit consume (received message)']['data']).toStrictEqual([
+        expect(reportData['result']['Rabbit consume (received messages)']['data']).toStrictEqual([
             { data: { a: 1 }, header: { correlationId: '', fields: {}, properties: {}, headers: {} } },
             { data: { a: 2 }, header: { correlationId: '', fields: {}, properties: {}, headers: {} } }
         ]);
@@ -694,9 +1003,9 @@ describe('reports', () => {
                     description: 'Rabbit consume (configuration)',
                     type: 'object',
                     data: {
+                        count_max: null,
+                        count_min: 2,
                         hostname: 'rabbitmq_hostname',
-                        messageCount: 2,
-                        password: 'rabbitmq_password',
                         port: 5672,
                         queue: 'queue',
                         timeout: 10,
@@ -706,8 +1015,8 @@ describe('reports', () => {
                 }
             },
             result: {
-                'Rabbit consume (received message)': {
-                    description: 'Rabbit consume (received message)',
+                'Rabbit consume (received messages)': {
+                    description: 'Rabbit consume (received messages)',
                     type: 'object',
                     data: [
                         {
