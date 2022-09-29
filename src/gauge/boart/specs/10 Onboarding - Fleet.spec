@@ -50,7 +50,7 @@ Print store
    |-----------|---------------------------|
    |queue      |test.fleet.masterdata.error|
    |description|Error queue must be empty  |
-   |count      |0                          |
+   |count:max  |0                          |
 
 * request admin bearer
 

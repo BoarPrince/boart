@@ -21,13 +21,11 @@
       | in#email          | jitpaytest+ob${generate:s:random:5}@gmail.com |
       | in#firstName      | ${generate:s:fake:name:firstName}             |
       | in#lastName       | ${generate:s:fake:name:lastName}              |
-      | description       | ob_info                                       |
       | store             | ob_info                                       |
 
 * Data manage
 
       | action      | value                                          |
       | ----------- | ---------------------------------------------- |
-      | description | storename1                                     |
       | in          | <file:company-cascading-after-onboarding.json> |
       | store       | <storeName>                                    |
