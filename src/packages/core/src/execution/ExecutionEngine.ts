@@ -3,6 +3,7 @@ import { TableRowType } from '../table/TableRowType';
 
 import { ExecutionContext } from './ExecutionContext';
 import { ExecutionUnit } from './ExecutionUnit';
+import { ExecutionUnitValidation } from './ExecutionUnitValidation';
 
 /**
  *
@@ -37,7 +38,16 @@ export class ExecutionEngine<
         await this.executeByType(rows, this.context, TableRowType.Configuration);
         await this.executeByType(rows, this.context, TableRowType.PreProcessing);
 
-        await this.mainExecutionUnit().execute(this.context, null, () => this.executeByType(rows, this.context, TableRowType.InProcessing));
+        const mainExecutionUnit = this.mainExecutionUnit();
+
+        const mainExecutionUnitWithValidator = mainExecutionUnit as ExecutionUnitValidation<TExecutionContext> &
+            ExecutionUnit<TExecutionContext, TRowType>;
+
+        if (mainExecutionUnitWithValidator.validate) {
+            await mainExecutionUnitWithValidator.validate(this.context);
+        }
+
+        await mainExecutionUnit.execute(this.context, null, () => this.executeByType(rows, this.context, TableRowType.InProcessing));
 
         await this.executeByType(rows, this.context, TableRowType.PostProcessing);
 

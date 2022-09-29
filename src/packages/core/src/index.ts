@@ -20,6 +20,7 @@ import { TextContent } from './data/TextContent';
 import { ExecutionContext } from './execution/ExecutionContext';
 import { ExecutionEngine } from './execution/ExecutionEngine';
 import { ExecutionUnit } from './execution/ExecutionUnit';
+import { ExecutionUnitValidation } from './execution/ExecutionUnitValidation';
 import { Generator } from './generator/Generator';
 import { GeneratorHandler } from './generator/GeneratorHandler';
 import { Runtime } from './runtime/Runtime';
@@ -75,6 +76,7 @@ export {
     ObjectContent,
     ParaType,
     RowDefinition,
+    ExecutionUnitValidation,
     RowValidator,
     Runtime,
     RuntimeContext,
