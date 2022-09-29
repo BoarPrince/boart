@@ -4,6 +4,7 @@ import { ValidationHandler } from './Validators/ValidationHandler';
 import { ArraySubject } from './common/ArraySubject';
 import { EnvLoader } from './common/EnvLoader';
 import { JsonHelper } from './common/JsonHelper';
+import { Semaphore } from './common/Semaphore';
 import { TextLanguageHandler } from './common/TextLanguageHandler';
 import { Timer } from './common/Timer';
 import { UrlLoader } from './common/UrlLoader';
@@ -63,6 +64,7 @@ export {
     ExecutionContext,
     ExecutionEngine,
     ExecutionUnit,
+    ExecutionUnitValidation,
     Generator,
     GeneratorHandler,
     GroupRowDefinition,
@@ -76,7 +78,6 @@ export {
     ObjectContent,
     ParaType,
     RowDefinition,
-    ExecutionUnitValidation,
     RowValidator,
     Runtime,
     RuntimeContext,
@@ -86,6 +87,7 @@ export {
     ScopedType,
     ScopeType,
     SelectorType,
+    Semaphore,
     StepContext,
     Store,
     StoreWrapper,

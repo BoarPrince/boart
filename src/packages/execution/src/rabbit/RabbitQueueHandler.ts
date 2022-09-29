@@ -1,6 +1,5 @@
-import { Store } from '@boart/core';
+import { Semaphore, Store } from '@boart/core';
 import { Channel, connect, Connection, ConsumeMessage, Replies } from 'amqplib';
-import { Semaphore } from '../semaphore';
 
 import { RabbitConfiguration } from './RabbitConfiguration';
 import { RabbitQueueMessage } from './RabbitQueueMessage';
@@ -247,7 +246,6 @@ export class RabbitQueueHandler {
         // finisher
         let consumerTag: Replies.Consume;
         messageConsumer.stop = async (errorMessage: string = null): Promise<void> => {
-            console.log('handler', 'stop');
             // stop consuming from listener
             messageConsumer.messageHandler = () => Promise.resolve();
             try {
