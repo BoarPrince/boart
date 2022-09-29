@@ -84,6 +84,7 @@ describe('default', () => {
              | routing  | routing  |`
         );
 
+        const mock = await getAmqplibMock();
         await sut.handler.process(tableRows);
 
         expect(sut.handler.executionEngine.context.config.exchange).toBe('exchange');
@@ -91,7 +92,6 @@ describe('default', () => {
         expect(sut.handler.executionEngine.context.config.queue_create).toBe(true);
         expect(sut.handler.executionEngine.context.config.queue_delete).toBe(true);
 
-        const mock = await getAmqplibMock();
         expect(mock.channel.assertQueue).toBeCalledWith('queue', { durable: false });
         expect(mock.channel.bindQueue).toBeCalledWith('queue', 'exchange', 'routing');
     });
@@ -109,9 +109,9 @@ describe('default', () => {
              | routing  | routing2 |`
         );
 
+        const mock = await getAmqplibMock();
         await sut.handler.process(tableRows);
 
-        const mock = await getAmqplibMock();
         expect(mock.channel.bindQueue).toBeCalledTimes(2);
         expect(mock.channel.bindQueue).toBeCalledWith('queue', 'exchange', 'routing1');
         expect(mock.channel.bindQueue).toBeCalledWith('queue', 'exchange', 'routing2');
@@ -128,9 +128,9 @@ describe('default', () => {
              | queue    | queue    |`
         );
 
+        const mock = await getAmqplibMock();
         await sut.handler.process(tableRows);
 
-        const mock = await getAmqplibMock();
         // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(mock.connect).toHaveBeenNthCalledWith(1, {
             hostname: '${env?:rabbitmq_hostname}',
@@ -155,9 +155,9 @@ describe('default', () => {
              | hostname | h        |`
         );
 
+        const mock = await getAmqplibMock();
         await sut.handler.process(tableRows);
 
-        const mock = await getAmqplibMock();
         // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(mock.connect).toHaveBeenNthCalledWith(1, {
             hostname: 'h',
