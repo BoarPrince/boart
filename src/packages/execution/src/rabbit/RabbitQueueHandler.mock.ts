@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { RabbitBindConfigContext } from '../rabbitBind/RabbitBindContext';
 
@@ -7,7 +7,7 @@ import { RabbitBindConfigContext } from '../rabbitBind/RabbitBindContext';
  */
 export interface ConsumeMessage {
     fields?: Record<string, string | number>;
-    content: any;
+    content: unknown;
     properties?: {
         correlationId?: string;
         headers: Record<string, string>;
@@ -48,14 +48,22 @@ let messageGeneratorStarter: MessageGeneratorStarter = (): void => {};
  *
  */
 const on = {
-    deleteQueue: new Subject<string>(),
-    assertQueue: new Subject<Record<string, unknown>>()
+    deleteQueue: null as Subject<string>,
+    assertQueue: null as Subject<Record<string, unknown>>,
+    init: (): void => {
+        on.deleteQueue = new Subject<string>();
+        on.assertQueue = new Subject<Record<string, unknown>>();
+    }
 };
 
 /**
  *
  */
 const channel = {
+    isClosed: false,
+    init: (): void => {
+        channel.isClosed = false;
+    },
     checkQueue: jest.fn<Promise<void>, [string]>(() => Promise.resolve()),
     bindQueue: jest.fn<Promise<void>, [string, string, string]>(() => Promise.resolve()),
     assertQueue: jest.fn<Promise<void>, [string, object]>((queueName, options) => {
@@ -77,6 +85,7 @@ const channel = {
     }),
     close: jest.fn<Promise<void>, []>(() => {
         if (!!consumerPromise.resolver) {
+            channel.isClosed = true;
             consumerPromise.resolver(consumerResult);
         }
         return Promise.resolve();
@@ -89,15 +98,20 @@ const channel = {
             consumerPromise.rejecter = reject;
 
             messageGeneratorStarter({
-                send: (msg: ConsumeMessage): void =>
+                send: (msg: ConsumeMessage): void => {
+                    if (channel.isClosed) {
+                        return;
+                    }
                     consumer({
                         fields: {},
                         properties: {
                             correlationId: '',
                             headers: {}
                         },
-                        ...msg
-                    })
+                        ...msg,
+                        content: Buffer.from(JSON.stringify(msg.content), 'utf-8')
+                    });
+                }
             });
         });
     })
@@ -141,6 +155,8 @@ export function createAmqplibMock(): { connect(config: unknown): unknown } {
  *
  */
 export function getAmqplibMock(): Promise<AmqplibMock> {
+    channel.init();
+    on.init();
     return Promise.resolve({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         connect: connection.connect,

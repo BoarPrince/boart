@@ -268,14 +268,14 @@ export class RabbitQueueHandler {
         };
 
         // starter
-        messageConsumer.start = (): Promise<void> =>
-            Promise.race([
-                new Promise<void>((resolve: () => void, reject: (error: string) => void) => {
-                    resolver = resolve;
-                    rejecter = reject;
-                }),
-                startConsuming()
-            ]);
+        messageConsumer.start = (): Promise<void> => {
+            const startPromise = new Promise<void>((resolve: () => void, reject: (error: string) => void) => {
+                resolver = resolve;
+                rejecter = reject;
+            });
+            void startConsuming();
+            return startPromise;
+        };
 
         const startConsuming = async () => {
             const semaphore = new Semaphore();
