@@ -831,7 +831,7 @@ describe('deep setting', () => {
         try {
             DataContentHelper.setByPath('a#b#c', 'd', dataContent);
         } catch (error) {
-            expect(error.message).toBe(`cannot set value to an 'Text' value`);
+            expect(error.message).toBe('cannot set value to an \'Text\' value, selector: "a#b#c"');
             return;
         }
         fail('expection was not thrown');
