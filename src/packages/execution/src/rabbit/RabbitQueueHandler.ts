@@ -1,6 +1,6 @@
 import { Store } from '@boart/core';
 import { Channel, connect, Connection, ConsumeMessage, Replies } from 'amqplib';
-import { Subject } from 'rxjs';
+import { Semaphore } from '../semaphore';
 
 import { RabbitConfiguration } from './RabbitConfiguration';
 import { RabbitQueueMessage } from './RabbitQueueMessage';
@@ -46,7 +46,7 @@ export class RabbitQueueHandler {
      */
     private async execute<TReturnType>(runable: (channel: Channel) => Promise<TReturnType>): Promise<TReturnType> {
         const connection = await this.getConnection();
-        const channel = await connection.createChannel();
+        const channel = await this.createChannel(connection);
 
         return new Promise((resolve, reject) => {
             connection.on('error', (error) => reject(error));
@@ -82,6 +82,26 @@ export class RabbitQueueHandler {
         }
 
         return this.connection;
+    }
+
+    /**
+     *
+     */
+    async createChannel(connection: Connection): Promise<Channel> {
+        const channel = await connection.createChannel();
+        const closeAction = channel.close.bind(this);
+
+        let isClosed = false;
+
+        channel.close = () => {
+            if (isClosed) {
+                return;
+            } else {
+                isClosed = true;
+                return closeAction();
+            }
+        };
+        return channel;
     }
 
     /**
@@ -134,12 +154,9 @@ export class RabbitQueueHandler {
      *
      */
     async deleteQueue(queueName: string): Promise<void> {
-        const channel = await (await this.getConnection()).createChannel();
-        try {
+        await this.execute(async (channel) => {
             await channel.deleteQueue(queueName);
-        } finally {
-            await channel.close();
-        }
+        });
     }
 
     /**
@@ -212,15 +229,27 @@ export class RabbitQueueHandler {
         let rejecter = (_: string | unknown): void => null;
 
         const connection = await this.getConnection();
-        const channel = await connection.createChannel();
+        const channel = await this.createChannel(connection);
         await channel.checkQueue(queueName);
 
         // add amqplib specific error handling
         connection.on('error', (error) => rejecter(error));
 
+        /**
+         *
+         */
+        const messageConsumer: RabbitQueueMessageConsumer = {
+            start: null,
+            messageHandler: () => Promise.resolve(),
+            stop: null
+        };
+
         // finisher
         let consumerTag: Replies.Consume;
-        const finisher = async (errorMessage: string = null): Promise<void> => {
+        messageConsumer.stop = async (errorMessage: string = null): Promise<void> => {
+            console.log('handler', 'stop');
+            // stop consuming from listener
+            messageConsumer.messageHandler = () => Promise.resolve();
             try {
                 if (!!consumerTag) {
                     await channel.cancel(consumerTag.consumerTag);
@@ -238,15 +267,25 @@ export class RabbitQueueHandler {
             }
         };
 
-        // consuming
-        const messageSubject = new Subject<RabbitQueueMessage>();
+        // starter
+        messageConsumer.start = (): Promise<void> =>
+            Promise.race([
+                new Promise<void>((resolve: () => void, reject: (error: string) => void) => {
+                    resolver = resolve;
+                    rejecter = reject;
+                }),
+                startConsuming()
+            ]);
+
         const startConsuming = async () => {
+            const semaphore = new Semaphore();
+
             try {
                 consumerTag = await channel.consume(
                     queueName,
                     (msg: ConsumeMessage) => {
                         try {
-                            const message = JSON.stringify(msg.content);
+                            const message = msg.content.toString();
                             const consumerMessage: RabbitQueueMessage = {
                                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                                 correlationId: msg.properties.correlationId,
@@ -258,7 +297,14 @@ export class RabbitQueueHandler {
                             };
                             delete consumerMessage.properties.correlationId;
                             delete consumerMessage.properties.headers;
-                            messageSubject.next(consumerMessage);
+
+                            semaphore.take((done) => {
+                                messageConsumer
+                                    ?.messageHandler(consumerMessage)
+                                    .then(() => done())
+                                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                                    .catch((error) => messageConsumer.stop(error));
+                            });
                         } catch (error) {
                             rejecter(error);
                         }
@@ -270,20 +316,6 @@ export class RabbitQueueHandler {
             }
         };
 
-        // starter
-        const starter = (): Promise<void> =>
-            Promise.race([
-                new Promise<void>((resolve: () => void, reject: (error: string) => void) => {
-                    resolver = resolve;
-                    rejecter = reject;
-                }),
-                startConsuming()
-            ]);
-
-        return {
-            start: starter,
-            messages: messageSubject,
-            stop: finisher
-        };
+        return messageConsumer;
     }
 }

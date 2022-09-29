@@ -16,22 +16,38 @@ jest.mock('../store/Store', () => {
                 globalStore: {
                     clear: () => suiteMap.clear(),
                     put: jest.fn((key: string, value: string) => suiteMap.set(key, value)),
-                    get: jest.fn((key: string) => suiteMap.get(key))
+                    get: jest.fn((key: string) => suiteMap.get(key)),
+                    store: {
+                        put: jest.fn((key: string, value: string) => suiteMap.set(key, value)),
+                        get: jest.fn((key: string) => suiteMap.get(key))
+                    }
                 },
                 localStore: {
                     clear: () => specMap.clear(),
                     put: jest.fn((key: string, value: string) => specMap.set(key, value)),
-                    get: jest.fn((key: string) => specMap.get(key))
+                    get: jest.fn((key: string) => specMap.get(key)),
+                    store: {
+                        put: jest.fn((key: string, value: string) => specMap.set(key, value)),
+                        get: jest.fn((key: string) => specMap.get(key))
+                    }
                 },
                 testStore: {
                     clear: () => scenarioMap.clear(),
                     put: jest.fn((key: string, value: string) => scenarioMap.set(key, value)),
-                    get: jest.fn((key: string) => scenarioMap.get(key))
+                    get: jest.fn((key: string) => scenarioMap.get(key)),
+                    store: {
+                        put: jest.fn((key: string, value: string) => scenarioMap.set(key, value)),
+                        get: jest.fn((key: string) => scenarioMap.get(key))
+                    }
                 },
                 stepStore: {
                     clear: () => stepMap.clear(),
                     put: jest.fn((key: string, value: string) => stepMap.set(key, value)),
-                    get: jest.fn((key: string) => stepMap.get(key))
+                    get: jest.fn((key: string) => stepMap.get(key)),
+                    store: {
+                        put: jest.fn((key: string, value: string) => stepMap.set(key, value)),
+                        get: jest.fn((key: string) => stepMap.get(key))
+                    }
                 }
             }
         }
@@ -205,10 +221,10 @@ describe('check valueHandler (unscoped)', () => {
         const replacedValue = sut.replace('--${test:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.globalStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.store.get).not.toHaveBeenCalled();
     });
 
     /**
@@ -219,10 +235,10 @@ describe('check valueHandler (unscoped)', () => {
         const replacedValue = sut.replace('--${test:g:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(Store.instance.globalStore.get).toHaveBeenCalled();
-        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.globalStore.store.get).toHaveBeenCalled();
+        expect(Store.instance.localStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.store.get).not.toHaveBeenCalled();
     });
 
     /**
@@ -233,10 +249,10 @@ describe('check valueHandler (unscoped)', () => {
         const replacedValue = sut.replace('--${test:l:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.localStore.get).toHaveBeenCalled();
-        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.globalStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.store.get).toHaveBeenCalled();
+        expect(Store.instance.testStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.store.get).not.toHaveBeenCalled();
     });
 
     /**
@@ -247,10 +263,10 @@ describe('check valueHandler (unscoped)', () => {
         const replacedValue = sut.replace('--${test:t:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.testStore.get).toHaveBeenCalled();
-        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.globalStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.store.get).toHaveBeenCalled();
+        expect(Store.instance.stepStore.store.get).not.toHaveBeenCalled();
     });
 
     /**
@@ -261,10 +277,10 @@ describe('check valueHandler (unscoped)', () => {
         const replacedValue = sut.replace('--${test:s:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.stepStore.get).toHaveBeenCalled();
+        expect(Store.instance.globalStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.store.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.store.get).toHaveBeenCalled();
     });
 
     /**
@@ -274,7 +290,7 @@ describe('check valueHandler (unscoped)', () => {
         sut.add('test', new ValueReplacerMock());
         const result = sut.replace('--${test:l:a}--');
 
-        expect(Store.instance.localStore.get).toBeCalledWith('#test#:#a#');
+        expect(Store.instance.localStore.store.get).toBeCalledWith('#test#:#a#');
         expect(result).toBe('--#a#--');
     });
 
@@ -285,7 +301,7 @@ describe('check valueHandler (unscoped)', () => {
         sut.add('test', new ValueReplacerMockWithProperty('prop'));
         sut.replace('--${test:l:a}--');
 
-        expect(Store.instance.localStore.get).toBeCalledWith('prop');
+        expect(Store.instance.localStore.store.get).toBeCalledWith('prop');
     });
 
     /**
@@ -441,7 +457,7 @@ describe('check valueHandler (scoped)', () => {
         const replacer = new StoreReplacerNoMatchMock();
         replacer.scoped = ScopedType.multiple;
         sut.add('store', replacer);
-        Store.instance.testStore.put('a', '#b#');
+        Store.instance.testStore.store.put('a', '#b#');
 
         try {
             sut.replace('--${store:x}--');
@@ -461,8 +477,8 @@ describe('check valueHandler (scoped)', () => {
         replacer.scoped = ScopedType.multiple;
         sut.add('store', replacer);
 
-        Store.instance.testStore.put('a', 'b');
-        Store.instance.testStore.put('b', 'c');
+        Store.instance.testStore.store.put('a', 'b');
+        Store.instance.testStore.store.put('b', 'c');
         const result = sut.replace('--${store:${store:a}}--');
 
         expect(result).toBe('--c--');
