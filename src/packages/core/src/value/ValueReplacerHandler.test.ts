@@ -157,9 +157,6 @@ describe('check common functionality', () => {
     /**
      *
      */
-    /**
-     *
-     */
     it('adding and removing replacers', () => {
         const valueReplace = new ValueReplacerMock();
 
@@ -177,16 +174,27 @@ describe('check common functionality', () => {
     /**
      *
      */
+    it('no replacement', () => {
+        const replacedValue = sut.replace('--${no-replacer:a}--');
+        expect(replacedValue).toBe('--${no-replacer:a}--');
+    });
+
     /**
      *
      */
-    it('adding replacers with addItems (check recursive)', () => {
+    /**
+     *
+     */
+    it('adding replacers with addItems (check recursive, cascading)', () => {
         const valueReplacerXXX = new NamedValueReplacerMock('xxx');
         const valueReplacerYYY = new NamedValueReplacerMock('yyy');
 
         sut.addItems([valueReplacerXXX, valueReplacerYYY]);
 
-        const replacedValue = sut.replace('--${yyy:${xxx:a}}--');
+        let replacedValue = sut.replace('--${xxx:a}--');
+        expect(replacedValue).toBe('--#a#--');
+
+        replacedValue = sut.replace('--${yyy:${xxx:a}}--');
         expect(replacedValue).toBe('--##a##--');
     });
 
@@ -202,8 +210,8 @@ describe('check common functionality', () => {
 
         sut.addItems([valueReplacerXXX, valueReplacerYYY]);
 
-        const replacedValue = sut.replace('--${yyy:a} ${xxx:a}--');
-        expect(replacedValue).toBe('--#a# #a#--');
+        const replacedValue = sut.replace('--${yyy:a} ${xxx:b}--');
+        expect(replacedValue).toBe('--#a# #b#--');
     });
 });
 
@@ -319,6 +327,18 @@ describe('check valueHandler (unscoped)', () => {
         expect(Store.instance.stepStore.get).toBeCalledWith('#store#:#a#');
 
         expect(result).toBe('--#a#--');
+    });
+
+    /**
+     *
+     */
+    it('replacement multiple values in one text', () => {
+        const replacer = new ValueReplacerMock();
+        replacer.scoped = ScopedType.multiple;
+        sut.add('store', replacer);
+        const result = sut.replace('--${store:a}--${store:b}--');
+
+        expect(result).toBe('--#a#--#b#--');
     });
 });
 

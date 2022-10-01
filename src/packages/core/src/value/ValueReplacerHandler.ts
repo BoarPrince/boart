@@ -4,6 +4,7 @@ import { StoreWrapper } from '../store/StoreWrapper';
 import { ScopeType } from '../types/ScopeType';
 import { ScopedType } from '../types/ScopedType';
 
+import { PropertyParser } from './PropertyParser';
 import { ValueReplacer } from './ValueReplacer';
 
 /**
@@ -163,19 +164,20 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
      *
      */
     private replaceOnce(value: string): string {
-        const replacedValue = this.valueReplacers.reduce((v, r) => {
-            const re = new RegExp(`\\\${${r.identifier}(?<optional>[?]?):((?<scope>[glts]):)?(?<property>[^{}]+)}`, 'g');
-            const match = re.exec(v);
-            if (match) {
-                const optional = match.groups.optional;
-                const scope = match.groups.scope;
-                const property = match.groups.property;
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                return v?.replace(re, (_matchedSubString: string) => this.stringReplacer(r, !!optional, scope, property));
-            } else {
-                return v;
-            }
-        }, value);
+        const re = new RegExp(/\${[^{}]+}/, 'g');
+        const replacedValue = !value
+            ? value
+            : value.replace(re, (matchedValue: string) => {
+                  const property = PropertyParser.parse(matchedValue);
+
+                  return this.valueReplacers.reduce((v, r) => {
+                      return !!property &&
+                          // replacer must fit
+                          property.replacer === r.identifier
+                          ? this.stringReplacer(r, property.isOptional, property.scope, property.name)
+                          : v;
+                  }, matchedValue);
+              });
 
         switch (replacedValue) {
             case 'null':

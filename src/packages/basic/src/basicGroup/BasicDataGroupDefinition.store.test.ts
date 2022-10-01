@@ -1,5 +1,6 @@
 import 'jest-extended';
 
+import { BasicDataGroupDefinition } from '@boart/basic';
 import {
     MarkdownTableReader,
     NativeContent,
@@ -12,7 +13,31 @@ import {
 import { Store } from '@boart/core';
 import { DataContext, RowTypeValue } from '@boart/core-impl';
 
-import BasicGroupDefinition from './BasicDataGroupDefinition';
+/**
+ *
+ */
+jest.mock('@boart/core', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const originalModule = jest.requireActual('@boart/core');
+
+    return {
+        __esModule: true,
+        ...originalModule,
+        EnvLoader: class {
+            static instance = {
+                mapReportData: (filename: string) => filename,
+                get: (key: string) => key
+            };
+        },
+        TextLanguageHandler: class {
+            static instance = {
+                language: {
+                    subscribe: () => null
+                }
+            };
+        }
+    };
+});
 
 /**
  *
@@ -50,7 +75,7 @@ class MockTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<Da
      *
      */
     protected addGroupRowDefinition(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>) {
-        tableHandler.addGroupRowDefinition(BasicGroupDefinition);
+        tableHandler.addGroupRowDefinition(BasicDataGroupDefinition);
     }
 
     /*<*
@@ -748,5 +773,61 @@ describe('out store from payload', () => {
         const result = Store.instance.testStore.get('var');
 
         expect(result.toString()).toBe('{"a":1,"b":"true"}');
+    });
+
+    /**
+     *
+     */
+    it('add to payload from store', async () => {
+        Store.instance.testStore.put('a', 1);
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value       |
+             |----------|-------------|
+             |payload   | \${store:a} |
+             |store     | var         |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.toString()).toBe('1');
+    });
+
+    /**
+     *
+     */
+    it('add to payload from store multiple times', async () => {
+        Store.instance.testStore.put('a', 1);
+        Store.instance.testStore.put('b', 2);
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                   |
+             |----------|-------------------------|
+             |payload   | \${store:a}-\${store:b} |
+             |store     | var                     |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.toString()).toBe('1-2');
+    });
+
+    /**
+     *
+     */
+    it('try to payload from wrong replacement', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value      |
+             |----------|------------|
+             |payload   | \${sore:a} |
+             |store     | var        |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.toString()).toBe('${sore:a}');
     });
 });
