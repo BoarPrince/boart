@@ -52,7 +52,7 @@ export class ProtocolGenerator {
     /**
      *
      */
-    private tryReadItems(runtimeDefinition: RuntimeContext): void {
+    private readContextItems(runtimeDefinition: RuntimeContext): void {
         runtimeDefinition.localContext.forEach((locaItem) => {
             const filename = EnvLoader.instance.mapReportData(locaItem.id + '.json');
 
@@ -79,6 +79,7 @@ export class ProtocolGenerator {
                 }, new Array<string>());
         };
 
+        // read test items
         runtimeDefinition.localContext.forEach((localItem) =>
             localItem.testContext.forEach((testItem) => {
                 const filename = EnvLoader.instance.mapReportData(testItem.id + '.json');
@@ -97,6 +98,7 @@ export class ProtocolGenerator {
             })
         );
 
+        // read step items
         runtimeDefinition.localContext.forEach((localItem) =>
             localItem.testContext.forEach((testItem) =>
                 testItem.stepContext.forEach((stepItem) => {
@@ -207,10 +209,11 @@ export class ProtocolGenerator {
     /**
      *
      */
-    private generateSteps(testItemId: string): Array<StepItem> {
+    private generateSteps(testItemId: string, testNumber: string): Array<StepItem> {
         const testItems = this.stepItemsWithDescription.filter((stepItem) => stepItem.testReportItemId === testItemId);
 
-        return testItems.map((stepItem) => {
+        return testItems.map((stepItem, index) => {
+            debugger;
             return {
                 id: stepItem.id,
                 status: RuntimeStatus[stepItem.status],
@@ -218,7 +221,7 @@ export class ProtocolGenerator {
                 duration: stepItem.duration,
                 startTime: stepItem.startTime,
                 type: stepItem.type,
-                description: stepItem.description,
+                description: `${testNumber}.${index + 1}. ${stepItem.description}`,
                 input: this.generateDataItems(stepItem.input),
                 output: this.generateDataItems(stepItem.result)
             };
@@ -242,7 +245,7 @@ export class ProtocolGenerator {
                 priority: RuntimePriority[testItem.priority],
                 descriptions: testItem.descriptions,
                 tickets: testItem.tickets,
-                steps: this.generateSteps(testItem.id)
+                steps: this.generateSteps(testItem.id, testItem.number)
             };
         });
         return tests;
@@ -269,7 +272,7 @@ export class ProtocolGenerator {
      */
     private generateData(): string {
         const runtimeDefinition = this.readReport();
-        this.tryReadItems(runtimeDefinition);
+        this.readContextItems(runtimeDefinition);
 
         const protocol = this.generateProtocol(runtimeDefinition);
         const filename = EnvLoader.instance.mapReportData('test-protocol.json');
