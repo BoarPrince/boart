@@ -35,9 +35,19 @@ export class ExecutionEngine<
      *
      */
     async execute(rows: ReadonlyArray<TRowType>): Promise<TExecutionContext> {
-        await this.executeByType(rows, this.context, TableRowType.Configuration);
-        await this.executeByType(rows, this.context, TableRowType.PreProcessing);
+        await this.executeByType(rows, TableRowType.Configuration);
+        await this.executeByType(rows, TableRowType.PreProcessing);
 
+        await this.executeMainUnit(rows);
+
+        await this.executeByType(rows, TableRowType.PostProcessing);
+        return this.context;
+    }
+
+    /**
+     *
+     */
+    private async executeMainUnit(rows: ReadonlyArray<TRowType>): Promise<void> {
         const mainExecutionUnit = this.mainExecutionUnit();
 
         const mainExecutionUnitWithValidator = mainExecutionUnit as ExecutionUnitValidation<TExecutionContext> &
@@ -47,20 +57,16 @@ export class ExecutionEngine<
             await mainExecutionUnitWithValidator.validate(this.context);
         }
 
-        await mainExecutionUnit.execute(this.context, null, () => this.executeByType(rows, this.context, TableRowType.InProcessing));
-
-        await this.executeByType(rows, this.context, TableRowType.PostProcessing);
-
-        return this.context;
+        await mainExecutionUnit.execute(this.context, null, () => this.executeByType(rows, TableRowType.InProcessing));
     }
 
     /**
      *
      */
-    private async executeByType(rows: ReadonlyArray<TRowType>, context: TExecutionContext, type: TableRowType): Promise<void> {
+    private async executeByType(rows: ReadonlyArray<TRowType>, type: TableRowType): Promise<void> {
         const rowsByType = rows.filter((row) => row.data._metaDefinition.type === type);
         for (const row of rowsByType) {
-            await row.data._metaDefinition.executionUnit.execute(context, row);
+            await row.data._metaDefinition.executionUnit.execute(this.context, row);
         }
     }
 }
