@@ -75,7 +75,7 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async getConnection(): Promise<Connection> {
+    private async getConnection(): Promise<Connection> {
         if (!this.connection) {
             await this.connect();
         }
@@ -86,9 +86,9 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async createChannel(connection: Connection): Promise<Channel> {
+    private async createChannel(connection: Connection): Promise<Channel> {
         const channel = await connection.createChannel();
-        const closeAction = channel.close.bind(this);
+        const closeAction = channel.close.bind(channel);
 
         let isClosed = false;
 
@@ -106,7 +106,7 @@ export class RabbitQueueHandler {
     /**
      *
      */
-    async connect(): Promise<Connection> {
+    private async connect(): Promise<Connection> {
         try {
             this.connection = await connect({
                 username: this.config.username,
