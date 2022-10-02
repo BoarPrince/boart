@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+            crossorigin="anonymous"
+        />
+        <style type="text/css">
+            body {
+                background-color: black;
+            }
+            td {
+                vertical-align: middle;
+            }
+            dd {
+                font-size: smaller;
+            }
+            dd small {
+                font-size: smaller;
+            }
+            dd small pre {
+                font-size: smaller;
+                font-family: 'Courier New', Courier, monospace;
+            }
+            dd span.duration {
+                position: absolute;
+                right: 1em;
+                font-size: x-small;
+            }
+            div[data-bs-toggle] {
+                height: 3em;
+                padding-top: 1em;
+                padding-bottom: 1em;
+                margin-top: -1em;
+                transition: margin-bottom 1s;
+                margin-bottom: -1em;
+            }
+            #protocol_table tbody tr.failed:hover,
+            #protocol_table tbody tr.passed:hover,
+            div[data-bs-toggle]:hover {
+                opacity: 0.6;
+                font-style: italic;
+                cursor: pointer;
+            }
+            td.status,
+            div.statistic .badge {
+                cursor: pointer;
+            }
+            td.details-control i {
+                font-size: xx-large;
+            }
+            tr:not(.shown) td.details-control .closed,
+            tr.shown td.details-control .opened {
+                display: initial;
+            }
+            tr:not(.shown) td.details-control .opened,
+            tr.shown td.details-control .closed {
+                display: none;
+            }
+            tr.group td {
+                padding: 20px 10px;
+                font-size: xx-large;
+            }
+            li.group-step li {
+                margin-right: 0;
+                background-color: darkseagreen;
+            }
+            li.group-step,
+            li.step {
+                padding: 1rem 0.5rem;
+                margin-left: 2rem;
+                margin-right: 1rem;
+            }
+            .step-header.group:not(.collapsed) {
+                margin-bottom: 0;
+            }
+            .step-header i {
+                position: absolute;
+                left: -2rem;
+                font-size: large;
+            }
+            .step-header.group i {
+                font-weight: bold;
+            }
+            .output-code,
+            .input-code {
+                position: relative;
+            }
+            .code-copy-icon {
+                position: absolute;
+                top: 0.5rem;
+                right: 2rem;
+                font-size: x-large;
+                color: lightgray;
+            }
+            .code-copy-icon:hover:active {
+                color: green;
+            }
+            .code-copy-icon:hover {
+                color: gray;
+                height: 0;
+            }
+            .card-text pre {
+                overflow-x: auto;
+                max-height: 25em;
+            }
+            ul .card:not(:first-child) {
+                margin-top: 0.5em;
+            }
+            ul .card:first-child {
+                margin-top: 1em;
+            }
+            img.screenshot {
+                width: 15em;
+                cursor: pointer;
+            }
+        </style>
+        <title>Test Report</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <figure>
+                <figcaption>
+                    <div class="h1 alert alert-dark" role="alert">Test Protocol (<span class="project-description"></span>)</div>
+                </figcaption>
+                <div class="alert alert-dark statistic" role="alert">
+                    <div class="row p-2 pt-4 pb-4 border-bottom border-dark border-4 fw-bold">
+                        <div class="col-2">Time</div>
+                        <div class="col-10 start-time"></div>
+                        <div class="col-2">Total Duration</div>
+                        <div class="col-10"><span class="complete-duration"></span> min</div>
+                    </div>
+                    <div class="row high p-2 border-bottom border-dark border-4">
+                        <div class="col-2 fw-bold">High</div>
+                        <div class="col-2">
+                            <div class="row-1">
+                                <div class="col-12 passed">
+                                    <span class="badge bg-success">Succeed</span>
+                                    <small class="count"></small>
+                                </div>
+                                <div class="col-12 failed">
+                                    <span class="badge bg-danger">Failed</span>
+                                    <small class="count"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row medium p-2 border-bottom border-dark border-4">
+                        <div class="col-2 fw-bold">Medium</div>
+                        <div class="col-2">
+                            <div class="row-1">
+                                <div class="col-12 passed">
+                                    <span class="badge bg-success">Succeed</span>
+                                    <small class="count"></small>
+                                </div>
+                                <div class="col-12 failed">
+                                    <span class="badge bg-danger">Failed</span>
+                                    <small class="count"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row low p-2">
+                        <div class="col-2 fw-bold">Low</div>
+                        <div class="col-2">
+                            <div class="row-1">
+                                <div class="col-12 passed">
+                                    <span class="badge bg-success">Succeed</span>
+                                    <small class="count"></small>
+                                </div>
+                                <div class="col-12 failed">
+                                    <span class="badge bg-danger">Failed</span>
+                                    <small class="count"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="protocol_table" class="table table-dark table-striped" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <td></td>
+                            <th scope="col">Test Group</th>
+                            <th scope="col">Test</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Ticket</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">Duration</th>
+                        </tr>
+                    </thead>
+                </table>
+            </figure>
+        </div>
+        <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+            crossorigin="anonymous"
+        ></script>
+
+        <!-- ##################################################### -->
+        <!-- Render Table -->
+        <!-- ##################################################### -->
+        <script>
+            const groupColumn = 1;
+            $(document).ready(function () {
+                const table = $('#protocol_table').DataTable({
+                    paging: false,
+                    searching: false,
+                    ordering: false,
+                    info: false,
+                    autoWidht: true,
+                    columns: [
+                        {
+                            data: '',
+                            className: 'details-control',
+                            orderable: false,
+                            render: (data, type, row, meta) => {
+                                const textClass = row.status == 'failed' ? 'text-danger' : 'text-success';
+                                return `<button type="button" class="btn btn-outline-secondary border-0"><i class="${textClass} closed bi bi-plus-circle-fill"></i><i class="${textClass} opened bi bi-dash-circle-fill"></i></button>`;
+                            }
+                        },
+                        { data: 'topic' },
+                        { data: 'name' },
+                        {
+                            data: 'status',
+                            className: 'status',
+                            render: (data, type, row, meta) =>
+                                data == 'failed'
+                                    ? `<span class="badge bg-danger">${data}</span>`
+                                    : `<span class="badge bg-success">${data}</span>`
+                        },
+                        { data: 'ticket' },
+                        { data: 'priority' },
+                        {
+                            data: 'duration',
+                            render: (data, type, row, meta) => `<small>${formatDuration(data)} s</small>`
+                        }
+                    ],
+                    createdRow: function (row, data, dataIndex, cells) {
+                        $(row).addClass(data.status);
+                        $(row).addClass(`local-${data.localId}`);
+                    },
+                    order: [[0, 'asc']],
+                    columnDefs: [{ visible: false, targets: groupColumn }],
+                    drawCallback: function (settings) {
+                        var api = this.api();
+                        var rows = api.rows({ page: 'current' }).nodes();
+                        var last = null;
+                        var data = api.data();
+
+                        api.column(groupColumn, { page: 'current' })
+                            .data()
+                            .each((group, i) => {
+                                if (last !== group) {
+                                    $(rows)
+                                        .eq(i)
+                                        .before(`<tr local-id="${data[i].localId}" class="group"><td colspan="7">${group}</td></tr>`);
+
+                                    last = group;
+                                }
+                            });
+                    },
+                    data: document.data.overview
+                });
+
+                // #####################################################
+                // Add event listener for opening and closing details
+                // #####################################################
+                $('#protocol_table tbody').on('click', 'tr', function () {
+                    const tr = $(this);
+                    const data = table.data();
+                    const row = table.row(tr);
+                    if (row.child.isShown()) {
+                        // This row is already open - close it
+                        row.child.hide();
+                        tr.removeClass('shown');
+                    } else {
+                        const data = row.data();
+                        if (!data) {
+                            const localId = tr.attr('local-id');
+                            const rows = $(`.local-${localId}`);
+                            if (tr.hasClass('hide')) {
+                                rows.show();
+                                tr.removeClass('hide');
+                            } else {
+                                rows.hide();
+                                tr.addClass('hide');
+                            }
+                            return;
+                        }
+                        const scenario = document.data.tests[data.testId];
+                        document.scenarioDatailPostActions = [];
+                        const childContent = document.formTestDetail(scenario);
+                        row.child(childContent).show();
+                        document.scenarioDatailPostActions.forEach((action) => action());
+                        tr.addClass('shown');
+                    }
+                });
+
+                // #####################################################
+                // Filters
+                // #####################################################
+                const filterTableByPrioAndStatus = (priority, status) => {
+                    table.clear().draw();
+                    const failedTests = document.data.overview.filter((test) => test.status == status && test.priority == priority);
+                    failedTests.forEach((test) => table.row.add(test).draw(false));
+                };
+
+                globalThis.filterTableByTag = (tag) => {
+                    table.clear().draw();
+                    const failedTests = document.data.overview.filter((test) => test.tags?.includes(tag));
+                    failedTests.forEach((test) => table.row.add(test).draw(false));
+                    return false;
+                };
+
+                $('.project-description').text(`${document.data.projectName}, ${document.data.environment}`);
+
+                // #####################################################
+                // Add Statistic
+                // #####################################################
+                const statistic = document.data.statistic;
+                $('.statistic .high .passed .count').text(`(${statistic.high.succeed})`);
+                $('.statistic .high .failed .count').text(`(${statistic.high.failed})`);
+                $('.statistic .medium .passed .count').text(`(${statistic.medium.succeed})`);
+                $('.statistic .medium .failed .count').text(`(${statistic.medium.failed})`);
+                $('.statistic .low .passed .count').text(`(${statistic.low.succeed})`);
+                $('.statistic .low .failed .count').text(`(${statistic.low.failed})`);
+
+                $('div.statistic').on('click', '.high .passed', () => filterTableByPrioAndStatus('high', 'passed'));
+                $('div.statistic').on('click', '.high .failed', () => filterTableByPrioAndStatus('high', 'failed'));
+                $('div.statistic').on('click', '.medium .passed', () => filterTableByPrioAndStatus('medium', 'passed'));
+                $('div.statistic').on('click', '.medium .failed', () => filterTableByPrioAndStatus('medium', 'failed'));
+                $('div.statistic').on('click', '.low .passed', () => filterTableByPrioAndStatus('low', 'passed'));
+                $('div.statistic').on('click', '.low .failed', () => filterTableByPrioAndStatus('low', 'failed'));
+
+                $('.start-time').text(formatDate(document.data.startTime));
+                $('.complete-duration').text(formatDuration(document.data.durationMin));
+            });
+        </script>
+
+        <script>
+            // #####################################################
+            // Copy code to clipboard
+            // #####################################################
+            function copyCodeToClipboard(self, code) {
+                //self.style.color = 'red';
+                if (!navigator.clipboard) {
+                    return;
+                }
+                navigator.clipboard.writeText(code);
+            }
+            // #####################################################
+            // Helpers
+            // #####################################################
+            const stringifyIfObject = (data) => {
+                if (typeof data === 'object') {
+                    return JSON.stringify(data, null, ' ');
+                }
+                return data;
+            };
+
+            const formatDuration = (duration) => {
+                return new Intl.NumberFormat({ maximumSignificantDigits: 2 }).format(duration);
+            };
+
+            const formatDate = (dateISO) => {
+                const date = new Date(dateISO);
+                return new Intl.DateTimeFormat('default', { dateStyle: 'full', timeStyle: 'long' }).format(date);
+            };
+
+            // #####################################################
+            // Step Details
+            // #####################################################
+            const addStepDetails = (step) => {
+                const stepDetail = [];
+
+                // screenshots
+                if (!!step.screenshots && step.screenshots.length > 0) {
+                    stepDetail.push(`<div class="card">
+                        <p class="card-header">Screenshots</p>
+                        <div class="card-body input-code">`);
+
+                    step.screenshots.forEach((screenshot) => {
+                        stepDetail.push(`<img class="screenshot" id="img-${screenshot}" loading="lazy"></img>`);
+                        document.scenarioDatailPostActions.push(() => {
+                            const image = $(`#img-${screenshot}`);
+                            image
+                                .on('load', function () {
+                                    this.src = document.data.screenshots[screenshot];
+                                    image.unbind('load');
+                                })
+                                .on('click', function () {
+                                    let pdfWindow = window.open('');
+                                    pdfWindow.document.write(
+                                        "<img width='100%' height='100%' src='" + document.data.screenshots[screenshot] + "'></img>"
+                                    );
+                                })
+                                .each(function () {
+                                    $(this).trigger('load');
+                                });
+                            $(`#img-${screenshot}`).removeAttr('id');
+                        });
+                    });
+                    stepDetail.push(`</div></div>`);
+                }
+
+                // Input
+                step.input.forEach((stepInput) => {
+                    const code = stringifyIfObject(stepInput.data) || '-';
+                    stepDetail.push(`<div class="card">
+                                        <p class="card-header">${stepInput.desc}</p>
+                                        <div class="card-body input-code">
+                                            <div class="card-text">
+                                                <i id="ic-${stepInput.id}" class="code-copy-icon bi bi-file-earmark-text-fill"></i>
+                                                <small><pre>${code}</pre></small></div>
+                                        </div>
+                                     </div>`);
+                    document.scenarioDatailPostActions.push(() => {
+                        $(`#ic-${stepInput.id}`).on('click', function () {
+                            copyCodeToClipboard(this, code);
+                        });
+                        $(`#ic-${stepInput.id}`).removeAttr('id');
+                    });
+                });
+
+                // Output
+                step.output
+                    .filter((stepOutput) => !!stepOutput.desc)
+                    .forEach((stepOutput) => {
+                        const code = stringifyIfObject(stepOutput.data);
+                        stepDetail.push(`<div class="card">
+                            <p class="card-header">${stepOutput.desc}</p>
+                                <div class="card-body output-code">
+                                    <div class="card-text">
+                                        <i id="oc-${stepOutput.id}" class="code-copy-icon bi bi-file-earmark-text-fill"></i>
+                                        <small><pre>${code}</pre></small></div>
+                                </div>
+                            </div>`);
+                        document.scenarioDatailPostActions.push(() => {
+                            $(`#oc-${stepOutput.id}`).on('click', function () {
+                                copyCodeToClipboard(this, code);
+                            });
+                            $(`#oc-${stepOutput.id}`).removeAttr('id');
+                        });
+                    });
+
+                // Error Message
+                if (!!step.errorMessage) {
+                    stepDetail.push(`<div class="card">
+                                        <p class="card-header">Error Message</p>
+                                        <div class="card-body">
+                                            <div class="card-text"><small>${stringifyIfObject(step.errorMessage)}</small></div>
+                                        </div>
+                                      </div>`);
+                }
+                return stepDetail.join('\n');
+            };
+
+            // #####################################################
+            // Step List
+            // #####################################################
+            const addSteps = (steps) => {
+                const statusIcon = (status) => {
+                    switch (status) {
+                        case 'failed':
+                            return '<i class="text-danger bi bi-emoji-frown-fill"></i>';
+                        case 'succeed':
+                            return '<i class="text-success bi bi-emoji-smile-fill"></i>';
+                        default:
+                            return '<i class="text-secondary bi bi-emoji-neutral-fill"></i>';
+                    }
+                };
+
+                const stepDescItems = [];
+                stepDescItems.push('<ul class="list-group">');
+                steps.forEach((step) => {
+                    if (step.type === 'group') {
+                        stepDescItems.push(`<li class="list-group-item list-group-item-dark group-step">`);
+                        stepDescItems.push(`<div class="step-header group collapsed" data-bs-toggle="collapse" href="#detail-${step.id}">`);
+                        stepDescItems.push(statusIcon(step.status));
+
+                        stepDescItems.push(`${step.description}`);
+                        stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
+                        stepDescItems.push(`</div>`);
+
+                        stepDescItems.push(`<div class="collapse" id="detail-${step.id}">`);
+                        stepDescItems.push('<ul class="list-group">');
+                        stepDescItems.push(addSteps(step.steps));
+                        stepDescItems.push('</ul>');
+                        stepDescItems.push('</div>');
+
+                        stepDescItems.push('</li>');
+                    } else {
+                        stepDescItems.push(`<li class="list-group-item list-group-item-dark step">`);
+                        stepDescItems.push(`<div class="step-header" data-bs-toggle="collapse" href="#detail-${step.id}">`);
+
+                        stepDescItems.push(statusIcon(step.status));
+                        stepDescItems.push(`${step.description}`);
+                        stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
+                        stepDescItems.push('</div>');
+
+                        stepDescItems.push(`<div class="collapse" id="detail-${step.id}">`);
+                        stepDescItems.push(addStepDetails(step));
+                        stepDescItems.push(`</div>`);
+                    }
+
+                    stepDescItems.push('</li>');
+                });
+                stepDescItems.push('</ul>');
+                return stepDescItems.join('\n');
+            };
+            const conditinallyAdd = (text_or_delegate, condition) => {
+                return condition ? (typeof text_or_delegate === 'string' ? text_or_delegate : text_or_delegate()) : '';
+            };
+
+            // #####################################################
+            // Test Detail
+            // #####################################################
+            document.formTestDetail = (test) => {
+                return (
+                    '<div class="container">' +
+                    // Execution Time
+                    '<dl class="row">' +
+                    ' <dt class="col-2">Time</dt>' +
+                    `  <dd class="col-10">${formatDate(test.startTime)}</dd>` +
+                    '</dl>' +
+                    // Duration
+                    '<dl class="row">' +
+                    ' <dt class="col-2">Duration</dt>' +
+                    `  <dd class="col-10">${formatDuration(test.duration)} s</dd>` +
+                    '</dl>' +
+                    conditinallyAdd(
+                        // Tickets
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Tickets</dt>' +
+                            `  <dd class="col-10">${test.tickets
+                                .map((t) => '<a href="' + t.link + '" target="_">' + t.id + '@' + t.source + '</a>')
+                                .join(', ')}</dd>` +
+                            '</dl>',
+                        !!test.tickets && test.tickets.length > 0
+                    ) +
+                    conditinallyAdd(
+                        // Tags
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Tags</dt>' +
+                            `  <dd class="col-10">${test.tags
+                                .map((t) => `<a href="#" onclick="filterTableByTag('${t}');">${t}</a>`)
+                                .join(', ')}</dd>` +
+                            '</dl>',
+                        !!test.tags && test.tags.length > 0
+                    ) +
+                    conditinallyAdd(
+                        // Description
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Description</dt>' +
+                            `  <dd class="col-10">${test.descriptions.replace('\n', '<br>')}</dd>` +
+                            '</dl>',
+                        !!test.descriptions
+                    ) +
+                    conditinallyAdd(
+                        () =>
+                            // stepDescription
+                            '<dl class="row">' +
+                            ' <dt class="col-2">Steps</dt>' +
+                            `  <dd class="col-10">${addSteps(test.steps)}</dd>` +
+                            '</dl>',
+                        !!test.steps && test.steps.length > 0
+                    ) +
+                    conditinallyAdd(
+                        // Failure Description
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Failure</dt>' +
+                            `  <dd class="col-10"><pre>${test.errorMessage}</pre></dd>` +
+                            '</dl>',
+                        test.status == 'failed' && !!test.errorMessage
+                    ) +
+                    conditinallyAdd(
+                        // screenshot
+                        '<dl class="row">' +
+                            ' <dt class="col-2">Screenshot</dt>' +
+                            `  <dd class="col-10"><img width="100%" src="${test.screenshot}" alt="Red dot" /></dd>` +
+                            '</dl>',
+                        !!test.screenshot
+                    ) +
+                    '</div>'
+                );
+            };
+        </script>
+
+        <!-- ##################################################### -->
+        <!-- Document Data -->
+        <!-- ##################################################### -->
+        <script>
+            document.data = {
+                statistic: { high: { succeed: 0, failed: 1 }, medium: { succeed: 0, failed: 0 }, low: { succeed: 0, failed: 0 } },
+                overview: [
+                    {
+                        topic: '1. Onboarding Fleet --10.2--',
+                        name: '1.1. Read Event from Onboarding Service once the first time',
+                        ticket: '',
+                        tags: ['env-all', 'env-local', 'ob-10.2', 'ob-10.2-1', 'onboarding', 'queue'],
+                        status: 'failed',
+                        priority: 'high',
+                        duration: 1.52,
+                        startTime: '2022-10-02T12:14:31.964Z',
+                        localId: '70bb9bb8-b2e6-4e64-8553-773afd3e8b6a',
+                        testId: 'e06dec66-e973-4aba-b69a-7eae1e23b25f'
+                    }
+                ],
+                locals: {
+                    '70bb9bb8-b2e6-4e64-8553-773afd3e8b6a': {
+                        id: '70bb9bb8-b2e6-4e64-8553-773afd3e8b6a',
+                        tags: ['env-all', 'queue', 'onboarding', 'ob-10.2'],
+                        duration: 1.54,
+                        status: 'failed',
+                        name: 'Onboarding Fleet --10.2--',
+                        number: '1'
+                    }
+                },
+                tests: {
+                    'e06dec66-e973-4aba-b69a-7eae1e23b25f': {
+                        id: 'e06dec66-e973-4aba-b69a-7eae1e23b25f',
+                        tags: ['env-all', 'env-local', 'ob-10.2', 'ob-10.2-1', 'onboarding', 'queue'],
+                        name: '1.1. Read Event from Onboarding Service once the first time',
+                        status: 'failed',
+                        duration: 1.52,
+                        startTime: '2022-10-02T12:14:31.964Z',
+                        priority: 'high',
+                        descriptions: 'Check that onboarding event can be consumed while creating',
+                        tickets: [],
+                        steps: [
+                            {
+                                id: '81b324e6-b9b7-4b9b-a168-797414a439c3',
+                                status: 'succeed',
+                                errorMessage: '',
+                                duration: 0.52,
+                                startTime: '2022-10-02T12:14:31.984Z',
+                                type: 'rabbitBind',
+                                description: '1.1.1. Bind all queues',
+                                input: [],
+                                output: [
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit bind (config)',
+                                        data: {
+                                            queue: 'test.fleet.masterdata.error',
+                                            exchange: 'fleet.masterdata.error.exchange',
+                                            routing: [
+                                                'fleet.masterdata.company.error',
+                                                'fleet.masterdata.carrier.error',
+                                                'fleet.masterdata.user.error'
+                                            ],
+                                            queue_create: true,
+                                            queue_delete: true,
+                                            username: 'jitpay',
+                                            password: 'JITpaySYS#19',
+                                            hostname: '192.168.50.250',
+                                            port: 5672,
+                                            vhost: '/'
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'd5957115-6689-4552-b2ea-c58b8689df63',
+                                status: 'succeed',
+                                errorMessage: '',
+                                duration: 0.01,
+                                startTime: '2022-10-02T12:14:32.520Z',
+                                type: 'data handling',
+                                description: '1.1.2. create Payload',
+                                input: [
+                                    {
+                                        id: '-',
+                                        desc: 'Data Handling (input)',
+                                        data: {
+                                            eventType: 'CREATE',
+                                            eventDate: '2022-09-20T15:37:06.892633+02:00',
+                                            eventId: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                            id: 'a2c07696-3b88-4203-8079-64887687b724',
+                                            phoneNumbers: [
+                                                {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    description: 'Defined during Onboarding',
+                                                    number: 1743284130,
+                                                    countryPrefix: 49,
+                                                    category: 'OFFICE',
+                                                    phoneType: 'UNKNOWN',
+                                                    favorite: false
+                                                }
+                                            ],
+                                            bankDetails: [
+                                                { bankName: 'Societe Generalex', iban: 'DE75512108001245126199', bic: 'SOGEDEFFXXX' }
+                                            ],
+                                            customers: [],
+                                            carriers: [
+                                                {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    currency: '',
+                                                    initialPin: '',
+                                                    preferredCardIssuer: 'NONE',
+                                                    maximumCards: 100,
+                                                    baseCashpoolValue: 0,
+                                                    baseCashpoolPercentage: 50,
+                                                    defaultDriverLimit: 2000,
+                                                    defaultVehicleLimit: 2000,
+                                                    addresses: [
+                                                        {
+                                                            id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                            street: 'Feil Stream',
+                                                            zipCode: '48827-6185',
+                                                            city: 'Bustermouth',
+                                                            country: 'DE',
+                                                            firstname: 'Amara',
+                                                            lastname: 'Ritchie',
+                                                            email: 'jitpaytest+ob06854@gmail.com',
+                                                            countryPrefix: 49,
+                                                            phoneNumber: 1743284130,
+                                                            type: 'BILLING'
+                                                        }
+                                                    ],
+                                                    phoneNumbers: [
+                                                        {
+                                                            id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                            description: 'Defined dur ing Onboarding',
+                                                            number: 1743284130,
+                                                            countryPrefix: 49,
+                                                            category: 'OFFICE',
+                                                            phoneType: 'UNKNOWN',
+                                                            favorite: false
+                                                        }
+                                                    ],
+                                                    users: [
+                                                        {
+                                                            id: 'jitpaytest+ob06854@gmail.com',
+                                                            email: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                            phoneNumbers: [
+                                                                {
+                                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                                    description: 'Defined during Onboarding',
+                                                                    number: 1743284130,
+                                                                    countryPrefix: 49,
+                                                                    category: 'OFFICE',
+                                                                    phoneType: 'UNKNOWN',
+                                                                    favorite: false
+                                                                }
+                                                            ],
+                                                            username: 'jitpaytest+ob06854@gmail.com',
+                                                            lastname: 'Ritchie',
+                                                            firstname: 'Amara',
+                                                            activationCode: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                            legitimationStatus: 'LegimitationStarted',
+                                                            source: 'Onboarding',
+                                                            carrierIds: ['0b77c51c-1b62-45ca-9d44-ad7842e17ae0'],
+                                                            roles: [],
+                                                            createDate: '2022-09-20T15:37:06.4+02:00',
+                                                            modifiedDate: '2022-09-20T15:37:06.4+02:00'
+                                                        }
+                                                    ],
+                                                    carrierName: 'Schaden - Dickinson',
+                                                    companyId: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                    createDate: '2022-09-20T13:37:06.750882Z',
+                                                    modifiedDate: '2022-09-20T13:37:06.750882Z'
+                                                }
+                                            ],
+                                            addresses: [
+                                                {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    street: 'Simonis Manor',
+                                                    zipCode: '71898-8463',
+                                                    city: 'Baldwin Park',
+                                                    country: 'DE',
+                                                    firstname: 'Amara',
+                                                    lastname: 'Ritchie',
+                                                    email: 'jitpaytest+ob06854@gmail.com',
+                                                    countryPrefix: 49,
+                                                    phoneNumber: 1743284130,
+                                                    type: 'BILLING'
+                                                }
+                                            ],
+                                            companyName: 'Schaden - Dickinson',
+                                            documentStorageDirectoryName: '',
+                                            jitPayId: 8940,
+                                            legalForm: 'GmbH_de',
+                                            createDate: '2022-09-20T13:37:06.70862Z',
+                                            modifiedDate: '2022-09-20T13:37:06.801836Z'
+                                        }
+                                    }
+                                ],
+                                output: []
+                            },
+                            {
+                                id: '16aff4be-66f4-4383-8be3-e11400830af5',
+                                status: 'succeed',
+                                errorMessage: '',
+                                duration: 0.18,
+                                startTime: '2022-10-02T12:14:32.528Z',
+                                type: 'rabbitPublish',
+                                description: '1.1.3. Send Company Event (MD) to Exchange (event after onboarding)',
+                                input: [
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit publish (configuration)',
+                                        data: {
+                                            queue_or_exhange: 'company',
+                                            type: 'exchange',
+                                            username: 'jitpay',
+                                            hostname: '192.168.50.250',
+                                            port: 5672,
+                                            vhost: '/'
+                                        }
+                                    },
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit publish (header)',
+                                        data: {
+                                            header: '{"eventDate":"2022-09-20T15:37:06.892633+02:00","eventId":"0b77c51c-1b62-45ca-9d44-ad7842e17ae0","eventType":"CREATE"}',
+                                            correlationId: '',
+                                            messageId: '',
+                                            routing: ''
+                                        }
+                                    },
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit publish to exchange (payload)',
+                                        data: {
+                                            eventType: 'CREATE',
+                                            eventDate: '2022-09-20T15:37:06.892633+02:00',
+                                            eventId: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                            id: 'a2c07696-3b88-4203-8079-64887687b724',
+                                            phoneNumbers: [
+                                                {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    description: 'Defined during Onboarding',
+                                                    number: 1743284130,
+                                                    countryPrefix: 49,
+                                                    category: 'OFFICE',
+                                                    phoneType: 'UNKNOWN',
+                                                    favorite: false
+                                                }
+                                            ],
+                                            bankDetails: [
+                                                { bankName: 'Societe Generalex', iban: 'DE75512108001245126199', bic: 'SOGEDEFFXXX' }
+                                            ],
+                                            customers: [],
+                                            carriers: [
+                                                {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    currency: '',
+                                                    initialPin: '',
+                                                    preferredCardIssuer: 'NONE',
+                                                    maximumCards: 100,
+                                                    baseCashpoolValue: 0,
+                                                    baseCashpoolPercentage: 50,
+                                                    defaultDriverLimit: 2000,
+                                                    defaultVehicleLimit: 2000,
+                                                    addresses: [
+                                                        {
+                                                            id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                            street: 'Feil Stream',
+                                                            zipCode: '48827-6185',
+                                                            city: 'Bustermouth',
+                                                            country: 'DE',
+                                                            firstname: 'Amara',
+                                                            lastname: 'Ritchie',
+                                                            email: 'jitpaytest+ob06854@gmail.com',
+                                                            countryPrefix: 49,
+                                                            phoneNumber: 1743284130,
+                                                            type: 'BILLING'
+                                                        }
+                                                    ],
+                                                    phoneNumbers: [
+                                                        {
+                                                            id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                            description: 'Defined dur ing Onboarding',
+                                                            number: 1743284130,
+                                                            countryPrefix: 49,
+                                                            category: 'OFFICE',
+                                                            phoneType: 'UNKNOWN',
+                                                            favorite: false
+                                                        }
+                                                    ],
+                                                    users: [
+                                                        {
+                                                            id: 'jitpaytest+ob06854@gmail.com',
+                                                            email: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                            phoneNumbers: [
+                                                                {
+                                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                                    description: 'Defined during Onboarding',
+                                                                    number: 1743284130,
+                                                                    countryPrefix: 49,
+                                                                    category: 'OFFICE',
+                                                                    phoneType: 'UNKNOWN',
+                                                                    favorite: false
+                                                                }
+                                                            ],
+                                                            username: 'jitpaytest+ob06854@gmail.com',
+                                                            lastname: 'Ritchie',
+                                                            firstname: 'Amara',
+                                                            activationCode: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                            legitimationStatus: 'LegimitationStarted',
+                                                            source: 'Onboarding',
+                                                            carrierIds: ['0b77c51c-1b62-45ca-9d44-ad7842e17ae0'],
+                                                            roles: [],
+                                                            createDate: '2022-09-20T15:37:06.4+02:00',
+                                                            modifiedDate: '2022-09-20T15:37:06.4+02:00'
+                                                        }
+                                                    ],
+                                                    carrierName: 'Schaden - Dickinson',
+                                                    companyId: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                    createDate: '2022-09-20T13:37:06.750882Z',
+                                                    modifiedDate: '2022-09-20T13:37:06.750882Z'
+                                                }
+                                            ],
+                                            addresses: [
+                                                {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    street: 'Simonis Manor',
+                                                    zipCode: '71898-8463',
+                                                    city: 'Baldwin Park',
+                                                    country: 'DE',
+                                                    firstname: 'Amara',
+                                                    lastname: 'Ritchie',
+                                                    email: 'jitpaytest+ob06854@gmail.com',
+                                                    countryPrefix: 49,
+                                                    phoneNumber: 1743284130,
+                                                    type: 'BILLING'
+                                                }
+                                            ],
+                                            companyName: 'Schaden - Dickinson',
+                                            documentStorageDirectoryName: '',
+                                            jitPayId: 8940,
+                                            legalForm: 'GmbH_de',
+                                            createDate: '2022-09-20T13:37:06.70862Z',
+                                            modifiedDate: '2022-09-20T13:37:06.801836Z'
+                                        }
+                                    }
+                                ],
+                                output: []
+                            },
+                            {
+                                id: '1ccee7c2-1ad4-4354-a23b-9c3534839fc6',
+                                status: 'succeed',
+                                errorMessage: '',
+                                duration: 0.18,
+                                startTime: '2022-10-02T12:14:32.710Z',
+                                type: 'rabbitPublish',
+                                description: '1.1.4. Send Carrier Event (MD) to Exchange (event after onboarding)',
+                                input: [
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit publish (configuration)',
+                                        data: {
+                                            queue_or_exhange: 'carrier',
+                                            type: 'exchange',
+                                            username: 'jitpay',
+                                            hostname: '192.168.50.250',
+                                            port: 5672,
+                                            vhost: '/'
+                                        }
+                                    },
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit publish (header)',
+                                        data: {
+                                            header: '{"eventDate":"2022-09-20T15:37:06.892633+02:00","eventId":"0b77c51c-1b62-45ca-9d44-ad7842e17ae0","eventType":"UPDATE"}',
+                                            correlationId: '',
+                                            messageId: '',
+                                            routing: ''
+                                        }
+                                    },
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit publish to exchange (payload)',
+                                        data: {
+                                            id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                            currency: '',
+                                            initialPin: '',
+                                            preferredCardIssuer: 'NONE',
+                                            maximumCards: 100,
+                                            baseCashpoolValue: 0,
+                                            baseCashpoolPercentage: 50,
+                                            defaultDriverLimit: 2000,
+                                            defaultVehicleLimit: 2000,
+                                            addresses: [
+                                                {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    street: 'Feil Stream',
+                                                    zipCode: '48827-6185',
+                                                    city: 'Bustermouth',
+                                                    country: 'DE',
+                                                    firstname: 'Amara',
+                                                    lastname: 'Ritchie',
+                                                    email: 'jitpaytest+ob06854@gmail.com',
+                                                    countryPrefix: 49,
+                                                    phoneNumber: 1743284130,
+                                                    type: 'BILLING'
+                                                }
+                                            ],
+                                            phoneNumbers: [
+                                                {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    description: 'Defined dur ing Onboarding',
+                                                    number: 1743284130,
+                                                    countryPrefix: 49,
+                                                    category: 'OFFICE',
+                                                    phoneType: 'UNKNOWN',
+                                                    favorite: false
+                                                }
+                                            ],
+                                            users: [
+                                                {
+                                                    id: 'jitpaytest+ob06854@gmail.com',
+                                                    email: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                    phoneNumbers: [
+                                                        {
+                                                            id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                            description: 'Defined during Onboarding',
+                                                            number: 1743284130,
+                                                            countryPrefix: 49,
+                                                            category: 'OFFICE',
+                                                            phoneType: 'UNKNOWN',
+                                                            favorite: false
+                                                        }
+                                                    ],
+                                                    username: 'jitpaytest+ob06854@gmail.com',
+                                                    lastname: 'Ritchie',
+                                                    firstname: 'Amara',
+                                                    activationCode: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                    legitimationStatus: 'LegimitationStarted',
+                                                    source: 'Onboarding',
+                                                    carrierIds: ['0b77c51c-1b62-45ca-9d44-ad7842e17ae0'],
+                                                    roles: [],
+                                                    createDate: '2022-09-20T15:37:06.4+02:00',
+                                                    modifiedDate: '2022-09-20T15:37:06.4+02:00'
+                                                }
+                                            ],
+                                            carrierName: 'Schaden - Dickinson',
+                                            companyId: 'a2c07696-3b88-4203-8079-64887687b724',
+                                            createDate: '2022-09-20T13:37:06.750882Z',
+                                            modifiedDate: '2022-09-20T13:37:06.750882Z',
+                                            eventDate: '2022-09-20T15:37:06.892633+02:00',
+                                            eventId: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                            eventType: 'UPDATE'
+                                        }
+                                    }
+                                ],
+                                output: []
+                            },
+                            {
+                                id: '679b5a5f-b18e-4a14-9416-13a01ffe0624',
+                                status: 'failed',
+                                errorMessage: 'Error: maximum 0 message(s) expected, but 1 message(s) received',
+                                duration: 0.59,
+                                startTime: '2022-10-02T12:14:32.890Z',
+                                type: 'rabbitConsume',
+                                description: '1.1.5. Check Fleet MasterData Error queue. It must be empty.',
+                                input: [
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit consume (configuration)',
+                                        data: {
+                                            queue: 'test.fleet.masterdata.error',
+                                            timeout: 5,
+                                            count_min: 0,
+                                            count_max: 0,
+                                            username: 'jitpay',
+                                            hostname: '192.168.50.250',
+                                            port: 5672,
+                                            vhost: '/'
+                                        }
+                                    }
+                                ],
+                                output: [
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit consume (received messages)',
+                                        data: [
+                                            {
+                                                header: {
+                                                    correlationId: '',
+                                                    fields: {
+                                                        consumerTag: 'amq.ctag-VtSFnfncLmXm1oLzQYu3LQ',
+                                                        deliveryTag: 1,
+                                                        redelivered: false,
+                                                        exchange: 'fleet.masterdata.error.exchange',
+                                                        routingKey: 'fleet.masterdata.carrier.error'
+                                                    },
+                                                    properties: { deliveryMode: 1, messageId: '' },
+                                                    headers: {
+                                                        eventDate: '2022-09-20T15:37:06.892633+02:00',
+                                                        eventId: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                        eventType: 'UPDATE',
+                                                        'x-death': [
+                                                            {
+                                                                count: 1,
+                                                                reason: 'rejected',
+                                                                queue: 'fleet.masterdata.carrier',
+                                                                time: { '!': 'timestamp', value: 1664712873 },
+                                                                exchange: 'carrier',
+                                                                'routing-keys': ['']
+                                                            }
+                                                        ],
+                                                        'x-first-death-exchange': 'carrier',
+                                                        'x-first-death-queue': 'fleet.masterdata.carrier',
+                                                        'x-first-death-reason': 'rejected'
+                                                    }
+                                                },
+                                                data: {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    currency: '',
+                                                    initialPin: '',
+                                                    preferredCardIssuer: 'NONE',
+                                                    maximumCards: 100,
+                                                    baseCashpoolValue: 0,
+                                                    baseCashpoolPercentage: 50,
+                                                    defaultDriverLimit: 2000,
+                                                    defaultVehicleLimit: 2000,
+                                                    addresses: [
+                                                        {
+                                                            id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                            street: 'Feil Stream',
+                                                            zipCode: '48827-6185',
+                                                            city: 'Bustermouth',
+                                                            country: 'DE',
+                                                            firstname: 'Amara',
+                                                            lastname: 'Ritchie',
+                                                            email: 'jitpaytest+ob06854@gmail.com',
+                                                            countryPrefix: 49,
+                                                            phoneNumber: 1743284130,
+                                                            type: 'BILLING'
+                                                        }
+                                                    ],
+                                                    phoneNumbers: [
+                                                        {
+                                                            id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                            description: 'Defined dur ing Onboarding',
+                                                            number: 1743284130,
+                                                            countryPrefix: 49,
+                                                            category: 'OFFICE',
+                                                            phoneType: 'UNKNOWN',
+                                                            favorite: false
+                                                        }
+                                                    ],
+                                                    users: [
+                                                        {
+                                                            id: 'jitpaytest+ob06854@gmail.com',
+                                                            email: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                            phoneNumbers: [
+                                                                {
+                                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                                    description: 'Defined during Onboarding',
+                                                                    number: 1743284130,
+                                                                    countryPrefix: 49,
+                                                                    category: 'OFFICE',
+                                                                    phoneType: 'UNKNOWN',
+                                                                    favorite: false
+                                                                }
+                                                            ],
+                                                            username: 'jitpaytest+ob06854@gmail.com',
+                                                            lastname: 'Ritchie',
+                                                            firstname: 'Amara',
+                                                            activationCode: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                            legitimationStatus: 'LegimitationStarted',
+                                                            source: 'Onboarding',
+                                                            carrierIds: ['0b77c51c-1b62-45ca-9d44-ad7842e17ae0'],
+                                                            roles: [],
+                                                            createDate: '2022-09-20T15:37:06.4+02:00',
+                                                            modifiedDate: '2022-09-20T15:37:06.4+02:00'
+                                                        }
+                                                    ],
+                                                    carrierName: 'Schaden - Dickinson',
+                                                    companyId: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                    createDate: '2022-09-20T13:37:06.750882Z',
+                                                    modifiedDate: '2022-09-20T13:37:06.750882Z',
+                                                    eventDate: '2022-09-20T15:37:06.892633+02:00',
+                                                    eventId: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    eventType: 'UPDATE'
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit consume (header)',
+                                        data: {
+                                            correlationId: '',
+                                            fields: {
+                                                consumerTag: 'amq.ctag-VtSFnfncLmXm1oLzQYu3LQ',
+                                                deliveryTag: 1,
+                                                redelivered: false,
+                                                exchange: 'fleet.masterdata.error.exchange',
+                                                routingKey: 'fleet.masterdata.carrier.error'
+                                            },
+                                            properties: { deliveryMode: 1, messageId: '' },
+                                            headers: {
+                                                eventDate: '2022-09-20T15:37:06.892633+02:00',
+                                                eventId: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                eventType: 'UPDATE',
+                                                'x-death': [
+                                                    {
+                                                        count: 1,
+                                                        reason: 'rejected',
+                                                        queue: 'fleet.masterdata.carrier',
+                                                        time: { '!': 'timestamp', value: 1664712873 },
+                                                        exchange: 'carrier',
+                                                        'routing-keys': ['']
+                                                    }
+                                                ],
+                                                'x-first-death-exchange': 'carrier',
+                                                'x-first-death-queue': 'fleet.masterdata.carrier',
+                                                'x-first-death-reason': 'rejected'
+                                            }
+                                        }
+                                    },
+                                    {
+                                        id: '-',
+                                        desc: 'Rabbit consume (data)',
+                                        data: {
+                                            id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                            currency: '',
+                                            initialPin: '',
+                                            preferredCardIssuer: 'NONE',
+                                            maximumCards: 100,
+                                            baseCashpoolValue: 0,
+                                            baseCashpoolPercentage: 50,
+                                            defaultDriverLimit: 2000,
+                                            defaultVehicleLimit: 2000,
+                                            addresses: [
+                                                {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    street: 'Feil Stream',
+                                                    zipCode: '48827-6185',
+                                                    city: 'Bustermouth',
+                                                    country: 'DE',
+                                                    firstname: 'Amara',
+                                                    lastname: 'Ritchie',
+                                                    email: 'jitpaytest+ob06854@gmail.com',
+                                                    countryPrefix: 49,
+                                                    phoneNumber: 1743284130,
+                                                    type: 'BILLING'
+                                                }
+                                            ],
+                                            phoneNumbers: [
+                                                {
+                                                    id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                    description: 'Defined dur ing Onboarding',
+                                                    number: 1743284130,
+                                                    countryPrefix: 49,
+                                                    category: 'OFFICE',
+                                                    phoneType: 'UNKNOWN',
+                                                    favorite: false
+                                                }
+                                            ],
+                                            users: [
+                                                {
+                                                    id: 'jitpaytest+ob06854@gmail.com',
+                                                    email: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                    phoneNumbers: [
+                                                        {
+                                                            id: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                                            description: 'Defined during Onboarding',
+                                                            number: 1743284130,
+                                                            countryPrefix: 49,
+                                                            category: 'OFFICE',
+                                                            phoneType: 'UNKNOWN',
+                                                            favorite: false
+                                                        }
+                                                    ],
+                                                    username: 'jitpaytest+ob06854@gmail.com',
+                                                    lastname: 'Ritchie',
+                                                    firstname: 'Amara',
+                                                    activationCode: 'a2c07696-3b88-4203-8079-64887687b724',
+                                                    legitimationStatus: 'LegimitationStarted',
+                                                    source: 'Onboarding',
+                                                    carrierIds: ['0b77c51c-1b62-45ca-9d44-ad7842e17ae0'],
+                                                    roles: [],
+                                                    createDate: '2022-09-20T15:37:06.4+02:00',
+                                                    modifiedDate: '2022-09-20T15:37:06.4+02:00'
+                                                }
+                                            ],
+                                            carrierName: 'Schaden - Dickinson',
+                                            companyId: 'a2c07696-3b88-4203-8079-64887687b724',
+                                            createDate: '2022-09-20T13:37:06.750882Z',
+                                            modifiedDate: '2022-09-20T13:37:06.750882Z',
+                                            eventDate: '2022-09-20T15:37:06.892633+02:00',
+                                            eventId: '0b77c51c-1b62-45ca-9d44-ad7842e17ae0',
+                                            eventType: 'UPDATE'
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                projectName: 'gauge',
+                durationMin: '0.03',
+                startTime: '2022-10-02T12:14:31.940Z'
+            };
+        </script>
+    </body>
+</html>
