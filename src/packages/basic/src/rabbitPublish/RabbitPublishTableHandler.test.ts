@@ -428,7 +428,7 @@ describe('reporting', () => {
                 'Rabbit publish (header)': {
                     data: {
                         correlationId: '',
-                        header: '{}',
+                        header: {},
                         messageId: '',
                         routing: ''
                     },
@@ -489,9 +489,70 @@ describe('reporting', () => {
                 'Rabbit publish (header)': {
                     data: {
                         correlationId: '',
-                        header: '{}',
+                        header: {},
                         messageId: '',
                         routing: 'r1'
+                    },
+                    description: 'Rabbit publish (header)',
+                    type: 'object'
+                },
+                'Rabbit publish to exchange (payload)': {
+                    data: {
+                        a: 1
+                    },
+                    description: 'Rabbit publish to exchange (payload)',
+                    type: 'json'
+                }
+            },
+            result: {},
+            startTime: '2020-01-01T00:00:00.000Z',
+            status: 2,
+            type: 'rabbitPublish'
+        });
+    });
+
+    /**
+     *
+     */
+    it('report with header', async () => {
+        const tableRows = MarkdownTableReader.convert(
+            `| action         | value     |
+             |----------------|-----------|
+             | exchange       | exchange  |
+             | header#traceId | t1        |
+             | description    | test desc |
+             | payload        | {"a": 1}  |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        Runtime.instance.stepRuntime.current.id = 'id-id-id';
+        StepReport.instance.report();
+
+        const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
+        // expect(writeFileMockCalls.length).toBe(1);
+        expect(JSON.parse(writeFileMockCalls[0][1] as string)).toStrictEqual({
+            description: 'test desc',
+            id: 'id-id-id',
+            input: {
+                'Rabbit publish (configuration)': {
+                    data: {
+                        hostname: 'rabbitmq_hostname',
+                        port: 5672,
+                        queue_or_exhange: 'exchange',
+                        type: 'exchange',
+                        username: 'rabbitmq_username',
+                        vhost: '/'
+                    },
+                    description: 'Rabbit publish (configuration)',
+                    type: 'json'
+                },
+                'Rabbit publish (header)': {
+                    data: {
+                        correlationId: '',
+                        header: { traceId: 't1' },
+                        messageId: '',
+                        routing: ''
                     },
                     description: 'Rabbit publish (header)',
                     type: 'object'

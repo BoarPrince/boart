@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { EnvLoader, Runtime } from '@boart/core';
+import { ContentType, EnvLoader, Runtime } from '@boart/core';
 
 import { StepReportDataItem } from '../report-item/StepReportDataItem';
 import { StepReportItem } from '../report-item/StepReportitem';
@@ -122,6 +122,18 @@ export class StepReport {
             } catch (error) {
                 // use data without parsing
             }
+        } else if (Array.isArray(data)) {
+            return data;
+        } else if (typeof data === 'object') {
+            const dataAsJSON = JSON.stringify(data, (key: string, value: ContentType) => {
+                if (typeof value === 'string') {
+                    // occurs when a DataContentObject is inside an object
+                    return this.tryConvertToObject(value);
+                } else {
+                    return value;
+                }
+            });
+            return JSON.parse(dataAsJSON);
         }
 
         return data;

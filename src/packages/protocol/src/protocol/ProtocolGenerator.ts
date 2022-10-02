@@ -213,7 +213,6 @@ export class ProtocolGenerator {
         const testItems = this.stepItemsWithDescription.filter((stepItem) => stepItem.testReportItemId === testItemId);
 
         return testItems.map((stepItem, index) => {
-            debugger;
             return {
                 id: stepItem.id,
                 status: RuntimeStatus[stepItem.status],
