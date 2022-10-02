@@ -213,6 +213,8 @@ export class ProtocolGenerator {
         const testItems = this.stepItemsWithDescription.filter((stepItem) => stepItem.testReportItemId === testItemId);
 
         return testItems.map((stepItem, index) => {
+            const stepDescription = stepItem.description.split('\n');
+
             return {
                 id: stepItem.id,
                 status: RuntimeStatus[stepItem.status],
@@ -220,7 +222,8 @@ export class ProtocolGenerator {
                 duration: stepItem.duration,
                 startTime: stepItem.startTime,
                 type: stepItem.type,
-                description: `${testNumber}.${index + 1}. ${stepItem.description}`,
+                description: `${testNumber}.${index + 1}. ${stepDescription.shift() || ''}`,
+                detailDescription: stepDescription,
                 input: this.generateDataItems(stepItem.input),
                 output: this.generateDataItems(stepItem.result)
             };

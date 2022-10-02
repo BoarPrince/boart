@@ -571,6 +571,29 @@ describe('reporting', () => {
             type: 'rabbitPublish'
         });
     });
+
+    /**
+     *
+     */
+    it('report with multiple descriptions', async () => {
+        const tableRows = MarkdownTableReader.convert(
+            `| action      | value            |
+             |-------------|------------------|
+             | queue       | queue1           |
+             | description | test desc line 1 |
+             |             | test desc line 2 |
+             | payload     | {"a": 1}         |`
+        );
+
+        await sut.handler.process(tableRows);
+
+        Runtime.instance.stepRuntime.current.id = 'id-id-id';
+        StepReport.instance.report();
+
+        const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
+        expect(writeFileMockCalls.length).toBe(1);
+        expect(JSON.parse(writeFileMockCalls[0][1] as string).description).toStrictEqual('test desc line 1\ntest desc line 2');
+    });
 });
 
 /**

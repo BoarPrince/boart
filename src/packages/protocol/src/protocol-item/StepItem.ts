@@ -12,6 +12,7 @@ export interface StepItem {
     startTime: string;
     type: string;
     description: string;
+    detailDescription: string[];
     input: Array<DataItem>;
     output: Array<DataItem>;
 }

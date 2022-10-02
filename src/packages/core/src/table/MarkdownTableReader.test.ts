@@ -148,3 +148,19 @@ it('formatted table with spaces', () => {
     expect(result.headers.cells).toStrictEqual(['h1', 'h2']);
     expect(result.rows).toEqual([{ cells: ['a1', 'a2'] }, { cells: ['b1', 'b2'] }]);
 });
+
+/**
+ *
+ */
+it('formatted table with multine line', () => {
+    const result = MarkdownTableReader.convert(
+        `| h1   | h2   |
+         | ---- | ---- |
+         | a1   | a2.1 |
+         |      | b2.2 |`
+    );
+
+    expect(result.headers).toBeDefined();
+    expect(result.headers.cells).toStrictEqual(['h1', 'h2']);
+    expect(result.rows).toEqual([{ cells: ['a1', 'a2.1'] }, { cells: ['', 'b2.2'] }]);
+});
