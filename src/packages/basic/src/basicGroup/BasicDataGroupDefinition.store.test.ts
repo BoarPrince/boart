@@ -134,7 +134,7 @@ describe('out store', () => {
     /**
      *
      */
-    it('null', async () => {
+    it('null handling', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action  |value |
              |--------|------|
@@ -829,5 +829,40 @@ describe('out store from payload', () => {
         const result = Store.instance.testStore.get('var');
 
         expect(result.toString()).toBe('${sore:a}');
+    });
+
+    /**
+     *
+     */
+    it('use store default', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value          |
+             |----------|----------------|
+             |payload#a | \${store:a:-1} |
+             |store     | var            |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: 1 });
+    });
+
+    /**
+     *
+     */
+    it('use store default, but store is defined', async () => {
+        Store.instance.testStore.put('a', 1);
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value          |
+             |----------|----------------|
+             |payload#a | \${store:a:-2} |
+             |store     | var            |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: 1 });
     });
 });
