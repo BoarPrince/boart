@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
@@ -209,10 +210,70 @@ export class ProtocolGenerator {
     /**
      *
      */
-    private generateSteps(testItemId: string, testNumber: string): Array<StepItem> {
-        const testItems = this.stepItemsWithDescription.filter((stepItem) => stepItem.testReportItemId === testItemId);
+    private groupingStepItems(stepItems: Array<StepItem>, testNumber: string): Array<StepItem> {
+        const groupedStepItems = new Array<StepItem>();
+        let currentGroupStepItem: StepItem = null;
+        stepItems.forEach((stepItem) => {
+            if (!stepItem.group) {
+                groupedStepItems.push(stepItem);
+                currentGroupStepItem = null;
+                return;
+            }
+            if (!currentGroupStepItem || currentGroupStepItem.group !== stepItem.group) {
+                currentGroupStepItem = {
+                    id: randomUUID(),
+                    type: 'group',
+                    status: null,
+                    duration: 0,
+                    description: stepItem.group,
+                    group: stepItem.group,
+                    startTime: null,
+                    steps: [stepItem],
+                    errorMessage: null,
+                    detailDescription: null,
+                    input: null,
+                    output: null
+                };
+                groupedStepItems.push(currentGroupStepItem);
+            } else {
+                currentGroupStepItem.steps.push(stepItem);
+            }
+        });
 
-        return testItems.map((stepItem, index) => {
+        // calculate status
+        groupedStepItems
+            .filter((stepItem) => !!stepItem.steps)
+            .forEach((groupItem) => {
+                groupItem.status = !groupItem.steps.find((stepItem) => stepItem.status === RuntimeStatus[RuntimeStatus.failed])
+                    ? RuntimeStatus[RuntimeStatus.succeed]
+                    : RuntimeStatus[RuntimeStatus.failed];
+            });
+
+        // calculate duration
+        groupedStepItems
+            .filter((stepItem) => !!stepItem.steps)
+            .forEach((groupItem) => {
+                groupItem.duration = groupItem.steps.reduce((p, c) => (p += c.duration), 0);
+            });
+
+        // number items
+        groupedStepItems.forEach((stepItem, index) => {
+            stepItem.description = `${testNumber}.${index + 1}. ${stepItem.description}`;
+            stepItem.steps?.forEach((childStepItem, childIndex) => {
+                childStepItem.description = `${testNumber}.${index + 1}.${childIndex + 1} ${childStepItem.description}`;
+            });
+        });
+
+        return groupedStepItems;
+    }
+
+    /**
+     *
+     */
+    private generateSteps(testItemId: string): Array<StepItem> {
+        const stepItems = this.stepItemsWithDescription.filter((stepItem) => stepItem.testReportItemId === testItemId);
+
+        return stepItems.map((stepItem) => {
             const stepDescription = stepItem.description.split('\n');
 
             return {
@@ -222,8 +283,10 @@ export class ProtocolGenerator {
                 duration: stepItem.duration,
                 startTime: stepItem.startTime,
                 type: stepItem.type,
-                description: `${testNumber}.${index + 1}. ${stepDescription.shift() || ''}`,
+                group: stepItem.group,
+                description: stepDescription.shift(),
                 detailDescription: stepDescription,
+                steps: null,
                 input: this.generateDataItems(stepItem.input),
                 output: this.generateDataItems(stepItem.result)
             };
@@ -247,7 +310,7 @@ export class ProtocolGenerator {
                 priority: RuntimePriority[testItem.priority],
                 descriptions: testItem.descriptions,
                 tickets: testItem.tickets,
-                steps: this.generateSteps(testItem.id, testItem.number)
+                steps: this.groupingStepItems(this.generateSteps(testItem.id), testItem.number)
             };
         });
         return tests;

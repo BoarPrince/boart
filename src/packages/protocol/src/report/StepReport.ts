@@ -62,6 +62,7 @@ export class StepReport {
             type: this._type,
             startTime: currentStepRuntime.startTime,
             duration: currentStepRuntime.duration,
+            group: currentStepRuntime.group,
             description: currentStepRuntime.descriptions.join('\n'),
             input: fromEntries(this.inputItems),
             result: fromEntries(this.resultItem)

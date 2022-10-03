@@ -36,6 +36,7 @@ export abstract class BaseRuntimeContext {
  */
 export class StepContext extends BaseRuntimeContext implements RuntimeResultContext {
     descriptions = new Array<string>();
+    group: string;
 }
 
 /**

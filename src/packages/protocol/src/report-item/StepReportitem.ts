@@ -15,6 +15,7 @@ export interface StepReportItem {
     type: string;
     startTime: string;
     duration: number;
+    group: string;
     description: string;
     input: Record<string, StepReportDataItem>;
     result: Record<string, StepReportDataItem>;

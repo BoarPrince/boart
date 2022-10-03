@@ -6,6 +6,7 @@ import { ExpectedDataExecutinoUnit } from './execution/expected/ExecutionUnit.Ex
 import { ExpectedJsonLogicExecutionUnit } from './execution/expected/ExecutionUnit.ExpectedJsonLogic';
 import { ExpectedOperatorImplementation } from './execution/expected/ExpectedOperator.Implementation';
 import { DescriptionExecutionUnit } from './execution/misc/ExecutionUnit.Description';
+import { GroupExecutionUnit } from './execution/misc/ExecutionUnit.Group';
 import { OutStoreExecutionUnit } from './execution/misc/ExecutionUnit.OutStore';
 import { WaitExecutionUnit } from './execution/misc/ExecutionUnit.Wait';
 import { PropertySetterExecutionUnit } from './execution/property-setter/PropertySetterExecutionUnit';
@@ -56,6 +57,7 @@ export {
     ExpectedJsonLogicExecutionUnit,
     FakeGenerator,
     GenerateReplacer,
+    GroupExecutionUnit,
     HexGenerator,
     IbanGenerator,
     IntValidator,
