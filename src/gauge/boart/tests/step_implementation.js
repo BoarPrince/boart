@@ -186,16 +186,20 @@ step('Data manage <table>', async (table) => {
  *
  */
 step('Print store', () => {
-    gauge.dataStore.scenarioStore;
+    console.log(' ');
     const keys = Object.keys(gauge.dataStore.scenarioStore.store);
-    console.log('key', keys);
+    keys.forEach((key) => console.log('key: ', key));
     console.log(' ');
 
     keys.forEach((key) => {
-        if (key === 'company_event_after_onboarding') {
-            console.log('\t', key, ':', JSON.stringify(gauge.dataStore.scenarioStore.get(key)));
-        } else {
-            console.log('\t', key, ':', gauge.dataStore.scenarioStore.get(key));
+        let value;
+        try {
+            value = JSON.stringify(gauge.dataStore.scenarioStore.get(key));
+        } catch (error) {
+            value = gauge.dataStore.scenarioStore.get(key);
         }
+        console.log('*****', key, '******** :');
+        console.log(' ');
+        console.log(value);
     });
 });

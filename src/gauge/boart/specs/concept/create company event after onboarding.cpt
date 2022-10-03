@@ -3,29 +3,39 @@
 
 * Data manage
 
-      | action            | value                                         |
-      |-------------------|-----------------------------------------------|
-      | in#eventId        | ${generate:uuid}                              |
-      | in#companyId      | ${generate:s:uuid}                            |
-      | in#activationCode | ${generate:s:uuid}                            |
-      | in#carrierId      | ${generate:uuid}                              |
-      | in#companyName    | ${generate:fake:company:name}                 |
-      | in#street         | ${generate:fake:address:street}               |
-      | in#zipCode        | ${generate:fake:address:zipCode}              |
-      | in#city           | ${generate:fake:address:city}                 |
-      | in#addressId      | ${generate:uuid}                              |
-      | in#phoneNumberId  | ${generate:uuid}                              |
-      | in#contactId      | ${generate:uuid}                              |
-      | in#userId         | ${generate:uuid}                              |
-      | in#jitpayId       | ${generate:s:random:4}                        |
-      | in#email          | jitpaytest+ob${generate:s:random:5}@gmail.com |
-      | in#firstName      | ${generate:s:fake:name:firstName}             |
-      | in#lastName       | ${generate:s:fake:name:lastName}              |
-      | store             | ob_info                                       |
+      | action                  | value                                         |
+      |-------------------------|-----------------------------------------------|
+      | description             | Generate Variables                            |
+      | group                   | Payload                                       |
+      | in#eventId              | ${generate:uuid}                              |
+      | in#companyId            | ${generate:s:uuid}                            |
+      | in#activationCode       | ${generate:s:uuid}                            |
+      | in#carrierId            | ${generate:uuid}                              |
+      | in#companyName          | ${generate:fake:company:name}                 |
+      | in#street               | ${generate:fake:address:street}               |
+      | in#zipCode              | ${generate:fake:address:zipCode}              |
+      | in#city                 | ${generate:fake:address:city}                 |
+      | in#addressId            | ${generate:uuid}                              |
+      | in#carrierAddressId     | ${generate:uuid}                              |
+      | in#addressId            | ${generate:uuid}                              |
+      | in#phoneNumberId        | ${generate:uuid}                              |
+      | in#carrierPhoneNumberId | ${generate:uuid}                              |
+      | in#userPhoneNumberId    | ${generate:uuid}                              |
+      | in#contactId            | ${generate:uuid}                              |
+      | in#userId               | ${generate:uuid}                              |
+      | in#jitpayId             | ${generate:s:random:4}                        |
+      | in#email                | jitpaytest+ob${generate:s:random:5}@gmail.com |
+      | in#firstName            | ${generate:s:fake:name:firstName}             |
+      | in#lastName             | ${generate:s:fake:name:lastName}              |
+      | store                   | ob_info                                       |
+
+Print store
 
 * Data manage
 
       | action      | value                                          |
-      | ----------- | ---------------------------------------------- |
+      |-------------|------------------------------------------------|
       | in          | <file:company-cascading-after-onboarding.json> |
+      | description | Create Payload                                 |
+      | group       | Payload                                        |
       | store       | <storeName>                                    |

@@ -23,14 +23,14 @@
       "https://keycloak.dev.jitpay.eu/auth/realms/jitpay/protocol/openid-connect",
       "https://keycloak.stage.jitpay.eu/auth/realms/jitpay/protocol/openid-connect"
     ],
-    "/api": [
-      "https://master-data.dev.jitpay.eu",
-      "https://master-data.stage.jitpay.eu",
-      "http://localhost:8090"
-    ],
     "/api/masterdata": [
       "https://jitfleet-master.dev.jitpay.eu",
       "https://jitfleet-master.stage.jitpay.eu",
+      "http://localhost:8090"
+    ],
+    "/api": [
+      "https://master-data.dev.jitpay.eu",
+      "https://master-data.stage.jitpay.eu",
       "http://localhost:8090"
     ]
   },
