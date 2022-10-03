@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 import { EnvLoader, Runtime } from '@boart/core';
 
@@ -28,11 +29,12 @@ export class LocalReport {
     /**
      *
      */
-    private getNumber(location: string, name: string): string {
+    public static getNumber(location: string, name: string): string {
         const numberRegexp = /^([\d]+[\d.]*)/;
         const nameMatch = name.match(numberRegexp);
         const nameNumber = !nameMatch ? '' : nameMatch[1].replace(/[.]$/, '');
-        const locationMatch = location.match(/^([\d])/);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+        const locationMatch: RegExpMatchArray = path.basename(location).match(/^([\d]+)/);
         if (!!locationMatch) {
             const locationNumber = locationMatch[1].replace(/[.]$/, '');
             return nameNumber.replace(numberRegexp, locationNumber) || locationNumber;
@@ -59,7 +61,7 @@ export class LocalReport {
         // data output
         const objectData: LocalReportItem = {
             id,
-            number: this.getNumber(currentLocalRuntime.location, currentLocalRuntime.name),
+            number: LocalReport.getNumber(currentLocalRuntime.location, currentLocalRuntime.name),
             name: this.getName(currentLocalRuntime.name),
             tags: currentLocalRuntime.tags,
             errorMessage: currentLocalRuntime.errorMessage,

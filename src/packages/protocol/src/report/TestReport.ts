@@ -5,6 +5,8 @@ import { EnvLoader, Runtime } from '@boart/core';
 import { TestReportItem } from '../report-item/TestReportItem';
 import { TicketItem } from '../report-item/TicketItem';
 
+import { LocalReport } from './LocalReport';
+
 /**
  *
  */
@@ -64,15 +66,8 @@ export class TestReport {
      *
      */
     private getNumber(location: string, name: string): string {
-        const nameMatch = name?.match(/^([\d]+[\d.]*)/);
-        const nameNumber = !nameMatch ? '' : nameMatch[1].replace(/[.]$/, '');
-
-        const locationMatch = location?.match(/^([\d])/);
-        if (!!locationMatch) {
-            const locationNumber = locationMatch[1].replace(/[.]$/, '');
-            return nameNumber.replace(/^\d+/, locationNumber);
-        }
-        return nameNumber;
+        const localNumber = LocalReport.getNumber(location, name);
+        return name.replace(/^([\d.]+)([\d]+)(\W+.+)/, localNumber + '.$2');
     }
 
     /**
