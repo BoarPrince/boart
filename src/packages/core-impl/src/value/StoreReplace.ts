@@ -4,7 +4,8 @@ import { ScopedType, ScopeType, Store, StoreMap, ValueReplacer } from '@boart/co
  *
  */
 export class StoreReplacer implements ValueReplacer {
-    private static readonly re = /^(?<property>[^:]+)(:-(?<default>.*))?$/;
+    private static readonly re = /^(?<property>[^:]+)((?<operator>:.)(?<default>.+))?$/;
+
     readonly name = 'store';
     readonly nullable = true;
     private _stores: Array<StoreMap>;
@@ -37,7 +38,7 @@ export class StoreReplacer implements ValueReplacer {
     /**
      *
      */
-    private getPropertyValue(property: string, store: StoreMap, scope?: string): string {
+    private getPropertyValue(property: string, store: StoreMap, scope: ScopeType): string {
         if (!scope) {
             for (const store of this.stores) {
                 const storeContent = store.get(property)?.toString();
@@ -53,14 +54,27 @@ export class StoreReplacer implements ValueReplacer {
     /**
      *
      */
-    replace(definition: string, store: StoreMap, scope: string): string {
+    replace(definition: string, store: StoreMap, scope: ScopeType): string {
         const match = definition.match(StoreReplacer.re);
+        if (!match) {
+            throw new Error(`store expression '${definition}' not valid`);
+        }
 
         const property = match.groups.property;
         const content = this.getPropertyValue(property, store, scope);
 
         if (!content) {
-            return match.groups.default;
+            switch (match.groups.operator) {
+                case ':-':
+                    return match.groups.default;
+                case ':=':
+                    store.put(property, match.groups.default);
+                    return match.groups.default;
+                case undefined:
+                    return null;
+                default:
+                    throw Error(`store default operator '${match.groups.operator}' not valid`);
+            }
         }
 
         return content;

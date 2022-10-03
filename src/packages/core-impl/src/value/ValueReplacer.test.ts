@@ -94,183 +94,194 @@ jest.mock('./ReferenceHandler', () => {
 /**
  *
  */
-describe('check replacers', () => {
+it('check environment replacement', () => {
+    const sut: ValueReplacer = new EnvironmentReplacer();
+
+    expect(sut.name).toBe('env');
+    expect(sut.priority).toBe(1000);
+    expect(sut.scoped).toBe(ScopedType.false);
+
+    sut.replace('yyyy');
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    const getter = EnvLoader.instance.get;
+    expect(getter).toBeCalled();
+    expect(getter).toBeCalledWith('yyyy', null, true);
+});
+
+/**
+ *
+ */
+it('check generate replacer', () => {
+    const sut: ValueReplacer = new GenerateReplacer();
+    const store = Store.instance.testStore.store;
+
+    expect(sut.name).toBe('generate');
+    expect(sut.priority).toBe(900);
+    expect(sut.scoped).toBe(ScopedType.true);
+
+    sut.replace('xxxx', store);
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    const generater = GeneratorHandler.instance.generate;
+
+    expect(generater).toBeCalled();
+    expect(generater).toBeCalledWith('xxxx');
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(store.get).toBeCalledWith('#generate#:#xxxx#');
+});
+
+/**
+ *
+ */
+it('check text replacer', () => {
+    const sut: ValueReplacer = new TextReplacer();
+
+    expect(sut.name).toBe('TextReplacer');
+    expect(sut.priority).toBe(950);
+    expect(sut.scoped).toBe(ScopedType.false);
+
+    sut.replace('xxxx');
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    const getter = TextLanguageHandler.instance.get;
+    expect(getter).toBeCalled();
+    expect(getter).toBeCalledWith('xxxx');
+});
+
+/**
+ *
+ */
+describe('reference', () => {
     /**
      *
      */
-    it('check environment replacement', () => {
-        const sut: ValueReplacer = new EnvironmentReplacer();
-
-        expect(sut.name).toBe('env');
-        expect(sut.priority).toBe(1000);
-        expect(sut.scoped).toBe(ScopedType.false);
-
-        sut.replace('yyyy');
-
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        const getter = EnvLoader.instance.get;
-        expect(getter).toBeCalled();
-        expect(getter).toBeCalledWith('yyyy', null, true);
-    });
-
-    /**
-     *
-     */
-    it('check generate replacer', () => {
-        const sut: ValueReplacer = new GenerateReplacer();
+    it('check reference replacer (valid property)', () => {
+        const sut: ValueReplacer = new ReferenceReplacer();
         const store = Store.instance.testStore.store;
 
-        expect(sut.name).toBe('generate');
+        expect(sut.name).toBe('ref');
         expect(sut.priority).toBe(900);
         expect(sut.scoped).toBe(ScopedType.true);
 
-        sut.replace('xxxx', store);
+        sut.replace('\\x/x-x/-x-x#_y-yyy2', store);
 
         // eslint-disable-next-line @typescript-eslint/unbound-method
-        const generater = GeneratorHandler.instance.generate;
-
-        expect(generater).toBeCalled();
-        expect(generater).toBeCalledWith('xxxx');
+        const getter = ReferenceHandler.getProperty;
         // eslint-disable-next-line @typescript-eslint/unbound-method
-        expect(store.get).toBeCalledWith('#generate#:#xxxx#');
-    });
+        const storeGetter = store.get;
 
-    /**
-     *
-     */
-    it('check text replacer', () => {
-        const sut: ValueReplacer = new TextReplacer();
-
-        expect(sut.name).toBe('TextReplacer');
-        expect(sut.priority).toBe(950);
-        expect(sut.scoped).toBe(ScopedType.false);
-
-        sut.replace('xxxx');
-
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        const getter = TextLanguageHandler.instance.get;
         expect(getter).toBeCalled();
-        expect(getter).toBeCalledWith('xxxx');
+        expect(getter).toBeCalledWith('\\x/x-x/-x-x', '_y-yyy2');
+        expect(storeGetter).toBeCalledWith('#ref#:#\\x/x-x/-x-x#_y-yyy2#');
     });
 
     /**
      *
      */
-    describe('reference', () => {
-        /**
-         *
-         */
-        it('check reference replacer (valid property)', () => {
-            const sut: ValueReplacer = new ReferenceReplacer();
-            const store = Store.instance.testStore.store;
+    it('check reference replacer (not valid property)', () => {
+        const sut: ValueReplacer = new ReferenceReplacer();
+        const store = Store.instance.testStore.store;
 
-            expect(sut.name).toBe('ref');
-            expect(sut.priority).toBe(900);
-            expect(sut.scoped).toBe(ScopedType.true);
+        expect(sut.name).toBe('ref');
+        expect(sut.priority).toBe(900);
+        expect(sut.scoped).toBe(ScopedType.true);
 
-            sut.replace('\\x/x-x/-x-x#_y-yyy2', store);
+        const value = sut.replace('\\xxxxx##yyyy', store);
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        const storeGetter = store.get;
 
-            // eslint-disable-next-line @typescript-eslint/unbound-method
-            const getter = ReferenceHandler.getProperty;
-            // eslint-disable-next-line @typescript-eslint/unbound-method
-            const storeGetter = store.get;
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        const getter = ReferenceHandler.getProperty;
+        expect(getter).not.toBeCalled();
+        expect(value).toBeNull();
+        expect(storeGetter).toBeCalledWith('#ref#:#\\xxxxx##yyyy#');
+    });
+});
 
-            expect(getter).toBeCalled();
-            expect(getter).toBeCalledWith('\\x/x-x/-x-x', '_y-yyy2');
-            expect(storeGetter).toBeCalledWith('#ref#:#\\x/x-x/-x-x#_y-yyy2#');
-        });
+/**
+ *
+ */
+describe('store', () => {
+    /**
+     *
+     */
+    it('no default, no scope', () => {
+        const sut: ValueReplacer = new StoreReplacer();
 
-        /**
-         *
-         */
-        it('check reference replacer (not valid property)', () => {
-            const sut: ValueReplacer = new ReferenceReplacer();
-            const store = Store.instance.testStore.store;
+        expect(sut.name).toBe('store');
+        expect(sut.priority).toBe(950);
+        expect(sut.scoped).toBe(ScopedType.multiple);
 
-            expect(sut.name).toBe('ref');
-            expect(sut.priority).toBe(900);
-            expect(sut.scoped).toBe(ScopedType.true);
-
-            const value = sut.replace('\\xxxxx##yyyy', store);
-            // eslint-disable-next-line @typescript-eslint/unbound-method
-            const storeGetter = store.get;
-
-            // eslint-disable-next-line @typescript-eslint/unbound-method
-            const getter = ReferenceHandler.getProperty;
-            expect(getter).not.toBeCalled();
-            expect(value).toBeNull();
-            expect(storeGetter).toBeCalledWith('#ref#:#\\xxxxx##yyyy#');
-        });
+        const replacedValue = sut.replace('xxxxx##yyyy', Store.instance.testStore.store, null);
+        expect(replacedValue).toBeNull();
     });
 
     /**
      *
      */
-    describe('store', () => {
-        /**
-         *
-         */
-        it('check store replacer - no default, no scope', () => {
-            const sut: ValueReplacer = new StoreReplacer();
+    it('with default, no scope', () => {
+        const sut: ValueReplacer = new StoreReplacer();
 
-            expect(sut.name).toBe('store');
-            expect(sut.priority).toBe(950);
-            expect(sut.scoped).toBe(ScopedType.multiple);
+        const replacedValue = sut.replace('xxxxx##yyyy:-default', Store.instance.testStore.store, null);
+        expect(replacedValue).toBe('default');
+    });
 
-            const property = 'xxxxx##yyyy';
+    /**
+     *
+     */
+    it('test scope - value defined', () => {
+        Store.instance.testStore.put('x', 1);
+        const sut: ValueReplacer = new StoreReplacer();
 
-            const replacedValue = sut.replace(property, Store.instance.testStore.store, null);
-            expect(replacedValue).toBeUndefined();
-        });
+        const replacedValue = sut.replace('x', Store.instance.testStore.store, ScopeType.Test);
+        expect(replacedValue).toBe('1');
+    });
 
-        /**
-         *
-         */
-        it('check store replacer - with default, no scope', () => {
-            const sut: ValueReplacer = new StoreReplacer();
+    /**
+     *
+     */
+    it('no scope - value defined', () => {
+        Store.instance.testStore.put('x', 1);
+        const sut: ValueReplacer = new StoreReplacer();
 
-            expect(sut.name).toBe('store');
-            expect(sut.priority).toBe(950);
-            expect(sut.scoped).toBe(ScopedType.multiple);
+        expect(sut.name).toBe('store');
+        expect(sut.priority).toBe(950);
+        expect(sut.scoped).toBe(ScopedType.multiple);
 
-            const property = 'xxxxx##yyyy:-default';
+        const replacedValue = sut.replace('x', Store.instance.testStore.store, null);
+        expect(replacedValue).toBe('1');
+    });
 
-            const replacedValue = sut.replace(property, Store.instance.testStore.store, null);
-            expect(replacedValue).toBe('default');
-        });
+    /**
+     *
+     */
+    it('no scope - use assign operator', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore.store;
 
-        /**
-         *
-         */
-        it('check store replacer - test scope - value defined', () => {
-            Store.instance.testStore.put('x', 1);
-            const sut: ValueReplacer = new StoreReplacer();
+        const replacedValue = sut.replace('x:=2', store, null);
+        expect(replacedValue).toBe('2');
+        expect(store.get('x')).toBe('2');
+    });
 
-            expect(sut.name).toBe('store');
-            expect(sut.priority).toBe(950);
-            expect(sut.scoped).toBe(ScopedType.multiple);
+    /**
+     *
+     */
+    it('expression not valid must throw an error', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore.store;
 
-            const property = 'x';
+        expect(() => sut.replace('x:=', store, null)).toThrowError(`store expression 'x:=' not valid`);
+    });
 
-            const replacedValue = sut.replace(property, Store.instance.testStore.store, ScopeType.Test);
-            expect(replacedValue).toBe('1');
-        });
+    /**
+     *
+     */
+    it('wrong default operator must throw an error', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore.store;
 
-        /**
-         *
-         */
-        it('check store replacer - no scope - value defined', () => {
-            Store.instance.testStore.put('x', 1);
-            const sut: ValueReplacer = new StoreReplacer();
-
-            expect(sut.name).toBe('store');
-            expect(sut.priority).toBe(950);
-            expect(sut.scoped).toBe(ScopedType.multiple);
-
-            const property = 'x';
-
-            const replacedValue = sut.replace(property, Store.instance.testStore.store, null);
-            expect(replacedValue).toBe('1');
-        });
+        expect(() => sut.replace('x:?default', store, null)).toThrowError(`store default operator ':?' not valid`);
     });
 });
