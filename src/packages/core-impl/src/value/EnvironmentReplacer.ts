@@ -1,7 +1,7 @@
 import { EnvLoader, ScopedType, ValueReplacer } from '@boart/core';
 
 export class EnvironmentReplacer implements ValueReplacer {
-    readonly name = 'EnvironmentReplacer';
+    readonly name = 'env';
 
     /**
      *

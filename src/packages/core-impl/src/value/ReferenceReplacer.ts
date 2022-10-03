@@ -1,9 +1,9 @@
-import { ScopedType, ValueReplacer } from '@boart/core';
+import { ScopedType, StoreMap, ValueReplacer } from '@boart/core';
 
 import { ReferenceHandler } from './ReferenceHandler';
 
 export class ReferenceReplacer implements ValueReplacer {
-    readonly name = 'ReferenceReplacer';
+    readonly name = 'ref';
 
     /**
      *
@@ -22,12 +22,27 @@ export class ReferenceReplacer implements ValueReplacer {
     /**
      *
      */
-    replace(property: string): string {
+    private getPropertyValue(property: string): string {
         const match = property.match(/^([^#]+)#([^#]+)$/);
         if (!!match) {
             return ReferenceHandler.getProperty(match[1], match[2]);
         } else {
             return null;
         }
+    }
+
+    /**
+     *
+     */
+    replace(property: string, store: StoreMap): string {
+        const storeIdentifier = `#${this.name}#:#${property}#`;
+
+        let content: string = store.get(storeIdentifier)?.toString();
+        if (!content) {
+            content = this.getPropertyValue(property);
+            store.put(storeIdentifier, content);
+        }
+
+        return content;
     }
 }

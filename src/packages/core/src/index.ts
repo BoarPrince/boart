@@ -29,6 +29,7 @@ import { LocalContext, RuntimeContext, RuntimeResultContext, StepContext, TestCo
 import { RuntimePriority } from './runtime/RuntimePriority';
 import { RuntimeStatus } from './runtime/RuntimeStatus';
 import { Store } from './store/Store';
+import { StoreMap } from './store/StoreMap';
 import { StoreWrapper } from './store/StoreWrapper';
 import { BaseRowMetaDefinition } from './table/BaseRowMetaDefinition';
 import { BaseRowType } from './table/BaseRowType';
@@ -90,6 +91,7 @@ export {
     Semaphore,
     StepContext,
     Store,
+    StoreMap,
     StoreWrapper,
     TableHandler,
     TableHandlerBaseImpl,

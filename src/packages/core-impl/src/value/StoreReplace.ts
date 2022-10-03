@@ -1,12 +1,13 @@
-import { ScopedType, ValueReplacer } from '@boart/core';
+import { ScopedType, ScopeType, Store, StoreMap, ValueReplacer } from '@boart/core';
 
 /**
  *
  */
 export class StoreReplacer implements ValueReplacer {
     private static readonly re = /^(?<property>[^:]+)(:-(?<default>.*))?$/;
-    readonly name = 'StoreReplacer';
+    readonly name = 'store';
     readonly nullable = true;
+    private _stores: Array<StoreMap>;
 
     /**
      *
@@ -25,16 +26,43 @@ export class StoreReplacer implements ValueReplacer {
     /**
      *
      */
-    getProperty(property: string): string {
-        const match = property.match(StoreReplacer.re);
-        return match.groups.property;
+    private get stores(): Array<StoreMap> {
+        const store = Store.instance;
+        if (!this._stores) {
+            this._stores = [store.globalStore, store.localStore, store.testStore, store.stepStore];
+        }
+        return this._stores;
     }
 
     /**
      *
      */
-    replace(property: string): string {
-        const match = property.match(StoreReplacer.re);
-        return match.groups.default;
+    private getPropertyValue(property: string, store: StoreMap, scope?: string): string {
+        if (!scope) {
+            for (const store of this.stores) {
+                const storeContent = store.get(property)?.toString();
+                if (!!storeContent) {
+                    return storeContent;
+                }
+            }
+        } else {
+            return store.get(property)?.toString();
+        }
+    }
+
+    /**
+     *
+     */
+    replace(definition: string, store: StoreMap, scope: string): string {
+        const match = definition.match(StoreReplacer.re);
+
+        const property = match.groups.property;
+        const content = this.getPropertyValue(property, store, scope);
+
+        if (!content) {
+            return match.groups.default;
+        }
+
+        return content;
     }
 }

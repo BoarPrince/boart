@@ -2,7 +2,6 @@ import { Initializer } from '../common/Initializer';
 import { Store } from '../store/Store';
 import { StoreWrapper } from '../store/StoreWrapper';
 import { ScopeType } from '../types/ScopeType';
-import { ScopedType } from '../types/ScopedType';
 
 import { PropertyParser } from './PropertyParser';
 import { ValueReplacer } from './ValueReplacer';
@@ -20,7 +19,6 @@ type ValueReplaceItem = {
  */
 export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     private valueReplacers: Array<ValueReplaceItem>;
-    private stores: Array<ScopeType> = [];
 
     /**
      *
@@ -36,15 +34,8 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
         if (!globalThis._valueReplaceHandlerInstance) {
             const instance = new ValueReplacerHandler();
             globalThis._valueReplaceHandlerInstance = instance;
-            instance.init();
         }
         return globalThis._valueReplaceHandlerInstance;
-    }
-    /**
-     *
-     */
-    private init(): void {
-        this.stores = [ScopeType.Step, ScopeType.Test, ScopeType.Local, ScopeType.Global];
     }
 
     /**
@@ -130,34 +121,11 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
      *
      */
     private stringReplacer(r: ValueReplaceItem, optional: boolean, scope: string, property: string) {
-        const storeIdentifier = !r.replacer.getProperty ? `#${r.identifier}#:#${property}#` : r.replacer.getProperty(property);
+        // const storeIdentifier = !r.replacer.getProperty ? `#${r.identifier}#:#${property}#` : r.replacer.getProperty(property);
 
-        switch (r.replacer.scoped) {
-            case ScopedType.false: {
-                const content = r.replacer.replace(property);
-                return ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property);
-            }
-            case ScopedType.true: {
-                const store = ValueReplacerHandler.getStore(scope);
-                let content = store.store.get(storeIdentifier)?.toString();
-                if (!content) {
-                    content = r.replacer.replace(property);
-                    ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property);
-                    store.store.put(storeIdentifier, content);
-                }
-                return content;
-            }
-            case ScopedType.multiple: {
-                for (const store of this.stores) {
-                    const storeContent = ValueReplacerHandler.getStore(store).get(storeIdentifier)?.toString();
-                    if (!!storeContent) {
-                        return storeContent;
-                    }
-                }
-                const content = r.replacer.replace(property);
-                return ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property);
-            }
-        }
+        const store = ValueReplacerHandler.getStore(scope);
+        const content = r.replacer.replace(property, store.store, <ScopeType>ScopeType[scope]);
+        return ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property);
     }
 
     /**

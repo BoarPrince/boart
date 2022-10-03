@@ -1,10 +1,10 @@
-import { GeneratorHandler, ScopedType, ValueReplacer } from '@boart/core';
+import { GeneratorHandler, ScopedType, StoreMap, ValueReplacer } from '@boart/core';
 
 /**
  *
  */
 export class GenerateReplacer implements ValueReplacer {
-    readonly name = 'GenerateReplacer';
+    readonly name = 'generate';
 
     /**
      *
@@ -23,7 +23,15 @@ export class GenerateReplacer implements ValueReplacer {
     /**
      *
      */
-    replace(definition: string): string {
-        return GeneratorHandler.instance.generate(definition);
+    replace(property: string, store: StoreMap): string {
+        const storeIdentifier = `#${this.name}#:#${property}#`;
+
+        let content: string = store.get(storeIdentifier)?.toString();
+        if (!content) {
+            content = GeneratorHandler.instance.generate(property);
+            store.put(storeIdentifier, content);
+        }
+
+        return content;
     }
 }

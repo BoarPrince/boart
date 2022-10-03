@@ -1,3 +1,5 @@
+import { StoreMap } from '../store/StoreMap';
+import { ScopeType } from '../types/ScopeType';
 import { ScopedType } from '../types/ScopedType';
 
 export interface ValueReplacer {
@@ -5,6 +7,5 @@ export interface ValueReplacer {
     readonly priority: number;
     readonly scoped: ScopedType;
     readonly nullable?: boolean;
-    readonly getProperty?: (property: string) => string;
-    replace(property: string): string | null | undefined;
+    replace(property: string, store?: StoreMap, scope?: ScopeType): string;
 }
