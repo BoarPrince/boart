@@ -10,17 +10,10 @@ describe('check timestamp generator', () => {
         expect(timestamp).not.toBeNull();
         expect(timestamp).toBeDefined();
         expect(timestamp.length).toBeGreaterThanOrEqual(17);
-        expect(timestamp.length).toBeLessThanOrEqual(18);
+        expect(timestamp.length).toBeLessThanOrEqual(19);
     });
 
     it('parameters shall not be defined', () => {
-        try {
-            sut.generate('para1');
-        } catch (error) {
-            expect(error.message).toBe(`parameter 'para1' cannot be defined for timestamp generator`);
-            return;
-        }
-
-        assert.fail('exception was not thrown but a parameter was defined');
+        expect(() => sut.generate('para1')).toThrowError(`parameter 'para1' cannot be defined for timestamp generator`);
     });
 });

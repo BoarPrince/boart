@@ -365,10 +365,10 @@ describe('data', () => {
         it('exchange with header', async () => {
             const tableRows = MarkdownTableReader.convert(
                 `| action    | value |
-           |-----------|-------|
-           | exchange  | ex    |
-           | header#h1 | 1     |
-           | payload#a | 1     |`
+                 |-----------|-------|
+                 | exchange  | ex    |
+                 | header#h1 | 1     |
+                 | payload#a | 1     |`
             );
 
             await sut.handler.process(tableRows);

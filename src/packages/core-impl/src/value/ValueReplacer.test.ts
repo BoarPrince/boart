@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { EnvLoader, GeneratorHandler, ScopedType, ScopeType, Store, TextLanguageHandler, ValueReplacer } from '@boart/core';
 
 import { EnvironmentReplacer } from './EnvironmentReplacer';
@@ -19,47 +20,32 @@ jest.mock('@boart/core', () => {
     const scenarioMap = new Map<string, string>();
     const stepMap = new Map<string, string>();
 
+    /**
+     *
+     */
+    const storeFactory = (baseStore: Map<string, string>) => ({
+        clear: () => baseStore.clear(),
+        put: jest.fn((key: string, value: string) => baseStore.set(key, value)),
+        get: jest.fn((key: string) => baseStore.get(key)),
+        store: {
+            put: jest.fn((key: string, value: string) => baseStore.set(key, value)),
+            get: jest.fn((key: string) => baseStore.get(key))
+        }
+    });
+
+    /**
+     *
+     */
     return {
         __esModule: true,
         ...originalModule,
+        StoreWrapper: jest.fn().mockImplementation(() => storeFactory(scenarioMap)),
         Store: {
             instance: {
-                globalStore: {
-                    clear: () => suiteMap.clear(),
-                    put: jest.fn((key: string, value: string) => suiteMap.set(key, value)),
-                    get: jest.fn((key: string) => suiteMap.get(key)),
-                    store: {
-                        put: jest.fn((key: string, value: string) => suiteMap.set(key, value)),
-                        get: jest.fn((key: string) => suiteMap.get(key))
-                    }
-                },
-                localStore: {
-                    clear: () => specMap.clear(),
-                    put: jest.fn((key: string, value: string) => specMap.set(key, value)),
-                    get: jest.fn((key: string) => specMap.get(key)),
-                    store: {
-                        put: jest.fn((key: string, value: string) => specMap.set(key, value)),
-                        get: jest.fn((key: string) => specMap.get(key))
-                    }
-                },
-                testStore: {
-                    clear: () => scenarioMap.clear(),
-                    put: jest.fn((key: string, value: string) => scenarioMap.set(key, value)),
-                    get: jest.fn((key: string) => scenarioMap.get(key)),
-                    store: {
-                        put: jest.fn((key: string, value: string) => scenarioMap.set(key, value)),
-                        get: jest.fn((key: string) => scenarioMap.get(key))
-                    }
-                },
-                stepStore: {
-                    clear: () => stepMap.clear(),
-                    put: jest.fn((key: string, value: string) => stepMap.set(key, value)),
-                    get: jest.fn((key: string) => stepMap.get(key)),
-                    store: {
-                        put: jest.fn((key: string, value: string) => stepMap.set(key, value)),
-                        get: jest.fn((key: string) => stepMap.get(key))
-                    }
-                }
+                globalStore: storeFactory(suiteMap),
+                localStore: storeFactory(specMap),
+                testStore: storeFactory(scenarioMap),
+                stepStore: storeFactory(stepMap)
             }
         },
         EnvLoader: {
@@ -94,6 +80,13 @@ jest.mock('./ReferenceHandler', () => {
 /**
  *
  */
+beforeEach(() => {
+    Store.instance.testStore.clear();
+});
+
+/**
+ *
+ */
 it('check environment replacement', () => {
     const sut: ValueReplacer = new EnvironmentReplacer();
 
@@ -103,7 +96,6 @@ it('check environment replacement', () => {
 
     sut.replace('yyyy');
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     const getter = EnvLoader.instance.get;
     expect(getter).toBeCalled();
     expect(getter).toBeCalledWith('yyyy', null, true);
@@ -114,7 +106,7 @@ it('check environment replacement', () => {
  */
 it('check generate replacer', () => {
     const sut: ValueReplacer = new GenerateReplacer();
-    const store = Store.instance.testStore.store;
+    const store = Store.instance.testStore;
 
     expect(sut.name).toBe('generate');
     expect(sut.priority).toBe(900);
@@ -122,13 +114,11 @@ it('check generate replacer', () => {
 
     sut.replace('xxxx', store);
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     const generater = GeneratorHandler.instance.generate;
 
     expect(generater).toBeCalled();
     expect(generater).toBeCalledWith('xxxx');
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(store.get).toBeCalledWith('#generate#:#xxxx#');
+    expect(store.store.get).toBeCalledWith('#generate#:#xxxx#');
 });
 
 /**
@@ -143,7 +133,6 @@ it('check text replacer', () => {
 
     sut.replace('xxxx');
 
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     const getter = TextLanguageHandler.instance.get;
     expect(getter).toBeCalled();
     expect(getter).toBeCalledWith('xxxx');
@@ -158,7 +147,7 @@ describe('reference', () => {
      */
     it('check reference replacer (valid property)', () => {
         const sut: ValueReplacer = new ReferenceReplacer();
-        const store = Store.instance.testStore.store;
+        const store = Store.instance.testStore;
 
         expect(sut.name).toBe('ref');
         expect(sut.priority).toBe(900);
@@ -166,14 +155,11 @@ describe('reference', () => {
 
         sut.replace('\\x/x-x/-x-x#_y-yyy2', store);
 
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         const getter = ReferenceHandler.getProperty;
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        const storeGetter = store.get;
 
         expect(getter).toBeCalled();
         expect(getter).toBeCalledWith('\\x/x-x/-x-x', '_y-yyy2');
-        expect(storeGetter).toBeCalledWith('#ref#:#\\x/x-x/-x-x#_y-yyy2#');
+        expect(store.store.get).toBeCalledWith('#ref#:#\\x/x-x/-x-x#_y-yyy2#');
     });
 
     /**
@@ -181,21 +167,18 @@ describe('reference', () => {
      */
     it('check reference replacer (not valid property)', () => {
         const sut: ValueReplacer = new ReferenceReplacer();
-        const store = Store.instance.testStore.store;
+        const store = Store.instance.testStore;
 
         expect(sut.name).toBe('ref');
         expect(sut.priority).toBe(900);
         expect(sut.scoped).toBe(ScopedType.true);
 
         const value = sut.replace('\\xxxxx##yyyy', store);
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        const storeGetter = store.get;
 
-        // eslint-disable-next-line @typescript-eslint/unbound-method
         const getter = ReferenceHandler.getProperty;
         expect(getter).not.toBeCalled();
         expect(value).toBeNull();
-        expect(storeGetter).toBeCalledWith('#ref#:#\\xxxxx##yyyy#');
+        expect(store.store.get).toBeCalledWith('#ref#:#\\xxxxx##yyyy#');
     });
 });
 
@@ -208,12 +191,13 @@ describe('store', () => {
      */
     it('no default, no scope', () => {
         const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore;
 
         expect(sut.name).toBe('store');
         expect(sut.priority).toBe(950);
         expect(sut.scoped).toBe(ScopedType.multiple);
 
-        const replacedValue = sut.replace('xxxxx##yyyy', Store.instance.testStore.store, null);
+        const replacedValue = sut.replace('xxxxx##yyyy', store, null);
         expect(replacedValue).toBeNull();
     });
 
@@ -222,8 +206,9 @@ describe('store', () => {
      */
     it('with default, no scope', () => {
         const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore;
 
-        const replacedValue = sut.replace('xxxxx##yyyy:-default', Store.instance.testStore.store, null);
+        const replacedValue = sut.replace('xxxxx##yyyy:-default', store, null);
         expect(replacedValue).toBe('default');
     });
 
@@ -233,8 +218,9 @@ describe('store', () => {
     it('test scope - value defined', () => {
         Store.instance.testStore.put('x', 1);
         const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore;
 
-        const replacedValue = sut.replace('x', Store.instance.testStore.store, ScopeType.Test);
+        const replacedValue = sut.replace('x', store, ScopeType.Test);
         expect(replacedValue).toBe('1');
     });
 
@@ -244,12 +230,13 @@ describe('store', () => {
     it('no scope - value defined', () => {
         Store.instance.testStore.put('x', 1);
         const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore;
 
         expect(sut.name).toBe('store');
         expect(sut.priority).toBe(950);
         expect(sut.scoped).toBe(ScopedType.multiple);
 
-        const replacedValue = sut.replace('x', Store.instance.testStore.store, null);
+        const replacedValue = sut.replace('x', store, null);
         expect(replacedValue).toBe('1');
     });
 
@@ -258,11 +245,24 @@ describe('store', () => {
      */
     it('no scope - use assign operator', () => {
         const sut: ValueReplacer = new StoreReplacer();
-        const store = Store.instance.testStore.store;
+        const store = Store.instance.testStore;
 
         const replacedValue = sut.replace('x:=2', store, null);
         expect(replacedValue).toBe('2');
-        expect(store.get('x')).toBe('2');
+        expect(store.store.get('x')).toBe('2');
+    });
+
+    /**
+     *
+     */
+    it('no scope - use assign operator with store attribute', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore;
+
+        const replacedValue = sut.replace('x#y:=2', store);
+        expect(replacedValue).toBe('2');
+        expect(store.put).toHaveBeenCalled();
+        expect(store.put).toHaveBeenCalledWith('x#y', '2');
     });
 
     /**
@@ -270,7 +270,7 @@ describe('store', () => {
      */
     it('expression not valid must throw an error', () => {
         const sut: ValueReplacer = new StoreReplacer();
-        const store = Store.instance.testStore.store;
+        const store = Store.instance.testStore;
 
         expect(() => sut.replace('x:=', store, null)).toThrowError(`store expression 'x:=' not valid`);
     });
@@ -280,7 +280,7 @@ describe('store', () => {
      */
     it('wrong default operator must throw an error', () => {
         const sut: ValueReplacer = new StoreReplacer();
-        const store = Store.instance.testStore.store;
+        const store = Store.instance.testStore;
 
         expect(() => sut.replace('x:?default', store, null)).toThrowError(`store default operator ':?' not valid`);
     });

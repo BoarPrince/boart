@@ -188,9 +188,6 @@ describe('get', () => {
      *
      */
     it('get with bearer, when store was initialized', async () => {
-        // change store implementation
-        Store.instance.initTestStore({});
-
         Store.instance.testStore.put('authorization', 't.o.k.e.n');
 
         fetchMock.doMock(JSON.stringify({ b: 2 }));
@@ -200,7 +197,9 @@ describe('get', () => {
              | method:get     | http://xxx |`
         );
 
-        await sut.handler.process(tableRows);
+        const context = await sut.handler.process(tableRows);
+
+        expect(context.preExecution.authorization).toBe('t.o.k.e.n');
         expect(fetchMock.mock.calls).toEqual([
             [
                 'http://xxx',

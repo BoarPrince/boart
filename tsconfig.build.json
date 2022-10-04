@@ -8,7 +8,7 @@
     "**/src/**/*.ts"
   ],
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es2021",
     "module": "commonjs",
     "strict": false,
     "strictNullChecks": false,

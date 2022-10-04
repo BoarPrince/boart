@@ -865,4 +865,114 @@ describe('out store from payload', () => {
 
         expect(result.valueOf()).toStrictEqual({ a: 1 });
     });
+
+    /**
+     *
+     */
+    it('use store default - with property', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value            |
+             |----------|------------------|
+             |payload#a | \${store:a.p:-1} |
+             |store     | var              |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: 1 });
+    });
+
+    /**
+     *
+     */
+    it('use store default - with property, but store is defined', async () => {
+        Store.instance.testStore.put('a', { p: 1 });
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value            |
+             |----------|------------------|
+             |payload#a | \${store:a.p:-2} |
+             |store     | var              |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: 1 });
+    });
+
+    /**
+     *
+     */
+    it('use store default-assignment - with property', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value            |
+             |----------|------------------|
+             |payload#a | \${store:a.p:=1} |
+             |store     | var              |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: 1 });
+        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 1 });
+    });
+
+    /**
+     *
+     */
+    it('use store default-assignment - with property, but store is defined', async () => {
+        Store.instance.testStore.put('a', { p: 1 });
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value            |
+             |----------|------------------|
+             |payload#a | \${store:a.p:=2} |
+             |store     | var              |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: 1 });
+        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 1 });
+    });
+
+    /**
+     *
+     */
+    it('use store default-assignment - recursive usage - simple data', async () => {
+        Store.instance.testStore.put('b', 3);
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                      |
+             |----------|----------------------------|
+             |payload#a | \${store:a.p:=\${store:b}} |
+             |store     | var                        |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: 3 });
+        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 3 });
+    });
+
+    /**
+     *
+     */
+    it('use store default-assignment - recursive usage - object', async () => {
+        Store.instance.testStore.put('b', { p: 3 });
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                      |
+             |----------|----------------------------|
+             |payload#a | \${store:a.p:=\${store:b}} |
+             |store     | var                        |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: { p: 3 } });
+        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: { p: 3 } });
+    });
 });

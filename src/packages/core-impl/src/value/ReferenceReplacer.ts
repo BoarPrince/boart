@@ -1,4 +1,4 @@
-import { ScopedType, StoreMap, ValueReplacer } from '@boart/core';
+import { ScopedType, StoreWrapper, ValueReplacer } from '@boart/core';
 
 import { ReferenceHandler } from './ReferenceHandler';
 
@@ -34,13 +34,14 @@ export class ReferenceReplacer implements ValueReplacer {
     /**
      *
      */
-    replace(property: string, store: StoreMap): string {
+    replace(property: string, store: StoreWrapper): string {
         const storeIdentifier = `#${this.name}#:#${property}#`;
+        const baseStore = store.store;
 
-        let content: string = store.get(storeIdentifier)?.toString();
+        let content: string = baseStore.get(storeIdentifier)?.toString();
         if (!content) {
             content = this.getPropertyValue(property);
-            store.put(storeIdentifier, content);
+            baseStore.put(storeIdentifier, content);
         }
 
         return content;

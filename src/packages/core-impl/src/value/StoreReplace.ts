@@ -1,4 +1,4 @@
-import { ScopedType, ScopeType, Store, StoreMap, ValueReplacer } from '@boart/core';
+import { ContentType, ScopedType, ScopeType, Store, StoreMap, StoreWrapper, ValueReplacer } from '@boart/core';
 
 /**
  *
@@ -8,7 +8,7 @@ export class StoreReplacer implements ValueReplacer {
 
     readonly name = 'store';
     readonly nullable = true;
-    private _stores: Array<StoreMap>;
+    private _stores: Array<StoreWrapper>;
 
     /**
      *
@@ -27,7 +27,7 @@ export class StoreReplacer implements ValueReplacer {
     /**
      *
      */
-    private get stores(): Array<StoreMap> {
+    private get stores(): Array<StoreWrapper> {
         const store = Store.instance;
         if (!this._stores) {
             this._stores = [store.globalStore, store.localStore, store.testStore, store.stepStore];
@@ -38,30 +38,40 @@ export class StoreReplacer implements ValueReplacer {
     /**
      *
      */
-    private getPropertyValue(property: string, store: StoreMap, scope: ScopeType): string {
+    private getPropertyValue(property: string, store: StoreWrapper, scope: ScopeType, check: boolean): string {
+        const runable = (runable: () => ContentType, throwError: boolean): string => {
+            try {
+                return runable()?.toString();
+            } catch (error) {
+                if (throwError) {
+                    throw error;
+                }
+            }
+        };
+
         if (!scope) {
             for (const store of this.stores) {
-                const storeContent = store.get(property)?.toString();
+                const storeContent = runable(() => store.get(property), check);
                 if (!!storeContent) {
                     return storeContent;
                 }
             }
         } else {
-            return store.get(property)?.toString();
+            return runable(() => store.get(property), check);
         }
     }
 
     /**
      *
      */
-    replace(definition: string, store: StoreMap, scope: ScopeType): string {
+    replace(definition: string, store: StoreWrapper, scope: ScopeType): string {
         const match = definition.match(StoreReplacer.re);
         if (!match) {
             throw new Error(`store expression '${definition}' not valid`);
         }
 
         const property = match.groups.property;
-        const content = this.getPropertyValue(property, store, scope);
+        const content = this.getPropertyValue(property, store, scope, !match.groups.operator);
 
         if (!content) {
             switch (match.groups.operator) {

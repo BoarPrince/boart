@@ -376,10 +376,10 @@ it('with generator - random - with size', async () => {
     jest.spyOn(global.Math, 'floor').mockReturnValue(5);
 
     const tableRows = MarkdownTableReader.convert(
-        `| action    | value                 |
-         |-----------|-----------------------|
+        `| action    | value                  |
+         |-----------|------------------------|
          | in#random | \${generate:random:10} |
-         | store     | out                   |`
+         | store     | out                    |`
     );
 
     await sut.handler.process(tableRows);

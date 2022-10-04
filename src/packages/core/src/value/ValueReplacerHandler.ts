@@ -17,6 +17,14 @@ type ValueReplaceItem = {
 /**
  *
  */
+enum ReplacementMode {
+    RemoveBrackets,
+    RetractBrackets
+}
+
+/**
+ *
+ */
 export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     private valueReplacers: Array<ValueReplaceItem>;
 
@@ -74,6 +82,27 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     }
 
     /**
+     * Needed for inplace/recursive replacement, e.g. store
+     *
+     * When a complete JSON expression is used as parameter.
+     * Can happen with a statement like this ${store:att1.att11:=${store:att2}}
+     * and ${store:att2} is replaced to JSON expression.
+     */
+    private static replaceCurlyBrackets(value: string, mode: ReplacementMode): string {
+        if (!value) {
+            return value;
+        }
+
+        if (mode === ReplacementMode.RemoveBrackets) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            return value.replaceAll('{', '\x01').replaceAll('}', '\x02');
+        } else {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            return value.replaceAll('\x01', '{').replaceAll('\x02', '}');
+        }
+    }
+
+    /**
      *
      */
     public replace(value: string): string {
@@ -83,7 +112,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
             // recursive replacement
             replacedValue = this.replaceOnce(value);
         }
-        return value;
+        return ValueReplacerHandler.replaceCurlyBrackets(value, ReplacementMode.RetractBrackets);
     }
 
     /**
@@ -121,11 +150,14 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
      *
      */
     private stringReplacer(r: ValueReplaceItem, optional: boolean, scope: string, property: string) {
-        // const storeIdentifier = !r.replacer.getProperty ? `#${r.identifier}#:#${property}#` : r.replacer.getProperty(property);
-
+        property = ValueReplacerHandler.replaceCurlyBrackets(property, ReplacementMode.RetractBrackets);
         const store = ValueReplacerHandler.getStore(scope);
-        const content = r.replacer.replace(property, store.store, <ScopeType>ScopeType[scope]);
-        return ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property);
+        const content = r.replacer.replace(property, store, <ScopeType>ScopeType[scope]);
+
+        return ValueReplacerHandler.replaceCurlyBrackets(
+            ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property),
+            ReplacementMode.RemoveBrackets
+        );
     }
 
     /**

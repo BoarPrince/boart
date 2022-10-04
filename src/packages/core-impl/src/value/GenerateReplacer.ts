@@ -1,4 +1,4 @@
-import { GeneratorHandler, ScopedType, StoreMap, ValueReplacer } from '@boart/core';
+import { GeneratorHandler, ScopedType, StoreWrapper, ValueReplacer } from '@boart/core';
 
 /**
  *
@@ -23,13 +23,14 @@ export class GenerateReplacer implements ValueReplacer {
     /**
      *
      */
-    replace(property: string, store: StoreMap): string {
+    replace(property: string, store: StoreWrapper): string {
+        const baseStore = store.store;
         const storeIdentifier = `#${this.name}#:#${property}#`;
 
-        let content: string = store.get(storeIdentifier)?.toString();
+        let content: string = baseStore.get(storeIdentifier)?.toString();
         if (!content) {
             content = GeneratorHandler.instance.generate(property);
-            store.put(storeIdentifier, content);
+            baseStore.put(storeIdentifier, content);
         }
 
         return content;
