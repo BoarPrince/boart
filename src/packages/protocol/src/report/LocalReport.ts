@@ -31,10 +31,11 @@ export class LocalReport {
      */
     public static getNumber(location: string, name: string): string {
         const numberRegexp = /^([\d]+[\d.]*)/;
-        const nameMatch = name.match(numberRegexp);
+        const nameMatch = name?.match(numberRegexp);
         const nameNumber = !nameMatch ? '' : nameMatch[1].replace(/[.]$/, '');
+
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-        const locationMatch: RegExpMatchArray = path.basename(location).match(/^([\d]+)/);
+        const locationMatch: RegExpMatchArray = path.basename(location || '').match(/^([\d]+)/);
         if (!!locationMatch) {
             const locationNumber = locationMatch[1].replace(/[.]$/, '');
             return nameNumber.replace(numberRegexp, locationNumber) || locationNumber;
