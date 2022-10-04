@@ -30,7 +30,7 @@ export class StoreReplacer implements ValueReplacer {
     private get stores(): Array<StoreWrapper> {
         const store = Store.instance;
         if (!this._stores) {
-            this._stores = [store.globalStore, store.localStore, store.testStore, store.stepStore];
+            this._stores = [store.stepStore, store.testStore, store.localStore, store.globalStore];
         }
         return this._stores;
     }

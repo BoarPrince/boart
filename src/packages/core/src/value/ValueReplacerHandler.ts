@@ -152,7 +152,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     private stringReplacer(r: ValueReplaceItem, optional: boolean, scope: string, property: string) {
         property = ValueReplacerHandler.replaceCurlyBrackets(property, ReplacementMode.RetractBrackets);
         const store = ValueReplacerHandler.getStore(scope);
-        const content = r.replacer.replace(property, store, <ScopeType>ScopeType[scope]);
+        const content = r.replacer.replace(property, store, scope as ScopeType);
 
         return ValueReplacerHandler.replaceCurlyBrackets(
             ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property),

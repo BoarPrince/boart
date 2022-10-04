@@ -81,7 +81,10 @@ jest.mock('./ReferenceHandler', () => {
  *
  */
 beforeEach(() => {
+    Store.instance.globalStore.clear();
+    Store.instance.localStore.clear();
     Store.instance.testStore.clear();
+    Store.instance.stepStore.clear();
 });
 
 /**
@@ -198,6 +201,7 @@ describe('store', () => {
         expect(sut.scoped).toBe(ScopedType.multiple);
 
         const replacedValue = sut.replace('xxxxx##yyyy', store, null);
+
         expect(replacedValue).toBeNull();
     });
 
@@ -209,6 +213,7 @@ describe('store', () => {
         const store = Store.instance.testStore;
 
         const replacedValue = sut.replace('xxxxx##yyyy:-default', store, null);
+
         expect(replacedValue).toBe('default');
     });
 
@@ -221,6 +226,7 @@ describe('store', () => {
         const store = Store.instance.testStore;
 
         const replacedValue = sut.replace('x', store, ScopeType.Test);
+
         expect(replacedValue).toBe('1');
     });
 
@@ -237,6 +243,7 @@ describe('store', () => {
         expect(sut.scoped).toBe(ScopedType.multiple);
 
         const replacedValue = sut.replace('x', store, null);
+
         expect(replacedValue).toBe('1');
     });
 
@@ -248,6 +255,7 @@ describe('store', () => {
         const store = Store.instance.testStore;
 
         const replacedValue = sut.replace('x:=2', store, null);
+
         expect(replacedValue).toBe('2');
         expect(store.store.get('x')).toBe('2');
     });
@@ -260,6 +268,7 @@ describe('store', () => {
         const store = Store.instance.testStore;
 
         const replacedValue = sut.replace('x#y:=2', store);
+
         expect(replacedValue).toBe('2');
         expect(store.put).toHaveBeenCalled();
         expect(store.put).toHaveBeenCalledWith('x#y', '2');
@@ -283,5 +292,141 @@ describe('store', () => {
         const store = Store.instance.testStore;
 
         expect(() => sut.replace('x:?default', store, null)).toThrowError(`store default operator ':?' not valid`);
+    });
+
+    /**
+     *
+     */
+    it('replacement with global (suite) scope', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.globalStore;
+        store.put('a', 1);
+
+        const replacedValue = sut.replace('a', store, ScopeType.Global);
+
+        expect(replacedValue).toBe('1');
+        expect(Store.instance.globalStore.get).toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('replacement with file/local (spec) scope', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.localStore;
+        store.put('a', 2);
+
+        const replacedValue = sut.replace('a', store, ScopeType.Local);
+
+        expect(replacedValue).toBe('2');
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).toHaveBeenCalled();
+        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('replacement with test (scenario) scope', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore;
+        store.put('a', 3);
+
+        const replacedValue = sut.replace('a', store, ScopeType.Local);
+
+        expect(replacedValue).toBe('3');
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('replacement with step (step) scope', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.stepStore;
+        store.put('a', 4);
+
+        const replacedValue = sut.replace('a', store, ScopeType.Step);
+
+        expect(replacedValue).toBe('4');
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('no scope, variable in global', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.globalStore;
+        store.put('a', 1);
+
+        const replacedValue = sut.replace('a', store);
+
+        expect(replacedValue).toBe('1');
+        expect(Store.instance.globalStore.get).toHaveBeenCalled();
+        expect(Store.instance.localStore.get).toHaveBeenCalled();
+        expect(Store.instance.testStore.get).toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('no scope, variable in local', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.localStore;
+        store.put('a', 2);
+
+        const replacedValue = sut.replace('a', store);
+
+        expect(replacedValue).toBe('2');
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).toHaveBeenCalled();
+        expect(Store.instance.testStore.get).toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('no scope, variable in test', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore;
+        store.put('a', 3);
+
+        const replacedValue = sut.replace('a', store);
+
+        expect(replacedValue).toBe('3');
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).toHaveBeenCalled();
+    });
+
+    /**
+     *
+     */
+    it('no scope, variable in step', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.stepStore;
+        store.put('a', 4);
+
+        const replacedValue = sut.replace('a', store);
+
+        expect(replacedValue).toBe('4');
+        expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
+        expect(Store.instance.stepStore.get).toHaveBeenCalled();
     });
 });
