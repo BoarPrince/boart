@@ -53,6 +53,16 @@ export class GeneratorHandler implements Initializer<Generator> {
     /**
      *
      */
+    public get(name: string): Generator {
+        if (!this.generators.has(name)) {
+            throw Error(`generator '${name}' does not exists!`);
+        }
+        return this.generators.get(name);
+    }
+
+    /**
+     *
+     */
     addItems(generator: readonly Generator[]): Initializer<Generator> {
         generator?.forEach((g) => this.add(g.name, g));
         return this;

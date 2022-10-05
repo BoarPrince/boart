@@ -1,7 +1,7 @@
 import { ScopedType, TextLanguageHandler, ValueReplacer } from '@boart/core';
 
 export class TextReplacer implements ValueReplacer {
-    readonly name = 'TextReplacer';
+    readonly name = 'text';
 
     /**
      *

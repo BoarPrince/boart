@@ -4,6 +4,7 @@ import { GeneratorHandler, ScopedType, StoreWrapper, ValueReplacer } from '@boar
  *
  */
 export class GenerateReplacer implements ValueReplacer {
+    private static readonly re = /^(@(?<scopename>[^@:]+):)?(?<property>.+)$/;
     readonly name = 'generate';
 
     /**
@@ -25,7 +26,13 @@ export class GenerateReplacer implements ValueReplacer {
      */
     replace(property: string, store: StoreWrapper): string {
         const baseStore = store.store;
-        const storeIdentifier = `#${this.name}#:#${property}#`;
+
+        const match = property.match(GenerateReplacer.re);
+        property = match.groups.property;
+
+        const storeIdentifier = match.groups.scopename
+            ? `#${this.name}#:#${match.groups.scopename}#:#${property}#`
+            : `#${this.name}#:#${property}#`;
 
         let content: string = baseStore.get(storeIdentifier)?.toString();
         if (!content) {

@@ -2,6 +2,7 @@ import 'jest-extended';
 
 import { BasicDataGroupDefinition } from '@boart/basic';
 import {
+    GeneratorHandler,
     MarkdownTableReader,
     NativeContent,
     NullContent,
@@ -103,16 +104,18 @@ const sut = new MockTableHandler();
 /**
  *
  */
-describe('out store', () => {
-    /**
-     *
-     */
-    beforeEach(() => {
-        sut.handler.executionEngine.context.execution.data = new NullContent();
-        sut.handler.executionEngine.context.execution.transformed = new NullContent();
-        Store.instance.testStore.clear();
-    });
+beforeEach(() => {
+    sut.handler.executionEngine.context.execution.data = null;
+    sut.handler.executionEngine.context.execution.transformed = null;
+    sut.handler.executionEngine.context.preExecution.payload = null;
+    Store.instance.testStore.clear();
+    Store.instance.globalStore.clear();
+});
 
+/**
+ *
+ */
+describe('out store', () => {
     /**
      *
      */
@@ -279,16 +282,6 @@ describe('out store', () => {
  *
  */
 describe('out store from payload', () => {
-    /**
-     *
-     */
-    beforeEach(() => {
-        sut.handler.executionEngine.context.execution.data = null;
-        sut.handler.executionEngine.context.execution.transformed = null;
-        sut.handler.executionEngine.context.preExecution.payload = null;
-        Store.instance.testStore.clear();
-    });
-
     /**
      *
      */
@@ -974,5 +967,120 @@ describe('out store from payload', () => {
 
         expect(result.valueOf()).toStrictEqual({ a: { p: 3 } });
         expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: { p: 3 } });
+    });
+});
+
+/** */
+describe('generate', () => {
+    /**
+     *
+     */
+    it('default', async () => {
+        const hexGenerator = GeneratorHandler.instance.get('hex');
+        jest.spyOn(hexGenerator, 'generate').mockImplementation((size) => size as string);
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value              |
+             |----------|--------------------|
+             |payload#a | \${generate:hex:5} |
+             |store     | var                |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result.valueOf()).toStrictEqual({ a: 5 });
+    });
+
+    /**
+     *
+     */
+    it('default with name', async () => {
+        let hex = 1;
+        const hexGenerator = GeneratorHandler.instance.get('hex');
+        jest.spyOn(hexGenerator, 'generate').mockImplementation(() => (hex++).toString());
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                   |
+             |----------|-------------------------|
+             |payload#a | \${generate:@nameA:hex} |
+             |payload#b | \${generate:@nameB:hex} |
+             |payload#c | \${generate:@nameA:hex} |
+             |store     | var                     |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result.valueOf()).toStrictEqual({ a: 1, b: 2, c: 1 });
+    });
+
+    /**
+     *
+     */
+    it('default with name and scope', async () => {
+        let hex = 10;
+        const hexGenerator = GeneratorHandler.instance.get('hex');
+        jest.spyOn(hexGenerator, 'generate').mockImplementation(() => (hex++).toString());
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                      |
+             |----------|---------------------------|
+             |payload#a | \${generate:g:@nameA:hex} |
+             |payload#b | \${generate:g:@nameB:hex} |
+             |payload#c | \${generate:g:@nameA:hex} |
+             |payload#d | \${generate:@nameA:hex}   |
+             |store     | var                       |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result.valueOf()).toStrictEqual({ a: 10, b: 11, c: 10, d: 12 });
+    });
+
+    /**
+     *
+     */
+    it('use with store assignment', async () => {
+        const hexGenerator = GeneratorHandler.instance.get('hex');
+        jest.spyOn(hexGenerator, 'generate').mockImplementation((size) => size as string);
+
+        console.log(Store.instance.testStore);
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                               |
+             |----------|-------------------------------------|
+             |payload#a | \${store:a.p:=\${generate:hex:111}} |
+             |store     | var                                 |`
+        );
+
+        await sut.handler.process(tableDef);
+        console.log(Store.instance.testStore);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result.valueOf()).toStrictEqual({ a: 111 });
+        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 111 });
+    });
+
+    /**
+     *
+     */
+    it('use with store assignment and scoped name', async () => {
+        const hexGenerator = GeneratorHandler.instance.get('hex');
+        jest.spyOn(hexGenerator, 'generate').mockImplementation((size) => size as string);
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                                    |
+             |----------|------------------------------------------|
+             |payload#a | \${store:a.p:=\${generate:@name:hex:22}} |
+             |store     | var                                      |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result.valueOf()).toStrictEqual({ a: 22 });
+        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 22 });
     });
 });

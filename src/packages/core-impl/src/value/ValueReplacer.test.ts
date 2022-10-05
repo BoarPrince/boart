@@ -107,38 +107,69 @@ it('check environment replacement', () => {
 /**
  *
  */
-it('check generate replacer', () => {
-    const sut: ValueReplacer = new GenerateReplacer();
-    const store = Store.instance.testStore;
-
-    expect(sut.name).toBe('generate');
-    expect(sut.priority).toBe(900);
-    expect(sut.scoped).toBe(ScopedType.true);
-
-    sut.replace('xxxx', store);
-
-    const generater = GeneratorHandler.instance.generate;
-
-    expect(generater).toBeCalled();
-    expect(generater).toBeCalledWith('xxxx');
-    expect(store.store.get).toBeCalledWith('#generate#:#xxxx#');
-});
-
-/**
- *
- */
 it('check text replacer', () => {
     const sut: ValueReplacer = new TextReplacer();
 
-    expect(sut.name).toBe('TextReplacer');
-    expect(sut.priority).toBe(950);
-    expect(sut.scoped).toBe(ScopedType.false);
-
+    expect(sut.name).toBe('text');
     sut.replace('xxxx');
 
     const getter = TextLanguageHandler.instance.get;
     expect(getter).toBeCalled();
     expect(getter).toBeCalledWith('xxxx');
+});
+
+/**
+ *
+ */
+describe('generate', () => {
+    /**
+     *
+     */
+    it('default', () => {
+        const sut: ValueReplacer = new GenerateReplacer();
+        const store = Store.instance.testStore;
+
+        sut.replace('xxxx', store);
+
+        const generater = GeneratorHandler.instance.generate;
+
+        expect(generater).toBeCalled();
+        expect(generater).toBeCalledWith('xxxx');
+        expect(store.store.get).toBeCalledWith('#generate#:#xxxx#');
+    });
+
+    /**
+     *
+     */
+    it('with arguments', () => {
+        const sut: ValueReplacer = new GenerateReplacer();
+        const store = Store.instance.testStore;
+
+        sut.replace('xxxx:arg1:arg2', store);
+
+        const generater = GeneratorHandler.instance.generate;
+
+        expect(generater).toBeCalled();
+        expect(generater).toBeCalledWith('xxxx:arg1:arg2');
+        expect(store.store.get).toBeCalledWith('#generate#:#xxxx:arg1:arg2#');
+    });
+
+    /**
+     *
+     */
+    it('with extended namescope', () => {
+        const sut: ValueReplacer = new GenerateReplacer();
+        const store = Store.instance.testStore;
+
+        expect(sut.name).toBe('generate');
+        sut.replace('@name:xxxx:arg1:arg2', store);
+
+        const generater = GeneratorHandler.instance.generate;
+
+        expect(generater).toBeCalled();
+        expect(generater).toBeCalledWith('xxxx:arg1:arg2');
+        expect(store.store.get).toBeCalledWith('#generate#:#name#:#xxxx:arg1:arg2#');
+    });
 });
 
 /**
