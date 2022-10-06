@@ -17,7 +17,6 @@ jest.mock('fs');
  */
 beforeEach(() => {
     jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
-    sut.handler.executionEngine.initContext();
     Store.instance.testStore.clear();
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
 });
@@ -76,7 +75,6 @@ beforeAll(() => {
  */
 beforeEach(() => {
     Store.instance.initTestStore({});
-    sut.handler.executionEngine.initContext();
 
     Runtime.instance.runtime.notifyStart({} as RuntimeContext);
     Runtime.instance.localRuntime.notifyStart({} as LocalContext);
