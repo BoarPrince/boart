@@ -53,7 +53,6 @@ beforeAll(() => {
  */
 beforeEach(() => {
     Store.instance.initTestStore({});
-    sut.handler.executionEngine.initContext();
 
     Runtime.instance.runtime.notifyStart({} as RuntimeContext);
     Runtime.instance.localRuntime.notifyStart({} as LocalContext);
@@ -80,8 +79,7 @@ describe('default', () => {
             `| action   | value    |
              |----------|----------|
              | exchange | exchange |
-             | queue    | queue    |
-             | routing  | routing  |`
+             | queue    | queue    |`
         );
 
         const mock = await getAmqplibMock();
@@ -93,7 +91,7 @@ describe('default', () => {
         expect(sut.handler.executionEngine.context.config.queue_delete).toBe(true);
 
         expect(mock.channel.assertQueue).toBeCalledWith('queue', { durable: false });
-        expect(mock.channel.bindQueue).toBeCalledWith('queue', 'exchange', 'routing');
+        expect(mock.channel.bindQueue).toBeCalledWith('queue', 'exchange', '');
     });
 
     /**
