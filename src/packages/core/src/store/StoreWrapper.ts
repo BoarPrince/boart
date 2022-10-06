@@ -73,7 +73,7 @@ export class StoreWrapper {
             const firstKey = keys.shift();
             const nativeContentValue = this.store.get(firstKey);
             const contentValue =
-                nativeContentValue !== undefined //
+                nativeContentValue != null //
                     ? DataContentHelper.create(this.store.get(firstKey))
                     : new ObjectContent();
             DataContentHelper.setByPath(keys, value, contentValue);

@@ -139,7 +139,7 @@ export class TextLanguageHandler {
             const settings = JSON.parse(fileData) as EnvironmentSettings;
             return settings.text_mapping;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             throw Error(`can't read language settings from env [${filename}]: ${JSON.stringify(error)}`);
         }
     }
