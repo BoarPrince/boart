@@ -69,8 +69,6 @@ beforeAll(() => {
  *
  */
 beforeEach(() => {
-    Store.instance.initTestStore({});
-
     Runtime.instance.runtime.notifyStart({} as RuntimeContext);
     Runtime.instance.localRuntime.notifyStart({} as LocalContext);
     Runtime.instance.testRuntime.notifyStart({} as TestContext);
