@@ -319,7 +319,11 @@ export class RestHttp {
     /**
      *
      */
-    public getExecutionInfo(): ExecutionInfo {
-        return this.executionInfo;
+    public getExecutionInfo(includeBody = true): ExecutionInfo {
+        if (includeBody === true || !this.executionInfo?.option.body) {
+            return this.executionInfo;
+        } else {
+            return { ...this.executionInfo, option: { ...this.executionInfo.option, body: '...' } };
+        }
     }
 }

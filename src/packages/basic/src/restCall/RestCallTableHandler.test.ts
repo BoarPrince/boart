@@ -48,7 +48,6 @@ jest.mock('fs');
  *
  */
 beforeEach(() => {
-    sut.handler.executionEngine.initContext();
     Store.instance.localStore.clear();
     Store.instance.testStore.clear();
 });
@@ -805,9 +804,7 @@ describe('form-data', () => {
              | payload          | { "a": 1   |`
         );
 
-        await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError(
-            'payload cannot be parsed as a valid json\n{ "a": 1'
-        );
+        await expect(sut.handler.process(tableRows)).rejects.toThrowError('payload cannot be parsed as a valid json\n{ "a": 1');
     });
 });
 
@@ -858,6 +855,10 @@ describe('report', () => {
                     description: 'Rest call (curl)',
                     type: 'text',
                     data: "curl -i -X GET 'http://xxx' \\\n\t-H 'Content-Type: application/json'"
+                },
+                'Rest call (payload)': {
+                    description: 'Rest call (payload)',
+                    type: 'json'
                 }
             },
             result: {
@@ -905,4 +906,29 @@ it('default expected - wrong', async () => {
     await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError(
         'error: expected\n\texpected: xxx\n\tactual: {"b":2}'
     );
+});
+
+/**
+ *
+ */
+it('context must be re-created', async () => {
+    let tableRows = MarkdownTableReader.convert(
+        `|action       |value       |
+         |-------------|------------|
+         | method:post | http://xxx |
+         | payload     | {"a": 1}   |`
+    );
+
+    let context = await sut.handler.process(tableRows);
+    StepReport.instance.report();
+    expect(context.preExecution.payload).toBe('{"a": 1}');
+
+    tableRows = MarkdownTableReader.convert(
+        `|action       |value       |
+         |-------------|------------|
+         | method:get  | http://xxx |`
+    );
+
+    context = await sut.handler.process(tableRows);
+    expect(context.preExecution.payload).toBeNull();
 });

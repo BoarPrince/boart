@@ -18,7 +18,7 @@ import {
     UniqueValidator
 } from '@boart/core-impl';
 
-import { ContextMethod, RestCallContext, RestCallPreExecutionContext } from './RestCallContext';
+import { ContextMethod, RestCallContext } from './RestCallContext';
 import { RestCallExecutionUnit } from './RestCallExecutionUnit';
 
 /**
