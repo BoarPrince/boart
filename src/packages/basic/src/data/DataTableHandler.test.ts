@@ -56,7 +56,6 @@ jest.mock('fs');
  *
  */
 beforeEach(() => {
-    sut.handler.executionEngine.initContext();
     Store.instance.testStore.clear();
 });
 
@@ -369,6 +368,7 @@ it('with generator - random - string', async () => {
     const result = Store.instance.testStore.get('out');
     expect(result.valueOf()).toStrictEqual({ random: '-5555-' });
 });
+
 /**
  *
  */
