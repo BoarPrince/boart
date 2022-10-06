@@ -95,6 +95,10 @@ export class StepReport {
      *
      */
     public addResultItem(description: string, type: string, data: object | string): void {
+        if (!data) {
+            return;
+        }
+
         if (this.resultItem.has(description)) {
             throw new Error(`report result type "${description}" already exists`);
         }

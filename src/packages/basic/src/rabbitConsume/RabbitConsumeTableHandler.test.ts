@@ -70,7 +70,6 @@ beforeAll(() => {
  */
 beforeEach(() => {
     Store.instance.initTestStore({});
-    sut.handler.executionEngine.initContext();
 
     Runtime.instance.runtime.notifyStart({} as RuntimeContext);
     Runtime.instance.localRuntime.notifyStart({} as LocalContext);
