@@ -49,7 +49,6 @@ jest.mock('fs');
  *
  */
 beforeEach(() => {
-    sut.handler.executionEngine.initContext();
     Store.instance.testStore.clear();
 });
 
