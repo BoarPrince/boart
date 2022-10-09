@@ -1,6 +1,25 @@
+import { Subject } from 'rxjs';
+
 import { TextContent } from '../data/TextContent';
 
 import { StepStore } from './StepStore';
+
+const onStartSubject = new Subject<void>();
+
+/**
+ *
+ */
+jest.mock('../runtime/Runtime', () => {
+    return {
+        Runtime: class {
+            static instance = {
+                stepRuntime: {
+                    onStart: () => onStartSubject
+                }
+            };
+        }
+    };
+});
 
 /**
  *
@@ -22,7 +41,6 @@ describe('check step store', () => {
      */
     it('put and get DataContent value', () => {
         const sut = new StepStore();
-
         sut.put('a', new TextContent('b'));
 
         expect(sut.get('a')).toBeInstanceOf(TextContent);
@@ -36,7 +54,7 @@ describe('check step store', () => {
         const sut = new StepStore();
 
         sut.put('a', new TextContent('b'));
-        sut.changeContext({});
+        onStartSubject.next();
         sut.put('b', 'c');
 
         expect(sut.get('a')).toBeUndefined();
