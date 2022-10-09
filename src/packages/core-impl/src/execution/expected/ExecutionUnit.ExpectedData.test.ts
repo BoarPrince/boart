@@ -42,6 +42,15 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
 /**
  *
  */
+const intialContext = {
+    data: null,
+    header: null,
+    transformed: null
+};
+
+/**
+ *
+ */
 class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<DataContext>> {
     /**
      *
@@ -62,13 +71,22 @@ class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<
                 payload: null
             },
             execution: {
-                data: null,
-                transformed: null,
-                header: null
+                data: intialContext.data,
+                transformed: intialContext.transformed,
+                header: intialContext.header
             }
         });
     }
 }
+
+/**
+ *
+ */
+beforeEach(() => {
+    intialContext.data = null;
+    intialContext.header = null;
+    intialContext.transformed = null;
+});
 
 /**
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -76,7 +94,7 @@ class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 describe('check expected:data execution units', () => {
-    const tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
+    const tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
 
     const sut1 = new ExpectedDataExecutinoUnit<DataContext>('data');
     const sut2 = new ExpectedDataExecutinoUnit();
@@ -100,7 +118,7 @@ describe('check expected:data execution units', () => {
      *
      */
     it('not must negate the result', async () => {
-        tableHandler.executionEngine.context.execution.data = new TextContent('x');
+        intialContext.data = new TextContent('x');
         await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
@@ -117,7 +135,7 @@ describe('check expected:data execution units', () => {
      *
      */
     it('use default operator - data', async () => {
-        tableHandler.executionEngine.context.execution.data = new TextContent('x');
+        intialContext.data = new TextContent('x');
         await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
@@ -134,7 +152,7 @@ describe('check expected:data execution units', () => {
      *
      */
     it('use default operator - without data', async () => {
-        tableHandler.executionEngine.context.execution.data = new TextContent('x');
+        intialContext.data = new TextContent('x');
         await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
@@ -166,7 +184,7 @@ describe('check expected:data execution units', () => {
             ['9. object', new ObjectContent({ a: 1, b: 2, c: [3, 4, 5] }), '{"a":1,"b":2,"c":[3,4,5]}'],
             ['10. array', new ObjectContent([1, 2, 3, 4, 5]), '[1,2,3,4,5]']
         ])(`%s, data: %s -> expected: %s `, async (_: string, data: DataContent, expected: string) => {
-            tableHandler.executionEngine.context.execution.data = data;
+            intialContext.data = data;
             await tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
@@ -194,7 +212,7 @@ describe('check expected:data execution units', () => {
             ['4. boolean (false)', 'a.b', new ObjectContent({ a: { b: false } }), 'false'],
             ['5. boolean (true)', 'a.b', new ObjectContent({ a: { b: true } }), 'true']
         ])(`%s, property: %s, data: %s -> expected: %s `, async (_: string, property: string, data: DataContent, expected: string) => {
-            tableHandler.executionEngine.context.execution.data = data;
+            intialContext.data = data;
             await tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
@@ -219,7 +237,7 @@ describe('check expected:data execution units', () => {
             ['string false', new TextContent('false'), '"false"'],
             ['number 0', new TextContent('0'), '1']
         ])(`%s, data: %s -> not expected: %s `, async (_: string, data: DataContent, expected: string) => {
-            tableHandler.executionEngine.context.execution.data = data;
+            intialContext.data = data;
             try {
                 await tableHandler.process({
                     headers: {
@@ -247,7 +265,7 @@ describe('check expected:data execution units', () => {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 describe('check expected:header execution units', () => {
-    const tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
+    const tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
 
     const sut = new ExpectedDataExecutinoUnit<DataContext>('header');
 
@@ -273,7 +291,7 @@ describe('check expected:header execution units', () => {
             ['4, boolean (false)', 'a.b', new ObjectContent({ a: { b: false } }), 'false'],
             ['5, boolean (true)', 'a.b', new ObjectContent({ a: { b: true } }), 'true']
         ])(`%s, property: %s, data: %s -> expected: %s `, async (_: string, property: string, header: DataContent, expected: string) => {
-            tableHandler.executionEngine.context.execution.header = header;
+            intialContext.header = header;
             await tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
@@ -298,7 +316,7 @@ describe('check expected:header execution units', () => {
             ['1. string false', 'a', new ObjectContent({ a: 'false' }), '"false"'],
             ['2. number 0', 'a', new ObjectContent({ a: '0' }), '1']
         ])(`%s, data: %s -> not expected: %s `, async (_: string, property: string, header: DataContent, expected: string) => {
-            tableHandler.executionEngine.context.execution.header = header;
+            intialContext.header = header;
             try {
                 await tableHandler.process({
                     headers: {
@@ -322,7 +340,7 @@ describe('check expected:header execution units', () => {
          *
          */
         it('no parameter defined for accessing header', async () => {
-            tableHandler.executionEngine.context.execution.header = new ObjectContent({ a: 'b' });
+            intialContext.header = new ObjectContent({ a: 'b' });
             await expect(async () => {
                 await tableHandler.process({
                     headers: {
@@ -345,7 +363,7 @@ describe('check expected:header execution units', () => {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 describe('check expected:transformed execution units', () => {
-    const tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
+    const tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
 
     const sut = new ExpectedDataExecutinoUnit<DataContext>('transformed');
 
@@ -361,7 +379,7 @@ describe('check expected:transformed execution units', () => {
      *
      */
     it('check transformed', async () => {
-        tableHandler.executionEngine.context.execution.transformed = new TextContent('xxx');
+        intialContext.transformed = new TextContent('xxx');
 
         await tableHandler.process({
             headers: {
@@ -389,7 +407,7 @@ describe('check expected:data execution units with operators', () => {
      */
     beforeEach(() => {
         ExpectedOperatorInitializer.instance.clear();
-        tableHandler = new TableHandler(RowTypeValue, new RestCallExecutionEngine());
+        tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
     });
 
     /**
@@ -534,7 +552,7 @@ describe('check expected:data execution units with operators', () => {
         const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         const dataToCheck = new NativeContent(1);
-        tableHandler.executionEngine.context.execution.data = dataToCheck;
+        intialContext.data = dataToCheck;
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,
@@ -570,7 +588,7 @@ describe('check expected:data execution units with operators', () => {
         const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         const dataToCheck = new ObjectContent({ a: 'b' });
-        tableHandler.executionEngine.context.execution.data = dataToCheck;
+        intialContext.data = dataToCheck;
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,
@@ -632,7 +650,7 @@ describe('check expected:data execution units with operators', () => {
         ExpectedOperatorInitializer.instance.addOperator(operator);
         const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
-        tableHandler.executionEngine.context.execution.data = new NullContent();
+        intialContext.data = new NullContent();
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,
@@ -680,7 +698,7 @@ describe('check expected:data execution units with operators', () => {
         ExpectedOperatorInitializer.instance.addOperator(operator);
         const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
-        tableHandler.executionEngine.context.execution.data = new NullContent();
+        intialContext.data = new NullContent();
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,

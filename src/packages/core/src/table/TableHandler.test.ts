@@ -65,7 +65,7 @@ describe('check TableHandler', () => {
             execute: jest.fn()
         };
 
-        const sut = new TableHandler(RowWithOneValue, executionEngineMock);
+        const sut = new TableHandler(RowWithOneValue, () => executionEngineMock);
 
         sut.addRowDefinition(
             new RowDefinition({

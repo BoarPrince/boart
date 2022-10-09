@@ -27,6 +27,15 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
 /**
  *
  */
+const intialContext = {
+    data: null,
+    header: null,
+    transformed: null
+};
+
+/**
+ *
+ */
 class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<DataContext>> {
     /**
      *
@@ -47,13 +56,22 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
                 payload: null
             },
             execution: {
-                data: null,
-                transformed: null,
-                header: null
+                data: intialContext.data,
+                transformed: intialContext.transformed,
+                header: intialContext.header
             }
         });
     }
 }
+
+/**
+ *
+ */
+beforeEach(() => {
+    intialContext.data = null;
+    intialContext.header = null;
+    intialContext.transformed = null;
+});
 
 /*
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -61,7 +79,7 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 describe('check expected:jsonLogic execution units', () => {
-    const tableHandler = new TableHandler(RowTypeValue, new ExecutionEngineMock());
+    const tableHandler = new TableHandler(RowTypeValue, () => new ExecutionEngineMock());
 
     const sut = new ExpectedJsonLogicExecutionUnit();
 
@@ -77,7 +95,7 @@ describe('check expected:jsonLogic execution units', () => {
      *
      */
     it('check truthy (correct)', async () => {
-        tableHandler.executionEngine.context.execution.data = new NativeContent(1);
+        intialContext.data = new NativeContent(1);
         await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
@@ -94,7 +112,7 @@ describe('check expected:jsonLogic execution units', () => {
      *
      */
     it('check falsy (correct)', async () => {
-        tableHandler.executionEngine.context.execution.data = new NativeContent(1);
+        intialContext.data = new NativeContent(1);
         await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
@@ -111,7 +129,7 @@ describe('check expected:jsonLogic execution units', () => {
      *
      */
     it('check wrong property', async () => {
-        tableHandler.executionEngine.context.execution.data = new NativeContent(1);
+        intialContext.data = new NativeContent(1);
         try {
             await tableHandler.process({
                 headers: {

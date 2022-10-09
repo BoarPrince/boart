@@ -22,13 +22,13 @@ export class TableHandler<
 
     private readonly rowDefinitions = new Map<string, RowDefinition<TExecutionContext, TRowType>>();
     private readonly groupValidations = new Array<TypedGroupValidator<TExecutionContext, TRowType>>();
-
+    public executionEngine: ExecutionEngine<TExecutionContext, TRowType>;
     /**
      *
      */
     constructor(
         private readonly rowType: new (BaseTableRowMetaDefinition) => TRowType,
-        public readonly executionEngine: ExecutionEngine<TExecutionContext, TRowType>
+        public readonly executionEngineCreator: () => ExecutionEngine<TExecutionContext, TRowType>
     ) {
         this.columnMetaInfo = TableMetaInfo.get(rowType);
     }
@@ -109,6 +109,7 @@ export class TableHandler<
         const validator = new ValidationHandler<TExecutionContext, TRowType>(this.groupValidations);
         validator.validate(rows);
 
+        this.executionEngine = this.executionEngineCreator();
         return this.executionEngine.execute(rows);
     }
 }

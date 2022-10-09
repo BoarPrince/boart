@@ -43,6 +43,15 @@ jest.mock('@boart/core', () => {
 /**
  *
  */
+const intialContext = {
+    data: null,
+    header: null,
+    transformed: null
+};
+
+/**
+ *
+ */
 class MockTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<DataContext>> {
     /**
      *
@@ -66,9 +75,9 @@ class MockTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<Da
             payload: null
         },
         execution: {
-            data: null,
-            transformed: null,
-            header: null
+            data: intialContext.data,
+            transformed: intialContext.transformed,
+            header: intialContext.header
         }
     });
 
@@ -105,11 +114,12 @@ const sut = new MockTableHandler();
  *
  */
 beforeEach(() => {
-    sut.handler.executionEngine.context.execution.data = null;
-    sut.handler.executionEngine.context.execution.transformed = null;
-    sut.handler.executionEngine.context.preExecution.payload = null;
     Store.instance.testStore.clear();
     Store.instance.globalStore.clear();
+
+    intialContext.data = null;
+    intialContext.header = null;
+    intialContext.transformed = null;
 });
 
 /**
@@ -120,11 +130,6 @@ describe('out store', () => {
      *
      */
     it('not initialized', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        sut.handler.executionEngine.context.execution.data = undefined as any;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        sut.handler.executionEngine.context.execution.transformed = undefined as any;
-
         const tableDef = MarkdownTableReader.convert(
             `|action  |value |
              |--------|------|
@@ -168,7 +173,8 @@ describe('out store', () => {
      *
      */
     it('get deep value, first level', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+        intialContext.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+
         const tableDef = MarkdownTableReader.convert(
             `|action  |value |
              |--------|------|
@@ -185,7 +191,7 @@ describe('out store', () => {
      *
      */
     it('get deep value, first level, set and get', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+        intialContext.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action  |value  |
              |--------|-------|
@@ -202,7 +208,7 @@ describe('out store', () => {
      *
      */
     it('get deep value, first level, set and get, multiple times - 2', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+        intialContext.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action  |value  |
              |--------|-------|
@@ -221,7 +227,7 @@ describe('out store', () => {
      *
      */
     it('get deep value, first level, set and get, multiple times - 3', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+        intialContext.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action  |value  |
              |--------|-------|
@@ -241,7 +247,7 @@ describe('out store', () => {
      *
      */
     it('get deep value, second level, set, multiple times - 3', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
+        intialContext.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action  |value    |
              |--------|---------|
@@ -261,7 +267,7 @@ describe('out store', () => {
      *
      */
     it('get deep value, second level, set and get, multiple times - 3', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 1, b: { e: 5 }, c: 3, d: 4 });
+        intialContext.data = new ObjectContent({ a: 1, b: { e: 5 }, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action    |value    |
              |----------|---------|
@@ -968,6 +974,28 @@ describe('out store from payload', () => {
         expect(result.valueOf()).toStrictEqual({ a: { p: 3 } });
         expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: { p: 3 } });
     });
+
+    /**
+     *
+     */
+    xit('use store default-assignment - recursive usage - multiple assignment', async () => {
+        Store.instance.testStore.put('b', { p: 3 });
+        const tableDef = MarkdownTableReader.convert(
+            `|action  | value                                  |
+             |--------|----------------------------------------|
+             |payload | {                                      |
+             |        |  "a": "\${store:a:=\${generate:hex}}", |
+             |        |  "b": \${store:a}"                     |
+             |        | }                                      |
+             |store   | var                                    |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: { p: 3 } });
+        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: { p: 3 } });
+    });
 });
 
 /** */
@@ -1046,8 +1074,6 @@ describe('generate', () => {
         const hexGenerator = GeneratorHandler.instance.get('hex');
         jest.spyOn(hexGenerator, 'generate').mockImplementation((size) => size as string);
 
-        console.log(Store.instance.testStore);
-
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                               |
              |----------|-------------------------------------|
@@ -1056,7 +1082,6 @@ describe('generate', () => {
         );
 
         await sut.handler.process(tableDef);
-        console.log(Store.instance.testStore);
 
         const result = Store.instance.testStore.get('var');
         expect(result.valueOf()).toStrictEqual({ a: 111 });

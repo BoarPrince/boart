@@ -32,7 +32,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
                     const result = await operator.check(value, expectedValue);
                     return {
                         result: !result.result,
-                        errorMessage: result.errorMessage
+                        errorMessage: ':not' + (result.errorMessage || '')
                     };
                 }
             });

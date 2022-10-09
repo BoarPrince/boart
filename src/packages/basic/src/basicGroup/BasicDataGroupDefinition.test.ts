@@ -33,6 +33,15 @@ export type MockContext = ExecutionContext<
 /**
  *
  */
+const intialContext = {
+    data: null,
+    header: null,
+    transformed: null
+};
+
+/**
+ *
+ */
 class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<MockContext>> {
     /**
      *
@@ -59,9 +68,9 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
             payload: null
         },
         execution: {
-            data: null,
-            transformed: null,
-            header: null
+            data: intialContext.data,
+            transformed: intialContext.transformed,
+            header: intialContext.header
         }
     });
 
@@ -132,6 +141,15 @@ const sut = new MockTableHandler();
 /**
  *
  */
+beforeEach(() => {
+    intialContext.data = null;
+    intialContext.header = null;
+    intialContext.transformed = null;
+});
+
+/**
+ *
+ */
 it('wrong action key must throw an error', async () => {
     const tableDef = MarkdownTableReader.convert(
         `|action       |value  |
@@ -167,7 +185,7 @@ describe('check expected,expected:data', () => {
      *
      */
     it('expected:data can check complete value - correct', async () => {
-        sut.handler.executionEngine.context.execution.data = new TextContent('xxx');
+        intialContext.data = new TextContent('xxx');
 
         const tableDef = MarkdownTableReader.convert(
             `|action       |value  |
@@ -182,7 +200,7 @@ describe('check expected,expected:data', () => {
      *
      */
     it('expected can check complete value - correct', async () => {
-        sut.handler.executionEngine.context.execution.data = new TextContent('xxx');
+        intialContext.data = new TextContent('xxx');
 
         const tableDef = MarkdownTableReader.convert(
             `|action   |value  |
@@ -197,7 +215,7 @@ describe('check expected,expected:data', () => {
      *
      */
     it('expected:data can check complete value - incorrect', async () => {
-        sut.handler.executionEngine.context.execution.data = new TextContent('xxx');
+        intialContext.data = new TextContent('xxx');
 
         const tableDef = MarkdownTableReader.convert(
             `|action       |value  |
@@ -228,7 +246,7 @@ describe('check expected,expected:data', () => {
      *
      */
     it('expected:data can check value with selector', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 'xyz' });
+        intialContext.data = new ObjectContent({ a: 'xyz' });
 
         const tableDef = MarkdownTableReader.convert(
             `|action         |value |
@@ -243,7 +261,7 @@ describe('check expected,expected:data', () => {
      *
      */
     it('expected:data can check value with selector - incorrect', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 'xy' });
+        intialContext.data = new ObjectContent({ a: 'xy' });
 
         const tableDef = MarkdownTableReader.convert(
             `|action         |value |
@@ -260,7 +278,7 @@ describe('check expected,expected:data', () => {
      *
      */
     it('expected:data can check value without selector, but it is expected - incorrect', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 'xyz' });
+        intialContext.data = new ObjectContent({ a: 'xyz' });
 
         const tableDef = MarkdownTableReader.convert(
             `|action         |value |
@@ -277,7 +295,7 @@ describe('check expected,expected:data', () => {
      *
      */
     it('expected:data can check value with selector and regexp', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 'aabaa' });
+        intialContext.data = new ObjectContent({ a: 'aabaa' });
 
         const tableDef = MarkdownTableReader.convert(
             `|action                |value |
@@ -312,7 +330,7 @@ describe('check expected:header', () => {
      *
      */
     it('expected:header can check complete value - correct', async () => {
-        sut.handler.executionEngine.context.execution.header = new TextContent('xxx');
+        intialContext.header = new TextContent('xxx');
 
         const tableDef = MarkdownTableReader.convert(
             `|action         |value  |
@@ -327,7 +345,7 @@ describe('check expected:header', () => {
      *
      */
     it('expected:header can check complete value - incorrect', async () => {
-        sut.handler.executionEngine.context.execution.header = new TextContent('xxx');
+        intialContext.header = new TextContent('xxx');
 
         const tableDef = MarkdownTableReader.convert(
             `|action         |value  |
@@ -344,7 +362,7 @@ describe('check expected:header', () => {
      *
      */
     it('expected:header can check value with selector', async () => {
-        sut.handler.executionEngine.context.execution.header = new ObjectContent({ a: 'xyz' });
+        intialContext.header = new ObjectContent({ a: 'xyz' });
 
         const tableDef = MarkdownTableReader.convert(
             `|action           |value |
@@ -359,7 +377,7 @@ describe('check expected:header', () => {
      *
      */
     it('expected:header can check value with selector - incorrect', async () => {
-        sut.handler.executionEngine.context.execution.header = new ObjectContent({ a: 'xy' });
+        intialContext.header = new ObjectContent({ a: 'xy' });
 
         const tableDef = MarkdownTableReader.convert(
             `|action           |value |
@@ -376,7 +394,7 @@ describe('check expected:header', () => {
      *
      */
     it('expected:header can check value without selector, but it is expected - incorrect', async () => {
-        sut.handler.executionEngine.context.execution.header = new ObjectContent({ a: 'xyz' });
+        intialContext.header = new ObjectContent({ a: 'xyz' });
 
         const tableDef = MarkdownTableReader.convert(
             `|action           |value |
@@ -413,7 +431,7 @@ describe('check expected:transformed', () => {
      *
      */
     it('expected:header can check complete value - correct', async () => {
-        sut.handler.executionEngine.context.execution.transformed = new TextContent('xxx');
+        intialContext.transformed = new TextContent('xxx');
 
         const tableDef = MarkdownTableReader.convert(
             `|action              |value  |
@@ -477,7 +495,7 @@ describe('check expected operators', () => {
      *
      */
     it('count operator, object', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent({ a: 'a', b: 'a', c: 'a' });
+        intialContext.data = new ObjectContent({ a: 'a', b: 'a', c: 'a' });
 
         const tableDef = MarkdownTableReader.convert(
             `|action         |value |
@@ -492,7 +510,7 @@ describe('check expected operators', () => {
      *
      */
     it('not:count header operator, object', async () => {
-        sut.handler.executionEngine.context.execution.header = new ObjectContent({ a: 'a', b: 'a', c: 'a' });
+        intialContext.header = new ObjectContent({ a: 'a', b: 'a', c: 'a' });
 
         const tableDef = MarkdownTableReader.convert(
             `|action                    |value |
@@ -502,14 +520,14 @@ describe('check expected operators', () => {
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError("error: expected:header, value: 3, actual: keys: 'a,b,c'");
+        }).rejects.toThrowError('error: expected:header:not, value: 3, actual: 3');
     });
 
     /**
      *
      */
     it('count operator, array', async () => {
-        sut.handler.executionEngine.context.execution.data = new ObjectContent(['a', 'b', 'c']);
+        intialContext.data = new ObjectContent(['a', 'b', 'c']);
 
         const tableDef = MarkdownTableReader.convert(
             `|action         |value |
@@ -524,7 +542,7 @@ describe('check expected operators', () => {
      *
      */
     it('not:count header operator, array', async () => {
-        sut.handler.executionEngine.context.execution.header = new ObjectContent(['a', 'b', 'c']);
+        intialContext.header = new ObjectContent(['a', 'b', 'c']);
 
         const tableDef = MarkdownTableReader.convert(
             `|action                    |value |
@@ -534,7 +552,7 @@ describe('check expected operators', () => {
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError("error: expected:header, value: 3, actual: indexes: '0,1,2'");
+        }).rejects.toThrowError('error: expected:header:not, value: 3, actual: 3');
     });
 });
 

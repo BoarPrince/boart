@@ -58,7 +58,7 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
 describe('check wait:before execution units', () => {
     const mainExecutionUnit = new ExecutionUnitMock();
     const executionEnginge = new ExecutionEngineMock(mainExecutionUnit);
-    const tableHandler = new TableHandler(RowTypeValue, executionEnginge);
+    const tableHandler = new TableHandler(RowTypeValue, () => executionEnginge);
 
     const sut = new WaitExecutionUnit();
 
@@ -218,7 +218,7 @@ describe('check wait:before execution units', () => {
 describe('check wait:after execution units', () => {
     const mainExecutionUnit = new ExecutionUnitMock();
     const executionEnginge = new ExecutionEngineMock(mainExecutionUnit);
-    const tableHandler = new TableHandler(RowTypeValue, executionEnginge);
+    const tableHandler = new TableHandler(RowTypeValue, () => executionEnginge);
 
     const sut = new WaitExecutionUnit();
 

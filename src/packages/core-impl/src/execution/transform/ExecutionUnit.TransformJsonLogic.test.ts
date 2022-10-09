@@ -2,7 +2,6 @@ import {
     ExecutionEngine,
     ExecutionUnit,
     NativeContent,
-    NullContent,
     ObjectContent,
     RowDefinition,
     TableHandler,
@@ -37,6 +36,15 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
 /**
  *
  */
+const initialContext = {
+    data: null,
+    header: null,
+    transformed: null
+};
+
+/**
+ *
+ */
 class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<DataContext>> {
     /**
      *
@@ -57,19 +65,28 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
                 payload: null
             },
             execution: {
-                data: null,
-                transformed: null,
-                header: null
+                data: initialContext.data,
+                transformed: initialContext.transformed,
+                header: initialContext.header
             }
         });
     }
 }
 
+/**
+ *
+ */
+beforeEach(() => {
+    initialContext.data = null;
+    initialContext.header = null;
+    initialContext.transformed = null;
+});
+
 /*
  *
  */
 describe('check transform:jsonLogic execution units', () => {
-    const tableHandler = new TableHandler(RowTypeValue, new ExecutionEngineMock());
+    const tableHandler = new TableHandler(RowTypeValue, () => new ExecutionEngineMock());
 
     const sut = new TransformJsonLogicExecutionUnit();
 
@@ -85,8 +102,8 @@ describe('check transform:jsonLogic execution units', () => {
      *
      */
     it('transform (number)', async () => {
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ a: 1, b: 2 });
-        await tableHandler.process({
+        initialContext.transformed = new ObjectContent({ a: 1, b: 2 });
+        const context = await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -96,17 +113,17 @@ describe('check transform:jsonLogic execution units', () => {
                 }
             ]
         });
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(NativeContent);
-        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('1');
+        expect(context.execution.transformed).toBeDefined();
+        expect(context.execution.transformed).toBeInstanceOf(NativeContent);
+        expect(context.execution.transformed.toString()).toBe('1');
     });
 
     /**
      *
      */
     it('transform (string)', async () => {
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ a: 'c', b: 'd' });
-        await tableHandler.process({
+        initialContext.transformed = new ObjectContent({ a: 'c', b: 'd' });
+        const context = await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -116,17 +133,17 @@ describe('check transform:jsonLogic execution units', () => {
                 }
             ]
         });
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(TextContent);
-        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('c');
+        expect(context.execution.transformed).toBeDefined();
+        expect(context.execution.transformed).toBeInstanceOf(TextContent);
+        expect(context.execution.transformed.toString()).toBe('c');
     });
 
     /**
      *
      */
     it('transform (boolean)', async () => {
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ a: true, b: false });
-        await tableHandler.process({
+        initialContext.transformed = new ObjectContent({ a: true, b: false });
+        const context = await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -136,17 +153,17 @@ describe('check transform:jsonLogic execution units', () => {
                 }
             ]
         });
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(NativeContent);
-        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('false');
+        expect(context.execution.transformed).toBeDefined();
+        expect(context.execution.transformed).toBeInstanceOf(NativeContent);
+        expect(context.execution.transformed.toString()).toBe('false');
     });
 
     /**
      *
      */
     it('transform (array)', async () => {
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ a: true, b: [true, false] });
-        await tableHandler.process({
+        initialContext.transformed = new ObjectContent({ a: true, b: [true, false] });
+        const context = await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -156,18 +173,18 @@ describe('check transform:jsonLogic execution units', () => {
                 }
             ]
         });
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(ObjectContent);
-        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('[true,false]');
+        expect(context.execution.transformed).toBeDefined();
+        expect(context.execution.transformed).toBeInstanceOf(ObjectContent);
+        expect(context.execution.transformed.toString()).toBe('[true,false]');
     });
 
     /**
      *
      */
     it('transform (failure - wrong rule)', async () => {
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ a: true, b: false });
+        initialContext.transformed = new ObjectContent({ a: true, b: false });
         try {
-            await tableHandler.process({
+            const context = await tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
                 },
@@ -189,8 +206,8 @@ describe('check transform:jsonLogic execution units', () => {
      *
      */
     it('transform (use selector)', async () => {
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ a: true, b: [true, false] });
-        await tableHandler.process({
+        initialContext.transformed = new ObjectContent({ a: true, b: [true, false] });
+        const context = await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -200,18 +217,18 @@ describe('check transform:jsonLogic execution units', () => {
                 }
             ]
         });
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(ObjectContent);
-        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('{"a":[true,false],"b":[true,false]}');
+        expect(context.execution.transformed).toBeDefined();
+        expect(context.execution.transformed).toBeInstanceOf(ObjectContent);
+        expect(context.execution.transformed.toString()).toBe('{"a":[true,false],"b":[true,false]}');
     });
 
     /**
      *
      */
     it('transform (executionType)', async () => {
-        tableHandler.executionEngine.context.execution.data = new ObjectContent({ a: true, b: [true, false] });
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent();
-        await tableHandler.process({
+        initialContext.data = new ObjectContent({ a: true, b: [true, false] });
+        initialContext.transformed = new ObjectContent();
+        const context = await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -221,18 +238,18 @@ describe('check transform:jsonLogic execution units', () => {
                 }
             ]
         });
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(NativeContent);
-        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('true');
+        expect(context.execution.transformed).toBeDefined();
+        expect(context.execution.transformed).toBeInstanceOf(NativeContent);
+        expect(context.execution.transformed.toString()).toBe('true');
     });
 
     /**
      *
      */
     it('transform (selector and executionType)', async () => {
-        tableHandler.executionEngine.context.execution.data = new ObjectContent({ a: true, b: [true, false] });
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent();
-        await tableHandler.process({
+        initialContext.data = new ObjectContent({ a: true, b: [true, false] });
+        initialContext.transformed = new ObjectContent();
+        const context = await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -242,18 +259,18 @@ describe('check transform:jsonLogic execution units', () => {
                 }
             ]
         });
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(ObjectContent);
-        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('{"c":true}');
+        expect(context.execution.transformed).toBeDefined();
+        expect(context.execution.transformed).toBeInstanceOf(ObjectContent);
+        expect(context.execution.transformed.toString()).toBe('{"c":true}');
     });
 
     /**
      *
      */
     it('transform (selector and executionType:header)', async () => {
-        tableHandler.executionEngine.context.execution.header = new ObjectContent({ a: true, b: [true, false] });
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent();
-        await tableHandler.process({
+        initialContext.header = new ObjectContent({ a: true, b: [true, false] });
+        initialContext.transformed = new ObjectContent();
+        const context = await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -263,17 +280,17 @@ describe('check transform:jsonLogic execution units', () => {
                 }
             ]
         });
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(ObjectContent);
-        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('{"c":true}');
+        expect(context.execution.transformed).toBeDefined();
+        expect(context.execution.transformed).toBeInstanceOf(ObjectContent);
+        expect(context.execution.transformed.toString()).toBe('{"c":true}');
     });
 
     /**
      *
      */
     it('transform (use selector and executionType:transformed)', async () => {
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ a: true, b: [true, false] });
-        await tableHandler.process({
+        initialContext.transformed = new ObjectContent({ a: true, b: [true, false] });
+        const context = await tableHandler.process({
             headers: {
                 cells: ['action', 'value']
             },
@@ -283,8 +300,8 @@ describe('check transform:jsonLogic execution units', () => {
                 }
             ]
         });
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeDefined();
-        expect(tableHandler.executionEngine.context.execution.transformed).toBeInstanceOf(ObjectContent);
-        expect(tableHandler.executionEngine.context.execution.transformed.toString()).toBe('{"a":[true,false],"b":[true,false]}');
+        expect(context.execution.transformed).toBeDefined();
+        expect(context.execution.transformed).toBeInstanceOf(ObjectContent);
+        expect(context.execution.transformed.toString()).toBe('{"a":[true,false],"b":[true,false]}');
     });
 });

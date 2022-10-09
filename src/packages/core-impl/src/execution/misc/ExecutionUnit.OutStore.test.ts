@@ -53,6 +53,20 @@ export type ExtendedDataContext = ExecutionContext<
 /**
  *
  */
+const initialContext = {
+    execution: {
+        data: null,
+        transformed: null,
+        header: null
+    },
+    preExecution: {
+        payload: null
+    }
+};
+
+/**
+ *
+ */
 class ExecutionEngineMock<MockContext extends DataContext> extends ExecutionEngine<MockContext, RowTypeValue<MockContext>> {
     /**
      *
@@ -70,14 +84,8 @@ class ExecutionEngineMock<MockContext extends DataContext> extends ExecutionEngi
             config: {
                 value: ''
             },
-            preExecution: {
-                payload: null
-            },
-            execution: {
-                data: null,
-                transformed: null,
-                header: null
-            }
+            preExecution: initialContext.preExecution,
+            execution: initialContext.execution
         });
     }
 }
@@ -87,7 +95,7 @@ class ExecutionEngineMock<MockContext extends DataContext> extends ExecutionEngi
  * O U T : S T O R E
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-const tableHandler = new TableHandler(RowTypeValue, new ExecutionEngineMock());
+const tableHandler = new TableHandler(RowTypeValue, () => new ExecutionEngineMock());
 const sut = new OutStoreExecutionUnit();
 const sutData = new OutStoreExecutionUnit('data');
 const sutHeader = new OutStoreExecutionUnit('header');
@@ -150,6 +158,11 @@ beforeEach(() => {
     Store.instance.globalStore.clear();
     Store.instance.localStore.clear();
     Store.instance.stepStore.clear();
+
+    initialContext.execution.data = null;
+    initialContext.execution.header = null;
+    initialContext.execution.transformed = null;
+    initialContext.preExecution.payload = null;
 });
 
 /**
@@ -174,7 +187,7 @@ describe('check test store', () => {
     ])(
         `%s, data: %s, store postfix: %s, var postfix: %s, expected %s`,
         async (_: string, data: DataContent, storePostfix: string, varPostfix: string, expected: string) => {
-            tableHandler.executionEngine.context.execution.transformed = data;
+            initialContext.execution.transformed = data;
             await tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
@@ -214,7 +227,7 @@ describe('check all store types', () => {
     ])(
         `%s, data: %s, store postfix: %s, var postfix: %s, expected %s`,
         async (_: string, storeWrapper: StoreWrapper, data: DataContent, storePostfix: string, varPostfix: string, expected: string) => {
-            tableHandler.executionEngine.context.execution.transformed = data;
+            initialContext.execution.transformed = data;
             await tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
@@ -280,9 +293,9 @@ describe('check preExecution.payload', () => {
      *
      */
     it('use default, if no execution result exists', async () => {
-        tableHandler.executionEngine.context.execution.data = new NullContent();
-        tableHandler.executionEngine.context.execution.transformed = new NullContent();
-        tableHandler.executionEngine.context.preExecution.payload = new ObjectContent({ a: 1 });
+        initialContext.execution.data = new NullContent();
+        initialContext.execution.transformed = new NullContent();
+        initialContext.preExecution.payload = new ObjectContent({ a: 1 });
 
         await tableHandler.process({
             headers: {
@@ -302,9 +315,9 @@ describe('check preExecution.payload', () => {
      *
      */
     it('use explicit payload, if no execution result exists', async () => {
-        tableHandler.executionEngine.context.execution.data = new ObjectContent({ a: 1 });
-        tableHandler.executionEngine.context.execution.transformed = new ObjectContent({ b: 2 });
-        tableHandler.executionEngine.context.preExecution.payload = new ObjectContent({ c: 3 });
+        initialContext.execution.data = new ObjectContent({ a: 1 });
+        initialContext.execution.transformed = new ObjectContent({ b: 2 });
+        initialContext.preExecution.payload = new ObjectContent({ c: 3 });
 
         await tableHandler.process({
             headers: {

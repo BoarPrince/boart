@@ -27,7 +27,7 @@ export class ExecutionEngine<
     /**
      *
      */
-    public initContext(): void {
+    private initContext(): void {
         this.context = this.executionContextGenerator();
     }
 
