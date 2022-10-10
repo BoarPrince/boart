@@ -98,7 +98,11 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
             return value.replaceAll('{', '\x01').replaceAll('}', '\x02');
         } else {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            return value.replaceAll('\x01', '{').replaceAll('\x02', '}');
+            return value
+                .replaceAll('\x01', '{') //
+                .replaceAll('\x03', '{')
+                .replaceAll('\x02', '}')
+                .replaceAll('\x04', '}');
         }
     }
 
@@ -106,7 +110,16 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
      *
      */
     public replace(value: string): string {
-        let replacedValue = this.replaceOnce(value);
+        // replace without null checking
+        let replacedValue = this.replaceOnce(value, false);
+        while (value !== replacedValue) {
+            value = replacedValue;
+            // recursive replacement
+            replacedValue = this.replaceOnce(value, false);
+        }
+
+        // replace with null checking, if needed
+        replacedValue = this.replaceOnce(value);
         while (value !== replacedValue) {
             value = replacedValue;
             // recursive replacement
@@ -118,9 +131,19 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     /**
      *
      */
-    private static checkNull(value: string, nullable: boolean, optional: boolean, identifier: string, property: string): string {
+    private static checkNull(
+        value: string,
+        nullable: boolean,
+        optional: boolean,
+        identifier: string,
+        property: string,
+        checkNull: boolean
+    ): string {
         if (!value && !(nullable && optional)) {
-            throw new Error(`can't find value of '${identifier}:${property}'`);
+            if (checkNull === true) {
+                throw new Error(`can't find value of '${identifier}:${property}'`);
+            }
+            return `$\x03${identifier}:${property}\x04`;
         } else {
             return value;
         }
@@ -149,13 +172,13 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     /**
      *
      */
-    private stringReplacer(r: ValueReplaceItem, optional: boolean, scope: string, property: string) {
+    private stringReplacer(r: ValueReplaceItem, optional: boolean, scope: string, property: string, checkNull: boolean) {
         property = ValueReplacerHandler.replaceCurlyBrackets(property, ReplacementMode.RetractBrackets);
         const store = ValueReplacerHandler.getStore(scope);
         const content = r.replacer.replace(property, store, scope as ScopeType);
 
         return ValueReplacerHandler.replaceCurlyBrackets(
-            ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property),
+            ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property, checkNull),
             ReplacementMode.RemoveBrackets
         );
     }
@@ -163,18 +186,19 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     /**
      *
      */
-    private replaceOnce(value: string): string {
-        const re = new RegExp(/\${[^{}]+}/, 'g');
+    private replaceOnce(value: string, checkNull = true): string {
+        // eslint-disable-next-line no-control-regex
+        const re = new RegExp(/\$[{|\x03]([^{}\x03\x04]+)[}|\x04]/, 'g');
         const replacedValue = !value
             ? value
             : value.replace(re, (matchedValue: string) => {
-                  const property = PropertyParser.parse(matchedValue);
+                  const property = PropertyParser.parse(matchedValue.replace('\x03', '{').replace('\x04', '}'));
 
                   return this.valueReplacers.reduce((v, r) => {
                       return !!property &&
                           // replacer must fit
                           property.replacer === r.identifier
-                          ? this.stringReplacer(r, property.isOptional, property.scope, property.name)
+                          ? this.stringReplacer(r, property.isOptional, property.scope, property.name, checkNull)
                           : v;
                   }, matchedValue);
               });

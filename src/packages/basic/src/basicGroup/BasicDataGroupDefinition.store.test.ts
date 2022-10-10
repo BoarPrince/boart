@@ -978,23 +978,46 @@ describe('out store from payload', () => {
     /**
      *
      */
-    xit('use store default-assignment - recursive usage - multiple assignment', async () => {
-        Store.instance.testStore.put('b', { p: 3 });
+    it('use store default-assignment - recursive usage - multiple assignment', async () => {
+        jest.spyOn(Math, 'random').mockImplementation(() => 0.5);
+
         const tableDef = MarkdownTableReader.convert(
             `|action  | value                                  |
              |--------|----------------------------------------|
              |payload | {                                      |
              |        |  "a": "\${store:a:=\${generate:hex}}", |
-             |        |  "b": \${store:a}"                     |
+             |        |  "b": "\${store:a}"                    |
              |        | }                                      |
              |store   | var                                    |`
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        expect(Store.instance.testStore.get('a').valueOf()).toBe(8);
 
-        expect(result.valueOf()).toStrictEqual({ a: { p: 3 } });
-        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: { p: 3 } });
+        const result = Store.instance.testStore.get('var');
+        expect(result.valueOf()).toStrictEqual({
+            a: '8',
+            b: '8'
+        });
+    });
+
+    /**
+     *
+     */
+    it('use store default-assignment - recursive usage - multiple assignment - failure', async () => {
+        jest.spyOn(Math, 'random').mockImplementation(() => 0.5);
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action  | value                                  |
+             |--------|----------------------------------------|
+             |payload | {                                      |
+             |        |  "a": "\${store:a:=\${generate:hex}}", |
+             |        |  "b": "\${store:b}"                    |
+             |        | }                                      |
+             |store   | var                                    |`
+        );
+
+        await expect(async () => sut.handler.process(tableDef)).rejects.toThrowError(`can't find value of 'store:b'`);
     });
 });
 

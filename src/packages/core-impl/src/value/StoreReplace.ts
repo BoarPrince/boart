@@ -39,25 +39,15 @@ export class StoreReplacer implements ValueReplacer {
      *
      */
     private getPropertyValue(property: string, store: StoreWrapper, scope: ScopeType, check: boolean): string {
-        const runable = (runable: () => ContentType, throwError: boolean): string => {
-            try {
-                return runable()?.toString();
-            } catch (error) {
-                if (throwError) {
-                    throw error;
-                }
-            }
-        };
-
         if (!scope) {
             for (const store of this.stores) {
-                const storeContent = runable(() => store.get(property), check);
+                const storeContent = store.get(property)?.toString();
                 if (!!storeContent) {
                     return storeContent;
                 }
             }
         } else {
-            return runable(() => store.get(property), check);
+            return store.get(property)?.toString();
         }
     }
 
