@@ -1019,6 +1019,31 @@ describe('out store from payload', () => {
 
         await expect(async () => sut.handler.process(tableDef)).rejects.toThrowError(`can't find value of 'store:b'`);
     });
+
+    /**
+     *
+     */
+    it('using json comment with replacement', async () => {
+        jest.spyOn(Math, 'random').mockImplementation(() => 0.5);
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action  | value                               |
+             |--------|-------------------------------------|
+             |payload | {                                   |
+             |        |  // "\${store:a:=\${generate:hex}}" |
+             |        |  "b": \${store:a}                   |
+             |        | }                                   |
+             |store   | var                                 |`
+        );
+
+        await sut.handler.process(tableDef);
+        expect(Store.instance.testStore.get('a').valueOf()).toBe(8);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result.valueOf()).toStrictEqual({
+            b: 8
+        });
+    });
 });
 
 /** */

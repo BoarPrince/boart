@@ -125,7 +125,13 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
             // recursive replacement
             replacedValue = this.replaceOnce(value);
         }
-        return ValueReplacerHandler.replaceCurlyBrackets(value, ReplacementMode.RetractBrackets);
+
+        replacedValue = ValueReplacerHandler.replaceCurlyBrackets(value, ReplacementMode.RetractBrackets);
+        if (!replacedValue) {
+            return replacedValue;
+        } else {
+            return replacedValue.replace(/[\n]?\s[^\S]*\/\/.*[\n]?/g, '');
+        }
     }
 
     /**
