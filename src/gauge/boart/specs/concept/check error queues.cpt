@@ -1,0 +1,14 @@
+# check error queues
+
+* RabbitMQ consume
+  | action      | value                                                                         |
+  |-------------|-------------------------------------------------------------------------------|
+  | queue       | test.fleet.masterdata.error                                                   |
+  | group       | Check Queues                                                                  |
+  | description | Check Fleet MasterData Error queue (must be empty)                            |
+  |             | All fleet death letter exchanges are bound to this queue                      |
+  |             | No error should occur while consuming the Master Data creation/update events. |
+  |             | Therefore the queue must be empty                                             |
+  | timeout     | 5                                                                             |
+  | count:max   | 0                                                                             |
+  | count:min   | 0                                                                             |

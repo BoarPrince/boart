@@ -1,0 +1,17 @@
+# check master data queues
+
+* RabbitMQ consume
+  | action      | value                       |
+  |-------------|-----------------------------|
+  | queue       | test.md.company             |
+  | group       | Check Queues                |
+  | description | Company Event must be fired |
+  | timeout     | 10                          |
+
+* RabbitMQ consume
+  | action      | value                       |
+  |-------------|-----------------------------|
+  | queue       | test.md.carrier             |
+  | group       | Check Queues                |
+  | description | Carrier Event must be fired |
+  | timeout     | 10                          |
