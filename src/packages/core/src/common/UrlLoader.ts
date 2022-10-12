@@ -78,7 +78,12 @@ export class UrlLoader {
         const valueIndex = EnvLoader.instance.getValueIndex();
 
         Object.entries(settings)
-            .map(([key, value]) => [key, (Array.isArray(value) ? value[valueIndex] : value) as string])
+            .map(([key, value]) => [
+                key,
+                (Array.isArray(value) //
+                    ? value[valueIndex] || value[0]
+                    : value) as string
+            ])
             .forEach(([key, value]) => {
                 this.pathMapping.set(key, value);
             });

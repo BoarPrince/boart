@@ -7,7 +7,7 @@ jest.mock('fs');
 jest.mock('./EnvLoader', () => ({
     EnvLoader: class {
         static instance = {
-            getValueIndex: () => 0,
+            getValueIndex: jest.fn().mockReturnValue(0),
             isDockerEnvironment: () => false
         };
     }
@@ -205,5 +205,43 @@ describe('check url loader', () => {
 
         const path = sut.getAbsoluteUrl('http://api/a/b');
         expect(path).toBe('http://api/a/b');
+    });
+
+    /**
+     *
+     */
+    it('default value must be used, because requested env does not exists', () => {
+        (fs.readFileSync as jest.Mock).mockReturnValue(
+            JSON.stringify({
+                path_mapping: {
+                    '<a>': ['http://service-a0/', 'http://service-a1/']
+                }
+            })
+        );
+        jest.spyOn(EnvLoader.instance, 'getValueIndex').mockReturnValue(2);
+
+        const sut = UrlLoader.instance;
+
+        const path = sut.getAbsoluteUrl('<a>/api/a/b');
+        expect(path).toBe('http://service-a0/api/a/b');
+    });
+
+    /**
+     *
+     */
+    it('use existing environment value', () => {
+        (fs.readFileSync as jest.Mock).mockReturnValue(
+            JSON.stringify({
+                path_mapping: {
+                    '<a>': ['http://service-a0/', 'http://service-a1/']
+                }
+            })
+        );
+        jest.spyOn(EnvLoader.instance, 'getValueIndex').mockReturnValue(1);
+
+        const sut = UrlLoader.instance;
+
+        const path = sut.getAbsoluteUrl('<a>/api/a/b');
+        expect(path).toBe('http://service-a1/api/a/b');
     });
 });
