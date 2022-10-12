@@ -50,7 +50,9 @@ jest.mock('@boart/core', () => {
         },
         EnvLoader: {
             instance: {
-                get: jest.fn()
+                get: jest.fn(),
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                mapReportData: (path: string) => originalModule.EnvLoader.instance.mapReportData(path)
             }
         },
         GeneratorHandler: {

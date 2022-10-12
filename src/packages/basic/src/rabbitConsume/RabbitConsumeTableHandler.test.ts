@@ -394,7 +394,7 @@ describe('expected', () => {
              | expected:not#a | x     |`
         );
 
-        await expect(sut.handler.process(tableRows)).rejects.toThrowError('expected\n\texpected:not: x\n\tactual: x');
+        await expect(sut.handler.process(tableRows)).rejects.toThrowError('error: expected#a\n\tnot: x\n\tactual: x');
     });
 
     /**

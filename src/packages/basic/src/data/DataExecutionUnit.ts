@@ -6,7 +6,7 @@ import { StepReport } from '@boart/protocol';
  *
  */
 export class DataExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
-    public description = 'rest call - main';
+    public description = 'data - main';
 
     /**
      *

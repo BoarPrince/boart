@@ -101,9 +101,9 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
         const expectedResult = await operator.check(data, row.value.toString());
 
         if (expectedResult.result === false) {
-            const definition = 'expected:' + operatorName + (!row.selector ? '' : '#' + row.selector);
+            const description = this.description + (!row.selector ? '' : '#' + row.selector);
             throw Error(
-                `error: ${definition}` +
+                `error: ${description}` +
                     (!expectedResult.errorMessage
                         ? `\n\t${operatorName}: ${expected.toString()}\n\tactual: ${data.getText()}`
                         : expectedResult.errorMessage)

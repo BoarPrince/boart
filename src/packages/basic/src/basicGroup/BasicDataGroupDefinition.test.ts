@@ -271,7 +271,7 @@ describe('check expected,expected:data', () => {
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`error: expected:data\n\texpected: xyz\n\tactual: xy`);
+        }).rejects.toThrowError(`error: expected:data#a\n\texpected: xyz\n\tactual: xy`);
     });
 
     /**
@@ -387,7 +387,7 @@ describe('check expected:header', () => {
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`error: expected:header\n\texpected: xyz\n\tactual: xy`);
+        }).rejects.toThrowError(`error: expected:header#a\n\texpected: xyz\n\tactual: xy`);
     });
 
     /**
@@ -674,18 +674,17 @@ describe('check transformed jpath', () => {
      *
      */
     beforeEach(() => {
-        sut.handler.executionEngine.context.execution.data = new NullContent();
-        sut.handler.executionEngine.context.execution.transformed = new NullContent();
+        intialContext.data = new NullContent();
+        intialContext.header = null;
+        intialContext.transformed = new NullContent();
     });
 
     /**
      *
      */
     it('not initialized', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        sut.handler.executionEngine.context.execution.data = undefined as any;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        sut.handler.executionEngine.context.execution.transformed = undefined as any;
+        intialContext.data = undefined;
+        intialContext.transformed = undefined;
 
         const tableDef = MarkdownTableReader.convert(
             `|action          |value |
@@ -824,7 +823,7 @@ describe('check transformed jpath', () => {
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError('error: expected:transformed\n\texpected:empty: \n\tactual: {"c":{"d":"e"}}');
+        }).rejects.toThrowError(`error: expected:transformed\n\tempty: \n\tactual: {"c":{"d":"e"}}`);
     });
 
     /**
@@ -870,18 +869,18 @@ describe('check transformed jsonLogic', () => {
      *
      */
     beforeEach(() => {
-        sut.handler.executionEngine.context.execution.data = new NullContent();
-        sut.handler.executionEngine.context.execution.transformed = new NullContent();
+        intialContext.data = new NullContent();
+        intialContext.header = null;
+        intialContext.transformed = new NullContent();
     });
 
     /**
      *
      */
     it('not initialized', async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        sut.handler.executionEngine.context.execution.data = undefined as any;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        sut.handler.executionEngine.context.execution.transformed = undefined as any;
+        intialContext.data = undefined;
+        intialContext.header = null;
+        intialContext.transformed = undefined;
 
         const tableDef = MarkdownTableReader.convert(
             `|action              |value         |
@@ -896,9 +895,6 @@ describe('check transformed jsonLogic', () => {
      *
      */
     it('null', async () => {
-        sut.handler.executionEngine.context.execution.data = new NullContent();
-        sut.handler.executionEngine.context.execution.transformed = new NullContent();
-
         const tableDef = MarkdownTableReader.convert(
             `|action              |value         |
              |--------------------|--------------|
@@ -1031,7 +1027,7 @@ describe('check transformed jsonLogic', () => {
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError('error: expected:transformed\n\texpected:empty: \n\tactual: {"c":{"d":"e"}}');
+        }).rejects.toThrowError('error: expected:transformed\n\tempty: \n\tactual: {"c":{"d":"e"}}');
     });
 
     /**
