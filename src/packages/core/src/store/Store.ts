@@ -1,9 +1,26 @@
 /**
  *
  */
+import { ContentType } from '../data/ContentType';
+
 import { StepStore } from './StepStore';
 import { StoreMap } from './StoreMap';
 import { StoreWrapper } from './StoreWrapper';
+
+/**
+ *
+ */
+class NullStoreMap implements StoreMap {
+    put(): void {
+        // do nothing
+    }
+    get(): ContentType {
+        return null;
+    }
+    clear(): void {
+        // do nothing
+    }
+}
 
 /**
  *
@@ -13,6 +30,7 @@ export class Store {
     private _localStore = new StoreWrapper({}, 'local store');
     private _testStore = new StoreWrapper({}, 'test store');
     private _stepStore = new StoreWrapper(new StepStore(), 'step store');
+    private _nullStore = new StoreWrapper(new NullStoreMap(), 'null Store');
 
     /**
      *
@@ -57,6 +75,13 @@ export class Store {
      */
     get stepStore(): StoreWrapper {
         return this._stepStore;
+    }
+
+    /**
+     *
+     */
+    get nullStore(): StoreWrapper {
+        return this._nullStore;
     }
 
     /**

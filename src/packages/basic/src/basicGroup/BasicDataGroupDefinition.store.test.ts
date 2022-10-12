@@ -115,6 +115,7 @@ const sut = new MockTableHandler();
  */
 beforeEach(() => {
     Store.instance.testStore.clear();
+    Store.instance.stepStore.clear();
     Store.instance.globalStore.clear();
 
     intialContext.data = null;

@@ -1,4 +1,4 @@
-import { GeneratorHandler, ScopedType, StoreWrapper, ValueReplacer } from '@boart/core';
+import { GeneratorHandler, ScopedType, ScopeType, StoreWrapper, ValueReplacer } from '@boart/core';
 
 /**
  *
@@ -19,6 +19,14 @@ export class GenerateReplacer implements ValueReplacer {
      */
     get priority(): number {
         return 900;
+    }
+
+    /**
+     *
+     */
+    defaultScopeType(property: string): ScopeType {
+        const match = property.match(GenerateReplacer.re);
+        return !match.groups.scopename ? null : ScopeType.Step;
     }
 
     /**

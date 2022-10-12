@@ -7,5 +7,6 @@ export interface ValueReplacer {
     readonly priority: number;
     readonly scoped: ScopedType;
     readonly nullable?: boolean;
+    defaultScopeType?(property?: string): ScopeType;
     replace(property: string, store?: StoreWrapper, scope?: ScopeType): string;
 }

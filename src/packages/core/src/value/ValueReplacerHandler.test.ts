@@ -191,7 +191,7 @@ describe('check valueHandler (unscoped)', () => {
         const replacedValue = sut.replace('--${test:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(valueReplacer.replace).toBeCalledWith('a', Store.instance.testStore, undefined);
+        expect(valueReplacer.replace).toBeCalledWith('a', Store.instance.nullStore, undefined);
     });
 
     /**
@@ -271,7 +271,7 @@ describe('check valueHandler (scoped)', () => {
         const result = sut.replace('--${store:e}--');
 
         expect(result).toBe('--#e#--');
-        expect(replacer.replace).toBeCalledWith('e', Store.instance.testStore, undefined);
+        expect(replacer.replace).toBeCalledWith('e', Store.instance.nullStore, undefined);
     });
 
     /**

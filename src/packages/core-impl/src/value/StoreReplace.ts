@@ -1,4 +1,4 @@
-import { ContentType, ScopedType, ScopeType, Store, StoreMap, StoreWrapper, ValueReplacer } from '@boart/core';
+import { ScopedType, ScopeType, Store, StoreWrapper, ValueReplacer } from '@boart/core';
 
 /**
  *
@@ -27,6 +27,13 @@ export class StoreReplacer implements ValueReplacer {
     /**
      *
      */
+    defaultScopeType(): ScopeType {
+        return ScopeType.Test;
+    }
+
+    /**
+     *
+     */
     private get stores(): Array<StoreWrapper> {
         const store = Store.instance;
         if (!this._stores) {
@@ -38,7 +45,7 @@ export class StoreReplacer implements ValueReplacer {
     /**
      *
      */
-    private getPropertyValue(property: string, store: StoreWrapper, scope: ScopeType, check: boolean): string {
+    private getPropertyValue(property: string, store: StoreWrapper, scope: ScopeType): string {
         if (!scope) {
             for (const store of this.stores) {
                 const storeContent = store.get(property)?.toString();
@@ -61,7 +68,7 @@ export class StoreReplacer implements ValueReplacer {
         }
 
         const property = match.groups.property;
-        const content = this.getPropertyValue(property, store, scope, !match.groups.operator);
+        const content = this.getPropertyValue(property, store, scope);
 
         if (!content) {
             switch (match.groups.operator) {

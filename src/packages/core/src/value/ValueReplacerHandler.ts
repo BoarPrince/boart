@@ -67,6 +67,9 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
         if (!!this.valueReplacers.find((r) => r.identifier === name)) {
             throw Error(`valueReplacer '${name}' already exists!`);
         }
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        item.defaultScopeType = item.defaultScopeType || (() => null);
+
         this.valueReplacers.push({ identifier: name, replacer: item });
         this.valueReplacers = this.valueReplacers.sort((r1, r2) => r1.replacer.priority - r2.replacer.priority);
 
@@ -169,8 +172,11 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
             case ScopeType.Step: {
                 return Store.instance.stepStore;
             }
-            default: {
+            case ScopeType.Test: {
                 return Store.instance.testStore;
+            }
+            default: {
+                return Store.instance.nullStore;
             }
         }
     }
@@ -180,7 +186,8 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
      */
     private stringReplacer(r: ValueReplaceItem, optional: boolean, scope: string, property: string, checkNull: boolean) {
         property = ValueReplacerHandler.replaceCurlyBrackets(property, ReplacementMode.RetractBrackets);
-        const store = ValueReplacerHandler.getStore(scope);
+        const defaultScope = r.replacer.defaultScopeType(property);
+        const store = ValueReplacerHandler.getStore(scope || defaultScope);
         const content = r.replacer.replace(property, store, scope as ScopeType);
 
         return ValueReplacerHandler.replaceCurlyBrackets(
