@@ -1,0 +1,42 @@
+{
+  "id": "${generate:uuid}",
+  "phoneNumbers": [
+    {
+      "id": "${generate:uuid}",
+      "description": "Defined during Onboarding",
+      "number": 1743284130,
+      "countryPrefix": 49,
+      "category": "OFFICE",
+      "phoneType": "UNKNOWN",
+      "favorite": false
+    }
+  ],
+  "bankDetails": [
+    {
+      "bankName": "Societe Generalex",
+      "iban": "DE75512108001245126199",
+      "bic": "SOGEDEFFXXX"
+    }
+  ],
+  "customers": [],
+  "carriers": [],
+  "addresses": [
+    {
+      "id": "${generate:uuid}",
+      "street": "${generate:fake:address:street}",
+      "zipCode": "${generate:fake:address:zipCode}",
+      "city": "${generate:fake:address:city}",
+      "country": "DE",
+      "firstname": "${generate:t:fake:name:firstName}",
+      "lastname": "${generate:t:fake:name:lastName}",
+      "email": "jitpaytest+ob${generate:t:random:4}@gmail.com",
+      "countryPrefix": 49,
+      "phoneNumber": 1743284130,
+      "type": "BILLING"
+    }
+  ],
+  "companyName": "${generate:fake:company:name}",
+  "documentStorageDirectoryName": "",
+  "jitPayId": "{generate:s:random:4}",
+  "legalForm": "GmbH_de"
+}

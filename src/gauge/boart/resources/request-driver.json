@@ -1,0 +1,25 @@
+{
+  "email": "jitpaytest+ob${generate:t:random:4}@gmail.com",
+  "cardLimit": 1000,
+  "pin": 4711,
+  "dayDrivingTime": 0,
+  "dayWorkingTime": 0,
+  "cardNumber": "${generate:s:random:6}",
+  "driverRight": 0,
+  "dispositionInternalNumber": "${generate:s:random:6}",
+  "employeeNumber": "${generate:s:random:6}",
+  "workStatus": "REST",
+  "firstname": "${generate:t:fake:name:firstName}",
+  "lastname": "${generate:t:fake:name:lastName}",
+  "carrierId": "${store:request#carrierId}",
+  "phoneNumber": [
+    {
+      "description": "Created for testing",
+      "number": "${generate:s:random:6}",
+      "countryPrefix": "0049",
+      "category": "CUSTOMER",
+      "phoneType": "PHONE",
+      "favorite": true
+    }
+  ]
+}

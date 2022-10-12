@@ -1,0 +1,26 @@
+# add carrier, companyId: <companyId>, response: <response>
+
+* Data manage
+      | action       | value       |
+      |--------------|-------------|
+      | in#companyId | <companyId> |
+      | in#name      | ssss        |
+      | store        | request     |
+
+* Rest call
+      | action                 | value                       |
+      |------------------------|-----------------------------|
+      | method:post            | /api/carrier                |
+      | description            | Create a Carrier            |
+      | group                  | Initial Create              |
+      | payload                | <file:request-carrier.json> |
+      | expected:header#status | 200                         |
+      | store                  | <response>                  |
+      | store                  | response                    |
+
+* Data manage
+      | action       | value                |
+      |--------------|----------------------|
+      | in           | ${store:request}     |
+      | in#carrierId | ${store:response.id} |
+      | store        | request              |

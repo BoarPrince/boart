@@ -1,0 +1,39 @@
+{
+  "id": "${generate:uuid}",
+  "carrierName": "${store:request#name}",
+  "companyId": "${store:request#companyId}",
+  "currency": "EUR",
+  "preferredCardIssuer": "NONE",
+  "maximumCards": 100,
+  "baseCashpoolValue": 0,
+  "baseCashpoolPercentage": 50,
+  "defaultDriverLimit": 2000,
+  "defaultVehicleLimit": 2000,
+  "addresses": [
+    {
+      "id": "${generate:uuid}",
+      "street": "${generate:fake:address:street}",
+      "zipCode": "${generate:fake:address:zipCode}",
+      "city": "${generate:fake:address:city}",
+      "country": "DE",
+      "firstname": "${generate:t:fake:name:firstName}",
+      "lastname": "${generate:t:fake:name:lastName}",
+      "email": "jitpaytest+ob${generate:random:5}@gmail.com",
+      "countryPrefix": 49,
+      "phoneNumber": 1743284130,
+      "type": "BILLING"
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "id": "${generate:uuid}",
+      "description": "Defined dur ing Onboarding",
+      "number": 1743284130,
+      "countryPrefix": 49,
+      "category": "OFFICE",
+      "phoneType": "UNKNOWN",
+      "favorite": false
+    }
+  ],
+  "users": []
+}

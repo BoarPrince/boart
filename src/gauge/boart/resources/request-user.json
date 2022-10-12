@@ -1,0 +1,30 @@
+{
+  "id": "${generate:uuid}",
+  "email": "jitpaytest+ob${generate:t:random:4}@gmail.com",
+  "username": "jitpaytest+ob${generate:t:random:4}@gmail.com",
+  "password": "p-a-s-s-w-o-r-d",
+  "passwordHint": "p-a-s-s-w-o-r-d",
+  "phoneNumbers": [
+    {
+      "id": "${generate:uuid}",
+      "description": "Defined during Onboarding",
+      "number": 1743284130,
+      "countryPrefix": 49,
+      "category": "OFFICE",
+      "phoneType": "UNKNOWN",
+      "favorite": false
+    }
+  ],
+  "firstname": "${generate:t:fake:name:firstName}",
+  "lastname": "${generate:t:fake:name:lastName}",
+  "activationCode": "${generate:uuid}",
+  "legitimationStatus": "LegimitationStarted",
+  "source": "Onboarding",
+  "locale": "de",
+  "carrierIds": [
+    "${store:request#carrierId}"
+  ],
+  "roles": [],
+  "createDate": "2022-09-20T15:37:06.4+02:00",
+  "modifiedDate": "2022-09-20T15:37:06.4+02:00"
+}
