@@ -1,0 +1,55 @@
+# queues check <queue-list>
+
+* RabbitMQ consume, continue
+
+   | action         | value                      |
+   |----------------|----------------------------|
+   | runOnly:driver | <queue-list>               |
+   | queue          | test.md.driver             |
+   | group          | Check Queues               |
+   | description    | Driver Event must be fired |
+   | store          | event-driver               |
+
+* RabbitMQ consume, continue
+
+   | action       | value                    |
+   |--------------|--------------------------|
+   | runOnly:user | <queue-list>             |
+   | queue        | test.md.user             |
+   | group        | Check Queues             |
+   | description  | User Event must be fired |
+   | store        | event-user               |
+
+* RabbitMQ consume, continue
+
+   | action          | value                       |
+   |-----------------|-----------------------------|
+   | runOnly:company | <queue-list>                |
+   | queue           | test.md.company             |
+   | group           | Check Queues                |
+   | description     | Company Event must be fired |
+   | store           | event-company               |
+
+* RabbitMQ consume, continue
+
+   | action          | value                       |
+   |-----------------|-----------------------------|
+   | runOnly:carrier | <queue-list>                |
+   | queue           | test.md.carrier             |
+   | group           | Check Queues                |
+   | description     | Carrier Event must be fired |
+   | store           | event-carrier               |
+
+* RabbitMQ consume
+  | action        | value                                                                         |
+  |---------------|-------------------------------------------------------------------------------|
+  | runOnly:error | <queue-list>                                                                  |
+  | queue         | test.fleet.masterdata.error                                                   |
+  | group         | Check Queues                                                                  |
+  | description   | Check Fleet MasterData Error queue (must be empty)                            |
+  |               | All fleet death letter exchanges are bound to this queue                      |
+  |               | No error should occur while consuming the Master Data creation/update events. |
+  |               | Therefore the queue must be empty                                             |
+  | timeout       | 5                                                                             |
+  | count:max     | 0                                                                             |
+  | count:min     | 0                                                                             |

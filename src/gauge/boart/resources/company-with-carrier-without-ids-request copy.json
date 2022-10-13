@@ -29,12 +29,12 @@
       "defaultVehicleLimit": 2000,
       "addresses": [
         {
-          "street": "${generate:fake:address:street}",
-          "zipCode": "${generate:fake:address:zipCode}",
-          "city": "${generate:fake:address:city}",
+          "street": "${store:payload#street:=${generate:fake:address:street}}",
+          "zipCode": "${store:payload#zipCode:=${generate:fake:address:zipCode}}",
+          "city": "${store:payload#city:=${generate:fake:address:city}}",
           "country": "DE",
-          "firstname": "${generate:s:fake:name:firstName}",
-          "lastname": "${generate:s:fake:name:lastName}",
+          "firstname": "${store:payload#firstName:=${generate:s:fake:name:firstName}}",
+          "lastname": "${store:payload#lastName:=${generate:s:fake:name:lastName}}",
           "email": "${store:payload#email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
           "countryPrefix": 49,
           "phoneNumber": 1743284130,
@@ -51,7 +51,7 @@
           "favorite": false
         }
       ],
-      "carrierName": "${generate:fake:company:name}"
+      "carrierName": "${store:payload#companyName:=${generate:fake:company:name}}"
     }
   ],
   "addresses": [
@@ -68,8 +68,8 @@
       "type": "BILLING"
     }
   ],
-  "companyName": "${generate:fake:company:name}",
+  "companyName": "${store:payload#companyName:=${generate:fake:company:name}}",
   "documentStorageDirectoryName": "",
-  "jitPayId": "${generate:s:random:4}",
+  "jitPayId": "${store:jitpayId:=${generate:s:random:4}}",
   "legalForm": "GmbH_de"
 }

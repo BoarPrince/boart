@@ -1,0 +1,50 @@
+# queues bind <queue-list>
+
+* RabbitMQ bind
+  | action          | value              |
+  |-----------------|--------------------|
+  | runOnly:company | <queue-list>       |
+  | exchange        | company            |
+  | queue           | test.md.company    |
+  | description     | Bind company queue |
+  | group           | Bind Queues        |
+
+* RabbitMQ bind
+  | action          | value              |
+  |-----------------|--------------------|
+  | runOnly:company | <queue-list>       |
+  | exchange        | carrier            |
+  | queue           | test.md.carrier    |
+  | description     | Bind carrier queue |
+  | group           | Bind Queues        |
+
+* RabbitMQ bind
+  | action       | value           |
+  |--------------|-----------------|
+  | runOnly:user | <queue-list>    |
+  | exchange     | user            |
+  | queue        | test.md.user    |
+  | description  | Bind user queue |
+  | group        | Bind Queues     |
+
+* RabbitMQ bind
+  | action         | value             |
+  |----------------|-------------------|
+  | runOnly:driver | <queue-list>      |
+  | exchange       | driver            |
+  | queue          | test.md.driver    |
+  | description    | Bind driver queue |
+  | group          | Bind Queues       |
+
+* RabbitMQ bind
+  | action        | value                                                   |
+  |---------------|---------------------------------------------------------|
+  | runOnly:error | <queue-list>                                            |
+  | exchange      | fleet.masterdata.error.exchange                         |
+  | description   | Bind all error queues                                   |
+  |               | Binds all error queues to check if an error has occured |
+  | group         | Bind Queues                                             |
+  | queue         | test.fleet.masterdata.error                             |
+  | routing       | fleet.masterdata.company.error                          |
+  | routing       | fleet.masterdata.carrier.error                          |
+  | routing       | fleet.masterdata.user.error                             |

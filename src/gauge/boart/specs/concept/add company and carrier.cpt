@@ -1,0 +1,7 @@
+# add company and carrier
+
+* request admin bearer
+
+* add company, response: "response-co"
+
+* add carrier, companyId: "${store:response-co.id}", response: "response-ca"

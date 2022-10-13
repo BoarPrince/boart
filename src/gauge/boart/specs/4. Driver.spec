@@ -13,11 +13,7 @@ tags: md-4.1
    |description|Add a driver to company|
    |priority   |high                   |
 
-* request admin bearer
-
-* add company, response: "co-response"
-
-* add carrier, companyId: "${store:co-response.id}", response: "ca-response"
+* add company and carrier
 
 * RabbitMQ bind
 

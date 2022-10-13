@@ -70,9 +70,9 @@ tags: md-1.2
       | expected:header#status | 200                                           |
       | expected#companyName   | x-x-x                                         |
 
-## 1.2. Update a company with another id
+## 1.3. Update a company with another id
 
-tags: md-1.2
+tags: md-1.3
 
 * Test description
       | action      | value                                 |
@@ -124,20 +124,21 @@ tags: md-1.2
       | description            | Update first Company with payload id of second Company |
       | payload                | ${store:response1}                                     |
       | payload#id             | ${store:response2.id}                                  |
-      | expected:header#status | 200                                                    |
+      | expected:header#status | 409                                                    |
+      | expected#message       | id in payload does not match path id                   |
 
-* Rest call
-      | action                 | value                                          |
-      |------------------------|------------------------------------------------|
-      | method:get             | /api/carrier/${store:response1.carriers[0].id} |
-      | description            | Load lost carrier after Updating               |
-      | expected:header#status | 200                                            |
-
-* Rest call
-      | action                       | value                                                    |
-      |------------------------------|----------------------------------------------------------|
-      | method:get                   | /api/company/${store:response1.id}                       |
-      | description                  | Check if Carrier is still the same for the first Company |
-      | expected:header#status       | 200                                                      |
-      | expected:data:count#carriers | 1                                                        |
-      | expected#carriers[0].id      | ${store:response1.carriers[0].id}                        |
+comment * Rest call
+comment       | action                 | value                                          |
+comment       |------------------------|------------------------------------------------|
+comment       | method:get             | /api/carrier/${store:response1.carriers[0].id} |
+comment       | description            | Load lost carrier after Updating               |
+comment       | expected:header#status | 200                                            |
+comment
+comment * Rest call
+comment       | action                       | value                                                    |
+comment       |------------------------------|----------------------------------------------------------|
+comment       | method:get                   | /api/company/${store:response1.id}                       |
+comment       | description                  | Check if Carrier is still the same for the first Company |
+comment       | expected:header#status       | 200                                                      |
+comment       | expected:data:count#carriers | 1                                                        |
+comment       | expected#carriers[0].id      | ${store:response1.carriers[0].id}                        |
