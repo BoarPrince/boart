@@ -45,16 +45,16 @@ export class StoreReplacer implements ValueReplacer {
     /**
      *
      */
-    private getPropertyValue(property: string, store: StoreWrapper, scope: ScopeType): string {
+    private getPropertyValue(property: string, store: StoreWrapper, scope: ScopeType, optional: boolean): string {
         if (!scope) {
             for (const store of this.stores) {
-                const storeContent = store.get(property)?.toString();
+                const storeContent = store.get(property, optional)?.toString();
                 if (!!storeContent) {
                     return storeContent;
                 }
             }
         } else {
-            return store.get(property)?.toString();
+            return store.get(property, optional)?.toString();
         }
     }
 
@@ -68,7 +68,7 @@ export class StoreReplacer implements ValueReplacer {
         }
 
         const property = match.groups.property;
-        const content = this.getPropertyValue(property, store, scope);
+        const content = this.getPropertyValue(property, store, scope, !!match.groups.operator);
 
         if (!content) {
             switch (match.groups.operator) {

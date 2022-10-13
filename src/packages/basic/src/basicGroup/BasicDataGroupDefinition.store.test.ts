@@ -908,15 +908,41 @@ describe('out store from payload', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |
              |----------|------------------|
-             |payload#a | \${store:a.p:=1} |
+             |payload   | \${store:a.p:=1} |
              |store     | var              |`
         );
 
         await sut.handler.process(tableDef);
         const result = Store.instance.testStore.get('var');
 
-        expect(result.valueOf()).toStrictEqual({ a: 1 });
+        expect(result.valueOf()).toEqual(1);
         expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 1 });
+    });
+
+    /**
+     *
+     */
+    it('use store default-assignment - with two properties', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      | value                             |
+             |------------|-----------------------------------|
+             |payload#c.e | 3                                 |
+             |payload#c.f | 4                                 |
+             |payload#b   | \${store:a.c:=1} \${store:a.d:=1} |
+             |store       | var                               |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({
+            b: '1 1',
+            c: {
+                e: 3,
+                f: 4
+            }
+        });
+        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ c: 1, d: 1 });
     });
 
     /**
