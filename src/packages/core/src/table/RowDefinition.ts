@@ -24,6 +24,7 @@ interface RowDefinitionPara<
     TRowType extends BaseRowType<TExecutionContext>
 > {
     readonly key?: symbol;
+    readonly priority?: number;
     readonly type: TableRowType;
     readonly defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
     readonly defaultValueColumn?: symbol;
@@ -44,6 +45,7 @@ export class RowDefinition<
     public key: symbol;
     public defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
     public defaultValueColumn?: symbol;
+    public readonly priority: number = 0;
     public readonly type: TableRowType;
     public readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
     public readonly parameterType: ParaType = ParaType.False;
@@ -56,6 +58,7 @@ export class RowDefinition<
     constructor(value: RowDefinitionPara<TExecutionContext, TRowType>) {
         this.key = value.key || Symbol(value.executionUnit?.description);
         this.type = value.type;
+        this.priority = value.priority || value.executionUnit?.priority || this.priority;
         this.defaultValue = value.defaultValue || value.default?.value || this.defaultValue;
         this.defaultValueColumn =
             value.defaultValueColumn || (!value.default ? null : Symbol(value.default.column?.toString())) || this.defaultValueColumn;

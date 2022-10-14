@@ -25,6 +25,11 @@ export interface ExecutionUnit<
     /**
      *
      */
+    readonly priority?: number;
+
+    /**
+     *
+     */
     readonly parameterType?: ParaType;
 
     /**

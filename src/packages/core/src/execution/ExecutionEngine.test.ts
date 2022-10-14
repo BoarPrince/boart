@@ -104,7 +104,14 @@ const contextGenerator = (): TestExecutionContext => {
 /**
  *
  */
-it('check call order - pre, post, ...', async () => {
+beforeEach(() => {
+    Runtime.instance.stepRuntime.current = new StepContext();
+});
+
+/**
+ *
+ */
+it('call order - pre, post, ...', async () => {
     const rowDataPreConfig = createBaseRowType('pre config', TableRowType.PreConfiguration);
     const rowDataConfig = createBaseRowType('config', TableRowType.Configuration);
     const rowDataPre = createBaseRowType('pre', TableRowType.PreProcessing);
@@ -138,18 +145,37 @@ it('check call order - pre, post, ...', async () => {
 /**
  *
  */
-it('check call order - pre, post, ...', async () => {
+it('RuntimeStatus:stopped halt the execution', async () => {
     const rowDataPreConfig = createBaseRowType('pre config', TableRowType.PreConfiguration);
     const rowDataConfig = createBaseRowType('config', TableRowType.Configuration);
     const rowDataPre = createBaseRowType('pre', TableRowType.PreProcessing);
     const rowDataPost = createBaseRowType('post', TableRowType.PostProcessing);
 
-    Runtime.instance.stepRuntime.current = { ...new StepContext(), status: RuntimeStatus.stopped };
+    Runtime.instance.stepRuntime.current.status = RuntimeStatus.stopped;
 
     const mainExecutionUnit = new ExecutionUnitMock();
-    const sut = new ExecutionEngine<TestExecutionContext, any>(() => mainExecutionUnit, contextGenerator);
+    const sut = new ExecutionEngine<TestExecutionContext, BaseRowType<TestExecutionContext>>(() => mainExecutionUnit, contextGenerator);
 
     const context = await sut.execute([rowDataPost, rowDataConfig, rowDataPreConfig, rowDataPre]);
 
     expect(context.execution.data.join(',')).toEqual('pre config');
+});
+
+/**
+ *
+ */
+it('each type can have his own order', async () => {
+    const rowDataPreConfig = createBaseRowType('pre config', TableRowType.PreConfiguration);
+    const rowDataConfig = createBaseRowType('config', TableRowType.Configuration);
+    const rowDataPre1 = createBaseRowType('pre1', TableRowType.PreProcessing, 1);
+    const rowDataPre2 = createBaseRowType('pre2', TableRowType.PreProcessing, 2);
+    const rowDataPre3 = createBaseRowType('pre3', TableRowType.PreProcessing, 3);
+    const rowDataPost = createBaseRowType('post', TableRowType.PostProcessing);
+
+    const mainExecutionUnit = new ExecutionUnitMock();
+    const sut = new ExecutionEngine<TestExecutionContext, BaseRowType<TestExecutionContext>>(() => mainExecutionUnit, contextGenerator);
+
+    const context = await sut.execute([rowDataPost, rowDataConfig, rowDataPreConfig, rowDataPre2, rowDataPre1, rowDataPre3]);
+
+    expect(context.execution.data.join(',')).toEqual('pre config,config,pre3,pre2,pre1,main,post');
 });
