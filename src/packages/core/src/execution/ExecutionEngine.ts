@@ -1,3 +1,5 @@
+import { Runtime } from '../runtime/Runtime';
+import { RuntimeStatus } from '../runtime/RuntimeStatus';
 import { BaseRowType } from '../table/BaseRowType';
 import { TableRowType } from '../table/TableRowType';
 
@@ -35,6 +37,11 @@ export class ExecutionEngine<
      *
      */
     async execute(rows: ReadonlyArray<TRowType>): Promise<TExecutionContext> {
+        await this.executeByType(rows, TableRowType.PreConfiguration);
+        if (Runtime.instance.stepRuntime.current?.status === RuntimeStatus.stopped) {
+            return this.context;
+        }
+
         await this.executeByType(rows, TableRowType.Configuration);
         await this.executeByType(rows, TableRowType.PreProcessing);
 

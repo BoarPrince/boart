@@ -4,7 +4,8 @@
 export enum RuntimeStatus {
     failed,
     succeed,
-    notExecuted
+    notExecuted,
+    stopped
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace

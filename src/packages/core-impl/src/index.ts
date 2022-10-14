@@ -8,6 +8,7 @@ import { ExpectedOperatorImplementation } from './execution/expected/ExpectedOpe
 import { DescriptionExecutionUnit } from './execution/misc/ExecutionUnit.Description';
 import { GroupExecutionUnit } from './execution/misc/ExecutionUnit.Group';
 import { OutStoreExecutionUnit } from './execution/misc/ExecutionUnit.OutStore';
+import { RunOnlyExecutionUnit } from './execution/misc/ExecutionUnit.RunOnly';
 import { WaitExecutionUnit } from './execution/misc/ExecutionUnit.Wait';
 import { PropertySetterExecutionUnit } from './execution/property-setter/PropertySetterExecutionUnit';
 import { TransformJPathExecutionUnit } from './execution/transform/ExecutionUnit.TransformJPath';
@@ -70,6 +71,7 @@ export {
     ReferenceReplacer,
     RequiredValidator,
     RowTypeValue,
+    RunOnlyExecutionUnit,
     StoreReplacer,
     TextReplacer,
     TimestampGenerator,

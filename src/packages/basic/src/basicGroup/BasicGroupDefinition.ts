@@ -6,11 +6,20 @@ import {
     GroupExecutionUnit,
     ParaValidator,
     RowTypeValue,
+    RunOnlyExecutionUnit,
     WaitExecutionUnit
 } from '@boart/core-impl';
 
 if (!GroupRowDefinition.contains('basic')) {
     const basicGroup = GroupRowDefinition.getInstance<AnyContext, RowTypeValue<AnyContext>>('basic');
+
+    basicGroup.addRowDefinition(
+        new RowDefinition({
+            type: TableRowType.PreConfiguration,
+            executionUnit: new RunOnlyExecutionUnit(),
+            validators: null
+        })
+    );
 
     basicGroup.addRowDefinition(
         new RowDefinition({
@@ -24,7 +33,7 @@ if (!GroupRowDefinition.contains('basic')) {
     basicGroup.addRowDefinition(
         new RowDefinition({
             key: Symbol('wait:before'),
-            type: TableRowType.PreProcessing,
+            type: TableRowType.Configuration,
             executionUnit: new WaitExecutionUnit(),
             validators: [new ParaValidator([null, 'sec', 'min'])]
         })
@@ -33,7 +42,7 @@ if (!GroupRowDefinition.contains('basic')) {
     basicGroup.addRowDefinition(
         new RowDefinition({
             key: Symbol('description'),
-            type: TableRowType.PreProcessing,
+            type: TableRowType.Configuration,
             executionUnit: new DescriptionExecutionUnit(),
             validators: null
         })
@@ -42,7 +51,7 @@ if (!GroupRowDefinition.contains('basic')) {
     basicGroup.addRowDefinition(
         new RowDefinition({
             key: Symbol('group'),
-            type: TableRowType.PreProcessing,
+            type: TableRowType.Configuration,
             executionUnit: new GroupExecutionUnit(),
             validators: null
         })
