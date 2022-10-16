@@ -1,0 +1,22 @@
+# onboarding - register
+
+* Rest call
+
+      | action                 | value                                                    |
+      |------------------------|----------------------------------------------------------|
+      | method:post            | <ob>/new-api/public/registration/create                  |
+      | group                  | Register                                                 |
+      | description            | Call onboarding registration                             |
+      | payload                | {                                                        |
+      |                        | "reqHeader": "JpInternal",                               |
+      |                        | "languageCode": "en",                                    |
+      |                        | "referer": "LANDING_PAGE",                               |
+      |                        | "platform": "JITPAY",                                    |
+      |                        | "email": "jitpaytest+onb${generate:random:5}@gmail.com", |
+      |                        | "telephoneNumber": {                                     |
+      |                        | "country": "49",                                         |
+      |                        | "number":"0172${generate:random:8}"                      |
+      |                        | }                                                        |
+      |                        | }                                                        |
+      | expected:header#status | 200                                                      |
+      | store                  | response-register                                        |

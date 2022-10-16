@@ -1,0 +1,11 @@
+# add vehicle
+
+* Rest call
+
+   | action                 | value                       |
+   |------------------------|-----------------------------|
+   | method:post            | /api/vehicle                |
+   | description            | Add a Vehicle               |
+   | payload                | <file:request-vehicle.json> |
+   | expected:header#status | 200                         |
+   | store                  | response-vehicle            |

@@ -1,0 +1,15 @@
+# onboarding - request user bearer, username: <username>, password: <password>
+
+* Rest authorize
+
+    | action      | value                                          |
+    |-------------|------------------------------------------------|
+    | url         | /token                                         |
+    | grantType   | password                                       |
+    | description | Request bearer token for onboarding user       |
+    | group       | Register                                       |
+    | scope       | openid app_api jitpay.role email roles profile |
+    | clientId    | jitpay_portal_angular_application_client       |
+    | username    | <username>                                     |
+    | password    | <password>                                     |
+    | retry:count | 2                                              |

@@ -81,7 +81,7 @@ tags: md-5.2
    | method:post            | /api/user                                |
    | description            | Add a User (including a cascaded Driver) |
    | payload                | <file:request-user.json>                 |
-   | payload#driver         | <file:request-driver.json>               |
+   | payload#driver         | <file:request-driver-only.json>               |
    | expected:header#status | 200                                      |
 
 * RabbitMQ consume, continue

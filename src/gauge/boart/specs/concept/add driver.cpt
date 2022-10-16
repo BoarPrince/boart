@@ -1,0 +1,11 @@
+# add driver
+
+* Rest call
+
+   | action                 | value                      |
+   |------------------------|----------------------------|
+   | method:post            | /api/driver                |
+   | description            | Add a Driver               |
+   | payload                | <file:request-driver.json> |
+   | expected:header#status | 200                        |
+   | store                  | response-driver            |

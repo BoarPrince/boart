@@ -1,0 +1,12 @@
+# add user <firstname>
+
+* Rest call
+
+   | action                 | value                    |
+   |------------------------|--------------------------|
+   | method:post            | /api/user                |
+   | description            | Add an User              |
+   | payload                | <file:request-user.json> |
+   | payload#firstname      | <firstname>              |
+   | expected:header#status | 200                      |
+   | store                  | response-user            |

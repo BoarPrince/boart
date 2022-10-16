@@ -12,7 +12,7 @@
 * RabbitMQ bind
   | action          | value              |
   |-----------------|--------------------|
-  | runOnly:company | <queue-list>       |
+  | runOnly:carrier | <queue-list>       |
   | exchange        | carrier            |
   | queue           | test.md.carrier    |
   | description     | Bind carrier queue |

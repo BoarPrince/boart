@@ -2,8 +2,9 @@
   "name": "boart-gauge-integration",
   "description": "Starter template for writing JavaScript tests for Gauge",
   "scripts": {
-    "test": "gauge run --tags=\"md-4.2\"",
-    "test:local": "export runtime_environent=local && gauge run --tags=\"md-4.3\"",
+    "test": "gauge run --tags=\"md-3.1\"",
+    "test:": "gauge run",
+    "test:local": "export runtime_environent=local && gauge run --tags=\"ob-10.1\"",
     "update": "rm -rf node_modules/@boart && npm update",
     "update:and:test": "npm run update && npm run test"
   },
@@ -12,6 +13,7 @@
     "@boart/core": "*",
     "@boart/core-impl": "*",
     "@boart/protocol": "*",
-    "@boart/execution": "*"
+    "@boart/execution": "*",
+    "taiko": "latest"
   }
 }

@@ -2,6 +2,7 @@
   "environment": {
     "admin_login_user": "demo@jitpay.eu",
     "admin_login_password": "demoJITpay#123",
+    "default_password": "Germany2022!",
     "rabbitmq_hostname": [
       "192.168.50.250",
       "192.168.50.249",
@@ -16,8 +17,17 @@
       "jitpay",
       "jitpay",
       "guest"
+    ],
+    "onboarding_url": [
+      "https://new-onboarding-services.dev.jitpay.eu",
+      "https://new-onboarding-services.stage.jitpay.eu"
+    ],
+    "onboarding_ui_url": [
+      "https://cloud.dev.jitpay.eu/smart-onboarding",
+      "https://cloud.stage.jitpay.eu/smart-onboarding"
     ]
   },
+  "environment_reports_data_dir": "./reports",
   "path_mapping": {
     "/token": [
       "https://keycloak.dev.jitpay.eu/auth/realms/jitpay/protocol/openid-connect",
@@ -32,7 +42,14 @@
       "https://master-data.dev.jitpay.eu",
       "https://master-data.stage.jitpay.eu",
       "http://localhost:8090"
+    ],
+    "<ob>/new-api": [
+      "https://new-onboarding-services.dev.jitpay.eu",
+      "https://new-onboarding-services.stage.jitpay.eu"
+    ],
+    "<ob>/smart-onboarding": [
+      "https://cloud.dev.jitpay.eu",
+      "https://cloud.stage.jitpay.eu"
     ]
-  },
-  "environment_reports_data_dir": "./reports"
+  }
 }

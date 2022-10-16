@@ -1,0 +1,54 @@
+
+# onboarding - accept contract and condition
+
+* Rest call
+
+      | action                 | value                                                                  |
+      |------------------------|------------------------------------------------------------------------|
+      | method:put             | <ob>/new-api/contract/accept                                           |
+      | description            | Accept Contract (1)                                                    |
+      | group                  | Accept Contract and Condition                                          |
+      | payload                | {                                                                      |
+      |                        | "representativeId": "${store:response-register.representative[0].id}", |
+      |                        | "documentType": "contract"                                             |
+      |                        | }                                                                      |
+      | expected:header#status | 200                                                                    |
+
+* Rest call
+
+      | action                 | value                                                                  |
+      |------------------------|------------------------------------------------------------------------|
+      | method:put             | <ob>/new-api/contract/accept                                           |
+      | description            | Accept Contract (2)                                                    |
+      | group                  | Accept Contract and Condition                                          |
+      | payload                | {                                                                      |
+      |                        | "representativeId": "${store:response-register.representative[1].id}", |
+      |                        | "documentType": "contract"                                             |
+      |                        | }                                                                      |
+      | expected:header#status | 200                                                                    |
+
+* Rest call
+
+      | action                 | value                                                                  |
+      |------------------------|------------------------------------------------------------------------|
+      | method:put             | <ob>/new-api/contract/accept                                           |
+      | description            | Accept Condition  (1)                                                  |
+      | group                  | Accept Contract and Condition                                          |
+      | payload                | {                                                                      |
+      |                        | "representativeId": "${store:response-register.representative[0].id}", |
+      |                        | "documentType": "conditionSheet"                                       |
+      |                        | }                                                                      |
+      | expected:header#status | 200                                                                    |
+
+* Rest call
+
+      | action                 | value                                                                  |
+      |------------------------|------------------------------------------------------------------------|
+      | method:put             | <ob>/new-api/contract/accept                                           |
+      | description            | Accept Condition (2)                                                   |
+      | group                  | Accept Contract and Condition                                          |
+      | payload                | {                                                                      |
+      |                        | "representativeId": "${store:response-register.representative[1].id}", |
+      |                        | "documentType": "conditionSheet"                                       |
+      |                        | }                                                                      |
+      | expected:header#status | 200                                                                    |

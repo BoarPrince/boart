@@ -17,10 +17,3 @@
       | expected:header#status | 200                         |
       | store                  | <response>                  |
       | store                  | response                    |
-
-* Data manage
-      | action       | value                |
-      |--------------|----------------------|
-      | in           | ${store:request}     |
-      | in#carrierId | ${store:response.id} |
-      | store        | request              |

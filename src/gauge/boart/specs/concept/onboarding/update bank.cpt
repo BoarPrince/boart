@@ -1,0 +1,37 @@
+
+# onboarding - update bank
+
+* Rest call
+
+      | action                 | value                                               |
+      |------------------------|-----------------------------------------------------|
+      | method:put             | <ob>/new-api/bank-information/update                |
+      | description            | Update bank information                             |
+      | group                  | Update Bank                                         |
+      | payload                | {                                                   |
+      |                        | "id": null,                                         |
+      |                        | "bankName": "Societe Generalex",                    |
+      |                        | "bic": "SOGEDEFFXXX",                               |
+      |                        | "iban": "DE75512108001245126199",                   |
+      |                        | "companyId": "${store:response-register.companyId}" |
+      |                        | }                                                   |
+      | expected:header#status | 200                                                 |
+      | store                  | response-register-bank                              |
+
+* Rest call
+
+      | action                 | value                                                |
+      |------------------------|------------------------------------------------------|
+      | method:put             | <ob>/new-api/onboarding-process/update-step          |
+      | description            | Update bank step                                     |
+      | group                  | Update Bank                                          |
+      | payload                | {                                                    |
+      |                        | "id": "${store:response-register.onboardingId}",     |
+      |                        | "companyId": "${store:response-register.companyId}", |
+      |                        | "step": "representatives-information",               |
+      |                        | "status": "BANK_INFORMATION_FINISHED",               |
+      |                        | "kycResult": "unknown",                              |
+      |                        | "companyCountryCode": "DE",                          |
+      |                        | "representativesFixed": false                        |
+      |                        | }                                                    |
+      | expected:header#status | 200                                                  |

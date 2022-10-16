@@ -1,0 +1,58 @@
+
+# onboarding - update representative
+
+* Rest call
+
+      | action                 | value                                               |
+      |------------------------|-----------------------------------------------------|
+      | method:post            | <ob>/new-api/representative/create                  |
+      | group                  | Update Representative                               |
+      | description            | Update representative information (1)               |
+      | payload                | {                                                   |
+      |                        | "companyRole": "0",                                 |
+      |                        | "salutation": "mr",                                 |
+      |                        | "firstName": "Max 1",                               |
+      |                        | "lastName": "Mustermann",                           |
+      |                        | "email": "${store:response-register.email}",        |
+      |                        | "telephoneNumber": {                                |
+      |                        | "country": "49",                                    |
+      |                        | "number": 1743284130                                |
+      |                        | },                                                  |
+      |                        | "language": "de",                                   |
+      |                        | "companyId": "${store:response-register.companyId}" |
+      |                        | }                                                   |
+      | expected:header#status | 201                                                 |
+      | store#id               | response-register.representative[0].id              |
+
+* Rest call
+
+      | action                 | value                                               |
+      |------------------------|-----------------------------------------------------|
+      | method:post            | <ob>/new-api/representative/create                  |
+      | group                  | Update Representative                               |
+      | description            | Update representative information (2)               |
+      | payload                | {                                                   |
+      |                        | "companyRole": "0",                                 |
+      |                        | "salutation": "mr",                                 |
+      |                        | "firstName": "Max 2",                               |
+      |                        | "lastName": "Mustermann",                           |
+      |                        | "email": "${store:response-register.email}",        |
+      |                        | "telephoneNumber": {                                |
+      |                        | "country": "49",                                    |
+      |                        | "number": 1743284130                                |
+      |                        | },                                                  |
+      |                        | "language": "de",                                   |
+      |                        | "companyId": "${store:response-register.companyId}" |
+      |                        | }                                                   |
+      | expected:header#status | 201                                                 |
+      | store#id               | response-register.representative[1].id              |
+
+* Rest call
+
+      | action                 | value                                                                                         |
+      |------------------------|-----------------------------------------------------------------------------------------------|
+      | method:put             | <ob>/new-api/onboarding-process/fix-representatives-data/${store:response-register.companyId} |
+      | description            | Save representative information                                                               |
+      | group                  | Update Representative                                                                         |
+      | payload                | {}                                                                                            |
+      | expected:header#status | 200                                                                                           |
