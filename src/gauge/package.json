@@ -4,7 +4,8 @@
   "scripts": {
     "test": "gauge run --tags=\"md-3.1\"",
     "test:": "gauge run",
-    "test:local": "export runtime_environent=local && gauge run --tags=\"ob-10.1\"",
+    "test:local": "export runtime_environent=local && gauge run --tags=\"md-4.3\"",
+    "test:dev": "export runtime_environent=development && gauge run --tags=\"ob-10.1\"",
     "update": "rm -rf node_modules/@boart && npm update",
     "update:and:test": "npm run update && npm run test"
   },

@@ -14,6 +14,8 @@ tags: ob-10.1
    |           |and.....              |
    |priority   |high                  |
 
+* queues bind "company, company-consumer, company-onboarding, fleet-event-bus, error"
+
 * onboarding - register
 
 * onboarding - change password "${store:response-register.companyId}", username: "${store:response-register.email}", password: "${store:response-register.password}", new-password: "${env:default_password}"
@@ -22,10 +24,16 @@ tags: ob-10.1
 
 * onboarding - update company
 
+* queues check "company-onboarding, error"
+
 * onboarding - update bank
+
+* queues check "company-onboarding"
 
 * onboarding - update representative
 
 * onboarding - accept contract and condition
 
 * onboarding - start video legimitation
+
+* queues check "company-consumer, company-onboarding, fleet-event-bus, error"

@@ -97,8 +97,13 @@ tags: md-4.3
 
 * add user
 
+  add first driver
 * add driver
 
+  add a second driver
+* add driver
+
+  read the second created driver
 * Rest call
 
    |action                |value                                  |
@@ -107,13 +112,73 @@ tags: md-4.3
    |description           |Get created Driver                     |
    |expected:header#status|200                                    |
 
+  read all drivers associated to the carrier
 * Rest call
 
    |action                |value                                           |
    |----------------------|------------------------------------------------|
    |method:get            |/api/driver/carrier/${store:response-carrier.id}|
-   |description           |Get all Drivers                                 |
+   |description           |Get all Drivers of the carrier                  |
    |expected:header#status|200                                             |
-   |expected:count#content|1                                               |
+   |expected:count#content|2                                               |
 
 * add vehicle
+
+  assign the vehicle to the second driver
+* Rest call
+
+   |action                |value                                                                                  |
+   |----------------------|---------------------------------------------------------------------------------------|
+   |method:put            |/api/assignment/vehicle/${store:response-vehicle.id}/driver/${store:response-driver.id}|
+   |description           |Assign vehicle to the driver                                                           |
+   |expected:header#status|202                                                                                    |
+
+  driver must be associated with the vehicle
+* Rest call
+
+   |action                |value                                  |
+   |----------------------|---------------------------------------|
+   |method:get            |/api/driver/${store:response-driver.id}|
+   |description           |Get Driver with associated Vehicle     |
+   |expected:header#status|200                                    |
+   |expected#vehicleId    |${store:response-vehicle.id}           |
+
+
+  drivers list of the carrier must still have 2 drivers
+* Rest call
+
+   |action                |value                                                |
+   |----------------------|-----------------------------------------------------|
+   |method:get            |/api/driver/carrier/${store:response-carrier.id}     |
+   |description           |Get all Drivers of the carrier (must still 2 drivers)|
+   |expected:header#status|200                                                  |
+   |expected:count#content|2                                                    |
+
+  Remove driver assignment again
+* Rest call
+
+   |action                |value                                              |
+   |----------------------|---------------------------------------------------|
+   |method:delete         |/api/assignment/driver/${store:response-vehicle.id}|
+   |description           |Remove Driver / Vehicle Assignment again           |
+   |expected:header#status|202                                                |
+
+  driver shall not more have an associated vehicle
+* Rest call
+
+   |action                     |value                                  |
+   |---------------------------|---------------------------------------|
+   |method:get                 |/api/driver/${store:response-driver.id}|
+   |description                |Get Driver with associated Vehicle     |
+   |expected:header#status     |200                                    |
+   |--expected:empty#vehicleId?|${store:response-vehicle.id}           |
+
+  drivers list of the carrier must still have 2 drivers
+* Rest call
+
+   |action                |value                                                |
+   |----------------------|-----------------------------------------------------|
+   |method:get            |/api/driver/carrier/${store:response-carrier.id}     |
+   |description           |Get all Drivers of the carrier (must still 2 drivers)|
+   |expected:header#status|200                                                  |
+   |expected:count#content|2                                                    |

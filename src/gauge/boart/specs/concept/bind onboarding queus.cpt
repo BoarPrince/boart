@@ -17,7 +17,7 @@
   |--------------|--------------------|
   | exchange     | company            |
   | queue        | test.md.company    |
-  | description  | Bind company queue |
+  | description  | Bind company queue (MD is producer) |
   | group        | Bind Queues        |
 
 * RabbitMQ bind
@@ -27,3 +27,5 @@
   | queue        | test.md.carrier    |
   | description  | Bind carrier queue |
   | group        | Bind Queues        |
+
+

@@ -22,13 +22,43 @@
 
 * RabbitMQ consume, continue
 
-   | action          | value                       |
-   |-----------------|-----------------------------|
-   | runOnly:company | <queue-list>                |
-   | queue           | test.md.company             |
-   | group           | Check Queues                |
-   | description     | Company Event must be fired |
-   | store           | event-company               |
+   | action          | value                                             |
+   |-----------------|---------------------------------------------------|
+   | runOnly:company | <queue-list>                                      |
+   | queue           | test.md.company                                   |
+   | group           | Check Queues                                      |
+   | description     | Company Event must be fired (from MD to external) |
+   | store           | event-company                                     |
+
+* RabbitMQ consume, continue
+
+   | action                   | value                                |
+   |--------------------------|--------------------------------------|
+   | runOnly:company-consumer | <queue-list>                         |
+   | queue                    | test.md.company-consumer             |
+   | group                    | Check Queues                         |
+   | description              | Company data are from external to MD |
+   | store                    | event-company-consumer               |
+
+* RabbitMQ consume, continue
+
+   | action                     | value                                      |
+   |----------------------------|--------------------------------------------|
+   | runOnly:company-onboarding | <queue-list>                               |
+   | queue                      | test.md.company-consumer                   |
+   | group                      | Check Queues                               |
+   | description                | Onboarding backend must fire Company event |
+   | store                      | event-company-onboarding                   |
+
+* RabbitMQ consume, continue
+
+   | action                  | value                                    |
+   |-------------------------|------------------------------------------|
+   | runOnly:fleet-event-bus | <queue-list>                             |
+   | queue                   | test.md.fleet_event_bus                  |
+   | group                   | Check Queues                             |
+   | description             | Portal is producer in case of Onboarding |
+   | store                   | event-fleet-event-bus                    |
 
 * RabbitMQ consume, continue
 
@@ -40,7 +70,7 @@
    | description     | Carrier Event must be fired |
    | store           | event-carrier               |
 
-* RabbitMQ consume
+* RabbitMQ consume, continue
   | action        | value                                                                         |
   |---------------|-------------------------------------------------------------------------------|
   | runOnly:error | <queue-list>                                                                  |
