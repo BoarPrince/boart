@@ -264,12 +264,10 @@ export class RestHttp {
         bearer_token?: string | null,
         headers?: Record<string, string> | null
     ): Promise<Response> {
-        throwIfNotOk(!!body, 'there is no body defined!');
-
         const info = this.addHeaderInfo(bearer_token, headers);
         return this.fetch(this.url, {
             method: method.toUpperCase(),
-            body: !!(body as DataContent).toJSON ? (body as DataContent).toJSON() : (body as string),
+            body: !!body && !!body['toJSON'] ? (body as DataContent).toJSON() : (body as string),
             headers: info.headers,
             mode: info.mode,
             referrerPolicy: info.referrerPolicy

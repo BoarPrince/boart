@@ -71,15 +71,17 @@ describe('check rest http', () => {
          *
          */
         it('check null parameter (put)', async () => {
+            fetchMock.doMock('xxx');
             const sut = new RestHttp('http://url');
-            try {
-                await sut.put('', null, null);
-            } catch (error) {
-                expect(error.message).toBe('there is no body defined!');
-                return;
-            }
 
-            throw Error('error must occur if no body is defined');
+            const response = await sut.put('', null, null);
+            const result = await response.text();
+
+            expect(result).toBe('xxx');
+            expect(fetchMock.mock.calls[0]).toEqual([
+                'http://url',
+                { body: '', headers: { 'Content-Type': 'application/json' }, method: 'PUT', mode: 'no-cors', referrerPolicy: 'unsafe-url' }
+            ]);
         });
 
         /**

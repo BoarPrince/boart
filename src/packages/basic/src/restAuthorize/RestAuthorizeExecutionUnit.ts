@@ -1,4 +1,4 @@
-import { ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@boart/core';
+import { ExecutionUnit, ObjectContent, Timer, UrlLoader } from '@boart/core';
 import { RowTypeValue } from '@boart/core-impl';
 import { RestHttp } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
