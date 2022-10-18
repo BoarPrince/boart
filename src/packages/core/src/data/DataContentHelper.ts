@@ -1,7 +1,9 @@
+import { PropertyIterable } from '../value/PropertyIterable';
+import { PropertyParser } from '../value/PropertyParser';
+
 import { ContentInstance } from './ContentInstance';
 import { ContentType } from './ContentType';
 import { DataContent } from './DataContent';
-import { DataContentObject } from './DataContentObject';
 import { DataType } from './DataType.enum';
 import { NativeContent } from './NativeContent';
 import { NullContent } from './NullContent';
@@ -112,13 +114,21 @@ export class DataContentHelper {
         if (!DataContentHelper.isContent(variable)) {
             return false;
         }
+        return DataContentHelper.toObject(variable) != null;
+    }
 
-        const contentVariable = variable as DataContent;
+    /**
+     *
+     */
+    public static toObject(variable: ContentType): DataContent {
+        const contentVariable = DataContentHelper.create(variable);
         if (typeof contentVariable.isObject !== 'function') {
-            return false;
+            return null;
+        } else if (contentVariable.isObject() === false) {
+            return null;
         }
 
-        return contentVariable.isObject();
+        return contentVariable;
     }
 
     /**
@@ -165,17 +175,6 @@ export class DataContentHelper {
     /**
      *
      */
-    private static getPathValue(property: string, value: ContentType, completePath: string) {
-        if (!Object.keys(value).includes(property)) {
-            DataContentHelper.throwRecursiveError(completePath, property);
-        } else {
-            return value[property];
-        }
-    }
-
-    /**
-     *
-     */
     private static throwRecursiveError(property: string, current: string) {
         throw Error(`getting "${property}" not possible, because "${current}" is not an object or an array`);
     }
@@ -183,33 +182,37 @@ export class DataContentHelper {
     /**
      *
      */
-    public static getByPath(key: string | string[], content?: DataContent | null): DataContent {
-        const keys = Array.isArray(key) ? key : DataContentHelper.splitKeys(key);
-        const completePath = keys.join('.');
-        const firstKey = keys.shift();
-
-        if (!DataContentHelper.isObject(content)) {
-            DataContentHelper.throwRecursiveError(completePath, firstKey);
+    public static getByPath(selector: string, value: DataContent, optional?: boolean): DataContent;
+    public static getByPath(properties: PropertyIterable, value: DataContent, optional?: boolean): DataContent;
+    public static getByPath(selectorOrProperties: string | PropertyIterable, value: DataContent, optional = false): DataContent {
+        if (typeof selectorOrProperties == 'string') {
+            selectorOrProperties = PropertyParser.parseProperty(selectorOrProperties);
         }
 
-        if (!Object.keys(content.getValue()).includes(firstKey)) {
-            DataContentHelper.throwRecursiveError(completePath, firstKey);
+        if (selectorOrProperties.length === 0) {
+            return value;
         }
 
-        let lastKey = firstKey;
-
-        const contentValue: ContentType = keys.reduce((value: ContentType, currentKey: string) => {
-            try {
-                if (!value) {
-                    DataContentHelper.throwRecursiveError(completePath, lastKey);
-                }
-
-                return DataContentHelper.getPathValue(currentKey, value, completePath);
-            } finally {
-                lastKey = currentKey;
+        let contentValue = value;
+        for (const property of selectorOrProperties) {
+            const propertyOptional = property.isOptional || optional;
+            const contentValueAsObject = contentValue?.asDataContentObject();
+            if (contentValueAsObject == null) {
+                DataContentHelper.throwRecursiveError(property.path, property.key);
             }
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        }, content.getValue()[firstKey]);
+
+            if (!propertyOptional && !Object.keys(contentValue.getValue()).includes(property.key)) {
+                DataContentHelper.throwRecursiveError(property.path, property.key);
+            }
+
+            const propertyValue = contentValueAsObject.get(property.key);
+            if (propertyValue == null && propertyOptional === true) {
+                contentValue = null;
+                break;
+            } else {
+                contentValue = DataContentHelper.create(propertyValue);
+            }
+        }
 
         return DataContentHelper.create(contentValue);
     }
@@ -217,43 +220,35 @@ export class DataContentHelper {
     /**
      *
      */
-    public static setByPath(selector: string | string[], value: ContentType, content: DataContent): DataContent {
-        /**
-         *
-         */
-        const getDataContentObject = (contentObject: DataContent): DataContentObject => {
-            if (!DataContentHelper.isObject(contentObject)) {
-                throw Error(`cannot set value to an '${ContentInstance[contentObject.type]}' value, selector: ${JSON.stringify(selector)}`);
-            }
-            return contentObject.asDataContentObject();
-        };
-
-        const keys = Array.isArray(selector) ? selector : DataContentHelper.splitKeys(selector);
-        const lastKey = keys.pop();
-
-        const parentContent = content || DataContentHelper.create({});
-        let currentContent = parentContent;
-
-        for (const currentKey of keys) {
-            const currentObjectContent = getDataContentObject(currentContent);
-            const nextValue = currentObjectContent.get(currentKey);
-            currentContent = DataContentHelper.create(nextValue || {});
-            currentObjectContent.set(currentKey, currentContent);
+    public static setByPath(selector: string, value: ContentType, content: DataContent): DataContent;
+    public static setByPath(properties: PropertyIterable, value: ContentType, content: DataContent): DataContent;
+    public static setByPath(selectorOrProperties: string | PropertyIterable, value: ContentType, content: DataContent): DataContent {
+        if (typeof selectorOrProperties == 'string') {
+            selectorOrProperties = PropertyParser.parseProperty(selectorOrProperties);
         }
 
-        const lastObjectContent = getDataContentObject(currentContent);
-        lastObjectContent.set(lastKey, DataContentHelper.create(value));
+        content = DataContentHelper.isNullOrUndefined(content) ? null : content;
+        let currentContent = (content = DataContentHelper.create(content || {}));
+        for (const property of selectorOrProperties.noLast()) {
+            if (!currentContent.asDataContentObject()) {
+                throw Error(
+                    `cannot set value to an '${ContentInstance[currentContent.type]}' value, selector: ${JSON.stringify(
+                        selectorOrProperties.path
+                    )}`
+                );
+            }
 
-        return parentContent;
-    }
+            const currentValue = currentContent.asDataContentObject().get(property.key);
+            if (currentValue == null) {
+                const emptyObject = DataContentHelper.create({});
+                currentContent.asDataContentObject().set(property.key, emptyObject);
+                currentContent = emptyObject;
+            } else {
+                currentContent = DataContentHelper.create(currentValue);
+            }
+        }
 
-    /**
-     *
-     */
-    public static splitKeys(key: string | null): string[] {
-        key = (key || '') //
-            .replace(/^\[(\d+)\]/g, '$1') // [0].x.x
-            .replace(/\[(\d+)\]/g, '.$1'); // x.x[0].x
-        return !key ? [] : key.split(/[#.]/);
+        currentContent.asDataContentObject().set(selectorOrProperties.last().key, DataContentHelper.create(value));
+        return content;
     }
 }

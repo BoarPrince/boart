@@ -141,13 +141,7 @@ describe('check store', () => {
     it('get deep structure from string value', () => {
         sut.put('a', 'b');
 
-        try {
-            sut.get('a.b.c');
-        } catch (error) {
-            expect(error.message).toBe('getting "a.b.c" not possible, because it\'s not an object or an array');
-            return;
-        }
-        fail('expection was not thrown');
+        expect(() => sut.get('a.b.c')).toThrowError('getting "a.b.c" not possible, because "b" is not an object or an array');
     });
 
     /**
@@ -166,8 +160,8 @@ describe('check store', () => {
      *
      */
     it('set object value', () => {
-        sut.put('a#b', new TextContent('hallo'));
-        expect(sut.get('a#b').toString()).toBe('hallo');
+        sut.put('a.b', new TextContent('hallo'));
+        expect(sut.get('a.b').toString()).toBe('hallo');
     });
 
     /**

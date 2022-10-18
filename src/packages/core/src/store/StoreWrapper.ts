@@ -3,6 +3,7 @@ import { DataContent } from '../data/DataContent';
 import { DataContentHelper } from '../data/DataContentHelper';
 import { ObjectContent } from '../data/ObjectContent';
 import { ScopeType } from '../types/ScopeType';
+import { PropertyParser } from '../value/PropertyParser';
 
 import { Store } from './Store';
 import { StoreMap } from './StoreMap';
@@ -64,20 +65,18 @@ export class StoreWrapper {
      *
      */
     put(key: string, value: ContentType) {
-        const keys = DataContentHelper.splitKeys(key);
-        if (keys.length === 0) {
+        const properties = PropertyParser.parseProperty(key);
+
+        if (properties.length === 0) {
             throw Error('name must be defined for saving value in storage');
         }
 
-        if (keys.length > 1) {
-            const firstKey = keys.shift();
-            const nativeContentValue = this.store.get(firstKey);
-            const contentValue =
-                nativeContentValue != null //
-                    ? DataContentHelper.create(this.store.get(firstKey))
-                    : new ObjectContent();
-            DataContentHelper.setByPath(keys, value, contentValue);
-            this.store.put(firstKey, contentValue);
+        if (properties.length > 1) {
+            const nativeContentValue = this.store.get(properties.first().key);
+            let contentValue = nativeContentValue != null ? DataContentHelper.create(nativeContentValue) : new ObjectContent();
+
+            contentValue = DataContentHelper.setByPath(properties.nofirst(), value, contentValue);
+            this.store.put(properties.first().key, contentValue);
         } else {
             const contentValue = DataContentHelper.create(value);
             this.store.put(key, contentValue);
@@ -88,31 +87,19 @@ export class StoreWrapper {
      *
      */
     get(key: string, optional = false): ContentType {
-        const keys = DataContentHelper.splitKeys(key);
-        if (keys.length === 0) {
+        const properties = PropertyParser.parseProperty(key);
+
+        if (properties.length === 0) {
             throw Error('name must be defined for getting value from storage');
         }
 
-        const firstKey = keys.shift();
-        const contentValue = this.store.get(firstKey);
-
+        const contentValue = this.store.get(properties.first().key);
         if (contentValue == null) {
             return null;
         }
 
-        if (keys.length > 0) {
-            try {
-                const dataContentValue = DataContentHelper.create(contentValue);
-                return DataContentHelper.getByPath(keys, dataContentValue);
-            } catch (error) {
-                if (optional === true) {
-                    return null;
-                }
-                throw Error(`getting "${key}" not possible, because it's not an object or an array`);
-            }
-        } else {
-            return contentValue;
-        }
+        const dataContentValue = DataContentHelper.create(contentValue);
+        return DataContentHelper.getByPath(properties.nofirst(), dataContentValue, optional);
     }
 
     /**

@@ -345,7 +345,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('create null value', () => {
+    it('create object value with null', () => {
         const value = DataContentHelper.create('{"a": null}');
         expect(DataContentHelper.isObject(value)).toBeTruthy();
     });
@@ -392,13 +392,6 @@ describe('check create DataContent', () => {
      */
     it('check non data object (object)', () => {
         expect(DataContentHelper.isObject({ getValue: true })).toBeFalsy();
-    });
-
-    /**
-     *
-     */
-    it('check split key with null', () => {
-        expect(DataContentHelper.splitKeys(null)).toEqual([]);
     });
 });
 
@@ -544,17 +537,6 @@ describe('deep getting', () => {
     /**
      *
      */
-    it('get deep property with array (starting with array and split as array)', () => {
-        const val = new ObjectContent(['a', ['b', { c: 7 }]]);
-        const propValue = DataContentHelper.getByPath(['1', '1', 'c'], val);
-
-        expect(propValue).toBeInstanceOf(NativeContent);
-        expect(propValue.toString()).toBe('7');
-    });
-
-    /**
-     *
-     */
     it('get deep property from string', () => {
         const val = new ObjectContent('a');
 
@@ -688,7 +670,7 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('a.b.c', data);
         } catch (error) {
-            expect(error.message).toBe('getting "a.b.c" not possible, because "b" is not an object or an array');
+            expect(error.message).toBe('getting "a.b.c" not possible, because "c" is not an object or an array');
             return;
         }
         fail('expection was not thrown');
@@ -810,28 +792,12 @@ describe('deep setting', () => {
     /**
      *
      */
-    it('set path by using an array', () => {
-        const sut_object = DataContentHelper.setByPath(['a', 'b'], 'c', new ObjectContent());
-        expect(sut_object.toJSON()).toBe('{"a":{"b":"c"}}');
-    });
-
-    /**
-     *
-     */
-    it('set path by using a null content', () => {
-        const sut_object = DataContentHelper.setByPath(['a', 'b'], 'c', null);
-        expect(sut_object.toJSON()).toBe('{"a":{"b":"c"}}');
-    });
-
-    /**
-     *
-     */
     it('try set deep structure to a none object', () => {
         const dataContent = DataContentHelper.setByPath('a', 'a', new ObjectContent({ a: { b: 'c' } }));
         try {
             DataContentHelper.setByPath('a#b#c', 'd', dataContent);
         } catch (error) {
-            expect(error.message).toBe('cannot set value to an \'Text\' value, selector: "a#b#c"');
+            expect(error.message).toBe('cannot set value to an \'Text\' value, selector: "a.b.c"');
             return;
         }
         fail('expection was not thrown');
