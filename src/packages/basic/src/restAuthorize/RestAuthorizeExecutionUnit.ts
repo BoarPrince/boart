@@ -17,7 +17,7 @@ export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeCo
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async execute(context: RestAuthorizeContext, _row: RowTypeValue<RestAuthorizeContext>): Promise<void> {
         const timer = new Timer();
-        const url = UrlLoader.instance.getAbsoluteUrl(context.config.url);
+        const url = UrlLoader.instance.url(context.config.url);
         const rest = new RestHttp(url);
 
         StepReport.instance.type = 'restAuthorize';

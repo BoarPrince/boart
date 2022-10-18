@@ -21,7 +21,7 @@ jest.mock('@boart/core', () => {
         ...originalModule,
         UrlLoader: class {
             static instance = {
-                getAbsoluteUrl: (url: string) => url
+                url: (url: string) => url
             };
         },
         EnvLoader: class {

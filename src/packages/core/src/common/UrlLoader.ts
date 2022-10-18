@@ -91,8 +91,17 @@ export class UrlLoader {
 
     /**
      *
+     * @param url
+     * @returns
      */
-    getAbsoluteUrl(url: string): string {
+    static url(url: string): string {
+        return UrlLoader.instance.url(url);
+    }
+
+    /**
+     *
+     */
+    url(url: string): string {
         if (
             !!url &&
             !url.startsWith('<') &&

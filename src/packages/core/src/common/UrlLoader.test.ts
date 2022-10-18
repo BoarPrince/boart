@@ -40,7 +40,7 @@ describe('check url loader', () => {
     it('check getAbsolutePath (leading slash)', () => {
         const sut = UrlLoader.instance;
 
-        const path = sut.getAbsoluteUrl('/api/a/b');
+        const path = sut.url('/api/a/b');
         expect(path).toBe('http://service-a/api/a/b');
     });
 
@@ -59,7 +59,7 @@ describe('check url loader', () => {
 
         const sut = UrlLoader.instance;
 
-        const path = sut.getAbsoluteUrl('/api/a/b');
+        const path = sut.url('/api/a/b');
         expect(path).toBe('http://host.docker.internal:8000/api/a/b');
     });
 
@@ -69,7 +69,7 @@ describe('check url loader', () => {
     it('check getAbsolutePath (no leading slash)', () => {
         const sut = UrlLoader.instance;
 
-        const path = sut.getAbsoluteUrl('api/a/b');
+        const path = sut.url('api/a/b');
         expect(path).toBe('http://service-a/api/a/b');
     });
 
@@ -88,10 +88,10 @@ describe('check url loader', () => {
 
         const sut = UrlLoader.instance;
 
-        let path = sut.getAbsoluteUrl('/api/a/b');
+        let path = sut.url('/api/a/b');
         expect(path).toBe('http://service-a/api/a/b');
 
-        path = sut.getAbsoluteUrl('/api/b/b');
+        path = sut.url('/api/b/b');
         expect(path).toBe('http://service-b/api/b/b');
     });
 
@@ -110,10 +110,10 @@ describe('check url loader', () => {
 
         const sut = UrlLoader.instance;
 
-        let path = sut.getAbsoluteUrl('/api/a/b');
+        let path = sut.url('/api/a/b');
         expect(path).toBe('http://service-a/api/a/b');
 
-        path = sut.getAbsoluteUrl('/api/b/b');
+        path = sut.url('/api/b/b');
         expect(path).toBe('http://service-b/api/b/b');
     });
 
@@ -132,10 +132,10 @@ describe('check url loader', () => {
 
         const sut = UrlLoader.instance;
 
-        let path = sut.getAbsoluteUrl('<a>/api/a/b');
+        let path = sut.url('<a>/api/a/b');
         expect(path).toBe('http://service-a/api/a/b');
 
-        path = sut.getAbsoluteUrl('<b>/api/b/b');
+        path = sut.url('<b>/api/b/b');
         expect(path).toBe('http://service-b/api/b/b');
     });
 
@@ -154,10 +154,10 @@ describe('check url loader', () => {
 
         const sut = UrlLoader.instance;
 
-        let path = sut.getAbsoluteUrl('<a>/api/a/b');
+        let path = sut.url('<a>/api/a/b');
         expect(path).toBe('http://service-a/api/a/b');
 
-        path = sut.getAbsoluteUrl('<b>/api/b/b');
+        path = sut.url('<b>/api/b/b');
         expect(path).toBe('http://service-b/api/b/b');
     });
 
@@ -169,7 +169,7 @@ describe('check url loader', () => {
 
         const sut = UrlLoader.instance;
 
-        const path = sut.getAbsoluteUrl('<a>/api/a/b');
+        const path = sut.url('<a>/api/a/b');
         expect(path).toBe('/api/a/b');
     });
 
@@ -203,7 +203,7 @@ describe('check url loader', () => {
 
         const sut = UrlLoader.instance;
 
-        const path = sut.getAbsoluteUrl('http://api/a/b');
+        const path = sut.url('http://api/a/b');
         expect(path).toBe('http://api/a/b');
     });
 
@@ -222,7 +222,7 @@ describe('check url loader', () => {
 
         const sut = UrlLoader.instance;
 
-        const path = sut.getAbsoluteUrl('<a>/api/a/b');
+        const path = sut.url('<a>/api/a/b');
         expect(path).toBe('http://service-a0/api/a/b');
     });
 
@@ -241,7 +241,7 @@ describe('check url loader', () => {
 
         const sut = UrlLoader.instance;
 
-        const path = sut.getAbsoluteUrl('<a>/api/a/b');
+        const path = sut.url('<a>/api/a/b');
         expect(path).toBe('http://service-a1/api/a/b');
     });
 });
