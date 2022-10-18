@@ -111,6 +111,16 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
 
     /**
      *
+     * @param value contains replacement expressions
+     *              like: ${store:var}
+     * @returns     replaced expression by it's value
+     */
+    public static replace(value: string): string {
+        return ValueReplacerHandler.instance.replace(value);
+    }
+
+    /**
+     *
      */
     public replace(value: string): string {
         // replace without null checking
