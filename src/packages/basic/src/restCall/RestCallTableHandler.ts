@@ -121,8 +121,13 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
             new RowDefinition({
                 key: Symbol('query'),
                 type: TableRowType.PreProcessing,
-                parameterType: ParaType.Optional,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'query'),
+                parameterType: ParaType.False,
+                selectorType: SelectorType.True,
+                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'query', {
+                    actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
+                        `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString() || ''}`,
+                    actionSelectorModifier: (rowValue: ContentType): ContentType => encodeURIComponent(rowValue.toString())
+                }),
                 validators: null
             })
         );

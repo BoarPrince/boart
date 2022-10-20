@@ -63,7 +63,8 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
     async execute(context: RestCallContext, _row: RowTypeValue<RestCallContext>): Promise<void> {
         //#region rest call executing
         const timer = new Timer();
-        const rest = new RestHttp(UrlLoader.instance.url(context.preExecution.method.url));
+        const query = context.preExecution.query;
+        const rest = new RestHttp(UrlLoader.instance.url(context.preExecution.method.url) + (!!query ? `?${query.toString()}` : ''));
 
         StepReport.instance.type = 'restCall';
 

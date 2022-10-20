@@ -211,6 +211,91 @@ describe('get', () => {
             ]
         ]);
     });
+
+    /**
+     *
+     */
+    it('one query parameter', async () => {
+        Store.instance.testStore.put('authorization', 't.o.k.e.n');
+
+        fetchMock.doMock(JSON.stringify({ b: 2 }));
+        const tableRows = MarkdownTableReader.convert(
+            `|action          |value       |
+             |----------------|------------|
+             | query#search   | aaa        |
+             | method:get     | http://xxx |`
+        );
+
+        await sut.handler.process(tableRows);
+        expect(fetchMock.mock.calls).toEqual([
+            [
+                'http://xxx?search=aaa',
+                {
+                    headers: { Authorization: 'Bearer t.o.k.e.n', 'Content-Type': 'application/json' },
+                    method: 'GET',
+                    mode: 'no-cors',
+                    referrerPolicy: 'unsafe-url'
+                }
+            ]
+        ]);
+    });
+
+    /**
+     *
+     */
+    it('two query parameter', async () => {
+        Store.instance.testStore.put('authorization', 't.o.k.e.n');
+
+        fetchMock.doMock(JSON.stringify({ b: 2 }));
+        const tableRows = MarkdownTableReader.convert(
+            `|action          |value       |
+             |----------------|------------|
+             | query#search   | aaa        |
+             | query#size     | 5          |
+             | method:get     | http://xxx |`
+        );
+
+        await sut.handler.process(tableRows);
+        expect(fetchMock.mock.calls).toEqual([
+            [
+                'http://xxx?search=aaa&size=5',
+                {
+                    headers: { Authorization: 'Bearer t.o.k.e.n', 'Content-Type': 'application/json' },
+                    method: 'GET',
+                    mode: 'no-cors',
+                    referrerPolicy: 'unsafe-url'
+                }
+            ]
+        ]);
+    });
+
+    /**
+     *
+     */
+    it('query parameter with special characater', async () => {
+        Store.instance.testStore.put('authorization', 't.o.k.e.n');
+
+        fetchMock.doMock(JSON.stringify({ b: 2 }));
+        const tableRows = MarkdownTableReader.convert(
+            `|action          |value       |
+             |----------------|------------|
+             | query#search   | ?&=#       |
+             | method:get     | http://xxx |`
+        );
+
+        await sut.handler.process(tableRows);
+        expect(fetchMock.mock.calls).toEqual([
+            [
+                'http://xxx?search=%3F%26%3D%23',
+                {
+                    headers: { Authorization: 'Bearer t.o.k.e.n', 'Content-Type': 'application/json' },
+                    method: 'GET',
+                    mode: 'no-cors',
+                    referrerPolicy: 'unsafe-url'
+                }
+            ]
+        ]);
+    });
 });
 
 /**
