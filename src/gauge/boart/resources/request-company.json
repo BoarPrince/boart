@@ -35,8 +35,8 @@
       "type": "BILLING"
     }
   ],
-  "companyName": "${generate:fake:company:name}",
+  "companyName": "${generate:s:fake:company:name}-${generate:s:random:4}",
   "documentStorageDirectoryName": "",
-  "jitPayId": "{generate:s:random:4}",
+  "jitPayId": "K${generate:s:random:4}",
   "legalForm": "GmbH_de"
 }

@@ -48,6 +48,7 @@
    | queue                      | test.md.company-consumer                   |
    | group                      | Check Queues                               |
    | description                | Onboarding backend must fire Company event |
+   | timeout                    | 120                                        |
    | store                      | event-company-onboarding                   |
 
 * RabbitMQ consume, continue

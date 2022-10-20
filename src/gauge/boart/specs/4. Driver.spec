@@ -166,12 +166,12 @@ tags: md-4.3
   driver shall not more have an associated vehicle
 * Rest call
 
-   |action                     |value                                  |
-   |---------------------------|---------------------------------------|
-   |method:get                 |/api/driver/${store:response-driver.id}|
-   |description                |Get Driver with associated Vehicle     |
-   |expected:header#status     |200                                    |
-   |--expected:empty#vehicleId?|${store:response-vehicle.id}           |
+   |action                   |value                                  |
+   |-------------------------|---------------------------------------|
+   |method:get               |/api/driver/${store:response-driver.id}|
+   |description              |Get Driver with associated Vehicle     |
+   |expected:header#status   |200                                    |
+   |expected:empty#vehicleId?|${store:response-vehicle.id}           |
 
   drivers list of the carrier must still have 2 drivers
 * Rest call

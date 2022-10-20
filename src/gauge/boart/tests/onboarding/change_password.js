@@ -22,10 +22,10 @@ step(
             });
 
         await openBrowser({
-            headless: true
+            headless: false
         });
 
-        await goto(`${url}/${company_id}?lang=en`);
+        await goto(`${url}/${company_id}?lang=en`, { navigationTimeout: 1200000 });
         await write(username, into(textBox({ id: 'username' })));
         await write(password, into(textBox({ id: 'password' })));
         await press('Enter');

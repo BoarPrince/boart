@@ -24,11 +24,11 @@ tags: ob-10.1
 
 * onboarding - update company
 
-* queues check "company-onboarding, error"
+* queues check "fleet-event-bus, company, company-onboarding, error"
 
 * onboarding - update bank
 
-* queues check "company-onboarding"
+* queues check "company, company-onboarding"
 
 * onboarding - update representative
 
@@ -37,3 +37,16 @@ tags: ob-10.1
 * onboarding - start video legimitation
 
 * queues check "company-consumer, company-onboarding, fleet-event-bus, error"
+
+## 1.2. Id's must match after onboarding
+
+tags: ob-10.2
+
+* Test description
+
+   |action     |value                                                                      |
+   |-----------|---------------------------------------------------------------------------|
+   |description|After Onboarding ID's must be the same for all backends, including keycloak|
+   |priority   |high                                                                       |
+
+* onboarding - complete

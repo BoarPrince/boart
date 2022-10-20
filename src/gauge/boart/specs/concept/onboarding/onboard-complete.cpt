@@ -1,0 +1,18 @@
+
+# onboarding - complete
+
+* onboarding - register
+
+* onboarding - change password "${store:response-register.companyId}", username: "${store:response-register.email}", password: "${store:response-register.password}", new-password: "${env:default_password}"
+
+* onboarding - request user bearer, username: "${store:response-register.email}", password: "${env:default_password}"
+
+* onboarding - update company
+
+* onboarding - update bank
+
+* onboarding - update representative
+
+* onboarding - accept contract and condition
+
+* onboarding - start video legimitation
