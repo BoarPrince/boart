@@ -8,6 +8,38 @@ import { StepReportItem } from '../report-item/StepReportitem';
 /**
  *
  */
+class DataDelegate {
+    /**
+     *
+     */
+    constructor(private instance: StepReport) {}
+
+    /**
+     * Add input data element to the protocol view
+     *
+     * @param description The description is shown as header in the protocol
+     * @param data        Below the header the data is shown
+     */
+    addInput(description: string, data: object | string): this {
+        this.instance.addInputItem(description, 'object', data);
+        return this;
+    }
+
+    /**
+     * Add response data element to the protocol view
+     *
+     * @param description The description is shown as header in the protocol
+     * @param data        Below the header the data is shown
+     */
+    addResult(description: string, data: object | string): this {
+        this.instance.addInputItem(description, 'object', data);
+        return this;
+    }
+}
+
+/**
+ *
+ */
 export class StepReport {
     private _type: string;
     private readonly resultItem = new Map<string, StepReportDataItem>();
@@ -74,6 +106,22 @@ export class StepReport {
         fs.writeFile(filename, data, 'utf-8', (writeErr) => {
             if (writeErr) return console.log(writeErr);
         });
+    }
+
+    /**
+     * Each test step can be present in the protocol view. Therefore it is needed to define
+     * a description which is shown in the protocol for the step.
+     *
+     * @param description It's the header element of the presented test protocol item.
+     * @param group       The group can group similar test protocol items as child items.
+     *                    A group is defined, if more than one item has the same group.
+     */
+    public static report(description: string, group?: string): DataDelegate {
+        Runtime.instance.stepRuntime.current.descriptions.push(description);
+        if (!!group) {
+            Runtime.instance.stepRuntime.current.group = group;
+        }
+        return new DataDelegate(StepReport.instance);
     }
 
     /**
