@@ -229,10 +229,11 @@ export class RabbitQueueHandler {
 
         const connection = await this.getConnection();
         const channel = await this.createChannel(connection);
-        await channel.checkQueue(queueName);
 
         // add amqplib specific error handling
         connection.on('error', (error) => rejecter(error));
+
+        await channel.checkQueue(queueName);
 
         /**
          *
