@@ -24,7 +24,7 @@ tags: ob-10.1
 
 * onboarding - update company
 
-* queues check "fleet-event-bus, company, company-onboarding, error"
+* queues check "fleet-event-bus, company-consumer, company, company-onboarding, error"
 
 * onboarding - update bank
 
@@ -50,3 +50,38 @@ tags: ob-10.2
    |priority   |high                                                                       |
 
 * onboarding - complete
+
+## 1.3. Id's must match after onboarding event when debtor already exists (tax - match)
+
+tags: ob-10.3
+
+* Test description
+
+   |action     |value                                                                      |
+   |-----------|---------------------------------------------------------------------------|
+   |description|After Onboarding ID's must be the same for all backends, including keycloak|
+   |           |Debtor with same taxId already exists                                      |
+   |           |In this case the companyId of the existing Debtor must be used             |
+   |priority   |high                                                                       |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                            |
+   |----------------------|---------------------------------|
+   |method:post           |<portal>/api/company             |
+   |payload               |<file:request-portal-debtor.json>|
+   |description           |Create a Debtor                  |
+   |expected:header#status|201                              |
+   |store#taxNumber       |company.taxId                    |
+   |store#name            |company.name                     |
+   |store#taxNumber       |debtor.taxId                     |
+   |store#id              |debtor.id                        |
+
+* queues bind "company-consumer, error"
+
+* onboarding - complete
+
+* queues check "company-consumer, error"
+

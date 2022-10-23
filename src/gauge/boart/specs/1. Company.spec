@@ -220,3 +220,63 @@ tags: company-create-event, md-1-9
    |in                             |${store:event-company}|
    |expected:not:empty#createDate  |                      |
    |expected:not:empty#modifiedDate|                      |
+
+## 1.7. Check queue event, cascading creation with queue (creationDate, modifiedDate)
+
+tags: company-create-cascading-queue-event, md-1.7
+
+* Test description
+
+   |action     |value                                                                             |
+   |-----------|----------------------------------------------------------------------------------|
+   |description|Check event when creating a company (creationDate and modifiedDate cannot be null)|
+   |           |carrier and user event must be triggered too                                      |
+   |           |even keycloak/identity event                                                      |
+   |priority   |medium                                                                            |
+
+* queues bind "company, carrier, user, identity"
+
+* request admin bearer
+
+* Rest call
+
+   |action                         |value                                                         |
+   |-------------------------------|--------------------------------------------------------------|
+   |method:post                    |/api/company                                                  |
+   |payload                        |<file:request-company.json>                                   |
+   |payload#carriers[0]            |<file:request-carrier.json>                                   |
+   |payload#carriers[0].id         |undefined                                                     |
+   |payload#carriers[0].users[0]   |<file:request-user.json>                                      |
+   |payload#carriers[0].users[0].id|undefined                                                     |
+   |description                    |Create a cascaded Company request (including Carrier and users|
+   |expected:header#status         |200                                                           |
+   |store                          |response-company                                              |
+
+* queues check "company, carrier, user, identity"
+
+* Data manage
+
+   |action                          |value                                                 |
+   |--------------------------------|------------------------------------------------------|
+   |in                              |${store:event-company}                                |
+   |description                     |Company event must contain createDate and modifiedDate|
+   |                                |Carrier and User must also be included                |
+   |expected:not:empty#createDate   |                                                      |
+   |expected:not:empty#modifiedDate |                                                      |
+   |expected:count#carriers         |1                                                     |
+   |expected:count#carriers[0].users|1                                                     |
+
+* get user claims, username: "${store:response-company.carriers[0].users[0].email}", password: "${env:default_password}"
+
+* Data manage
+
+   |action               |value                                                                                                           |
+   |---------------------|----------------------------------------------------------------------------------------------------------------|
+   |in                   |${store:response_claims}                                                                                        |
+   |description          |Claims must contain the correct Id's                                                                            |
+   |                     |CompanyId, SubsidiaryId, UserId                                                                                 |
+   |expected#companyName |${store:response-company.companyName}                                                                           |
+   |expected#companyId   |${store:response-company.id}                                                                                    |
+   |expected#userId      |${store:response-company.carriers[0].users[0].id}                                                               |
+   |expected#subsidiaryId|${store:response-company.carriers[0].id}                                                                        |
+   |expected#name        |${store:response-company.carriers[0].users[0].firstname} ${store:response-company.carriers[0].users[0].lastname}|

@@ -5,7 +5,7 @@
       |--------------|-------------|
       | in#companyId | <companyId> |
       | in#name      | ssss        |
-      | store        | request     |
+      | store        | request |
 
 * Rest call
       | action                 | value                       |

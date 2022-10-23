@@ -1,13 +1,13 @@
 # queues bind <queue-list>
 
 * RabbitMQ bind
-  | action          | value              |
-  |-----------------|--------------------|
-  | runOnly:company | <queue-list>       |
-  | exchange        | company            |
-  | queue           | test.md.company    |
-  | description     | Bind company queue |
-  | group           | Bind Queues        |
+  | action          | value                 |
+  |-----------------|-----------------------|
+  | runOnly:company | <queue-list>          |
+  | exchange        | company               |
+  | queue           | test.md.company       |
+  | description     | Bind md company queue |
+  | group           | Bind Queues           |
 
 * RabbitMQ bind
   | action                   | value                               |
@@ -24,7 +24,7 @@
   |----------------------------|---------------------------------------------|
   | runOnly:company-onboarding | <queue-list>                                |
   | exchange                   | com.jitpay.company.onboarding               |
-  | queue                      | test.md.company-consumer                    |
+  | queue                      | test.ob.company                             |
   | routing                    | CompanionServices.RoutingKey                |
   | routing                    | JitpayServicesSync.RoutingKey               |
   | description                | Bind company queue (Onboarding is producer) |
@@ -62,10 +62,20 @@
   |-------------------------|-----------------------------------|
   | runOnly:fleet-event-bus | <queue-list>                      |
   | exchange                | fleet_event_bus                   |
-  | queue                   | test.md.fleet_event_bus                    |
+  | queue                   | test.md.fleet_event_bus           |
   | routing                 | OnBoardingFleetEvent              |
   | description             | Portal is producer for Onboarding |
   | group                   | Bind Queues                       |
+
+* RabbitMQ bind
+  | action           | value                        |
+  |------------------|------------------------------|
+  | runOnly:identity | <queue-list>                 |
+  | exchange         | Identity.Exchange.MasterData |
+  | queue            | test.md.identity             |
+  | routing          | Identity.UserSync            |
+  | description      | Bind identity/keycloak queue |
+  | group            | Bind Queues                  |
 
 * RabbitMQ bind
   | action        | value                                                   |

@@ -11,7 +11,7 @@
   "workStatus": "REST",
   "firstname": "${generate:t:fake:name:firstName}",
   "lastname": "${generate:t:fake:name:lastName}",
-  "carrierId": "${store:response-carrier.id}",
+  "carrierId": "${store:response-ca.id}",
   "phoneNumber": [
     {
       "description": "Created for testing",

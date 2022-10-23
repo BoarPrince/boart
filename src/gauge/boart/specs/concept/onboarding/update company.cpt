@@ -24,43 +24,43 @@
 
 * Rest call
 
-      | action                 | value                                                |
-      |------------------------|------------------------------------------------------|
-      | method:put             | <ob>/new-api/company/update                          |
-      | description            | Update onboarding company                            |
-      | group                  | Update Company                                       |
-      | payload                | {                                                    |
-      |                        | "id": "${store:response-register.companyId}",        |
-      |                        | "name": "${generate:fake:company:name}",             |
-      |                        | "legalForm": "GmbH_de",                              |
-      |                        | "vatId": null,                                       |
-      |                        | "taxId": "${generate:g:random:8}",                   |
-      |                        | "truckAmount": 0,                                    |
-      |                        | "address": {                                         |
-      |                        | "id": "${store:response-register.addressId}",        |
-      |                        | "companyId": "${store:response-register.companyId}", |
-      |                        | "street": "${generate:fake:address:street}",         |
-      |                        | "zipCode": "${generate:fake:address:zipCode}",       |
-      |                        | "city": "${generate:fake:address:city}",             |
-      |                        | "countryCode": "DE",                                 |
-      |                        | "timocomId": null                                    |
-      |                        | },                                                   |
-      |                        | "contactPerson": {                                   |
-      |                        | "id": "${store:response-register.contactPersonId}",  |
-      |                        | "firstName": "${generate:t:fake:name:firstName}",    |
-      |                        | "lastName": "${generate:t:fake:name:lastName}",      |
-      |                        | "email": "${store:response-register#email}",         |
-      |                        | "telephoneNumber": {                                 |
-      |                        | "country": "49",                                     |
-      |                        | "number": "1743284130"                               |
-      |                        | },                                                   |
-      |                        | "companyId": "${store:response-register.companyId}"  |
-      |                        | },                                                   |
-      |                        | "state": "CREATED",                                  |
-      |                        | "referer": "LANDING_PAGE",                           |
-      |                        | "target": "JITPAY"                                   |
-      |                        | }                                                    |
-      | expected:header#status | 200                                                  |
+      | action                 | value                                                             |
+      |------------------------|-------------------------------------------------------------------|
+      | method:put             | <ob>/new-api/company/update                                       |
+      | description            | Update onboarding company                                         |
+      | group                  | Update Company                                                    |
+      | payload                | {                                                                 |
+      |                        | "id": "${store:response-register.companyId}",                     |
+      |                        | "name": "${store:t:company.name:-${generate:fake:company:name}}", |
+      |                        | "legalForm": "GmbH_de",                                           |
+      |                        | "vatId": null,                                                    |
+      |                        | "taxId": "${store:t:company.taxId:-${generate:g:random:8}}",      |
+      |                        | "truckAmount": 0,                                                 |
+      |                        | "address": {                                                      |
+      |                        | "id": "${store:response-register.addressId}",                     |
+      |                        | "companyId": "${store:response-register.companyId}",              |
+      |                        | "street": "${generate:fake:address:street}",                      |
+      |                        | "zipCode": "${generate:fake:address:zipCode}",                    |
+      |                        | "city": "${generate:fake:address:city}",                          |
+      |                        | "countryCode": "DE",                                              |
+      |                        | "timocomId": null                                                 |
+      |                        | },                                                                |
+      |                        | "contactPerson": {                                                |
+      |                        | "id": "${store:response-register.contactPersonId}",               |
+      |                        | "firstName": "${generate:t:fake:name:firstName}",                 |
+      |                        | "lastName": "${generate:t:fake:name:lastName}",                   |
+      |                        | "email": "${store:response-register#email}",                      |
+      |                        | "telephoneNumber": {                                              |
+      |                        | "country": "49",                                                  |
+      |                        | "number": "1743284130"                                            |
+      |                        | },                                                                |
+      |                        | "companyId": "${store:response-register.companyId}"               |
+      |                        | },                                                                |
+      |                        | "state": "CREATED",                                               |
+      |                        | "referer": "LANDING_PAGE",                                        |
+      |                        | "target": "JITPAY"                                                |
+      |                        | }                                                                 |
+      | expected:header#status | 200                                                               |
 
 Update step - company update
 

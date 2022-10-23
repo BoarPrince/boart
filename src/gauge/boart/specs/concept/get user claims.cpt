@@ -1,0 +1,16 @@
+# get user claims, username: <username>, password: <password>
+
+* Rest authorize
+
+    | action      | value                                          |
+    |-------------|------------------------------------------------|
+    | url         | /token                                         |
+    | grantType   | password                                       |
+    | description | Get bearer token for onboarding user           |
+    | scope       | openid app_api jitpay.role email roles profile |
+    | clientId    | jitpay_portal_angular_application_client       |
+    | username    | <username>                                     |
+    | password    | <password>                                     |
+    | retry:count | 2                                              |
+    | store       | _token_bearer_                                 |
+    | store:data  | response_claims                                |

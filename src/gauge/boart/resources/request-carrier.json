@@ -1,7 +1,7 @@
 {
   "id": "${generate:uuid}",
-  "carrierName": "${store:request#name}",
-  "companyId": "${store:request#companyId}",
+  "carrierName": "${store:request#name:-${generate:s:fake:company:name}-${generate:s:random:4}}",
+  "companyId": "${store:request#companyId:-undefined}",
   "currency": "EUR",
   "preferredCardIssuer": "NONE",
   "maximumCards": 100,
@@ -35,5 +35,7 @@
       "favorite": false
     }
   ],
-  "users": []
+  "users": [],
+  "drivers": [],
+  "vehicles": []
 }

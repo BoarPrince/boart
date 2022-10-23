@@ -45,7 +45,7 @@
    | action                     | value                                      |
    |----------------------------|--------------------------------------------|
    | runOnly:company-onboarding | <queue-list>                               |
-   | queue                      | test.md.company-consumer                   |
+   | queue                      | test.ob.company                            |
    | group                      | Check Queues                               |
    | description                | Onboarding backend must fire Company event |
    | timeout                    | 120                                        |
@@ -72,6 +72,17 @@
    | store           | event-carrier               |
 
 * RabbitMQ consume, continue
+
+   | action           | value                        |
+   |------------------|------------------------------|
+   | runOnly:identity | <queue-list>                 |
+   | queue            | test.md.identity             |
+   | group            | Check Queues                 |
+   | description      | Identity Event must be fired |
+   | store            | event-identity               |
+
+* RabbitMQ consume, continue
+
   | action        | value                                                                         |
   |---------------|-------------------------------------------------------------------------------|
   | runOnly:error | <queue-list>                                                                  |

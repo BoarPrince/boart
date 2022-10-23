@@ -2,8 +2,8 @@
   "id": "${generate:uuid}",
   "email": "jitpaytest+ob${generate:s:random:4}@gmail.com",
   "username": "jitpaytest+ob${generate:s:random:4}@gmail.com",
-  "password": "p-a-s-s-w-o-r-d",
-  "passwordHint": "p-a-s-s-w-o-r-d",
+  "password": "${env:default_password}",
+  "passwordHint": "${env:default_password}",
   "phoneNumbers": [
     {
       "id": "${generate:uuid}",
@@ -22,7 +22,7 @@
   "source": "Onboarding",
   "locale": "de",
   "carrierIds": [
-    "${store:response-carrier#id}"
+    "${store:response-ca#id:-undefined}"
   ],
   "roles": [],
   "createDate": "2022-09-20T15:37:06.4+02:00",

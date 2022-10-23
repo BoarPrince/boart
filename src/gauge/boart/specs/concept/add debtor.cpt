@@ -1,0 +1,12 @@
+
+# add debtor
+
+* Rest call
+      | action                 | value                             |
+      |------------------------|-----------------------------------|
+      | method:post            | <portal>/api/company              |
+      | payload                | <file:request-portal-debtor.json> |
+      | description            | Create a Debtor                   |
+      | --group                | Initial Create                    |
+      | expected:header#status | 201                               |
+      | store                  | response-debtor                   |

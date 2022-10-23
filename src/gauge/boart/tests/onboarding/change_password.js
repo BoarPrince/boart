@@ -22,7 +22,7 @@ step(
             });
 
         await openBrowser({
-            headless: false
+            headless: true
         });
 
         await goto(`${url}/${company_id}?lang=en`, { navigationTimeout: 1200000 });

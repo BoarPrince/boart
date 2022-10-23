@@ -1,0 +1,50 @@
+{
+  "name": "${generate:s:fake:company:name}-${generate:s:random:4}",
+  "nameAddition": "Einzelunternehmer",
+  "vatId": null,
+  "taxNumber": "${generate:s:random:10}",
+  "commercialRegisterNumber": "HRB 12222",
+  "registryCourt": "Amtsgericht Braunschweig",
+  "homePage": "",
+  "originPlatform": "",
+  "salesManager": "",
+  "score": 123,
+  "riskQuota": 2,
+  "financialDataSource": "KYCnow",
+  "trafficLightState": "UNKNOWN",
+  "jitpayRating": 3,
+  "addresses": [
+    {
+      "id": "",
+      "street": "${generate:fake:address:street}",
+      "zipCode": "${generate:fake:address:zipCode}",
+      "city": "${generate:fake:address:city}",
+      "countryCode": "DE",
+      "subsidiaryIdentifier": "",
+      "type": "MASTER",
+      "contactPersonDto": {
+        "id": "",
+        "firstName": "${generate:t:fake:name:firstName}",
+        "lastName": "${generate:t:fake:name:lastName}",
+        "email": "jitpaytest+debtor${generate:t:random:4}@gmail.com",
+        "telephoneNumber": "+491743284130"
+      },
+      "markForDeletion": false
+    }
+  ],
+  "debtor": {
+    "insuranceId": "",
+    "factoringFee": 1,
+    "prohibitionOfAssignment": false,
+    "active": true,
+    "statusRemark": "",
+    "agreedToFactoringAt": null,
+    "lawCountryCode": "DE",
+    "vibanNumber": "",
+    "platforms": [
+      {
+        "id": "2700edf4-d4da-4b85-93c3-4f6714182da0"
+      }
+    ]
+  }
+}

@@ -115,12 +115,12 @@ tags: md-4.3
   read all drivers associated to the carrier
 * Rest call
 
-   |action                |value                                           |
-   |----------------------|------------------------------------------------|
-   |method:get            |/api/driver/carrier/${store:response-carrier.id}|
-   |description           |Get all Drivers of the carrier                  |
-   |expected:header#status|200                                             |
-   |expected:count#content|2                                               |
+   |action                |value                                      |
+   |----------------------|-------------------------------------------|
+   |method:get            |/api/driver/carrier/${store:response-ca.id}|
+   |description           |Get all Drivers of the carrier             |
+   |expected:header#status|200                                        |
+   |expected:count#content|2                                          |
 
 * add vehicle
 
@@ -149,7 +149,7 @@ tags: md-4.3
 
    |action                |value                                                |
    |----------------------|-----------------------------------------------------|
-   |method:get            |/api/driver/carrier/${store:response-carrier.id}     |
+   |method:get            |/api/driver/carrier/${store:response-ca.id}          |
    |description           |Get all Drivers of the carrier (must still 2 drivers)|
    |expected:header#status|200                                                  |
    |expected:count#content|2                                                    |
@@ -178,7 +178,7 @@ tags: md-4.3
 
    |action                |value                                                |
    |----------------------|-----------------------------------------------------|
-   |method:get            |/api/driver/carrier/${store:response-carrier.id}     |
+   |method:get            |/api/driver/carrier/${store:response-ca.id}          |
    |description           |Get all Drivers of the carrier (must still 2 drivers)|
    |expected:header#status|200                                                  |
    |expected:count#content|2                                                    |

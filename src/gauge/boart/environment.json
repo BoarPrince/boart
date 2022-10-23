@@ -50,6 +50,10 @@
     "<ob>/smart-onboarding": [
       "https://cloud.dev.jitpay.eu",
       "https://cloud.stage.jitpay.eu"
+    ],
+    "<portal>/api": [
+      "https://portal-services.dev.jitpay.eu",
+      "https://portal-services.stage.jitpay.eu"
     ]
   }
 }
