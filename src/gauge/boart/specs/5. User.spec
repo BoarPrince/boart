@@ -278,3 +278,62 @@ tags: md-5.6
    |expected:count#carrierIds   |2                                           |
    |expected:contains#carrierIds|${store:response-ca.id}                     |
    |expected:contains#carrierIds|${store:response-ca2.id}                    |
+
+## 1.7. Try add User with legitimationStatus = NONE
+
+tags: md-5.7
+
+* Test description
+
+   |action     |value                                                |
+   |-----------|-----------------------------------------------------|
+   |description|User cannot have legitimation Status NONE (only None)|
+   |priority   |high                                                 |
+
+* request admin bearer
+
+* add company and carrier
+
+* Rest call
+
+   |action                    |value                               |
+   |--------------------------|------------------------------------|
+   |method:post               |/api/user                           |
+   |description               |Tray add an User (LegiStatus = NONE)|
+   |payload                   |<file:request-user.json>            |
+   |payload#legitimationStatus|NONE                                |
+   |expected:header#status    |400                                 |
+
+## 1.8. Add User with legitimationStatus = None
+
+tags: md-5.8
+
+* Test description
+
+   |action     |value                                                    |
+   |-----------|---------------------------------------------------------|
+   |description|Add User with LegitimationStatus None and read user again|
+   |priority   |high                                                     |
+
+* request admin bearer
+
+* add company and carrier
+
+* Rest call
+
+   |action                    |value                          |
+   |--------------------------|-------------------------------|
+   |method:post               |/api/user                      |
+   |description               |Add an User (LegiStatus = None)|
+   |payload                   |<file:request-user.json>       |
+   |payload#legitimationStatus|None                           |
+   |expected:header#status    |200                            |
+   |store                     |response-user                  |
+
+* Rest call
+
+   |action                |value                              |
+   |----------------------|-----------------------------------|
+   |method:get            |/api/user/${store:response-user#id}|
+   |description           |Read user again                    |
+   |expected:header#status|200                                |
