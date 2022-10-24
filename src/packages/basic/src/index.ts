@@ -25,6 +25,7 @@ import RabbitConsumeTableHandler from './rabbitConsume/RabbitConsumeTableHandler
 import RabbitPublishTableHandler from './rabbitPublish/RabbitPublishTableHandler';
 import RestAuthorizeTableHandler from './restAuthorize/RestAuthorizeTableHandler';
 import RestCallTableHandler from './restCall/RestCallTableHandler';
+import SQLQueryTableHandler from './sqlQuery/SQLQueryTableHandler';
 import TestDescriptionTableHandler from './testDescription/TestDescriptionTableHandler';
 
 export {
@@ -36,7 +37,8 @@ export {
     RestAuthorizeTableHandler,
     RestCallTableHandler,
     TestDescriptionTableHandler,
-    DataTableHandler
+    DataTableHandler,
+    SQLQueryTableHandler
 };
 
 /**

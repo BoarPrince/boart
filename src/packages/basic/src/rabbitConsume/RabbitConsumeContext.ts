@@ -4,16 +4,6 @@ import { DataExecutionContext } from '@boart/core-impl';
 /**
  *
  */
-export interface RabbitConsumeDataExecutionContext extends DataExecutionContext {
-    filter: {
-        data: DataContent | null;
-        header: DataContent | null;
-    };
-}
-
-/**
- *
- */
 export interface RabbitConsumeConfigContext {
     queue: string;
     timeout: number;
@@ -24,6 +14,16 @@ export interface RabbitConsumeConfigContext {
     hostname: string;
     port: number;
     vhost: string;
+}
+
+/**
+ *
+ */
+export interface RabbitConsumeDataExecutionContext extends DataExecutionContext {
+    filter: {
+        data: DataContent | null;
+        header: DataContent | null;
+    };
 }
 
 /**

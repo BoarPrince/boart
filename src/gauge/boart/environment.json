@@ -18,6 +18,21 @@
       "jitpay",
       "guest"
     ],
+    "mssql_hostname": [
+      "192.168.50.194",
+      "192.168.50.42",
+      "localhost"
+    ],
+    "mssql_username": [
+      "Jitpay",
+      "Jitpay",
+      "guest"
+    ],
+    "mssql_password": [
+      "21Tauri#A",
+      "21Tauri#A",
+      "guest"
+    ],
     "onboarding_url": [
       "https://new-onboarding-services.dev.jitpay.eu",
       "https://new-onboarding-services.stage.jitpay.eu"

@@ -8,7 +8,8 @@ const {
     RabbitBindTableHandler,
     RabbitPublishTableHandler,
     RabbitConsumeTableHandler,
-    DataTableHandler
+    DataTableHandler,
+    SQLQueryTableHandler
 } = require('@boart/basic');
 const { Store, Runtime, RuntimeStatus } = require('@boart/core');
 
@@ -164,6 +165,18 @@ step('RabbitMQ consume <table>', async (table) => {
 
 step('RabbitMQ consume, continue <table>', { continueOnFailure: true }, async (table) => {
     await rabbitConsumeTableHandler.handler.process(table);
+});
+
+/**
+ *
+ */
+const sqlQueryTableHandler = new SQLQueryTableHandler();
+step('SQL query <table>', async (table) => {
+    await sqlQueryTableHandler.handler.process(table);
+});
+
+step('SQL query, continue <table>', { continueOnFailure: true }, async (table) => {
+    await sqlQueryTableHandler.handler.process(table);
 });
 
 /**
