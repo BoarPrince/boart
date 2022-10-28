@@ -2,45 +2,115 @@
 
 tags: env-all, onboarding, ob-10
 
-## 1.1. Register a new Company
+## 1.1. Send Onboarding Events manually
 
 tags: ob-10.1
 
 * Test description
 
-   |action     |value                 |
-   |-----------|----------------------|
-   |description|Register a new Company|
-   |           |and.....              |
-   |priority   |high                  |
+   |action     |value                              |
+   |-----------|-----------------------------------|
+   |description|Send Onboarding Event to Masterdata|
+   |priority   |high                               |
 
-* queues bind "company, company-consumer, company-onboarding, fleet-event-bus, error"
+* queues bind "company, user"
 
-* onboarding - register
+* RabbitMQ publish
 
-* onboarding - change password "${store:response-register.companyId}", username: "${store:response-register.email}", password: "${store:response-register.password}", new-password: "${env:default_password}"
+   |action        |value                                 |
+   |--------------|--------------------------------------|
+   |description   |Send onboarding event manually        |
+   |exchange      |com.jitpay.company.onboarding         |
+   |routing       |JitpayServicesSync.RoutingKey         |
+   |routing       |company-onboarding-data-sync-to-portal|
+   |payload       |<file:event-onboarding.json>          |
+   |wait:after:sec|4                                     |
 
-* onboarding - request user bearer, username: "${store:response-register.email}", password: "${env:default_password}"
+* RabbitMQ publish
 
-* onboarding - update company
+   |action        |value                                |
+   |--------------|-------------------------------------|
+   |description   |Send portal onboarding event manually|
+   |exchange      |fleet_event_bus                      |
+   |wait:after:sec|4                                    |
+   |routing       |OnBoardingFleetEvent                 |
+   |payload       |<file:event-portal-onboarding.json>  |
 
-* queues check "fleet-event-bus, company-consumer, company, company-onboarding, error"
+* queues check "company, user"
 
-* onboarding - update bank
+* Data manage
 
-* queues check "company, company-onboarding"
+   |action                                   |value                                             |
+   |-----------------------------------------|--------------------------------------------------|
+   |in                                       |${store:event-company}                            |
+   |description                              |Check Masterdata -> External Event                |
+   |                                         |And check that the user contains the correct roles|
+   |expected:count#carriers[0].users[0].roles|2                                                 |
+   |expected#carriers[0].users[0].roles      |["CarrierAdmin","CustomerAdmin"]                  |
 
-* onboarding - update representative
+* request admin bearer
 
-* onboarding - accept contract and condition
+* Rest call
 
-* onboarding - start video legimitation
+   |action                                   |value                                             |
+   |-----------------------------------------|--------------------------------------------------|
+   |method:get                               |/api/company/${store:ob-companyId}                |
+   |description                              |Request onboarded company                         |
+   |                                         |And check that the user contains the correct roles|
+   |expected:header#status                   |200                                               |
+   |expected:count#carriers[0].users[0].roles|2                                                 |
+   |expected#carriers[0].users[0].roles      |["CarrierAdmin","CustomerAdmin"]                  |
 
-* queues check "company-consumer, company-onboarding, fleet-event-bus, error"
-
-## 1.2. Id's must match after onboarding
+## 1.2. Send Onboarding Events manually and check id's
 
 tags: ob-10.2
+
+* Test description
+
+   |action     |value                                                      |
+   |-----------|-----------------------------------------------------------|
+   |description|Send Onboarding Event to Masterdata manually and check id's|
+   |priority   |high                                                       |
+
+* queues bind "user, company, carrier, company-onboarding, fleet-event-bus, identity, fleet-error, md-error"
+
+* RabbitMQ publish
+
+   |action        |value                                                |
+   |--------------|-----------------------------------------------------|
+   |description   |Send event to identity to create the user on keycload|
+   |exchange      |Identity.Exchange                                    |
+   |routing       |Identity.UserSync                                    |
+   |payload       |<file:event-identity.json>                           |
+   |wait:after:sec|4                                                    |
+
+* RabbitMQ publish
+
+   |action        |value                         |
+   |--------------|------------------------------|
+   |description   |Send onboarding event manually|
+   |exchange      |com.jitpay.company.onboarding |
+   |wait:after:sec|2                             |
+   |routing       |JitpayServicesSync.RoutingKey |
+   |payload       |<file:event-onboarding.json>  |
+
+* RabbitMQ publish
+
+   |action        |value                                |
+   |--------------|-------------------------------------|
+   |description   |Send portal onboarding event manually|
+   |exchange      |fleet_event_bus                      |
+   |wait:after:sec|4                                    |
+   |routing       |OnBoardingFleetEvent                 |
+   |payload       |<file:event-portal-onboarding.json>  |
+
+* queues check "user, company, carrier, company-onboarding, fleet-event-bus, identity, fleet-error, md-error"
+
+* onboarding - check matching ids, email: "${store:ob-email}", group: "check IDs", wait: "0", not: "portal"
+
+## 1.3. Id's must match after onboarding
+
+tags: ob-10.3
 
 * Test description
 
@@ -49,11 +119,20 @@ tags: ob-10.2
    |description|After Onboarding ID's must be the same for all backends, including keycloak|
    |priority   |high                                                                       |
 
+* queues bind "user, company, carrier, company-onboarding, fleet-event-bus, identity, fleet-error, md-error"
+
 * onboarding - complete
 
-## 1.3. Id's must match after onboarding event when debtor already exists (tax - match)
+* queues check "user, company, carrier, company-onboarding, fleet-event-bus, identity, fleet-error, md-error", min: "1", max: "10"
 
-tags: ob-10.3
+* onboarding - check matching ids, email: "${store:response-register.email}", group: "check IDs", wait: "0", not: ""
+comment * onboarding - check matching ids, email: "${store:response-register.email}", group: "check IDs second time after 10 seconds", wait: "10"
+
+comment * onboarding - check matching ids, email: "jitpaytest+onb39492@gmail.com", group: "check IDs", wait: "0"
+
+## 1.4. Id's must match after onboarding event when debtor already exists (tax - match)
+
+tags: ob-10.4
 
 * Test description
 
@@ -79,9 +158,9 @@ tags: ob-10.3
    |store#taxNumber       |debtor.taxId                     |
    |store#id              |debtor.id                        |
 
-* queues bind "company-consumer, error"
+* queues bind "company-consumer, fleet-error, md-error"
 
 * onboarding - complete
 
-* queues check "company-consumer, error"
+* queues check "company-consumer, fleet-error, md-error"
 

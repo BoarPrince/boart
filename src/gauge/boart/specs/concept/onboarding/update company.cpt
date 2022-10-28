@@ -82,3 +82,4 @@ Update step - company update
       |                        | "id": "${store:response-register.onboardingId}"      |
       |                        | }                                                    |
       | expected:header#status | 200                                                  |
+      | wait:after:sec         | 5                                                                                             |

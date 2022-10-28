@@ -1,0 +1,39 @@
+{
+  "companyDto": {
+    "id": "${store:ob-companyId:=${generate:uuid}}",
+    "name": "${store:ob-companyName:=${generate:s:fake:company:name}-${generate:s:random:4}}",
+    "state": "CREATED",
+    "referer": "LANDING_PAGE",
+    "target": "JITPAY",
+    "legalForm": "GmbH_de",
+    "vatId": null,
+    "truckAmount": 0,
+    "taxId": "${generate:random:8}"
+  },
+  "addressDto": {
+    "id": "${store:ob-carrierId:=${generate:uuid}}",
+    "companyId": "${store:ob-companyId}",
+    "street": "${generate:t:fake:address:street}",
+    "zipCode": "${generatet::fake:address:zipCode}",
+    "city": "${generate:t:fake:address:city}",
+    "countryCode": "DE",
+    "timocomId": null
+  },
+  "contactDto": {
+    "id": "${generate:uuid}",
+    "firstName": "${generate:t:fake:name:firstName}",
+    "lastName": "${generate:t:fake:name:lastName}",
+    "email": "${store:ob-email:=jitpaytest+ob${generate:t:random:4}@gmail.com}",
+    "telephoneNumber": {
+      "country": "49",
+      "number": "1743284130"
+    },
+    "companyId": "${store:ob-companyId}"
+  },
+  "userDetail": {
+    "id": "${store:ob-userId:=${generate:uuid}}",
+    "companyId": "${store:ob-companyId}",
+    "email": "${store:ob-email}",
+    "languageCode": "en"
+  }
+}

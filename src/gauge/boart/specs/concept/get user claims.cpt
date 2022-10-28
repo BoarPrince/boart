@@ -6,7 +6,8 @@
     |-------------|------------------------------------------------|
     | url         | /token                                         |
     | grantType   | password                                       |
-    | description | Get bearer token for onboarding user           |
+    | description | Get bearer token for user                     |
+    |             | <username>                                     |
     | scope       | openid app_api jitpay.role email roles profile |
     | clientId    | jitpay_portal_angular_application_client       |
     | username    | <username>                                     |

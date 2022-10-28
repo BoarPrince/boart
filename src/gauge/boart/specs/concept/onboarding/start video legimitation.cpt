@@ -1,7 +1,7 @@
 
 # onboarding - start video legimitation
 
-* Rest call
+* Rest call, continue
 
      | action                 | value                                                                  |
      |------------------------|------------------------------------------------------------------------|
@@ -19,7 +19,7 @@
      |                        | }                                                                      |
      | expected:header#status | 200                                                                    |
 
-* Rest call
+* Rest call, continue
 
      | action                 | value                                                                  |
      |------------------------|------------------------------------------------------------------------|

@@ -35,3 +35,4 @@
       |                        | "representativesFixed": false                        |
       |                        | }                                                    |
       | expected:header#status | 200                                                  |
+      | wait:after:sec         | 5                                                                                             |

@@ -1,0 +1,164 @@
+# onboarding - check matching ids, email: <email>, group: <group>, wait: <wait>, not: <not-list>
+
+* Rest authorize
+
+    | action      | value                                          |
+    |-------------|------------------------------------------------|
+    | description | Get claims of user                             |
+    |             | <email>                                        |
+    | group       | <group>                                        |
+    | url         | /token                                         |
+    | grantType   | password                                       |
+    | scope       | openid app_api jitpay.role email roles profile |
+    | clientId    | jitpay_portal_angular_application_client       |
+    | username    | <email>                                        |
+    | password    | ${env:default_password}                        |
+    | retry:count | 2                                              |
+    | store       | _token_bearer_                                 |
+    | store:data  | response_claims                                |
+
+* Data manage
+
+   | action         | value                                 |
+   |----------------|---------------------------------------|
+   | description    | Exptected IDs                         |
+   | group          | <group>                               |
+   | wait:before    | <wait>                                |
+   | in#email       | <email>                               |
+   | in#companyId   | ${store:response_claims.companyId}    |
+   | in#companyName | ${store:response_claims.companyName}  |
+   | in#carrierId   | ${store:response_claims.subsidiaryId} |
+   | in#userId      | ${store:response_claims.userId}       |
+   | store          | idPara                                |
+
+@     @                                   @@@@@@
+@@   @@   @@    @@@@  @@@@@ @@@@@@ @@@@@  @     @   @@   @@@@@   @@
+@ @ @ @  @  @  @        @   @      @    @ @     @  @  @    @    @  @
+@  @  @ @    @  @@@@    @   @@@@@  @    @ @     @ @    @   @   @    @
+@     @ @@@@@@      @   @   @      @@@@@  @     @ @@@@@@   @   @@@@@@
+@     @ @    @ @    @   @   @      @   @  @     @ @    @   @   @    @
+@     @ @    @  @@@@    @   @@@@@@ @    @ @@@@@@  @    @   @   @    @
+
+* SQL query, continue
+
+   | action               | value                                       |
+   |----------------------|---------------------------------------------|
+   | description          | Check Masterdata Database                   |
+   | group                | <group>                                     |
+   | database             | masterdata                                  |
+   | query                | SELECT                                      |
+   |                      | trim(md_u.username) AS email                |
+   |                      | , md_c.id AS carrierId                      |
+   |                      | , md_c.carrier_name AS carrierName          |
+   |                      | , md_c.deleted AS carrierDeleted            |
+   |                      | , md_co.id AS companyId                     |
+   |                      | , md_co.company_name AS companyName         |
+   |                      | , md_co.deleted AS companyDeleted           |
+   |                      | , md_u.id  AS userId                        |
+   |                      | FROM useraccount md_u                       |
+   |                      | LEFT OUTER JOIN useraccount_carriers md_u_c |
+   |                      | ON md_u.id = md_u_c.user_id                 |
+   |                      | LEFT OUTER JOIN carrier md_c                |
+   |                      | ON md_u_c.carriers_id = md_c.id             |
+   |                      | LEFT OUTER JOIN company md_co               |
+   |                      | ON md_c.company_id = md_co.id               |
+   |                      | WHERE md_u.EMAIL = '${store:idPara.email}'  |
+   | expected:header#rows | 1                                           |
+   | expected#carrierId   | ${store:idPara.carrierId}                   |
+   | expected#companyId   | ${store:idPara.companyId}                   |
+   | expected#userId      | ${store:idPara.userId}                      |
+
+@@@@@@@
+@       @      @@@@@@ @@@@@@ @@@@@
+@       @      @      @        @
+@@@@@   @      @@@@@  @@@@@    @
+@       @      @      @        @
+@       @      @      @        @
+@       @@@@@@ @@@@@@ @@@@@@   @
+
+* SQL query, continue
+
+   | action               | value                                            |
+   |----------------------|--------------------------------------------------|
+   | description          | Check Fleet Database                             |
+   | group                | <group>                                          |
+   | database             | Jitfleet                                         |
+   | query                | SELECT                                           |
+   |                      | TRIM(u.EMAIL) AS email                           |
+   |                      | , co.JITPAY_ID AS jitpayId                       |
+   |                      | , co.Name AS companyName                         |
+   |                      | , LOWER(CAST(ca.id AS VARCHAR(38))) AS carrierId |
+   |                      | , LOWER(CAST(co.id AS VARCHAR(38))) AS companyId |
+   |                      | , LOWER(CAST(u.id AS VARCHAR(38))) AS userId     |
+   |                      | FROM Fleet_User u                                |
+   |                      | LEFT OUTER JOIN Company co                       |
+   |                      | ON u.Company_id = co.id                          |
+   |                      | LEFT OUTER JOIN Driver d                         |
+   |                      | ON u.id = d.user_id                              |
+   |                      | LEFT OUTER JOIN Subsidiary ca                    |
+   |                      | ON co.id = ca.company_id                         |
+   |                      | Where u.EMAIL = '${store:idPara.email}'          |
+   | expected:header#rows | 1                                                |
+   | expected#carrierId   | ${store:idPara.carrierId}                        |
+   | expected#companyId   | ${store:idPara.companyId}                        |
+   | expected#userId      | ${store:idPara.userId}                           |
+
+@@@@@@@
+@       @    @ @@@@@@ @
+@       @    @ @      @
+@@@@@   @    @ @@@@@  @
+@       @    @ @      @
+@       @    @ @      @
+@        @@@@  @@@@@@ @@@@@@
+
+* SQL query, continue
+
+   | action               | value                                              |
+   |----------------------|----------------------------------------------------|
+   | description          | Check Fuel Database                                |
+   | group                | <group>                                            |
+   | database             | JitCash                                            |
+   | query                | SELECT                                             |
+   |                      | ca.external_id AS carrierId                        |
+   |                      | , ca.deleted AS isDeleted                          |
+   |                      | , ca.carrier_name AS carrierName                   |
+   |                      | FROM carrier ca                                    |
+   |                      | Where ca.external_id = '${store:idPara.carrierId}' |
+   | expected:header#rows | 1                                                  |
+   | expected#carrierId   | ${store:idPara.carrierId}                          |
+   | expected#carrierName | ${store:idPara.companyName}                        |
+   | expected#isDeleted   | false                                              |
+
+@@@@@@
+@     @  @@@@  @@@@@  @@@@@   @@   @
+@     @ @    @ @    @   @    @  @  @
+@@@@@@  @    @ @    @   @   @    @ @
+@       @    @ @@@@@    @   @@@@@@ @
+@       @    @ @   @    @   @    @ @
+@        @@@@  @    @   @   @    @ @@@@@@
+
+* SQL query, continue
+
+| action               | value                                                                                                                          |
+|----------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| description          | Check Portal Database                                                                                                          |
+| group                | <group>                                                                                                                        |
+| run:not:portal       | <not-list>                                                                                                                     |
+| database             | portal                                                                                                                         |
+| query                | SELECT                                                                                                                         |
+|                      | LOWER(STUFF(STUFF(STUFF(STUFF(CONVERT(VARCHAR(33), co.id, 2), 9, 0, '-'), 14, 0, '-'), 19, 0, '-'), 24, 0, '-')) as companyId  |
+|                      | , LOWER(STUFF(STUFF(STUFF(STUFF(CONVERT(VARCHAR(33), a.id, 2), 9, 0, '-'), 14, 0, '-'), 19, 0, '-'), 24, 0, '-')) as carrierId |
+|                      | , LOWER(STUFF(STUFF(STUFF(STUFF(CONVERT(VARCHAR(33), u.id, 2), 9, 0, '-'), 14, 0, '-'), 19, 0, '-'), 24, 0, '-')) as userId    |
+|                      | , co.name as companyName                                                                                                       |
+|                      | , u.email as email                                                                                                             |
+|                      | FROM company co                                                                                                                |
+|                      | INNER JOIN dbo.[user] u                                                                                                        |
+|                      | ON u.company_id = co.id                                                                                                        |
+|                      | LEFT OUTER JOIN [address] a                                                                                                    |
+|                      | ON a.company_id = co.id                                                                                                        |
+|                      | AND a.type = 'MASTER'                                                                                                          |
+|                      | WHERE u.email = '${store:idPara.email}'                                                                                        |
+| expected:header#rows | 1                                                                                                                              |
+| --expected#carrierId | ${store:idPara.carrierId}                                                                                                      |
+| expected#companyId   | ${store:idPara.companyId}                                                                                                      |
+| --expected#userId    | ${store:idPara.userId}                                                                                                         |

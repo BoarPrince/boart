@@ -56,3 +56,4 @@
       | group                  | Update Representative                                                                         |
       | payload                | {}                                                                                            |
       | expected:header#status | 200                                                                                           |
+      | wait:after:sec         | 5                                                                                             |

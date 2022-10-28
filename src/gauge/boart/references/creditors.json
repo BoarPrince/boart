@@ -1,0 +1,4496 @@
+[
+    {
+        "name": "ABC-Logistik GmbH Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "40221",
+        "city": "Düsseldorf-Hafen",
+        "street": "Cuxhavener Straße 4"
+    },
+    {
+        "name": "Accelerator AS",
+        "country_iso2": "NO",
+        "country_de": "Norwegen",
+        "zip": "2013",
+        "city": "Skjetten",
+        "street": "Lehaugmoveien 81"
+    },
+    {
+        "name": "Agotrans Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "63110",
+        "city": "Rodgau/Nieder-Roden",
+        "street": "Behringstr. 1"
+    },
+    {
+        "name": "Albert Craiss GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "75417",
+        "city": "Mühlacker",
+        "street": "Vetterstrasse 35"
+    },
+    {
+        "name": "Alfred Renn GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "78730",
+        "city": "Lauterbach",
+        "street": "Pfarrer-Sieger-Str. 30"
+    },
+    {
+        "name": "Alfred Schuon GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "72221",
+        "city": "Haiterbach",
+        "street": "Bühlwiesenweg 15"
+    },
+    {
+        "name": "All Road International GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "53253",
+        "city": "Düren",
+        "street": "Willi-Bleicher-Straße 17"
+    },
+    {
+        "name": "AllTime Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "79576",
+        "city": "Weil am Rhein",
+        "street": "Lustgartenstrasse 103"
+    },
+    {
+        "name": "Amm GmbH & Co KG Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "90451",
+        "city": "Nürnberg",
+        "street": "Hamburger Str. 99"
+    },
+    {
+        "name": "amm logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "95176",
+        "city": "Konradsreuth",
+        "street": "Silberbacher Strasse 19"
+    },
+    {
+        "name": "Andreas Schmid Internationale Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86368",
+        "city": "Gersthofen",
+        "street": "Andreas-Schmid-Str. 1"
+    },
+    {
+        "name": "Anzenberger Spedition Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85764",
+        "city": "Oberschließheim",
+        "street": "Sonnenstraße 7"
+    },
+    {
+        "name": "Arco Spedizioni S.p.A.",
+        "country_iso2": "IT",
+        "country_de": "Italien",
+        "zip": "20900",
+        "city": "Monza",
+        "street": "Via Lorenzetti 15"
+    },
+    {
+        "name": "Artur Möller GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "46562",
+        "city": "Voerde",
+        "street": "Böskenstrasse 44"
+    },
+    {
+        "name": "AT Termintransport-Service GmbH",
+        "country_iso2": "AT",
+        "country_de": "Österreich",
+        "zip": "6341",
+        "city": "Ebs",
+        "street": "Kleinfeld 10a"
+    },
+    {
+        "name": "ATEGE Int. Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "60314",
+        "city": "Frankfur",
+        "street": "Carl-Benz-Str. 11"
+    },
+    {
+        "name": "ATL Autotransport- und Logistik GmbH Chemnitz",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "09337",
+        "city": "Hohenstein-Ernstthal",
+        "street": "Landgraben 3"
+    },
+    {
+        "name": "ATLOC Roider GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "84166",
+        "city": "Adlkofen",
+        "street": "Ziegelbreite 2"
+    },
+    {
+        "name": "Auge Transporte + Logistik GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "18299",
+        "city": "Laage/OT Krotizkow",
+        "street": "Gewerbestraße 14/15"
+    },
+    {
+        "name": "AXAS Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "17126",
+        "city": "Jarmen",
+        "street": "Anklamer Straße 10"
+    },
+    {
+        "name": "Axthelm + Zufall GmbH & Co. KG Internationale Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "99428",
+        "city": "Nohra",
+        "street": "Österholzstr. 14"
+    },
+    {
+        "name": "B & H Spedition GmbH & Co. KG Logistik",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "99880",
+        "city": "Fröttstädt",
+        "street": "Am Bahnhof 6a"
+    },
+    {
+        "name": "B + S GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33829",
+        "city": "Bergholzhausen",
+        "street": "Am Teuto 12"
+    },
+    {
+        "name": "b.m.k. Spedition und Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "67551",
+        "city": "Worms",
+        "street": "Dieselstraße 51"
+    },
+    {
+        "name": "Baam Transporte + Lagerung",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "76189",
+        "city": "Karlsruhe",
+        "street": "Durmersheimer Str. 190a"
+    },
+    {
+        "name": "Barleber Speditionsgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "39179",
+        "city": "Barleben",
+        "street": "Im Hasenwinkel 18"
+    },
+    {
+        "name": "barth Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "72393",
+        "city": "Burladingen",
+        "street": "Gammertinger Str. 36 - 40"
+    },
+    {
+        "name": "Bauer Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "09337",
+        "city": "Callenberg",
+        "street": "Altenburger Str. 28a"
+    },
+    {
+        "name": "Baumann Spedition Mochau GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "04720",
+        "city": "Döbeln-Großsteinbach",
+        "street": "Am Fuchsloch 1"
+    },
+    {
+        "name": "Bayer u. Sohn Speditions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "54293",
+        "city": "Trier-Ehrang",
+        "street": "Auf dem Adler 24"
+    },
+    {
+        "name": "Bayern Express Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85748",
+        "city": "Garching bei München",
+        "street": "Münchner Straße 92"
+    },
+    {
+        "name": "BBS-Speditions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "60314",
+        "city": "Frankfurt/Main",
+        "street": "Riederhofstraße 14"
+    },
+    {
+        "name": "Beck Spedition + Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "70794",
+        "city": "Filderstadt",
+        "street": "Raiffeisenstr. 27 -29"
+    },
+    {
+        "name": "Beeger Internationale Stückgut Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "26689",
+        "city": "Apen/Augustfehn",
+        "street": "Tiegelstr. 3"
+    },
+    {
+        "name": "Beeger Logistik & Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "28857",
+        "city": "Syke",
+        "street": "Rudolf-Diesel-Str.  9 - 11"
+    },
+    {
+        "name": "Bekker Transporte & Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "46446",
+        "city": "Emmerich am Rhein",
+        "street": "Stadtweide 17"
+    },
+    {
+        "name": "Bellen Transporte International",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "46395",
+        "city": "Bocholt",
+        "street": "Harderhook 37"
+    },
+    {
+        "name": "Bellen Transporte International e.K. Standort Krefeld",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "47809",
+        "city": "Krefeld",
+        "street": "Kreuzweg 60"
+    },
+    {
+        "name": "Bellen Transporte, Spedition & Logistik",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "46325",
+        "city": "Borken",
+        "street": "Ramsdorfer Postweg 12a"
+    },
+    {
+        "name": "Bente jun. Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "31224",
+        "city": "Peine",
+        "street": "Woltorfer Straße 114"
+    },
+    {
+        "name": "Berghegger Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49565",
+        "city": "Bramsche",
+        "street": "Igels Sand 10"
+    },
+    {
+        "name": "Bergmann GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "42369",
+        "city": "Wuppertal",
+        "street": "Otto-Hahn-Str. 21"
+    },
+    {
+        "name": "Bermel Spedition & Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "56424",
+        "city": "Ebernhahn",
+        "street": "Sälzerstraße 2"
+    },
+    {
+        "name": "Bernhard Messing GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "48653",
+        "city": "Coesfeld",
+        "street": "Erlenweg 144 - 146"
+    },
+    {
+        "name": "BHS Spedition und Logistik GmbH Internationale Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "28197",
+        "city": "Bremen",
+        "street": "Ludwig-Erhard-Str. 38"
+    },
+    {
+        "name": "Bischoff International GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "95119",
+        "city": "Naila (Hof)",
+        "street": "Am Kalkofen 4"
+    },
+    {
+        "name": "BKV Logistik GmbH + Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "76287",
+        "city": "Rheinstetten",
+        "street": "Herrenalber Str. 7"
+    },
+    {
+        "name": "Bliestal Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "66440",
+        "city": "Blieskastel",
+        "street": "Im großen Gunterstal 24"
+    },
+    {
+        "name": "BM Spedition und Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "44894",
+        "city": "Bochum",
+        "street": "Lütgendortmunder Hellweg 207 - 209"
+    },
+    {
+        "name": "Böhls & Behncke Internationale Spedition oHG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "23554",
+        "city": "Lübeck",
+        "street": "Karlstr. 7"
+    },
+    {
+        "name": "Bombeck Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "46240",
+        "city": "Bottrop",
+        "street": "Industriestr. 26"
+    },
+    {
+        "name": "Bonilog Gesellschaft für optimierte Logistik mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "75179",
+        "city": "Pforzheim",
+        "street": "Freiburger Straße 9"
+    },
+    {
+        "name": "Borchers Borken GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "46325",
+        "city": "Borken",
+        "street": "Ahauser Str. 25"
+    },
+    {
+        "name": "Borne Logistik und Speditionsgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "54311",
+        "city": "Trierweiler",
+        "street": "Im Keitelsberg 8"
+    },
+    {
+        "name": "Bruhn Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "23554",
+        "city": "Lübeck",
+        "street": "Karlstr. 14"
+    },
+    {
+        "name": "BTG D.O.O Spedicija in Logistika",
+        "country_iso2": "SI",
+        "country_de": "Slowenien",
+        "zip": "2341",
+        "city": "Limbus",
+        "street": "Limbuska cesta 2"
+    },
+    {
+        "name": "BTG Feldberg & Sohn GmbH & Co.",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "46395",
+        "city": "Bocholt - Industriepark Süd",
+        "street": "Wüppings Weide 1"
+    },
+    {
+        "name": "BTG Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86462",
+        "city": "Langweid/Foret",
+        "street": "Parkstraße 35"
+    },
+    {
+        "name": "BTK Befrachtungs- und Transportkontor GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "83026",
+        "city": "Rosenheim",
+        "street": "Dr. Steinbeißer Straße 2"
+    },
+    {
+        "name": "Busse Logistik GmbH & Co. KG Int. Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "34260",
+        "city": "Kaufungen",
+        "street": "Leipziger Straße 61"
+    },
+    {
+        "name": "C.E. Noerpel GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "89079",
+        "city": "Ulm",
+        "street": "Ernst-Abbe Str. 22"
+    },
+    {
+        "name": "Cargo Lloyd International GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "47559",
+        "city": "Kranenburg",
+        "street": "Frassalter Weg 22"
+    },
+    {
+        "name": "Cargo Service Nord GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "25346",
+        "city": "Uetersen",
+        "street": "Große Twiete 92"
+    },
+    {
+        "name": "cargo-partner GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85399",
+        "city": "Hallbergmoos",
+        "street": "Zeppelinstraße 1"
+    },
+    {
+        "name": "Cargotrans GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "44388",
+        "city": "Dortmund",
+        "street": "Lütgendortmunder Hellweg 242"
+    },
+    {
+        "name": "Carl Köster & Louis Hapke GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "31319",
+        "city": "Sehnde",
+        "street": "Hannoversche Str. 27"
+    },
+    {
+        "name": "Carl-Friedrich Eppler GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "72458",
+        "city": "Albstadt",
+        "street": "Olgastr. 82"
+    },
+    {
+        "name": "CFL logistics S.A. Terminal Intermodal",
+        "country_iso2": "LU",
+        "country_de": "Luxemburg",
+        "zip": "3434",
+        "city": "Dudelange",
+        "street": "Eurohub Sud"
+    },
+    {
+        "name": "Christian Carstensen GmbH & CO. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "24976",
+        "city": "Handewitt",
+        "street": "Am Güterbahnhof 2"
+    },
+    {
+        "name": "CLI Contract GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "28197",
+        "city": "Bremen",
+        "street": "Fran-Stickan-Str. 4"
+    },
+    {
+        "name": "Clipper Logistics KG (GmbH & Co.)",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "95213",
+        "city": "Münchberg",
+        "street": "Steinweg 2"
+    },
+    {
+        "name": "Critzmann Logistic Services GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "14547",
+        "city": "Zauchwitz",
+        "street": "Trebbiner Straße 89"
+    },
+    {
+        "name": "CTL Cargo Trans Logistik AG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "34576",
+        "city": "Homberg",
+        "street": "Ludwig-Erhard-Straße 15"
+    },
+    {
+        "name": "CTS Group",
+        "country_iso2": "NL",
+        "country_de": "Niederland",
+        "zip": "02153",
+        "city": "Niuew-Vennep",
+        "street": "Schillingweg 50"
+    },
+    {
+        "name": "D. Sofsky Transporte e.K.",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "66989",
+        "city": "Hohfrösche",
+        "street": "Gewerbepark 13"
+    },
+    {
+        "name": "D+S logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "96465",
+        "city": "Reichenbach",
+        "street": "Luisenstraße 1"
+    },
+    {
+        "name": "De Graaf logistics bs",
+        "country_iso2": "NL",
+        "country_de": "Niederland",
+        "zip": "4906",
+        "city": "Oosterhoud",
+        "street": "Logistiekweg 18"
+    },
+    {
+        "name": "De Rooy Transport",
+        "country_iso2": "NL",
+        "country_de": "Niederland",
+        "zip": "3997",
+        "city": "MK t Goys (Houten)",
+        "street": "Beusichemseweg 58"
+    },
+    {
+        "name": "Decker & Co. Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "77855",
+        "city": "Achern",
+        "street": "Von-Drais-Straße 26"
+    },
+    {
+        "name": "Decker B.V.",
+        "country_iso2": "NL",
+        "country_de": "Niederland",
+        "zip": "5902",
+        "city": "GR",
+        "street": "Venlo"
+    },
+    {
+        "name": "DEFRU Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "47167",
+        "city": "Duisburg",
+        "street": "Kopernikusstr. 43"
+    },
+    {
+        "name": "DEFRU Logistik Sachsen GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "08371",
+        "city": "Glauchau",
+        "street": "Boschstr. 4"
+    },
+    {
+        "name": "Delamode Balkans d.o.o.",
+        "country_iso2": "RS",
+        "country_de": "Russland",
+        "zip": "11000",
+        "city": "Belgrade",
+        "street": "Bul. Mihajla Pupina 115"
+    },
+    {
+        "name": "Delamode Baltics UAB",
+        "country_iso2": "LT",
+        "country_de": "Litauen",
+        "zip": "03150",
+        "city": "Vilnius",
+        "street": "Eigliu str. 2"
+    },
+    {
+        "name": "Delamode Estonia OÜ",
+        "country_iso2": "EE",
+        "country_de": "Estland",
+        "zip": "53101",
+        "city": "Tallinn",
+        "street": "Laki 14a"
+    },
+    {
+        "name": "Delamode Macedonia dooel",
+        "country_iso2": "MK",
+        "country_de": "Mazedonien",
+        "zip": "1000",
+        "city": "Skopje",
+        "street": "Naum Naumovski Borce 50/2-17"
+    },
+    {
+        "name": "Delamode Romania s.r.l.",
+        "country_iso2": "RO",
+        "country_de": "Rumänien",
+        "zip": "061327",
+        "city": "Bucharest",
+        "street": "Timosoara Blvd. 111 - 115"
+    },
+    {
+        "name": "Delamode Romania s.r.l.",
+        "country_iso2": "RO",
+        "country_de": "Rumänien",
+        "zip": "417075",
+        "city": "Oradea/Jud. Bihor",
+        "street": "Sat Santion 343/C Comuna Bors"
+    },
+    {
+        "name": "delog Hüttemann GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "47226",
+        "city": "Duisburg",
+        "street": "Friedrich-Ebert-Straße 22"
+    },
+    {
+        "name": "Deutsche Transport-Compagnie",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "90451",
+        "city": "Nürnberg",
+        "street": "Donaustr. 126"
+    },
+    {
+        "name": "DiALOG AG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "71522",
+        "city": "Backnang",
+        "street": "Spinnerei 48"
+    },
+    {
+        "name": "Diebel Speditions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "34123",
+        "city": "Kassel",
+        "street": "Falderbaumstr. 31"
+    },
+    {
+        "name": "Dietrich Gass oHG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "42349",
+        "city": "Wuppertal",
+        "street": "Hauptstr. 60a"
+    },
+    {
+        "name": "Dirk Battefeld Spedition & Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "42489",
+        "city": "Wuelfrath",
+        "street": "Dieselstr. 78"
+    },
+    {
+        "name": "dls Land und See Speditionsges. mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "22962",
+        "city": "Siek",
+        "street": "Jacobsrade 1"
+    },
+    {
+        "name": "Döderlein Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86720",
+        "city": "Nördlingen",
+        "street": "Oettinger Straße 2"
+    },
+    {
+        "name": "Donau-Speditions-Gesellschaft Kiessling mbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "93128",
+        "city": "Regenstauf",
+        "street": "Gutenbergstr. 15"
+    },
+    {
+        "name": "Dresdner Transport Service Kentner Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "01099",
+        "city": "Dresden",
+        "street": "Magazinstraße 9-11"
+    },
+    {
+        "name": "Dröder Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "36093",
+        "city": "Künzell",
+        "street": "Haunestraße 1"
+    },
+    {
+        "name": "DSV Road GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "28195",
+        "city": "Bremen",
+        "street": "Schlachte 15 - 18"
+    },
+    {
+        "name": "Duwensee Spedition & Lagerhaus GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "63150",
+        "city": "Heusenstamm",
+        "street": "Weiskircher Weg 16"
+    },
+    {
+        "name": "Eberl - Internationale Spedition GmbH und Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "83365",
+        "city": "Aiging bei Traunstein",
+        "street": "Gewerbestraße 1"
+    },
+    {
+        "name": "Ebrex Deutschland GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "45881",
+        "city": "Gelsenkirchen",
+        "street": "Wiesmannstr. 56"
+    },
+    {
+        "name": "ECU Worldwide (Germany) GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "20097",
+        "city": "Hamburg",
+        "street": "Hammerbrookstraße 47b"
+    },
+    {
+        "name": "Edgar Rothermel Intern. Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "76684",
+        "city": "Östringen",
+        "street": "Industriestraße 2"
+    },
+    {
+        "name": "Edinger Transport GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33415",
+        "city": "Verl",
+        "street": "Kapellenweg 69"
+    },
+    {
+        "name": "egetra GmbH Internationale Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "41334",
+        "city": "Nettetal",
+        "street": "Herrenpfad-Süd 40"
+    },
+    {
+        "name": "Ehrhardt Logistik UG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "74632",
+        "city": "Neuenstein",
+        "street": "Felix-Wankel-Str. 6"
+    },
+    {
+        "name": "ELM GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "56626",
+        "city": "Andernach",
+        "street": "Buchenstr. 13"
+    },
+    {
+        "name": "Elsen Holding GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "54516",
+        "city": "Wittlich",
+        "street": "Justus-von-Liebig-Straße 2"
+    },
+    {
+        "name": "Emons Allgäu GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "51105",
+        "city": "Köln",
+        "street": "Poll-Vingster Straße 107 a"
+    },
+    {
+        "name": "Emons Augsburg GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86405",
+        "city": "Meitingen-Herbertshofen",
+        "street": "Deutzring 4"
+    },
+    {
+        "name": "Emons Spedice s.r.o.",
+        "country_iso2": "CZ",
+        "country_de": "Tschechien",
+        "zip": "32222",
+        "city": "Pilsen",
+        "street": "Chebská 78/23"
+    },
+    {
+        "name": "Emons Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "26683",
+        "city": "Saterland-Struecklingen",
+        "street": "Bürgermeister-Schroeer-Straße 7"
+    },
+    {
+        "name": "Engemann u. CO. Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "40721",
+        "city": "Hilden",
+        "street": "Otto-Hahn-Str. 29"
+    },
+    {
+        "name": "ERA Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "70806",
+        "city": "Kornwestheim",
+        "street": "Friedenstr. 6 - 10"
+    },
+    {
+        "name": "Erich Weiss Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "42579",
+        "city": "Heiligenhaus",
+        "street": "Humboldstr. 1 - 3"
+    },
+    {
+        "name": "Eurosped EOOD",
+        "country_iso2": "BG",
+        "country_de": "Bulgarien",
+        "zip": "1592",
+        "city": "Sofia",
+        "street": "bul. Christopher Columbus 56"
+    },
+    {
+        "name": "F.A. Kruse jun. Transportverwaltungsgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "25541",
+        "city": "Brunsbüttel",
+        "street": "Fährstr. 49"
+    },
+    {
+        "name": "Fachspedition Karl Dischinger GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "79238",
+        "city": "Ehrenkirchen-Niedermatten",
+        "street": "Niedermattenstr. 2"
+    },
+    {
+        "name": "Fenthol & Sandtmann GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "04158",
+        "city": "Leipzig",
+        "street": "Bredowstrasse 30"
+    },
+    {
+        "name": "Ferdinand Heinrich Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "20539",
+        "city": "Hamburg",
+        "street": "Peutestr. 86"
+    },
+    {
+        "name": "FIDO Transporte",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "26835",
+        "city": "Brinkum",
+        "street": "Gewerbestr. 6"
+    },
+    {
+        "name": "Fiedler GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "66687",
+        "city": "Wadern",
+        "street": "Schloßstraße 18"
+    },
+    {
+        "name": "Fiege Logistik Stiftung & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "22113",
+        "city": "Hamburg",
+        "street": "Amadeus-Stubbe-Straße 10"
+    },
+    {
+        "name": "FINE logistics Spolka z ograniczona odgpowiezialnoscia Spolka Komadytowa",
+        "country_iso2": "PL",
+        "country_de": "Polen",
+        "zip": "05",
+        "city": "800",
+        "street": "Pruszkow"
+    },
+    {
+        "name": "Finsterwalder Transport und Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "06112",
+        "city": "Türkheim",
+        "street": "Businesspark 96"
+    },
+    {
+        "name": "Franke Spedition u. Lagerung GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "31515",
+        "city": "Wunstorf/Luthe",
+        "street": "Albert-Einstein-Straße 19"
+    },
+    {
+        "name": "Frankenfeld Logistikgruppe",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33415",
+        "city": "Verl",
+        "street": "Stahlstraße 50"
+    },
+    {
+        "name": "Franz Lebert & Co. Internationale Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "87437",
+        "city": "Kempten",
+        "street": "Dieselstraße 18"
+    },
+    {
+        "name": "Franz Transport GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "07580",
+        "city": "Ronneburg",
+        "street": "Heidelbergweg 9"
+    },
+    {
+        "name": "Franz-Josef Reck GmbH & Co KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58640",
+        "city": "Iserlohn",
+        "street": "Kalthofer Feld 17"
+    },
+    {
+        "name": "Fred Moyzio Transport & Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "17094",
+        "city": "Groß Nemerow",
+        "street": "Heckenweg 2"
+    },
+    {
+        "name": "Friedhelm Kunz Spedition und Güterverkehr GmbH + Co",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "35745",
+        "city": "Herborn-Hörbach",
+        "street": "Im Breiten Boden 3"
+    },
+    {
+        "name": "Friedrich A. Kruse jun. Internationale Spedition e.K.",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "25541",
+        "city": "Brunsbüttel",
+        "street": "Fährstr. 49"
+    },
+    {
+        "name": "Friedrich Biermann Logistik und Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33142",
+        "city": "Büren",
+        "street": "Eickhoffer Straße 50"
+    },
+    {
+        "name": "Friedrich Wildt GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "77950",
+        "city": "Ettenheim",
+        "street": "Wolfsmatten 5"
+    },
+    {
+        "name": "Friedrich Zufall GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "37079",
+        "city": "Göttingen",
+        "street": "Robert-Bosch-Str. 11"
+    },
+    {
+        "name": "Fritz GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "74193",
+        "city": "Schwaigerm",
+        "street": "Neipperger Str. 11"
+    },
+    {
+        "name": "Frode Laursen A/S",
+        "country_iso2": "DK",
+        "zip": "08382",
+        "city": "Hinnerup",
+        "street": "Vittenvej, Vitten 90"
+    },
+    {
+        "name": "FTL Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "21406",
+        "city": "Melbeck",
+        "street": "Am Alten Werk 58"
+    },
+    {
+        "name": "Fuldaer Speditionsgesellschaft Hofmann & Brenner GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "36041",
+        "city": "Fulda",
+        "street": "Werner-von Siemens-Straße 17"
+    },
+    {
+        "name": "Güterkraftverkehr Hamburg - Holstein GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "22113",
+        "city": "Hamburg",
+        "street": "Grusonstraße 51 "
+    },
+    {
+        "name": "Garbe Tranport GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "22113",
+        "city": "Hamburg",
+        "street": "Liebigstr. 103"
+    },
+    {
+        "name": "Gate56 Systemverkehre GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "56751",
+        "city": "Polch",
+        "street": "Robert-Koch-Str. 1 - 9"
+    },
+    {
+        "name": "Geba GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "59320",
+        "city": "Ennigerloh",
+        "street": "Industriestr. 19"
+    },
+    {
+        "name": "Gebr. Sauels GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "41334",
+        "city": "Nettetal-Leuth",
+        "street": "Am Hotschgraf 21"
+    },
+    {
+        "name": "Gebr. Taskin Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "45549",
+        "city": "Sprockhoevel",
+        "street": "Hoppe 1"
+    },
+    {
+        "name": "Gebr. Taskin Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "45549",
+        "city": "Sprockhövel",
+        "street": "Hoppe 1"
+    },
+    {
+        "name": "Gebr. Zobel & Co Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58300",
+        "city": "Wetter (Volmarstein)",
+        "street": "An der Knorr-Bremse 6"
+    },
+    {
+        "name": "Gebrüder Weiss GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "87700",
+        "city": "Memmingen",
+        "street": "Karatas-Straße 6"
+    },
+    {
+        "name": "GEFCO Deutschland GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "55129",
+        "city": "Mainz",
+        "street": "August-Horch-Straße 2"
+    },
+    {
+        "name": "Geis Eurocargo GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "90451",
+        "city": "Nürnberg",
+        "street": "Hamburger Str. 24"
+    },
+    {
+        "name": "Georg Boll GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49716",
+        "city": "Meppen",
+        "street": "Schützenhof 40"
+    },
+    {
+        "name": "Georg Boll GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49716",
+        "city": " Meppen",
+        "street": "Schützenhof 40  - 56"
+    },
+    {
+        "name": "Georg Hemmerlein GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "96132",
+        "city": "Reichmannsdorf",
+        "street": "Untere Hauptstraße 6"
+    },
+    {
+        "name": "Gericke Transport GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "09337",
+        "city": "Hohenstein-Ernstthal",
+        "street": "Dresdner Str. 124"
+    },
+    {
+        "name": "Gerstlauer Spedition & Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "89264",
+        "city": "",
+        "street": "Weißenhorn"
+    },
+    {
+        "name": "GFT Logistic GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "74219",
+        "city": "Möckmühl",
+        "street": "Habichtshöfe 8"
+    },
+    {
+        "name": "Ghibi Kft. Transport - Logistics",
+        "country_iso2": "HU",
+        "country_de": "Ungarn",
+        "zip": "1211",
+        "city": "Budapest",
+        "street": "Petróleum u. 2"
+    },
+    {
+        "name": "Girr Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86836",
+        "city": "Graben",
+        "street": "Amazonstraße 13"
+    },
+    {
+        "name": "GlexX Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "59872",
+        "city": "Meschede",
+        "street": "Auf`m Brinke 16"
+    },
+    {
+        "name": "GLOB - SepLogistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "70794",
+        "city": "Filderstadt",
+        "street": "Raiffeisenstr. 16"
+    },
+    {
+        "name": "Gödecke Eurotrans GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "23556",
+        "city": "Lübeck",
+        "street": "Stellmacherstr. 6-12"
+    },
+    {
+        "name": "Gödecke Logistik AB",
+        "country_iso2": "SE",
+        "country_de": "Schweden",
+        "zip": "202",
+        "city": "11",
+        "street": "Malmö"
+    },
+    {
+        "name": "Göllner Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "31582",
+        "city": "Nienburg/Weser",
+        "street": "Kräher Weg 11"
+    },
+    {
+        "name": "Gollwitzer GmbH Internationale Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "90451",
+        "city": "Nürnberg",
+        "street": "Duisburger Str. 130"
+    },
+    {
+        "name": "Göschl. Int. Transporte + Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "83101",
+        "city": "Rohrdorf/Achenmühle",
+        "street": "Frasdorfer Str. 20"
+    },
+    {
+        "name": "GOTTARDO INT: SPEDITIONS GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "66989",
+        "city": "Höhfröschen",
+        "street": "Gewerbepark Höhfröschen 7"
+    },
+    {
+        "name": "Gotthold Haller Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "73061",
+        "city": "Ebersbach",
+        "street": "Hauptstraße 108 - 112"
+    },
+    {
+        "name": "Göttlich Transport und Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "02627",
+        "city": "Weißenberg",
+        "street": "Maltitz 35a"
+    },
+    {
+        "name": "Gras Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "56566",
+        "city": "Neuwied",
+        "street": "Allensteiner Straße 24"
+    },
+    {
+        "name": "Grieshaber Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "88250",
+        "city": "Weingarten",
+        "street": "Stettiner Str. 1"
+    },
+    {
+        "name": "Gröner Transport GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "89555",
+        "city": "Söhnstetten",
+        "street": "Fabrikstr. 1"
+    },
+    {
+        "name": "Gröner Transport GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "89555",
+        "city": "Steinheim - OT Söhnstetten",
+        "street": "Fabrikstr. 1"
+    },
+    {
+        "name": "GTS Transporte",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86165",
+        "city": "Augsburg",
+        "street": "Derchinger Strasse 141"
+    },
+    {
+        "name": "Gübau Cargo GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "14974",
+        "city": "Ludwigsfelde",
+        "street": "Rudolf-Dieselstr. 2"
+    },
+    {
+        "name": "Guckuk Logistik GmbH & Co KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "50829",
+        "city": "Köln",
+        "street": "Venloer Strasse 1303"
+    },
+    {
+        "name": "Gustav Helmrath GmbH & Co. KG Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "55252",
+        "city": "Mainz-Kastel",
+        "street": "Schmalweg 5"
+    },
+    {
+        "name": "Gustav Mäuler GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "42855",
+        "city": "Remscheid",
+        "street": "Auf dem Langenfeld 2 - 4"
+    },
+    {
+        "name": "Gustav Waldschmid & Sohn KG Transportunternehmen",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "35684",
+        "city": "Dillenburg",
+        "street": "Kupferwerkstraße 2"
+    },
+    {
+        "name": "Güttler Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "95030",
+        "city": "Hof",
+        "street": "Furhmannstraße 8"
+    },
+    {
+        "name": "GZ KölnBonn Logistik UG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "50829",
+        "city": "Köln",
+        "street": "Venloer Straße 1303"
+    },
+    {
+        "name": "H&H Logistics GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "28816",
+        "city": "Stuhr",
+        "street": "Gutenbergstr. 5"
+    },
+    {
+        "name": "H. de Boer logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "26845",
+        "city": "Nortmoor",
+        "street": "Gewerbestraße 9"
+    },
+    {
+        "name": "H. Veldhuizen Transport b.v.",
+        "country_iso2": "NL",
+        "country_de": "Niederland",
+        "zip": "1509",
+        "city": "BR Zaandam",
+        "street": "D. Sonoyweg 7"
+    },
+    {
+        "name": "H.R. Transport GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "23568",
+        "city": "Lübeck",
+        "street": "Niels-Bohr-Ring 10"
+    },
+    {
+        "name": "Haas Logistic GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "78655",
+        "city": "Dunningen",
+        "street": "Haerdtnerstraße 2"
+    },
+    {
+        "name": "Haller GmbH + Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "71696",
+        "city": "Möglingen",
+        "street": "Raiffeisenstr. 1"
+    },
+    {
+        "name": "Hamacher Logistik GmbH Internationale Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "48599",
+        "city": "Gronau",
+        "street": "Marie-Curie-Straße 3"
+    },
+    {
+        "name": "Hämmerling Group Logistic GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33104",
+        "city": "Paderborn",
+        "street": "Achsenschmiede 1 - 4"
+    },
+    {
+        "name": "Haneder GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "93055",
+        "city": "Regensburg",
+        "street": "Äußere Wiener Str. 18"
+    },
+    {
+        "name": "Hans Geis GmbH + Co KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "97616",
+        "city": "Bad Neustadt/Saale",
+        "street": "Rudolf-Diesel-Ring 24"
+    },
+    {
+        "name": "Hans Gerd Grüßing Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "26655",
+        "city": "Westerstede",
+        "street": "Zum Heerenberg 16"
+    },
+    {
+        "name": "Hans Grub Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "67661",
+        "city": "Kaiserslautern",
+        "street": "Hans-Geiger-Straße 9"
+    },
+    {
+        "name": "Hans Ihro GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "74632",
+        "city": "Neuenstein",
+        "street": "Hochfeldstrasse 9 - 14"
+    },
+    {
+        "name": "Hansa-Barth GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "72393",
+        "city": "Burladingen",
+        "street": "Gammertinger Str. 36 40"
+    },
+    {
+        "name": "Hartmann International GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33106",
+        "city": "Paderborn",
+        "street": "Halberstädter Straße 77"
+    },
+    {
+        "name": "Hartmann Spedition & Logistik AG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "76461",
+        "city": "Muggensturm",
+        "street": "Draisstr. 25 c"
+    },
+    {
+        "name": "Hasenauer+Koch GmbH+Co. KG Internationale Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "72760",
+        "city": "Reutlingen",
+        "street": "Sondelfinger Str. 5"
+    },
+    {
+        "name": "HDLV GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "76287",
+        "city": "Rheinstetten",
+        "street": "Odenwaldstr. 28"
+    },
+    {
+        "name": "Heinrich Koch Internationale Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49090",
+        "city": "Osnabrück",
+        "street": "Fürstenauer Weg 68"
+    },
+    {
+        "name": "Heinrich Kottmann - Spedition- GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33142",
+        "city": "Büren",
+        "street": "Heidfeld 6"
+    },
+    {
+        "name": "Heinrich Kottmann Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33142",
+        "city": "Büren",
+        "street": "Heidfeld 6"
+    },
+    {
+        "name": "Heinrich von Wirth GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "70435",
+        "city": "Stuttgart",
+        "street": "Waldheimstraße 5"
+    },
+    {
+        "name": "Heinrich Zoder Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "20539",
+        "city": "Hamburg",
+        "street": "Großmannstraße 114"
+    },
+    {
+        "name": "Heinz Huber Internationale Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85301",
+        "city": "Schweitenkirchen",
+        "street": "Fraunhoferstraße 9"
+    },
+    {
+        "name": "Heinz Zonsius GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "68219",
+        "city": "Mannheim",
+        "street": "Rhenaniastr. 104. - 106"
+    },
+    {
+        "name": "Heland Speditions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "96465",
+        "city": "Neustadt",
+        "street": "Marie-Curie-Straße 3"
+    },
+    {
+        "name": "Hellmold & Plank GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "35394",
+        "city": "Gießen",
+        "street": "Europastraße 7+9"
+    },
+    {
+        "name": "Hensel Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "55129",
+        "city": "Mainz",
+        "street": "Robert-Koch-Str. 9"
+    },
+    {
+        "name": "Herbert Voigt GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "24539",
+        "city": "Neumünster",
+        "street": "Krokamp 87"
+    },
+    {
+        "name": "Hermann Dischinger GmbH & Co. Spedition und Largerung",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "79238",
+        "city": "Ehrenkirchen",
+        "street": "Lairenstr. 3b"
+    },
+    {
+        "name": "Hermanns & Kreutz GmbH & Co. KG Spedition & Transporte",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "52156",
+        "city": "Monschau-Kalterherberg",
+        "street": "Kühlengasse 15"
+    },
+    {
+        "name": "Hettich Transporte GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "78052",
+        "city": "Villingen-Schwenningen",
+        "street": "Kirnacher Str. 46/ 1 - 8"
+    },
+    {
+        "name": "HEUEL Logistics Josef Heul GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58540",
+        "city": "Meinerzhagen",
+        "street": "Darmcher Grund 1"
+    },
+    {
+        "name": "Hinterberger GmbH & Co. KG Spedition u. Logistik",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "84503",
+        "city": "Altötting",
+        "street": "Daimlerstr. 2"
+    },
+    {
+        "name": "Hintzen Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "52249",
+        "city": "Eschweiler",
+        "street": "Hermann-Hollerith-Straße 1"
+    },
+    {
+        "name": "HNIDA Transport & Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86356",
+        "city": "Neusäß",
+        "street": "Salurnerstr. 4"
+    },
+    {
+        "name": "Hofmann Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "64584",
+        "city": "Biebesheim",
+        "street": "An der Hohen Str. 6"
+    },
+    {
+        "name": "Holenstein GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "78467",
+        "city": "Konstanz",
+        "street": "Max-Stromeyer-Str. 31"
+    },
+    {
+        "name": "Honold International GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "89231",
+        "city": "Neu-Ulm",
+        "street": "Ernst-Abbe Str. 5 - 7"
+    },
+    {
+        "name": "Hövelmann Logistik GmbH & Co KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "39340",
+        "city": "Haldensleben",
+        "street": "Hurler Str. 109"
+    },
+    {
+        "name": "HST-Gruppe",
+        "country_iso2": "NL",
+        "country_de": "Niederland",
+        "zip": "07547",
+        "city": "RW Enschede",
+        "street": "Verkehrszentrum 2"
+    },
+    {
+        "name": "Huber Transport & Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "83544",
+        "city": "Albaching",
+        "street": "Oberdieberg 15"
+    },
+    {
+        "name": "HUETTEMANN Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "47119",
+        "city": "Duisburg",
+        "street": "Friedrich-Ebert-Straße 22"
+    },
+    {
+        "name": "Hugger Spedition + Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "78554",
+        "city": "Aldingen",
+        "street": "In Rohräcker 5"
+    },
+    {
+        "name": "Hunecke Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "36282",
+        "city": "Hauneck",
+        "street": "Blaue Liede 12"
+    },
+    {
+        "name": "I T K Internationales Transpor Kontor GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "76189",
+        "city": "Karlsruhe",
+        "street": "Nordbeckenstraße  10 - 13"
+    },
+    {
+        "name": "IGS Logistic Group Holding GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "21129",
+        "city": "Hamburg",
+        "street": "Finkenwerder Weg 8"
+    },
+    {
+        "name": "Int. Spedition Böhm & Besold GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "89231",
+        "city": "Neu-Ulm",
+        "street": "Pfaffenweg 35"
+    },
+    {
+        "name": "Intertrans GmbH Europäische Verkehrsdienste",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "67065",
+        "city": "Ludwigshafen",
+        "street": "Kaiserwoerthdamm 15"
+    },
+    {
+        "name": "ITC Logistics Ges. mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "71701",
+        "city": "Schwieberdingen",
+        "street": "Markgröninger Str. 36"
+    },
+    {
+        "name": "ITC Logistics Ges. mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "56070",
+        "city": "Koblenz",
+        "street": "August Horch Str. 7a"
+    },
+    {
+        "name": "ITC-Trasconti Deutschland GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "09366",
+        "city": "Stollberg",
+        "street": "Auer Str. 8"
+    },
+    {
+        "name": "ITG GmbH Internationale Spedition + Logistik",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85445",
+        "city": "Schwaig",
+        "street": "Eichenstr. 2"
+    },
+    {
+        "name": "ITK Internationales Transportkontor GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "76189",
+        "city": "Karlsruhe",
+        "street": "Nordbeckenstr. 10. - 13"
+    },
+    {
+        "name": "J. & F. Pfahler GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "91550",
+        "city": "Dinkelsbühl",
+        "street": "Gleiwitzer Straße 1"
+    },
+    {
+        "name": "J. Dahmen & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "42653",
+        "city": "Solingen",
+        "street": "Dellenfeld 35"
+    },
+    {
+        "name": "J. L. Dederich Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "53340",
+        "city": "Meckenheim",
+        "street": "Heidestraße 18"
+    },
+    {
+        "name": "J. Schwarzer GmbH & Co. Service KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49439",
+        "city": "Steinfeld",
+        "street": "Habelschwerdter Straße 1"
+    },
+    {
+        "name": "J. Wedig Int.Spedition und Transportgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "67212",
+        "city": "Frankenthal",
+        "street": "Beindersheimer Str. 102"
+    },
+    {
+        "name": "Janta GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "71404",
+        "city": "Korb",
+        "street": "Im Riebeisen 31"
+    },
+    {
+        "name": "JCL Logistics Germany GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "77694",
+        "city": "Kehl",
+        "street": "Am Güterbahnhof 1"
+    },
+    {
+        "name": "Jens BERMEL Spedition u. Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "56424",
+        "city": "Ebernhahn",
+        "street": "Sälzerstraße 2"
+    },
+    {
+        "name": "Jentsch Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "50997",
+        "city": "Köln",
+        "street": "Am Eifeltor 10"
+    },
+    {
+        "name": "JET Group",
+        "country_iso2": "BE",
+        "country_de": "Belgien",
+        "zip": "03660",
+        "city": "Opglabeek",
+        "street": "Nijverheidslaam 1515"
+    },
+    {
+        "name": "Johann Schober Transporte",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85778",
+        "city": "Haimhausen",
+        "street": "Am Pfanderling 1"
+    },
+    {
+        "name": "Johann Schurz GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "53925",
+        "city": "Kall",
+        "street": "Hüttenstraße 106 - 108"
+    },
+    {
+        "name": "Johann Tombers GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "53840",
+        "city": "Troisdorf",
+        "street": "Oelbergstraße 12"
+    },
+    {
+        "name": "Johann Weiss GmbH",
+        "country_iso2": "AT",
+        "country_de": "Österreich",
+        "zip": "2355",
+        "city": "Wiener Neudorf",
+        "street": "IS NÖ-Süd Str. 16"
+    },
+    {
+        "name": "John Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "36124",
+        "city": "Eichenzell",
+        "street": "Zum Lingeshof 10"
+    },
+    {
+        "name": "Jürgen Matzke Transport und Entsorgungsservice",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "84032",
+        "city": "Altdorf",
+        "street": "Sonnenring 10"
+    },
+    {
+        "name": "K&S Transport GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "20095",
+        "city": "Hamburg",
+        "street": "Glockengießerwall 3"
+    },
+    {
+        "name": "karl dischinger logistikdiensteleister GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "79238",
+        "city": "Ehrenkirchen-Kirchhofen",
+        "street": "Gewerbegebiet Niedermatten 2"
+    },
+    {
+        "name": "Karl Flamm Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "72585",
+        "city": "Riederich",
+        "street": "Bachstraße 2 - 10"
+    },
+    {
+        "name": "Karl Jürgensen Autofernverkehr und Spedition KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "24837",
+        "city": "Schleswig",
+        "street": "Heinrich-Hertz-Straße 16"
+    },
+    {
+        "name": "Karl Scherer Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58513",
+        "city": "Lüdenscheid",
+        "street": "An der Bellmerei 11"
+    },
+    {
+        "name": "Karl Schnug Kraftwagenspedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "42699",
+        "city": "Solingen",
+        "street": "Löhdorfer Str. 257 - 263"
+    },
+    {
+        "name": "Kasseler Speditions-Kontor Rettberg GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "34123",
+        "city": "Kassel",
+        "street": "Osterholzstraße 52"
+    },
+    {
+        "name": "Kelbasha Logistics GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86165",
+        "city": "Augsburg",
+        "street": "Toblacher Straße 7a"
+    },
+    {
+        "name": "Kern & Karl Speditions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "92369",
+        "city": "Sengenthal-Reichertshofen",
+        "street": "Am Ganselweiher 6"
+    },
+    {
+        "name": "Kern & Karl Speditions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "92369",
+        "city": "Reichertshofen",
+        "street": "Am Ganslweiher 6"
+    },
+    {
+        "name": "KG Bursped Speditions GmbH & Co.",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "22113",
+        "city": "Hamburg",
+        "street": "Halskestr. 63"
+    },
+    {
+        "name": "Kieserling Spedition + Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "28197",
+        "city": "Bremen",
+        "street": "Franz-Stickan-Straße 4"
+    },
+    {
+        "name": "Kirchner und Partner",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "64879",
+        "city": "Gernsheim",
+        "street": "Robert Bunsen Strasse 36 - 40"
+    },
+    {
+        "name": "Kisker Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33790",
+        "city": "Halle/Westf.",
+        "street": "Kreisstraße  4 - 6"
+    },
+    {
+        "name": "KISSEL Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "63811",
+        "city": "Stockstadt (Main)",
+        "street": "Industriestraße 16"
+    },
+    {
+        "name": "Kleyling Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "79206",
+        "city": "Breisach",
+        "street": "Ihringer Landstraße 5"
+    },
+    {
+        "name": "Klumpp + Müller GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "77694",
+        "city": "Kehl",
+        "street": "Weststr. 24"
+    },
+    {
+        "name": "Koberger Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "31241",
+        "city": "Ilsede",
+        "street": "Peiner Feld 10"
+    },
+    {
+        "name": "Kochtrans Patrick G. Koch GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85375",
+        "city": "Neufahrn",
+        "street": "Römerstr. 8"
+    },
+    {
+        "name": "Kolbeck Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49393",
+        "city": "Lohne",
+        "street": "Rudolf-Diesel-Str. 1"
+    },
+    {
+        "name": "Komm Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "14979",
+        "city": "Großbeeren",
+        "street": "Osdorfer Ring 4 GVZ Berlin-Süd"
+    },
+    {
+        "name": "Kontinent Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "07745",
+        "city": "Jena",
+        "street": "Göschwitzer Str. 34"
+    },
+    {
+        "name": "Kost Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "57439",
+        "city": "Attendorn",
+        "street": "Askay 21"
+    },
+    {
+        "name": "Kottmeyer GmbH & Co. KG Int. Sepdition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "32549",
+        "city": "Bad Oeynhausen",
+        "street": "Brückenstraße 9"
+    },
+    {
+        "name": "Kottmeyer GmbH & Co.KG Internationale Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "32548",
+        "city": "Bad Oeyenhausen",
+        "street": "Brückenstraße 9"
+    },
+    {
+        "name": "Kraftverkehr Emsland GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "48529",
+        "city": "Nordhorn",
+        "street": "Otto-Hahn-Straße 1"
+    },
+    {
+        "name": "Kraftverkehr Münsterland C. Weilke GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "48268",
+        "city": "greven",
+        "street": "Hansaring 26"
+    },
+    {
+        "name": "Krage & Gerloff Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "39397",
+        "city": "Schwanebeck",
+        "street": "Westfeld 3"
+    },
+    {
+        "name": "Krage Potsdam GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "14478",
+        "city": "Potsdam",
+        "street": "Am Buchhorst 40"
+    },
+    {
+        "name": "Krage Speditionsgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "30855",
+        "city": "Langenhagen",
+        "street": "Münchner Straße 44"
+    },
+    {
+        "name": "Krause-Transporte KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "04356",
+        "city": "Leipzig",
+        "street": "Podelwitzer Str. 73"
+    },
+    {
+        "name": "KRUG Int. Spedition und Handelsgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "36211",
+        "city": "Alheim-Heinebach",
+        "street": "Haischwiese 1"
+    },
+    {
+        "name": "Krug Transporte Kiel GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "24647",
+        "city": "Wasbeck",
+        "street": "Industriestraße 4"
+    },
+    {
+        "name": "Krüger + Voigt Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "19370",
+        "city": "Parchim",
+        "street": "Schwarzer Weg 6"
+    },
+    {
+        "name": "Krüger Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "37079",
+        "city": "Göttingen",
+        "street": "Industriestr. 10"
+    },
+    {
+        "name": "KS-Logistic & Services GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "08056",
+        "city": "Zwickau",
+        "street": "Herschelstraße 7"
+    },
+    {
+        "name": "Kühling Transporte GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "39387",
+        "city": "Oschersleben",
+        "street": "Schermcker Str. 45"
+    },
+    {
+        "name": "Kühne + Nagel (AG & Co.) KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "20457",
+        "city": "Hamburg",
+        "street": "Großer Grasbook 11 - 13"
+    },
+    {
+        "name": "Kunzendorf Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "12057",
+        "city": "Berlin",
+        "street": "Nobelstraße 25"
+    },
+    {
+        "name": "Kurt Rothschild GmbH und Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "54589",
+        "city": "Stadtkyll",
+        "street": "Kyllstr. 2- 6"
+    },
+    {
+        "name": "L. Wackler Wwe. Nachf. GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "73037",
+        "city": "Göppingen",
+        "street": "Louis-Wackler-Str. 2"
+    },
+    {
+        "name": "L.I.T. Speditions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "26919",
+        "city": "Brake",
+        "street": "Otto-Hahn-Straße 18"
+    },
+    {
+        "name": "L.W. Cretschmar GmbH & Co KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "40599",
+        "city": "Düsseldorf",
+        "street": "Reisholzer Bahnstr. 13"
+    },
+    {
+        "name": "Lagermax Internationale Spedition GmbH",
+        "country_iso2": "AT",
+        "country_de": "Österreich",
+        "zip": "5020",
+        "city": "Salzburg",
+        "street": "Radingerstraße 16"
+    },
+    {
+        "name": "Lakner Sped. + Logistik GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "73529",
+        "city": "Schwäbisch Gmünd",
+        "street": "Lise-Meitner-Straße 7"
+    },
+    {
+        "name": "Lamprecht Transport AG",
+        "country_iso2": "CH",
+        "country_de": "Schweiz",
+        "zip": "4002",
+        "city": "Basel",
+        "street": "Peter Merian-Strasse 48"
+    },
+    {
+        "name": "LD Logistik GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "69469",
+        "city": "Weinheim",
+        "street": "Daimlerstr. 19"
+    },
+    {
+        "name": "Lebert & Co GmbH Int. Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "88255",
+        "city": "Baienfurt",
+        "street": "Eisenbahnstraße 4"
+    },
+    {
+        "name": "Leipziger Logistik & Lagerhaus GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "04249",
+        "city": "Leipzig",
+        "street": "Bösdorfer Ring 13 - 16"
+    },
+    {
+        "name": "Leonh. H. Knubben Speditions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "68159",
+        "city": "Mannheim",
+        "street": "Binnenhafen 20"
+    },
+    {
+        "name": "Leopold Michel GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "97337",
+        "city": "Würzburg/Dettelbach",
+        "street": "Mainfrankenpark 29"
+    },
+    {
+        "name": "Leopold Schäfer Nachf. GmbH, Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "57290",
+        "city": "Neunkirchen",
+        "street": "Lotzenarbachstr. 1"
+    },
+    {
+        "name": "Leupold Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "97469",
+        "city": "Gochsheim",
+        "street": "Jakop-Panzer-Straße 8"
+    },
+    {
+        "name": "LGI Logistics Group International c/o Lgi Deutschland GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "71083",
+        "city": "Herrenberg",
+        "street": "Hewlett-Packard-Str. 11"
+    },
+    {
+        "name": "LHG Lebensmittelhandelsgesellschaft mbH Co. Betriebs KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "97246",
+        "city": "Eibelstadt",
+        "street": "Untere Au 7"
+    },
+    {
+        "name": "Libra Logistik Dienste SL",
+        "country_iso2": "ES",
+        "country_de": "Spanien",
+        "zip": "08130",
+        "city": "Santa Perpetua de Mogoda",
+        "street": "CIM del Valles-Zona Nave 2"
+    },
+    {
+        "name": "Liegat Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "90441",
+        "city": "Nürnberg",
+        "street": "Nimrodstraße 22"
+    },
+    {
+        "name": "Logflex GmbH Internationale Spedition & Logistik",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "34123",
+        "city": "Kassel",
+        "street": "Werner-Heisenberg-Str. 1"
+    },
+    {
+        "name": "Logistik Partner Schneider & Co. GmbH Speditions- und Logistik KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85716",
+        "city": "Unterschleißheim",
+        "street": "Ohmstr. 2"
+    },
+    {
+        "name": "Logistik Transport Solution GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "70629",
+        "city": "Stuttgart",
+        "street": "Luftfrachtzentrum 610 /2"
+    },
+    {
+        "name": "LOTH Internationale Speditionsgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "04827",
+        "city": "Gerichshain",
+        "street": "Ringstr. 22"
+    },
+    {
+        "name": "Loxx Logistics GmbH Depot Frankreich",
+        "country_iso2": "FR",
+        "country_de": "Frankreich",
+        "zip": "45891",
+        "city": "Gelsenkirchen",
+        "street": "Emscherstr. 56"
+    },
+    {
+        "name": "LSL-Lohmöller Spedition und Loogistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "48432",
+        "city": "Rheine",
+        "street": "Daimlerstr. 29"
+    },
+    {
+        "name": "LSU Schäberle Logistik & Speditions-Union GmbH u. Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "70499",
+        "city": "Stuttgart-Weilimdorf",
+        "street": "Motorstr. 9"
+    },
+    {
+        "name": "Ludwig Häberle Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "73529",
+        "city": "Schwäbisch Gmünd",
+        "street": "Güglingstraße 85"
+    },
+    {
+        "name": "Luible Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "89340",
+        "city": "Leipheim",
+        "street": "An der Rollbahn 1"
+    },
+    {
+        "name": "M + F Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "47226",
+        "city": "Duisburg",
+        "street": "Friedrich-Ebert-Straße 22"
+    },
+    {
+        "name": "M+R Spedag Group Ag",
+        "country_iso2": "CH",
+        "country_de": "Schweiz",
+        "zip": "82047",
+        "city": "Schaffhausen",
+        "street": "Ebnatstrasse 171"
+    },
+    {
+        "name": "M+R Spedag Group Ag",
+        "country_iso2": "CH",
+        "country_de": "Schweiz",
+        "zip": "4132",
+        "city": "Muttenz",
+        "street": "Kriegackerstrasse 91"
+    },
+    {
+        "name": "Machoi Transport GmbH & Co KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "39164",
+        "city": "Wanzleben-Boerden",
+        "street": "Martin-Selber-Str. 13"
+    },
+    {
+        "name": "Machoi Transport GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "39164",
+        "city": "Wanzleben-Börde",
+        "street": "Martin-Selber-Str. 13"
+    },
+    {
+        "name": "Maier Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "78224",
+        "city": "Singen",
+        "street": "Carl-Benz-Str. 2"
+    },
+    {
+        "name": "Maintrans Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "63755",
+        "city": "Alzenau",
+        "street": "Röntgenstraße 4"
+    },
+    {
+        "name": "Maintrans Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "99091",
+        "city": "Erfurt",
+        "street": "August-Röbling-Str. 27"
+    },
+    {
+        "name": "Manfred Jungels GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "66687",
+        "city": "Wadern",
+        "street": "Im Hufgarten 17"
+    },
+    {
+        "name": "Mannheimer Transport-Gesellschaft Bayer GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "68169",
+        "city": "Mannheim",
+        "street": "Otto-Hahn-Straße 13"
+    },
+    {
+        "name": "Marten Spedition & Logistic GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "31737",
+        "city": "Rinteln ",
+        "street": "Bleekebrink 22"
+    },
+    {
+        "name": "Martin Baur GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "88521",
+        "city": "Ertingen-Binzwangen",
+        "street": "Riedstraße 2"
+    },
+    {
+        "name": "Martin Oelrich GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49549",
+        "city": "Ladbergern",
+        "street": "Saerbecker Str. 42"
+    },
+    {
+        "name": "Max Müller Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "88145",
+        "city": "Opfenbach",
+        "street": "Gewerbestraße 2"
+    },
+    {
+        "name": "MBS Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "51149",
+        "city": "Köln",
+        "street": "Hanseatenstr. 57"
+    },
+    {
+        "name": "Meyer & Meyer Holding SE & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49084",
+        "city": "Osnabrück",
+        "street": "Hettlicher Masch 15/17"
+    },
+    {
+        "name": "Meyer Jumbo Logistics GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "32457",
+        "city": "Porta Westfalica",
+        "street": "Zechenstraße 1-4"
+    },
+    {
+        "name": "Michael Wolf Spedition OHG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "94315",
+        "city": "Straubing",
+        "street": "Schlessische Str. 259"
+    },
+    {
+        "name": "Michel Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86650",
+        "city": "Wemdingen",
+        "street": "Industriestrasse 1 - 9"
+    },
+    {
+        "name": "Mitlog GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "47589",
+        "city": "Uedem",
+        "street": "Molkereistr. 41"
+    },
+    {
+        "name": "MLK GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58553",
+        "city": "Halver",
+        "street": "Langenscheid 6"
+    },
+    {
+        "name": "MMW Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "08491",
+        "city": "Netzschkau",
+        "street": "Elsterberger Straße 73"
+    },
+    {
+        "name": "Moeller - Internationale Spedition + Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "52351",
+        "city": "Düren",
+        "street": "Kölner Landstraße 270"
+    },
+    {
+        "name": "Moyzio Transport & Spedition e.K.",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "17094",
+        "city": "Groß Nemerow",
+        "street": "Heckenweg 2"
+    },
+    {
+        "name": "M-TRA-LOG GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "74706",
+        "city": "Osterburken",
+        "street": "Industriepark 21"
+    },
+    {
+        "name": "Müller - Die lila Logistik Deutschland GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "74354",
+        "city": "Besigheim-Ottmarsheim",
+        "street": "Ferdinand-Porsche-Str. 4"
+    },
+    {
+        "name": "Nanno Janssen Spediton",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "26723",
+        "city": "Emden",
+        "street": "Ubiestr. 29"
+    },
+    {
+        "name": "Neele-Vat Finn Oy",
+        "country_iso2": "FI",
+        "country_de": "Finnland",
+        "zip": "01510",
+        "city": "Vantaa",
+        "street": "Pakkalankuja 7"
+    },
+    {
+        "name": "Nellen & Quack Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "41066",
+        "city": "Mönchengladbach",
+        "street": "Krefelder Straße 845"
+    },
+    {
+        "name": "Net Cargo GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58511",
+        "city": "Lüdenscheid",
+        "street": "Wefelshohler Str. 44"
+    },
+    {
+        "name": "Network Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "68169",
+        "city": "Mannheim",
+        "street": "Ölhafenstraße  30 -32"
+    },
+    {
+        "name": "Next GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "51105",
+        "city": "Köln",
+        "street": "Ernst-Weyden-Straße 13- 15"
+    },
+    {
+        "name": "Niedermaier Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "94405",
+        "city": "Landau",
+        "street": "Furhmannstraße 10"
+    },
+    {
+        "name": "Niehaus Spedition Gmbh & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "46414",
+        "city": "Rhede",
+        "street": "Hoewwell 3"
+    },
+    {
+        "name": "Nikolaus Rathmann GmbH & CO. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "22145",
+        "city": "Braak",
+        "street": "Braaker Bogen 17 - 21"
+    },
+    {
+        "name": "Noerpel GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "79331",
+        "city": "Tenningen",
+        "street": "Gottlieb-Daimler-Straße 2"
+    },
+    {
+        "name": "Noerpel GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "78052",
+        "city": "Villingen-Schwenningen",
+        "street": "Auf Herdenen 3"
+    },
+    {
+        "name": "Norbert Redemann KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "45665",
+        "city": "Recklinghausen",
+        "street": "Schmalkalder Straße 1"
+    },
+    {
+        "name": "Nothegger Transport Logistik GmbH",
+        "country_iso2": "AT",
+        "country_de": "Österreich",
+        "zip": "6393",
+        "city": "St. Ulrich a. P./Tirol",
+        "street": "Niedersee 12"
+    },
+    {
+        "name": "NTG Continent A/S",
+        "country_iso2": "DK",
+        "zip": "6000",
+        "city": "Kolding",
+        "street": "Kokbjerg 15"
+    },
+    {
+        "name": "NTG Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "59469",
+        "city": "Ense-Höingen",
+        "street": "Harkortstrasse 1"
+    },
+    {
+        "name": "NTL Niers Transport + Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "41844",
+        "city": "Wegberg",
+        "street": "Siemensweg 1"
+    },
+    {
+        "name": "NTS National Transport Service GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "63110",
+        "city": "Rodgau",
+        "street": "Ferdinand-Porsche-Ring 3"
+    },
+    {
+        "name": "OBS Int. Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "15831",
+        "city": "Gross Kleinitz",
+        "street": "Hermann-Gebauer-Straße 7"
+    },
+    {
+        "name": "Oetjen Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "27356",
+        "city": "Rotenburg/Wümme",
+        "street": "Hermann-Schlüter-Straße 1"
+    },
+    {
+        "name": "Offergeld Logistik GmbH & Co. OHG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "21502",
+        "city": "Geesthacht",
+        "street": "Am Schleusenkanal 42"
+    },
+    {
+        "name": "Offergeld Logistik Gruppe",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "52146",
+        "city": "Würselen",
+        "street": "Grüner Weg  1 - 3 "
+    },
+    {
+        "name": "Olbrich KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "36100",
+        "city": "Petersberg",
+        "street": "Justus-Liebig-Straße 7"
+    },
+    {
+        "name": "Olbrich KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "36100",
+        "city": "Petersberg",
+        "street": "Justus-Liebig-Str. 7"
+    },
+    {
+        "name": "Omlor-Speditions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "66386",
+        "city": "St. Ingbert",
+        "street": "Mühlstraße 40"
+    },
+    {
+        "name": "OSA Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "22113",
+        "city": "Hamburg",
+        "street": "Andreas Meyer Str. 45 -57"
+    },
+    {
+        "name": "OSA Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "79588",
+        "city": "Efringen-Kirchen",
+        "street": "Beim Breitenstein 14"
+    },
+    {
+        "name": "OsnaTrans GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49078",
+        "city": "Osnabrück",
+        "street": "Averdiekstrasse 26"
+    },
+    {
+        "name": "Otto Bächle GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "78052",
+        "city": "Villingen Schwenningen",
+        "street": "Auf Herdenen 24"
+    },
+    {
+        "name": "Otto BRIEM Speditions-GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "70794",
+        "city": "Filderstadt - Bonland",
+        "street": "Raiffeisenstr. 42"
+    },
+    {
+        "name": "p.ressle GmbH & Co. Spedition KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86956",
+        "city": "Schongau",
+        "street": "Peitnachtstr. 2"
+    },
+    {
+        "name": "Palletways Bielefeld GmbH & Co.KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33689",
+        "city": "Bielefeld",
+        "street": "Gildemeisterstraße 100"
+    },
+    {
+        "name": "Palletways Neufahrn",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85375",
+        "city": "Neufahrn",
+        "street": "Ludwig-Erhard-Str. 11"
+    },
+    {
+        "name": "Paul Langen GmbH & Co KG Spedition, Möbelspedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "41189",
+        "city": "Mönchengladbach",
+        "street": "Hocksteiner Weg 50"
+    },
+    {
+        "name": "Paul Schockemöhle Logistics GmbH & Co.KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49439",
+        "city": "Mühlen",
+        "street": "Rienshof 2"
+    },
+    {
+        "name": "Paul Weidlich Lübeck GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "23556",
+        "city": "Lübeck",
+        "street": "Spenglerstr. 25 - 27"
+    },
+    {
+        "name": "Peisker Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "51545",
+        "city": "Waldbröl",
+        "street": "Industriestraße 24  -  26"
+    },
+    {
+        "name": "Peter Sous GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "52353",
+        "city": "Düren",
+        "street": "Willi-Bleicher-Straße 32"
+    },
+    {
+        "name": "Petersen & Bileck OHG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "21244",
+        "city": "Buchholz",
+        "street": "Zunftstraße 2"
+    },
+    {
+        "name": "Petersen Mordhorst Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "24145",
+        "city": "Kiel",
+        "street": "Borsigstraße 19"
+    },
+    {
+        "name": "Imlog GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "68542",
+        "city": "Heddesheim",
+        "street": "Daimlerstr. 4"
+    },
+    {
+        "name": "Pieper & Sohn Speditionsges. mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "16356",
+        "city": "Ahrensfelde Lindenberg",
+        "street": "Ambossweg 2"
+    },
+    {
+        "name": "Polski System Dystrybucji Sp. Z o. o",
+        "country_iso2": "PL",
+        "country_de": "Polen",
+        "zip": "97",
+        "city": "300",
+        "street": "Piotrków Trybunalski"
+    },
+    {
+        "name": "Prüstel Spedition GmbH Niederlassung West",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "09337",
+        "city": "Callenberg",
+        "street": "Lichtensteiner Str. 18a"
+    },
+    {
+        "name": "PST OST SPED SP. Z OO",
+        "country_iso2": "PL",
+        "country_de": "Polen",
+        "zip": "62023",
+        "city": "Gadki",
+        "street": "ul Lager 5a"
+    },
+    {
+        "name": "Purrmann Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "31789",
+        "city": "Hameln",
+        "street": "Marienthaler Straße 6a"
+    },
+    {
+        "name": "Quehenberger Logistics GmbH",
+        "country_iso2": "AT",
+        "country_de": "Österreich",
+        "zip": "52004",
+        "city": "Straßwalchen",
+        "street": "Gewerbegebiet Nord 5"
+    },
+    {
+        "name": "R&H Vogtland Logistik UG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "08412",
+        "city": "Werdau",
+        "street": "Bahnhofstr. 52"
+    },
+    {
+        "name": "Raben Trans European Germany GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "41199",
+        "city": "Mönchengladbach",
+        "street": "regioparkring 8"
+    },
+    {
+        "name": "Raven Logistic GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "64584",
+        "city": "Biebesheim am Rhein",
+        "street": "Am Winkelgraben 1"
+    },
+    {
+        "name": "RB-Logistic GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "48268",
+        "city": "Greven",
+        "street": "Philipp-Reis-Straße 5"
+    },
+    {
+        "name": "Reichhart Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "82205",
+        "city": "Gilching",
+        "street": "Lilienthalstr. 2"
+    },
+    {
+        "name": "reimer logistics GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "28217",
+        "city": "Bremen",
+        "street": "Stephaniekirchenweide 20"
+    },
+    {
+        "name": "Reischl + Schneider",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "88444",
+        "city": "Ummendorf",
+        "street": "Fabrikstraße 1"
+    },
+    {
+        "name": "Rhenus & Hellmann GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "09603",
+        "city": "Großschirma",
+        "street": "Am Steinberg 14"
+    },
+    {
+        "name": "Rhenus Freight Logistics GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "59425",
+        "city": "Unna",
+        "street": "Formerstr. 22"
+    },
+    {
+        "name": "Rhenus SE & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "59439",
+        "city": "Holzwickede",
+        "street": "Rhenus-Platz 1"
+    },
+    {
+        "name": "RHK Truck & Services GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "45149",
+        "city": "Essen",
+        "street": "Beekmannstr. 10"
+    },
+    {
+        "name": "Ritter Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "30855",
+        "city": "Langenhagen",
+        "street": "Bayernstr. 46"
+    },
+    {
+        "name": "Ritter Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "39126",
+        "city": "Magdeburg",
+        "street": "Tucheimerstr. 5"
+    },
+    {
+        "name": "ROADLINE Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "15831",
+        "city": "Groß Kienitz",
+        "street": "Am Weidendamm 6"
+    },
+    {
+        "name": "Robert Müller GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "66740",
+        "city": "Saarlouis",
+        "street": "Ostring 57"
+    },
+    {
+        "name": "Rottbeck Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "46242",
+        "city": "Bottrop",
+        "street": "Am Rhein-Herne-Kanal 5"
+    },
+    {
+        "name": "RS Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "25482",
+        "city": "Appen-Etz",
+        "street": "Apener Straße 19-21"
+    },
+    {
+        "name": "RS Transporte GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "90531",
+        "city": "Zirndorf",
+        "street": "Volkhardtstraße 12"
+    },
+    {
+        "name": "RT Logistik GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "19077",
+        "city": "Lübesse",
+        "street": "Gewerbering   9 - 11"
+    },
+    {
+        "name": "R-T-Logistik GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "19077",
+        "city": "Lübesse   ",
+        "street": "Gewerbring  11"
+    },
+    {
+        "name": "Rüdinger Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "74238",
+        "city": "Krautheim",
+        "street": "Uferweg 12"
+    },
+    {
+        "name": "Safram S.A.",
+        "country_iso2": "CH",
+        "country_de": "Schweiz",
+        "zip": "1242",
+        "city": "Satigny (Geneva)",
+        "street": "Route des Moulières  5"
+    },
+    {
+        "name": "Sander Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "25524",
+        "city": "Itzehoe",
+        "street": "Gasstr. 9"
+    },
+    {
+        "name": "Sauels Logistics Services GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "41334",
+        "city": "Nettetal",
+        "street": "Am Hotschgraf 21"
+    },
+    {
+        "name": "Schauer Speditionsbeteiligung",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "83395",
+        "city": "Freilassing",
+        "street": "Traunsteiner Str. 8"
+    },
+    {
+        "name": "Scheck Lagerhaus + Transporte GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "93073",
+        "city": "Neutraubling",
+        "street": "Oberheisinger Str. 3"
+    },
+    {
+        "name": "Schenkelberg Logistik GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "56424",
+        "city": "Ebernhahn",
+        "street": "Demnbacher Straße 59"
+    },
+    {
+        "name": "Scherbauer Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "93073",
+        "city": "Neutraubling",
+        "street": "Oberheisinger Str. 7"
+    },
+    {
+        "name": "Schimansky GmbH Co. KG Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "65719",
+        "city": "Hofheim",
+        "street": "Nassaustraße  17d"
+    },
+    {
+        "name": "Schmalz + Schön Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "70736",
+        "city": "Fellbach",
+        "street": "Ringstraße  39 - 41"
+    },
+    {
+        "name": "Schmalz + Schön Logistics GmbH Region Bautzen",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "02625",
+        "city": "Bautzen",
+        "street": "Philipp-Reis-Straße 18"
+    },
+    {
+        "name": "Schmalz + Schön Logistics GmbH Region Berlin",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "16727",
+        "city": "Velten",
+        "street": "Industriestraße  9"
+    },
+    {
+        "name": "Schmidt-Gevelsberg GmbH Internationale Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58332",
+        "city": "Schwelm",
+        "street": "Prinzenstr. 52"
+    },
+    {
+        "name": "Schröder + Schierenberg Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "32457",
+        "city": "Porta Westfalica",
+        "street": "Harmsweg 1"
+    },
+    {
+        "name": "Schweiger GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85126",
+        "city": "Münchsmünster",
+        "street": "Gewerbegebiert Süd   5 - 10"
+    },
+    {
+        "name": "SD-Europa",
+        "country_iso2": "BE",
+        "country_de": "Belgien",
+        "zip": "1730",
+        "city": "Mollem",
+        "street": "Z 5 Mollem 500, Hof te Bollebeeklaan 16"
+    },
+    {
+        "name": "Seifert Logistics GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "89079",
+        "city": "Ulm",
+        "street": "Daimlerstr. 22 - 26"
+    },
+    {
+        "name": "Siefert Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "77933",
+        "city": "Lahr",
+        "street": "Rainer-Haungs-Strasse  15 / 2"
+    },
+    {
+        "name": "Sirl Interaktive Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85716",
+        "city": "Unterschleissheim",
+        "street": "Siemensstr. 16"
+    },
+    {
+        "name": "Spedicam & Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "90451",
+        "city": "Nürnberg",
+        "street": "Hamburger Str. 70"
+    },
+    {
+        "name": "Spedition & Umzüge Gebr. Rost GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "36404",
+        "city": "Vacha",
+        "street": "Carl-Rost-Str. 1"
+    },
+    {
+        "name": "Spedition Achenbach GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "57319",
+        "city": "Bad Berleburg",
+        "street": "Arfelder Hauptstraße  14"
+    },
+    {
+        "name": "Spedition Balter GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "56218",
+        "city": "Mühlheim-Kärlich",
+        "street": "Urmitzer Straße  9"
+    },
+    {
+        "name": "Spedition Bernhard Messing GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "48653",
+        "city": "Coesfeld",
+        "street": "Erlenweg   144 - 146"
+    },
+    {
+        "name": "Spedition Brucker GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "73431",
+        "city": "Aalen",
+        "street": "Daimlerstraße  15-20"
+    },
+    {
+        "name": "Spedition Burchardt KG mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "23942",
+        "city": "Dassow",
+        "street": "Travemünder Weg  18"
+    },
+    {
+        "name": "Spedition Fecht Allgäu GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "87480",
+        "city": "Weitnau-Hofen",
+        "street": "Zur Eisenschmiede  1"
+    },
+    {
+        "name": "Spedition Fecht GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "88605",
+        "city": "Meßkirch",
+        "street": "Veritasring  15"
+    },
+    {
+        "name": "Spedition Fürmetz OHG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "84416",
+        "city": "Taufkirchen/Viols",
+        "street": "Kirchlern  4"
+    },
+    {
+        "name": "Spedition Georg Graßl GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "35685",
+        "city": "Dillenburg",
+        "street": "Robert-Bosch-Str. 9"
+    },
+    {
+        "name": "Spedition Gertner GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "17087",
+        "city": "Altentreptow",
+        "street": "Gewerbehof 16"
+    },
+    {
+        "name": "Spedition Geseridk GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "38489",
+        "city": "Lüdelsen",
+        "street": "Mehmker Weg  70a"
+    },
+    {
+        "name": "Spedition Gräfen Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "54552",
+        "city": "Nerdlen (Daun)",
+        "street": "Konrad-Zuse-Straße  7"
+    },
+    {
+        "name": "Spedition Häger GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "59909",
+        "city": "Bestwig",
+        "street": "Im Oehler  1"
+    },
+    {
+        "name": "Spedition Hein GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "997941",
+        "city": "Tauberbischhofsheim",
+        "street": "Ernst-Bauer-Str. 4"
+    },
+    {
+        "name": "Spedition Heinrich Gustke GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "18146",
+        "city": "Rostock",
+        "street": "Hanseatenstr. 1"
+    },
+    {
+        "name": "Spedition HOMTRANS Service GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "18196",
+        "city": "Kavelstorf",
+        "street": "Am Rieck Logistikpark  1"
+    },
+    {
+        "name": "Spedition Hoss GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "53721",
+        "city": "Siegburg",
+        "street": "Luisenstraße 147"
+    },
+    {
+        "name": "Spedition Huckschlag GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58730",
+        "city": "Fröndenberg",
+        "street": "Landstraße  2"
+    },
+    {
+        "name": "Spedition Karl Kerkeling GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "48653",
+        "city": "Coesfeld",
+        "street": "am Wasserturm  15 - 17"
+    },
+    {
+        "name": "Spedition Karl Raff GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "73235",
+        "city": "Weilheim",
+        "street": "Carl-Benz-Str.  21 - 29"
+    },
+    {
+        "name": "Spedition Klaus Meier GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "72108",
+        "city": "Rottenburg a. N. ",
+        "street": "Bellinostr. 15"
+    },
+    {
+        "name": "Spedition Kleine GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "41516",
+        "city": "Grevenbroich",
+        "street": "An der Glashütte 1"
+    },
+    {
+        "name": "Spedition Kockel GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "59494",
+        "city": "Soest",
+        "street": "Alter Elfster Weg 11"
+    },
+    {
+        "name": "Spedition Lagerpusch GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "38122",
+        "city": "Braunschweig",
+        "street": "Friedrich-Seele-Str. 10"
+    },
+    {
+        "name": "Spedition Leupold GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "95145",
+        "city": "Oberkotzau",
+        "street": "Am Saaleschlößchen 7"
+    },
+    {
+        "name": "Spedition Lode GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "84478",
+        "city": "Waldkraiburg",
+        "street": "Geretsrieder Str. 14"
+    },
+    {
+        "name": "Spedition Maack GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "21228",
+        "city": "Harmstorf",
+        "street": "Rehmenkamp 9"
+    },
+    {
+        "name": "Spedition Meidel GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "97348",
+        "city": "Markt Einersheim",
+        "street": "Possenheimer Straße 13"
+    },
+    {
+        "name": "Spedition Noack GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "15848",
+        "city": "Beeskow",
+        "street": "Charlottenhof  29"
+    },
+    {
+        "name": "Spedition Nuber GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86165",
+        "city": "Augsburg",
+        "street": "Derchinger Straße  125"
+    },
+    {
+        "name": "Spedition Nuss GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "76744",
+        "city": "Wörth/Rhein",
+        "street": "Am Oberwald  9"
+    },
+    {
+        "name": "Spedition Pohl GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "91334",
+        "city": "Hemhofen-Zeckern",
+        "street": "Eichendorffstraße   22 - 24"
+    },
+    {
+        "name": "Spedition Pohl GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "91334",
+        "city": "Hemhofen-Zeckern",
+        "street": "Eichendorffstr.  22. - 24"
+    },
+    {
+        "name": "Spedition Schäflein GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "97520",
+        "city": "Röthlein",
+        "street": "Am Etzberg 7"
+    },
+    {
+        "name": "Spedition Schmelzer GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "55457",
+        "city": "Gesingen",
+        "street": "Binger Straße 33"
+    },
+    {
+        "name": "Spedition Schroeder Logistsiche Dienstleistungsgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "56414",
+        "city": "Niederahr",
+        "street": "Hauptstr. 3"
+    },
+    {
+        "name": "Spedition Schwarz GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "89542",
+        "city": "Herbrechtingen",
+        "street": "Robert-Bosch-Str. 22"
+    },
+    {
+        "name": "Spedition Steinhart GmbH & Co.KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "72517",
+        "city": "Sigmaringendorf",
+        "street": "Scheerer Str.  15"
+    },
+    {
+        "name": "Spedition Striebich GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "76461",
+        "city": "Muggensturm",
+        "street": "Draisstr.  27 - 29"
+    },
+    {
+        "name": "Spedition und Logistik Haaren Keimeier und Finke GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33181",
+        "city": "Wuennenberg",
+        "street": "Otto-Lilienthal-Straße  5 - 18"
+    },
+    {
+        "name": "Spedition Venanz Fischer",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "96515",
+        "city": "Sonneberg",
+        "street": "Werkring  18"
+    },
+    {
+        "name": "Spedition W. Scheidweiler GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "56170",
+        "city": "Bendorf",
+        "street": "Am Hängelbach  4"
+    },
+    {
+        "name": "Spedition Wüst GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "91781",
+        "city": "Weißenburg",
+        "street": "Lehenwiesenweg 31"
+    },
+    {
+        "name": "Spedition Zahn GbR",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "65719",
+        "city": "Hofheim",
+        "street": "Werner-von-Siemens-Straße   4- 6"
+    },
+    {
+        "name": "Spedition Ziegler GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "52249",
+        "city": "Eschweiler",
+        "street": "Ernst-Abbe-Str. 34"
+    },
+    {
+        "name": "Speer Logistik & Distribution GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "63110",
+        "city": "Rodgau",
+        "street": "Klöcknerstr. 3"
+    },
+    {
+        "name": "SPERALUX GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58638",
+        "city": "Iserlohn",
+        "street": "Zur Helle  30"
+    },
+    {
+        "name": "Sprint Transportgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "24539",
+        "city": "Neumünster",
+        "street": "Leinestr. 1"
+    },
+    {
+        "name": "SST Stefan Sprich Transport und Logistik",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "79312",
+        "city": "Emmendingen",
+        "street": "Freiburgerstr. 9"
+    },
+    {
+        "name": "ST LOGISTIK GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "98529",
+        "city": "Suhl",
+        "street": "Meininger Strasse  222"
+    },
+    {
+        "name": "STAR Transporte GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58706",
+        "city": "Menden",
+        "street": "Fröndenberger Str. 164"
+    },
+    {
+        "name": "Steden Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "59423",
+        "city": "Unna",
+        "street": "Max-Planck-Str. 1"
+    },
+    {
+        "name": "Steinbach GmbH & Co. Spedition KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "95448",
+        "city": "Bayreuth",
+        "street": "Orionstraße  7"
+    },
+    {
+        "name": "STL Oberpfalz GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "96523",
+        "city": "Sonneberg OT Hasenthal",
+        "street": "Saalfelder Straße  54"
+    },
+    {
+        "name": "STL Oberpfalz GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "92637",
+        "city": "Weiden",
+        "street": "Albert-Einstein-Straße  7"
+    },
+    {
+        "name": "Stöhr Logistik e. K.",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "89616",
+        "city": "Rottenacker",
+        "street": "Grundlerstraße 15"
+    },
+    {
+        "name": "Stöhr Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "90471",
+        "city": "Nürnberg",
+        "street": "Beuthener Straße  43"
+    },
+    {
+        "name": "Streck Transportges. mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "79539",
+        "city": "Lörrach",
+        "street": "Brombacher Strasse  61"
+    },
+    {
+        "name": "Streit + Co Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "93083",
+        "city": "Obertraubling",
+        "street": "Am Langenwiesfeld  20 - 24"
+    },
+    {
+        "name": "SUN Global Logistics Solutions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "53842",
+        "city": "Torisdorf",
+        "street": "Lütticher Str. 12"
+    },
+    {
+        "name": "T & S cargo-concept GmbH Spedition & Logistik",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "48341",
+        "city": "Altenberge",
+        "street": "Kümperstege 11"
+    },
+    {
+        "name": "TCI Internationale Logstics GmbH (Headquarters)",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "20457",
+        "city": "Hamburg",
+        "street": "Afrikastraße 2"
+    },
+    {
+        "name": "TCT-Speditions GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "90518",
+        "city": "Altdorf bei Nbg",
+        "street": "Am Erlet 11"
+    },
+    {
+        "name": "Teca Forwarding GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "20095",
+        "city": "Hamburg",
+        "street": "Schopenstehl 22"
+    },
+    {
+        "name": "TERRA-SPED GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "47877",
+        "city": "Willich",
+        "street": "Virmondstr. 139"
+    },
+    {
+        "name": "TET Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "35799",
+        "city": "Merenberg",
+        "street": "Kruppstraße  2"
+    },
+    {
+        "name": "TET Spedition e.K.",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "35799",
+        "city": "Merenberg",
+        "street": "Kruppstr.  2"
+    },
+    {
+        "name": "Thomas Gemsjäger GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "80993",
+        "city": "München",
+        "street": "Wildermuthstraße 88"
+    },
+    {
+        "name": "Thorralf Pochanke Kurierunternehmen",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "26389",
+        "city": "Wilhemshaven",
+        "street": "Müllerstraße  54"
+    },
+    {
+        "name": "THS Transport, Handel & Service",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "17179",
+        "city": "Gnoien",
+        "street": "Gewerbestraße  16"
+    },
+    {
+        "name": "TLI-TransLog Internationale GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "78224",
+        "city": "Singen",
+        "street": "Pfaffenhäule  56"
+    },
+    {
+        "name": "TLT Berlin GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "14478",
+        "city": "Potsdamm",
+        "street": "Verkehrshof 2- 4 "
+    },
+    {
+        "name": "TML Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "04179",
+        "city": "Leipzig",
+        "street": "Franz-Flemming Str. 23"
+    },
+    {
+        "name": "Torrestir Deutschland GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "63452",
+        "city": "Hanau",
+        "street": "Moselstr. 70"
+    },
+    {
+        "name": "Tralo GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "01616",
+        "city": "Strehla",
+        "street": "An der alten Leimfrabrik 3"
+    },
+    {
+        "name": "TRANS MF Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "84051",
+        "city": "Essenbach/Ohu",
+        "street": "Ahornstr. 3"
+    },
+    {
+        "name": "Trans West Services GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "41542",
+        "city": "Dormagen",
+        "street": "Siemensstr. 21"
+    },
+    {
+        "name": "Transbest Internationale Speditionsgesellschaft mbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "63069",
+        "city": "Offenbach/Main",
+        "street": "Senefelderstraße   176 - 178"
+    },
+    {
+        "name": "Transco Süd Internationale Transporte GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "78224",
+        "city": "Singen (Hohentwiel)",
+        "street": "Gottlieb-Daimler-Straße 12"
+    },
+    {
+        "name": "Transfreight AG c/o Paul Leimburger AG",
+        "country_iso2": "CH",
+        "country_de": "Schweiz",
+        "zip": "4133",
+        "city": "Pratteln",
+        "street": "Niderfeldstrasse  5"
+    },
+    {
+        "name": "Transfreight AG c/o Stoll Transport AG",
+        "country_iso2": "CH",
+        "country_de": "Schweiz",
+        "zip": "8422",
+        "city": "Pfungen",
+        "street": "Wanistrasse  1"
+    },
+    {
+        "name": "Transland Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "35708",
+        "city": "Haiger",
+        "street": "Kalteiche-Ring 47"
+    },
+    {
+        "name": "Transmec De Bortoli Group Deutschland",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "85586",
+        "city": "Poing",
+        "street": "Gruberstr. 70"
+    },
+    {
+        "name": "Transport Betz GmbH & Co. Speditions KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "76316",
+        "city": "Malsch",
+        "street": "Daimlerstr. 22"
+    },
+    {
+        "name": "Transport und Logistik Theurer",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "19077",
+        "city": "Lübesse",
+        "street": "Gewerbering  24"
+    },
+    {
+        "name": "Transporta Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "54516",
+        "city": "Wittlich",
+        "street": "Rudolf-Diesel-Straße  7"
+    },
+    {
+        "name": "Transporte H. Krug GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "27793",
+        "city": "Wildeshausen",
+        "street": "Glaner Str. 31"
+    },
+    {
+        "name": "TTM GmbH Internationale Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "68535",
+        "city": "Edingen Neckarhausen",
+        "street": "Rosenstraße  68"
+    },
+    {
+        "name": "tulogistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "52068",
+        "city": "Aachen",
+        "street": "Jülicher Strasse  390"
+    },
+    {
+        "name": "Uhlhorn GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "28197",
+        "city": "Bremen",
+        "street": "Georg-Henschel-Straße  3"
+    },
+    {
+        "name": "Ulrich Rieck & Söhne Intern. Sped. Ges. mbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "14979",
+        "city": "Grossbeeren",
+        "street": "Ostdorfer Ring  5 - 11"
+    },
+    {
+        "name": "Unimasters Logistics SCS Ltd.",
+        "country_iso2": "BG",
+        "country_de": "Bulgarien",
+        "zip": "1592",
+        "city": "Sofia",
+        "street": "Prodan Tarachiev St. 12"
+    },
+    {
+        "name": "Wahl & Co Magdeburg GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "39167",
+        "city": "Irxleben",
+        "street": "Gewerbestr. 20a"
+    },
+    {
+        "name": "unitrans Hauptvogel GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "01665",
+        "city": "Klipphausen",
+        "street": "An der Unitrans / Gewerbegebiet Röhrshof  3"
+    },
+    {
+        "name": "VAO Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "07646",
+        "city": "Mörsdorf",
+        "street": "Die Mark 1"
+    },
+    {
+        "name": "Verkerhsunternehmen Andreas Schröder",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "07629",
+        "city": "Hermsdorf",
+        "street": "Hermsdorfer Höhe 7"
+    },
+    {
+        "name": "Vögele Speditions- und Kraftverkehrs GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "72336",
+        "city": "Balingen",
+        "street": "Frommerner Str.  56  - 58"
+    },
+    {
+        "name": "Vogt Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "44147",
+        "city": "Dortmund",
+        "street": "Überwasserstr. 35"
+    },
+    {
+        "name": "VS Logistics Würzburg GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "97080",
+        "city": "Würzburg",
+        "street": "Alfred-Nobel-Str. 11"
+    },
+    {
+        "name": "W. u. U. Scharf Transport GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "34253",
+        "city": "Lohfelden",
+        "street": "Am Fieseler Werk 6"
+    },
+    {
+        "name": "Wahl GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "33689",
+        "city": "Bielefeld",
+        "street": "Gildemeisterstr. 150"
+    },
+    {
+        "name": "Waldbach Fulfillment Logistik e.K.",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49328",
+        "city": "Melle-Riemsloh",
+        "street": "Rationalstraße 4"
+    },
+    {
+        "name": "Waldbach Logistik Fulfillment e.K.",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "49328",
+        "city": "Melle-Riensloh",
+        "street": "Rationalstraße  4"
+    },
+    {
+        "name": "Walter Eckhardt GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "70439",
+        "city": "Stuttgart",
+        "street": "Solitudeallee 12"
+    },
+    {
+        "name": "Walter Josten GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "64807",
+        "city": "Dieburg",
+        "street": "Semder Weg 13"
+    },
+    {
+        "name": "Weck+ Poller Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "08056",
+        "city": "Zwickau",
+        "street": "Reichenbacher Straße  67"
+    },
+    {
+        "name": "Wedlich. Servicegruppe GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "95447",
+        "city": "Bayreuth",
+        "street": "Logistikpark 7"
+    },
+    {
+        "name": "WeinTrans GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "72270",
+        "city": "Baiersbonn",
+        "street": "Ruhesteinstr. 211"
+    },
+    {
+        "name": "Wepler+Plappert GmbH & Co.KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "36124",
+        "city": "Eichenzell",
+        "street": "Bürgermeister-Ebert-Straße 22 - 26"
+    },
+    {
+        "name": "Werneke Logistic GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "59457",
+        "city": "Werl",
+        "street": "Hafervöhde 1"
+    },
+    {
+        "name": "Werner Brüning GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "26197",
+        "city": "Ahlhorn",
+        "street": "Lether Gewerbestraße  17"
+    },
+    {
+        "name": "Werner Schöndorf Speditionsges. mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "66440",
+        "city": "Blieskastel",
+        "street": "Im großen Gunterstal 24"
+    },
+    {
+        "name": "Werner Spedition",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "86462",
+        "city": "Langweid",
+        "street": "Liebigstr. 1"
+    },
+    {
+        "name": "Westfalen-Lippe Speditions- und Lagerhausgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "32051",
+        "city": "Herford",
+        "street": "Goebenstrasse  64"
+    },
+    {
+        "name": "Wienke Speditionsgesellschaft GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "44536",
+        "city": "Lünen",
+        "street": "An der Wethmarheide  13"
+    },
+    {
+        "name": "Wildenhofer Spedition und Transport GmbH",
+        "country_iso2": "AT",
+        "country_de": "Österreich",
+        "zip": "5020",
+        "city": "Salzburg",
+        "street": "Gingler Straße   5 - 7 "
+    },
+    {
+        "name": "Wilhelm Falke GmbH & Co.",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "30453",
+        "city": "Hannover",
+        "street": "Am Lindener Hafen  13 -15 "
+    },
+    {
+        "name": "Wilhelm Koch GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58849",
+        "city": "Herscheid",
+        "street": "Friedliner Straße  29"
+    },
+    {
+        "name": "Wilhelm Rosebrock GmbH & Co KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "28197",
+        "city": "Bremen-GVZ",
+        "street": "Albert-Bote-Straße 11"
+    },
+    {
+        "name": "Winner Spedition GmbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "58642",
+        "city": "Iserlohn",
+        "street": "Brinkhofstr. 41"
+    },
+    {
+        "name": "Woehl & Cie. S.A.",
+        "country_iso2": "FR",
+        "country_de": "Frankreich",
+        "zip": "67026",
+        "city": "Strasbourg",
+        "street": "Rue de Bayonne 11"
+    },
+    {
+        "name": "Wolf GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "74889",
+        "city": "Sinsheim",
+        "street": "Am Leitzelbach  16"
+    },
+    {
+        "name": "Wolf Internationale Spedition GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "74889",
+        "city": "Sinsheim",
+        "street": "Am Leitzelbach  16"
+    },
+    {
+        "name": "Wortmann Transporte GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "31785",
+        "city": "Hameln",
+        "street": "Am Güterbahnhof 10"
+    },
+    {
+        "name": "WSG Waldheimer Speditionsges. mbH & Co. KG",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "04736",
+        "city": "Waldheim",
+        "street": "Landsbergerstr. 20"
+    },
+    {
+        "name": "Würfel-Massong Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "27568",
+        "city": "Bremerhaven",
+        "street": "Am Leuchtturm 10"
+    },
+    {
+        "name": "Wwe. Th. Hövemann GmbH & Co. GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "46459",
+        "city": "Rees OT Empel",
+        "street": "Reeser Str. 22"
+    },
+    {
+        "name": "XPO Supply Chain Chemicals Belgium",
+        "country_iso2": "BE",
+        "country_de": "Belgien",
+        "zip": "4840",
+        "city": "Welkenraedt",
+        "street": "Rue de l Industrie 14"
+    },
+    {
+        "name": "Zippel Logistik GmbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "18196",
+        "city": "Dummerstorf",
+        "street": "Hohen Tannen  4"
+    },
+    {
+        "name": "ZT Transportlogistik- und Speditionsgesellschaft mbH",
+        "country_iso2": "DE",
+        "country_de": "Deutschland",
+        "zip": "09405",
+        "city": "Gornau",
+        "street": "Gewerbegebiert Süd 7"
+    }
+]

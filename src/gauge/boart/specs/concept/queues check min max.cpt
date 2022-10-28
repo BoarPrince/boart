@@ -1,0 +1,138 @@
+# queues check <queue-list>, min: <min>, max: <max>
+
+* RabbitMQ consume, continue
+
+   | action         | value                               |
+   |----------------|-------------------------------------|
+   | run:only:driver | <queue-list>                        |
+   | queue          | test.md.driver                      |
+   | group          | Check Queues                        |
+   | description    | Check Masterdata (Driver) -> Extern |
+   | count:max      | <max>                               |
+   | count:min      | <min>                               |
+   | store          | event-driver                        |
+
+* RabbitMQ consume, continue
+
+   | action       | value                             |
+   |--------------|-----------------------------------|
+   | run:only:user | <queue-list>                      |
+   | queue        | test.md.user                      |
+   | group        | Check Queues                      |
+   | description  | Check Masterdata (User) -> Extern |
+   | count:max    | <max>                             |
+   | count:min    | <min>                             |
+   | store        | event-user                        |
+
+* RabbitMQ consume, continue
+
+   | action          | value                                  |
+   |-----------------|----------------------------------------|
+   | run:only:company | <queue-list>                           |
+   | queue           | test.md.company                        |
+   | group           | Check Queues                           |
+   | description     | Check Masterdata (Company) -> External |
+   | count:max       | <max>                                  |
+   | count:min       | <min>                                  |
+   | store           | event-company                          |
+
+* RabbitMQ consume, continue
+
+   | action                   | value                                  |
+   |--------------------------|----------------------------------------|
+   | run:only:company-consumer | <queue-list>                           |
+   | queue                    | test.md.company-consumer               |
+   | group                    | Check Queues                           |
+   | description              | Check External (Company) -> Masterdata |
+   | count:max                | <max>                                  |
+   | count:min                | <min>                                  |
+   | store                    | event-company-consumer                 |
+
+* RabbitMQ consume, continue
+
+   | action                     | value                                           |
+   |----------------------------|-------------------------------------------------|
+   | run:only:company-onboarding | <queue-list>                                    |
+   | description                | Check Onboarding -> Extern (Masterdata, Portal) |
+   | group                      | Check Queues                                    |
+   | queue                      | test.ob.company                                 |
+   | timeout                    | 20                                              |
+   | count:max                  | <max>                                           |
+   | count:min                  | <min>                                           |
+   | store                      | event-company-onboarding                        |
+
+* RabbitMQ consume, continue
+
+   | action                  | value                      |
+   |-------------------------|----------------------------|
+   | run:only:fleet-event-bus | <queue-list>               |
+   | queue                   | test.md.fleet_event_bus    |
+   | group                   | Check Queues               |
+   | description             | Check Portal -> Masterdata |
+   | count:max               | <max>                      |
+   | count:min               | <min>                      |
+   | store                   | event-fleet-event-bus      |
+
+* RabbitMQ consume, continue
+
+   | action          | value                                  |
+   |-----------------|----------------------------------------|
+   | run:only:carrier | <queue-list>                           |
+   | queue           | test.md.carrier                        |
+   | group           | Check Queues                           |
+   | description     | Check Masterdata (Carrier) -> External |
+   | count:max       | <max>                                  |
+   | count:min       | <min>                                  |
+   | store           | event-carrier                          |
+
+* RabbitMQ consume, continue
+
+   | action           | value                             |
+   |------------------|-----------------------------------|
+   | run:only:identity | <queue-list>                      |
+   | queue            | test.md.identity                  |
+   | group            | Check Queues                      |
+   | description      | Check Extern -> Identity/Keycloak |
+   | count:max        | <max>                             |
+   | count:min        | <min>                             |
+   | store            | event-identity                    |
+
+* RabbitMQ consume, continue
+
+  | action              | value                                                                         |
+  |---------------------|-------------------------------------------------------------------------------|
+  | run:only:fleet-error | <queue-list>                                                                  |
+  | queue               | test.fleet.masterdata.error                                                   |
+  | group               | Check Queues                                                                  |
+  | description         | Check Masterdata -> Fleet Error queue                                         |
+  |                     | All fleet death letter exchanges are bound to this queue                      |
+  |                     | No error should occur while consuming the Master Data creation/update events. |
+  |                     | Therefore the queue must be empty                                             |
+  | timeout             | 5                                                                             |
+  | count:max           | 0                                                                             |
+  | count:min           | 0                                                                             |
+
+* RabbitMQ consume, continue
+
+  | action           | value                                  |
+  |------------------|----------------------------------------|
+  | run:only:md-error | <queue-list>                           |
+  | queue            | test.portal.masterdata.error           |
+  | group            | Check Queues                           |
+  | description      | Check Portal -> MasterData Error queue |
+  | timeout          | 5                                      |
+  | count:max        | 0                                      |
+  | count:min        | 0                                      |
+
+* RabbitMQ consume, continue
+
+  | action           | value                                      |
+  |------------------|--------------------------------------------|
+  | run:only:md-error | <queue-list>                               |
+  | queue            | test.onboarding.masterdata.error           |
+  | group            | Check Queues                               |
+  | description      | Check Onboarding -> Masterdata Error queue |
+  | timeout          | 5                                          |
+  | count:max        | 0                                          |
+  | count:min        | 0                                          |
+
