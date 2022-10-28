@@ -845,6 +845,8 @@ describe('transform & output', () => {
 //  *
 //  */
 describe('reports', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2000-01-01'));
+
     /**
      *
      */
@@ -901,12 +903,29 @@ describe('reports', () => {
                 'Rabbit consume (received messages)': {
                     description: 'Rabbit consume (received messages)',
                     type: 'object',
-                    data: [{ header: { correlationId: '', fields: {}, properties: {}, headers: {} }, data: { a: 'x' } }]
+                    data: [
+                        {
+                            header: {
+                                correlationId: '',
+                                fields: {},
+                                properties: {},
+                                headers: {},
+                                receivedTime: '2000-01-01T00:00:00.000Z'
+                            },
+                            data: { a: 'x' }
+                        }
+                    ]
                 },
                 'Rabbit consume (header)': {
                     description: 'Rabbit consume (header)',
                     type: 'object',
-                    data: { correlationId: '', fields: {}, properties: {}, headers: {} }
+                    data: {
+                        correlationId: '', //
+                        fields: {},
+                        properties: {},
+                        headers: {},
+                        receivedTime: '2000-01-01T00:00:00.000Z'
+                    }
                 },
                 'Rabbit consume (data)': { description: 'Rabbit consume (data)', type: 'object', data: { a: 'x' } }
             }
@@ -943,8 +962,14 @@ describe('reports', () => {
         const reportData = JSON.parse((fs.writeFile as any).mock.calls[0][1]);
 
         expect(reportData['result']['Rabbit consume (received messages)']['data']).toStrictEqual([
-            { data: { a: 1 }, header: { correlationId: '', fields: {}, properties: {}, headers: {} } },
-            { data: { a: 2 }, header: { correlationId: '', fields: {}, properties: {}, headers: {} } }
+            {
+                data: { a: 1 },
+                header: { correlationId: '', fields: {}, properties: {}, headers: {}, receivedTime: '2000-01-01T00:00:00.000Z' }
+            },
+            {
+                data: { a: 2 },
+                header: { correlationId: '', fields: {}, properties: {}, headers: {}, receivedTime: '2000-01-01T00:00:00.000Z' }
+            }
         ]);
     });
 
@@ -1017,7 +1042,13 @@ describe('reports', () => {
                     type: 'object',
                     data: [
                         {
-                            header: { correlationId: '', fields: {}, properties: {}, headers: {} },
+                            header: {
+                                correlationId: '',
+                                fields: {},
+                                properties: {},
+                                headers: {},
+                                receivedTime: '2000-01-01T00:00:00.000Z'
+                            },
                             data: { a: 1 }
                         }
                     ]
@@ -1025,7 +1056,13 @@ describe('reports', () => {
                 'Rabbit consume (header)': {
                     description: 'Rabbit consume (header)',
                     type: 'object',
-                    data: { correlationId: '', fields: {}, properties: {}, headers: {} }
+                    data: {
+                        correlationId: '', //
+                        fields: {},
+                        properties: {},
+                        headers: {},
+                        receivedTime: '2000-01-01T00:00:00.000Z'
+                    }
                 },
                 'Rabbit consume (data)': {
                     description: 'Rabbit consume (data)',

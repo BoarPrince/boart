@@ -291,7 +291,7 @@ export class RabbitQueueHandler {
                                 headers: msg.properties.headers,
                                 fields: { ...msg.fields },
                                 properties: { ...msg.properties },
-                                receivedTime: Date.now(),
+                                receivedTime: new Date().toISOString(),
                                 message
                             };
                             delete consumerMessage.properties.correlationId;

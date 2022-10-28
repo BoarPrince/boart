@@ -9,5 +9,5 @@ export interface RabbitQueueMessage {
     fields?: Record<string, ContentType>;
     properties?: Record<string, ContentType>;
     headers?: Record<string, ContentType>;
-    receivedTime?: number;
+    receivedTime?: string;
 }

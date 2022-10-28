@@ -23,7 +23,8 @@ export class RabbitConsumeExecutionUnit
             correlationId: queueMessage.correlationId,
             fields: queueMessage.fields,
             properties: queueMessage.properties,
-            headers: queueMessage.headers
+            headers: queueMessage.headers,
+            receivedTime: queueMessage.receivedTime
         });
     }
 
