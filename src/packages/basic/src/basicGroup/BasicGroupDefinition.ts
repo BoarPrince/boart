@@ -6,6 +6,7 @@ import {
     GroupExecutionUnit,
     ParaValidator,
     RowTypeValue,
+    RunNotExecutionUnit,
     RunOnlyExecutionUnit,
     WaitExecutionUnit
 } from '@boart/core-impl';
@@ -17,6 +18,14 @@ if (!GroupRowDefinition.contains('basic')) {
         new RowDefinition({
             type: TableRowType.PreConfiguration,
             executionUnit: new RunOnlyExecutionUnit(),
+            validators: null
+        })
+    );
+
+    basicGroup.addRowDefinition(
+        new RowDefinition({
+            type: TableRowType.PreConfiguration,
+            executionUnit: new RunNotExecutionUnit(),
             validators: null
         })
     );

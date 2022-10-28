@@ -7,8 +7,8 @@ import { UniqueValidator } from '../../validators/UniqueValidator';
 /**
  *
  */
-export class RunOnlyExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
-    readonly description = 'run:only';
+export class RunNotExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
+    readonly description = 'run:not';
     readonly parameterType = ParaType.True;
     readonly validators = [new UniqueValidator()];
 
@@ -22,8 +22,7 @@ export class RunOnlyExecutionUnit implements ExecutionUnit<AnyContext, RowTypeVa
             .filter((v) => !!v);
         const value = row.actionPara;
 
-        // expected value must be defined error (action), maybe see above.
-        if (!expectedValues.includes(value)) {
+        if (expectedValues.includes(value)) {
             Runtime.instance.stepRuntime.current.status = RuntimeStatus.stopped;
         }
     }
