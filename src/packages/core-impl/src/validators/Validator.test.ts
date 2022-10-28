@@ -249,6 +249,32 @@ describe('check row validators', () => {
                 throw Error('error must be thrown when any failures occurs during int valiation');
             }
         );
+
+        /**
+         *
+         */
+        it('allow null', () => {
+            const sut = new IntValidator('value1', true);
+            sut.validate({
+                key: 'a:a',
+                keyPara: null,
+                selector: null,
+                values: {
+                    value1: null
+                },
+                values_replaced: {
+                    value1: null
+                },
+                _metaDefinition: new RowDefinition({
+                    key: null,
+                    type: null,
+                    selectorType: null,
+                    executionUnit: null,
+                    parameterType: ParaType.False,
+                    validators: []
+                })
+            });
+        });
     });
 
     /**

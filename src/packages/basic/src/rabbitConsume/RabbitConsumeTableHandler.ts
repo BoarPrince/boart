@@ -184,7 +184,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
                     'config',
                     'count_max'
                 ),
-                validators: [new IntValidator('value')]
+                validators: [new IntValidator('value', true)]
             })
         );
 

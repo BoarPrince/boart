@@ -4,7 +4,7 @@ import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
  *
  */
 export class IntValidator implements RowValidator {
-    constructor(private readonly columnName: string) {}
+    constructor(private readonly columnName: string, private readonly allowNull = false) {}
 
     /**
      *
@@ -16,13 +16,18 @@ export class IntValidator implements RowValidator {
         }
 
         const value = row.values[this.columnName];
-        const re = /^\d+$/;
-        if (!re.test(String(value))) {
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            throw Error(`column '${this.columnName}' must be a integer (number) value, but is '${value}'`);
-        }
+        if (value == null && this.allowNull) {
+            return;
+        } else {
+            const re = /^\d+$/;
+            if (!re.test(String(value))) {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                throw Error(`column '${this.columnName}' must be a integer (number) value, but is '${value}'`);
+            }
 
-        row.values[this.columnName] = Number.parseInt(value as string);
-        row.values_replaced[this.columnName] = row.values[this.columnName];
+            const inVal = Number.parseInt(value as string);
+            row.values[this.columnName] = inVal;
+            row.values_replaced[this.columnName] = inVal;
+        }
     }
 }
