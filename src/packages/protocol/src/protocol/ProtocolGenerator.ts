@@ -28,6 +28,18 @@ export class ProtocolGenerator {
     /**
      *
      */
+    private static jsonParse<T>(jsonContent: string): T {
+        try {
+            return JSON.parse(jsonContent);
+        } catch (error) {
+            console.error('failed to read', jsonContent);
+            throw error;
+        }
+    }
+
+    /**
+     *
+     */
     private get stepItemsWithDescription(): Array<StepReportItem> {
         return Array.from(this.stepItems.values()).filter((stepItem) => stepItem.description?.length > 0);
     }
@@ -47,7 +59,7 @@ export class ProtocolGenerator {
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         const fileContent: string = fs.readFileSync(filename, 'utf-8');
-        return JSON.parse(fileContent);
+        return ProtocolGenerator.jsonParse(fileContent);
     }
 
     /**
@@ -64,7 +76,7 @@ export class ProtocolGenerator {
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
             const content: string = fs.readFileSync(filename, 'utf-8');
-            this.localItems.set(locaItem.id, JSON.parse(content) as LocalReportItem);
+            this.localItems.set(locaItem.id, ProtocolGenerator.jsonParse(content));
         });
 
         // concat and remove duplicates
@@ -92,7 +104,7 @@ export class ProtocolGenerator {
 
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                 const content: string = fs.readFileSync(filename, 'utf-8');
-                const item = JSON.parse(content) as TestReportItem;
+                const item = ProtocolGenerator.jsonParse<TestReportItem>(content);
                 item.tags = concatTags(item.tags, localItem.tags);
                 item.localReportItemId = localItem.id;
                 this.testItems.set(testItem.id, item);
@@ -112,7 +124,7 @@ export class ProtocolGenerator {
 
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     const content: string = fs.readFileSync(filename, 'utf-8');
-                    const item = JSON.parse(content) as StepReportItem;
+                    const item = ProtocolGenerator.jsonParse<StepReportItem>(content);
                     item.localReportItemId = localItem.id;
                     item.testReportItemId = testItem.id;
                     this.stepItems.set(stepItem.id, item);
