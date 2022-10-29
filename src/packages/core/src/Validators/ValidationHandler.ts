@@ -19,17 +19,17 @@ export class ValidationHandler<
      *
      */
     validate(rows: ReadonlyArray<AnyBaseRowType>): void {
-        const rowsData = rows.map(row => row.data);
+        const rowsData = rows.map((row) => row.data);
 
         // validate each row
-        rows.forEach(row => {
-            row.data._metaDefinition.validators?.forEach(validator => {
+        rows.forEach((row) => {
+            row.data._metaDefinition.validators?.forEach((validator) => {
                 validator.validate(row.data, rowsData);
             });
         });
 
         // validate rows as group
-        this.groupValidators?.forEach(validator => {
+        this.groupValidators?.forEach((validator) => {
             validator.validate(rowsData);
         });
     }

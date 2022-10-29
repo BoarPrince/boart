@@ -50,7 +50,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             header: new ObjectContent(),
             correlationId: '',
             messageId: '',
-            routing: ''
+            routing: []
         },
         execution: null
     });

@@ -314,6 +314,60 @@ describe('data', () => {
         /**
          *
          */
+        it('default publish - one routing', async () => {
+            const tableRows = MarkdownTableReader.convert(
+                `| action   | value    |
+                 |----------|----------|
+                 | exchange | ex       |
+                 | routing  | r1       |
+                 | payload  | {"a": 1} |`
+            );
+
+            await sut.handler.process(tableRows);
+
+            const channelMock = (await getAmqplibMock()).channel;
+            expect(channelMock.publish).toBeCalledWith('ex', 'r1', Buffer.from(JSON.stringify({ a: 1 })), {
+                correlationId: '',
+                headers: {},
+                messageId: '',
+                persistent: false
+            });
+        });
+
+        /**
+         *
+         */
+        it('default publish - two routings', async () => {
+            const tableRows = MarkdownTableReader.convert(
+                `| action   | value    |
+                 |----------|----------|
+                 | exchange | ex       |
+                 | routing  | r1       |
+                 | routing  | r2       |
+                 | payload  | {"a": 1} |`
+            );
+
+            await sut.handler.process(tableRows);
+
+            const channelMock = (await getAmqplibMock()).channel;
+            expect(channelMock.publish).toBeCalledTimes(2);
+            expect(channelMock.publish).toBeCalledWith('ex', 'r1', Buffer.from(JSON.stringify({ a: 1 })), {
+                correlationId: '',
+                headers: {},
+                messageId: '',
+                persistent: false
+            });
+            expect(channelMock.publish).toBeCalledWith('ex', 'r2', Buffer.from(JSON.stringify({ a: 1 })), {
+                correlationId: '',
+                headers: {},
+                messageId: '',
+                persistent: false
+            });
+        });
+
+        /**
+         *
+         */
         it('exchange with messageid', async () => {
             const tableRows = MarkdownTableReader.convert(
                 `| action    | value    |
@@ -428,7 +482,7 @@ describe('reporting', () => {
                         correlationId: '',
                         header: {},
                         messageId: '',
-                        routing: ''
+                        routing: []
                     },
                     description: 'Rabbit publish (header)',
                     type: 'object'
@@ -489,7 +543,7 @@ describe('reporting', () => {
                         correlationId: '',
                         header: {},
                         messageId: '',
-                        routing: 'r1'
+                        routing: ['r1']
                     },
                     description: 'Rabbit publish (header)',
                     type: 'object'
@@ -550,7 +604,7 @@ describe('reporting', () => {
                         correlationId: '',
                         header: { traceId: 't1' },
                         messageId: '',
-                        routing: ''
+                        routing: []
                     },
                     description: 'Rabbit publish (header)',
                     type: 'object'

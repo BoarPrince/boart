@@ -429,6 +429,13 @@ describe('count', () => {
     /**
      *
      */
+    beforeEach(() => {
+        jest.useRealTimers();
+    });
+
+    /**
+     *
+     */
     it('expect mininum 2 messages', async () => {
         getAmqplibMock()
             .then((mockInstance) => {
@@ -845,7 +852,12 @@ describe('transform & output', () => {
 //  *
 //  */
 describe('reports', () => {
-    jest.useFakeTimers().setSystemTime(new Date('2000-01-01'));
+    /**
+     *
+     */
+    beforeEach(() => {
+        jest.useFakeTimers().setSystemTime(new Date('2000-01-01'));
+    });
 
     /**
      *

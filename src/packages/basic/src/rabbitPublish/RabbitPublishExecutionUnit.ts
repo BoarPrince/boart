@@ -42,14 +42,17 @@ export class RabbitPublishExecutionUnit implements ExecutionUnit<RabbitPublishCo
             );
         } else {
             StepReport.instance.addInputItem('Rabbit publish to exchange (payload)', 'json', context.preExecution.payload);
-            await handlerInstance.sendToExchange(
-                context.config.queue_or_exhange,
-                context.preExecution.routing,
-                context.preExecution.payload.toJSON(),
-                headers,
-                context.preExecution.correlationId,
-                context.preExecution.messageId
-            );
+            const routings = context.preExecution.routing;
+            for (const routing of routings.length === 0 ? [''] : routings) {
+                await handlerInstance.sendToExchange(
+                    context.config.queue_or_exhange,
+                    routing,
+                    context.preExecution.payload.toJSON(),
+                    headers,
+                    context.preExecution.correlationId,
+                    context.preExecution.messageId
+                );
+            }
         }
     }
 }
