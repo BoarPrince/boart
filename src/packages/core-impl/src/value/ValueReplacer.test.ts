@@ -310,6 +310,16 @@ describe('store', () => {
     /**
      *
      */
+    it('error when operator not valid', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore;
+
+        expect(() => sut.replace('x:<y', store, null)).toThrowError("store default operator ':<' not valid (x:<y)");
+    });
+
+    /**
+     *
+     */
     it('expression not valid must throw an error', () => {
         const sut: ValueReplacer = new StoreReplacer();
         const store = Store.instance.testStore;

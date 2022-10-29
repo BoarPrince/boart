@@ -80,7 +80,7 @@ export class StoreReplacer implements ValueReplacer {
                 case undefined:
                     return null;
                 default:
-                    throw Error(`store default operator '${match.groups.operator}' not valid`);
+                    throw Error(`store default operator '${match.groups.operator}' not valid (${definition})`);
             }
         }
 
