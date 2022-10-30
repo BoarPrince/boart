@@ -1,17 +1,20 @@
 import 'jest-extended';
 
+import fs from 'fs';
+
 import { BasicDataGroupDefinition } from '@boart/basic';
 import {
+    EnvLoader,
     GeneratorHandler,
     MarkdownTableReader,
     NativeContent,
     NullContent,
     ObjectContent,
+    Store,
     TableHandler,
     TableHandlerBaseImpl,
     TextContent
 } from '@boart/core';
-import { Store } from '@boart/core';
 import { DataContext, RowTypeValue } from '@boart/core-impl';
 
 /**
@@ -25,6 +28,7 @@ jest.mock('@boart/core', () => {
         __esModule: true,
         ...originalModule,
         EnvLoader: class {
+            static getSettings = jest.fn().mockReturnValue({});
             static instance = {
                 mapReportData: (filename: string) => filename,
                 get: (key: string) => key
@@ -1182,5 +1186,75 @@ describe('generate', () => {
         const result = Store.instance.testStore.get('var');
         expect(result.valueOf()).toStrictEqual({ a: 22 });
         expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 22 });
+    });
+
+    /**
+     *
+     */
+    it('use template generator', async () => {
+        delete globalThis._templateHandlerInstance;
+        jest.spyOn(EnvLoader, 'getSettings').mockImplementation(() => ({
+            template_mapping: {
+                a: {
+                    b: 'c'
+                }
+            }
+        }));
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action  | value                |
+             |--------|----------------------|
+             |payload | \${generate:tpl:a.b} |
+             |store   | var                  |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result.valueOf()).toBe('c');
+    });
+
+    /**
+     *
+     */
+    it('use template generator contains hex generator ', async () => {
+        const hexGenerator = GeneratorHandler.instance.get('hex');
+        jest.spyOn(hexGenerator, 'generate').mockImplementation((size) => size as string);
+
+        delete globalThis._templateHandlerInstance;
+        jest.spyOn(EnvLoader, 'getSettings').mockImplementation(() => ({
+            template_mapping: {
+                a: '${generate:hex:22}'
+            }
+        }));
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action  | value              |
+             |--------|--------------------|
+             |payload | \${generate:tpl:a} |
+             |store   | var                |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get('var');
+        expect(result.valueOf()).toBe(22);
+    });
+
+    /**
+     *
+     */
+    it('use template generator, but template not found', () => {
+        delete globalThis._templateHandlerInstance;
+        jest.spyOn(EnvLoader, 'getSettings').mockImplementation(() => ({}));
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action  | value              |
+             |--------|--------------------|
+             |payload | \${generate:tpl:a} |
+             |store   | var                |`
+        );
+
+        expect(() => sut.handler.process(tableDef)).toThrowError(`error template generator, template: 'a' does not exist`);
     });
 });

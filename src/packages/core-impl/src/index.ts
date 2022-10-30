@@ -22,6 +22,7 @@ import { HexGenerator } from './generator/HexGenerator';
 import { ISODateGenerator } from './generator/ISODateGenerator';
 import { IbanGenerator } from './generator/IbanGenerator';
 import { RandomGenerator } from './generator/RandomGenerator';
+import { TemplateGenerator } from './generator/TemplateGenerator';
 import { TimestampGenerator } from './generator/TimestampGenerator';
 import { UUIDGenerator } from './generator/UUIDGenerator';
 import { BoolValidator } from './validators/BoolValidator';
@@ -37,7 +38,7 @@ import { XORValidator } from './validators/XORValidator';
 import { EnvironmentReplacer } from './value/EnvironmentReplacer';
 import { GenerateReplacer } from './value/GenerateReplacer';
 import { ReferenceReplacer } from './value/ReferenceReplacer';
-import { StoreReplacer } from './value/StoreReplace';
+import { StoreReplacer } from './value/StoreReplacer';
 import { TextReplacer } from './value/TextReplacer';
 
 /**
@@ -75,6 +76,7 @@ export {
     RunOnlyExecutionUnit,
     RunNotExecutionUnit,
     StoreReplacer,
+    TemplateGenerator,
     TextReplacer,
     TimestampGenerator,
     TransformJPathExecutionUnit,

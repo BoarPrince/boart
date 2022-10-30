@@ -1,10 +1,13 @@
 import 'jest-extended';
+import { TemplateHandler } from './value/TemplateHandler';
 
-declare global {
+export declare global {
     /**
      *
      */
     interface Console {
         readonly message: (...args: readonly unknown[]) => void;
     }
+
+    var _templateHandlerInstance: TemplateHandler;
 }

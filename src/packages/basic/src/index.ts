@@ -11,6 +11,7 @@ import {
     RandomGenerator,
     ReferenceReplacer,
     StoreReplacer,
+    TemplateGenerator,
     TextReplacer,
     TimestampGenerator,
     UUIDGenerator
@@ -63,6 +64,7 @@ function initialize(): void {
         new CharGenerator(),
         new DateTimeGenerator(),
         new FakeGenerator(),
+        new TemplateGenerator(),
         new HexGenerator(),
         new IbanGenerator(),
         new ISODateGenerator(),

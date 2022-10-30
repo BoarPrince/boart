@@ -392,7 +392,7 @@ describe('check env loader', () => {
 
             const sut = EnvLoader.instance;
 
-            expect(sut.defaultLocation).toBe('env/environment.json');
+            expect(EnvLoader.defaultLocation).toBe('env/environment.json');
             expect(fs.readFileSync).toBeCalledTimes(2);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             expect(fs.readFileSync).nthCalledWith(1, path.resolve('env/environment.json'), { encoding: 'utf-8' });
@@ -412,7 +412,7 @@ describe('check env loader', () => {
 
             const sut = EnvLoader.instance;
 
-            expect(sut.defaultLocation).toBe('default.location');
+            expect(EnvLoader.defaultLocation).toBe('default.location');
             expect(fs.readFileSync).toBeCalledTimes(1);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             expect(fs.readFileSync).nthCalledWith(1, path.resolve('default.location'), { encoding: 'utf-8' });

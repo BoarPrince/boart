@@ -86,7 +86,7 @@ export class EnvLoader {
     /**
      *
      */
-    public get projectRoot(): string {
+    public static get projectRoot(): string {
         const path = process.env.environment_project_root || '.';
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         if (fsPath.isAbsolute(path)) {
@@ -100,54 +100,64 @@ export class EnvLoader {
     /**
      *
      */
-    public get defaultLocation(): string {
+    public static get defaultLocation(): string {
         return process.env.environment_default_location || 'env/environment.json';
     }
 
     /**
      *
      */
-    public set defaultLocation(location: string) {
+    public static set defaultLocation(location: string) {
         process.env['environment_default_location'] = location;
     }
 
     /**
      *
      */
-    public get projectLocation(): string {
+    public static get projectLocation(): string {
         return process.env.environment_project_location;
     }
 
     /**
      *
      */
-    public set projectLocation(location: string) {
+    public static set projectLocation(location: string) {
         process.env['environment_project_location'] = location;
     }
 
     /**
      *
      */
-    private static readSettings(filename: string): Record<string, EnvironmentValue> {
+    private static readSettings(filename: string): object {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
         const fileData: string = fs.readFileSync(filename, { encoding: 'utf-8' });
-        const settings = JSON.parse(fileData) as EnvironmentSettings;
-        return { ...settings.system, ...settings.environment } as Record<string, EnvironmentValue>;
+        return JSON.parse(fileData);
+    }
+
+    /**
+     *
+     */
+    public static getSettings<T>(): T {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+        const defaultSettings = EnvLoader.readSettings(fsPath.join(EnvLoader.projectRoot, EnvLoader.defaultLocation));
+
+        // add or override project specific settings
+        if (!!EnvLoader.projectLocation) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+            const projectSettings = EnvLoader.readSettings(fsPath.join(EnvLoader.projectRoot, EnvLoader.projectLocation));
+            return EnvLoader.mergeDeep(defaultSettings, projectSettings) as unknown as T;
+        } else {
+            return defaultSettings as unknown as T;
+        }
     }
 
     /**
      *
      */
     private initialize() {
-        // read default settings
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
-        this.initMapping(EnvLoader.readSettings(fsPath.join(this.projectRoot, this.defaultLocation)));
-
-        // add or override project specific settings
-        if (!!this.projectLocation) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
-            this.initMapping(EnvLoader.readSettings(fsPath.join(this.projectRoot, this.projectLocation)));
-        }
+        const settings = EnvLoader.getSettings<EnvironmentSettings>();
+        const envSettings = { ...settings.system, ...settings.environment } as Record<string, EnvironmentValue>;
+        this.initMapping(envSettings);
     }
 
     /**
@@ -254,5 +264,27 @@ export class EnvLoader {
         }
 
         return this.isDocker;
+    }
+
+    /**
+     *
+     */
+    public static mergeDeep(...objects: object[]): object {
+        const isObject = (obj: unknown) => obj && !Array.isArray(obj) && typeof obj === 'object';
+
+        return objects.reduce((part, result) => {
+            Object.keys(result).forEach((key) => {
+                const partValue = part[key] as unknown;
+                const resultValue = result[key] as unknown;
+
+                if (isObject(partValue) && isObject(resultValue)) {
+                    part[key] = EnvLoader.mergeDeep(partValue as object, resultValue as object);
+                } else {
+                    part[key] = resultValue;
+                }
+            });
+
+            return part;
+        }, {});
     }
 }

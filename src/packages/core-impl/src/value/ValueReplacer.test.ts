@@ -5,7 +5,7 @@ import { EnvironmentReplacer } from './EnvironmentReplacer';
 import { GenerateReplacer } from './GenerateReplacer';
 import { ReferenceHandler } from './ReferenceHandler';
 import { ReferenceReplacer } from './ReferenceReplacer';
-import { StoreReplacer } from './StoreReplace';
+import { StoreReplacer } from './StoreReplacer';
 import { TextReplacer } from './TextReplacer';
 
 /**
