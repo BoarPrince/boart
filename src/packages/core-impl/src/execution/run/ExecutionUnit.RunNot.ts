@@ -4,11 +4,13 @@ import { AnyContext } from '../../AnyContext';
 import { RowTypeValue } from '../../RowTypeValue';
 import { UniqueValidator } from '../../validators/UniqueValidator';
 
+import { RunDefinitionParser } from './RunDefinitionParser';
+
 /**
  *
  */
-export class RunOnlyExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
-    readonly description = 'run:only';
+export class RunNotExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
+    readonly description = 'run:not';
     readonly parameterType = ParaType.True;
     readonly validators = [new UniqueValidator()];
 
@@ -16,14 +18,11 @@ export class RunOnlyExecutionUnit implements ExecutionUnit<AnyContext, RowTypeVa
      *
      */
     execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
-        const expectedValues = row.value
-            .toString()
-            .split(/[,;|\s]/)
-            .filter((v) => !!v);
-        const value = row.actionPara;
+        const runDefinition = RunDefinitionParser.parse(row.value.toString());
+        const name = row.actionPara;
 
-        // expected value must be defined error (action), maybe see above.
-        if (!expectedValues.includes(value)) {
+        const matchedDefinition = runDefinition.find((def) => def.name === name);
+        if (!!matchedDefinition) {
             Runtime.instance.stepRuntime.current.status = RuntimeStatus.stopped;
         }
     }

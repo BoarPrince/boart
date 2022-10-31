@@ -8,10 +8,10 @@ import { ExpectedOperatorImplementation } from './execution/expected/ExpectedOpe
 import { DescriptionExecutionUnit } from './execution/misc/ExecutionUnit.Description';
 import { GroupExecutionUnit } from './execution/misc/ExecutionUnit.Group';
 import { OutStoreExecutionUnit } from './execution/misc/ExecutionUnit.OutStore';
-import { RunNotExecutionUnit } from './execution/misc/ExecutionUnit.RunNot';
-import { RunOnlyExecutionUnit } from './execution/misc/ExecutionUnit.RunOnly';
 import { WaitExecutionUnit } from './execution/misc/ExecutionUnit.Wait';
 import { PropertySetterExecutionUnit } from './execution/property-setter/PropertySetterExecutionUnit';
+import { RunNotExecutionUnit } from './execution/run/ExecutionUnit.RunNot';
+import { RunOnlyExecutionUnit } from './execution/run/ExecutionUnit.RunOnly';
 import { TransformJPathExecutionUnit } from './execution/transform/ExecutionUnit.TransformJPath';
 import { TransformJsonLogicExecutionUnit } from './execution/transform/ExecutionUnit.TransformJsonLogic';
 import { TransformResetExecutionUnit } from './execution/transform/ExecutionUnit.TransformReset';
@@ -35,6 +35,7 @@ import { UniqueValidator } from './validators/UniqueValidator';
 import { ValueRequiredValidator } from './validators/ValueRequiredValidator';
 import { ValueValidator } from './validators/ValueValidator';
 import { XORValidator } from './validators/XORValidator';
+import { ContextReplacer } from './value/ContextReplacer';
 import { EnvironmentReplacer } from './value/EnvironmentReplacer';
 import { GenerateReplacer } from './value/GenerateReplacer';
 import { ReferenceReplacer } from './value/ReferenceReplacer';
@@ -47,6 +48,7 @@ import { TextReplacer } from './value/TextReplacer';
 export {
     AnyContext,
     BoolValidator,
+    ContextReplacer,
     CharGenerator,
     DataContext,
     DataExecutionContext,

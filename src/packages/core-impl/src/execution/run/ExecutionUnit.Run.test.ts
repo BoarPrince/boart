@@ -1,9 +1,9 @@
-import { Runtime, RuntimeStatus, StepContext } from '@boart/core';
+import { Context, NativeContent, NullContent, Runtime, RuntimeStatus, StepContext, Store } from '@boart/core';
 
 import { AnyContext } from '../../AnyContext';
 import { RowTypeValue } from '../../RowTypeValue';
-import { RunNotExecutionUnit } from './ExecutionUnit.RunNot';
 
+import { RunNotExecutionUnit } from './ExecutionUnit.RunNot';
 import { RunOnlyExecutionUnit } from './ExecutionUnit.RunOnly';
 
 /**
@@ -26,6 +26,13 @@ describe('run:only', () => {
     /**
      *
      */
+    beforeEach(() => {
+        Store.instance.stepStore.clear();
+    });
+
+    /**
+     *
+     */
     it.each([
         ['match single marker - continue running', 'marker', 'marker', RuntimeStatus.succeed],
         ['match multiple marker - whitespace - continue running', 'markerX marker', 'marker', RuntimeStatus.succeed],
@@ -42,6 +49,32 @@ describe('run:only', () => {
         } as RowTypeValue<AnyContext>);
 
         expect(Runtime.instance.stepRuntime.current.status).toBe(expected);
+    });
+
+    /**
+     *
+     */
+    it('with parameter', () => {
+        sut.execute(null, {
+            value: 'a:1:2',
+            actionPara: 'a'
+        } as RowTypeValue<AnyContext>);
+
+        expect(Context.instance.get('arg1').valueOf()).toBe(1);
+        expect(Context.instance.get('arg2').valueOf()).toBe(2);
+    });
+
+    /**
+     *
+     */
+    it('with parameter, but not matching', () => {
+        sut.execute(null, {
+            value: 'a:1:2',
+            actionPara: 'b'
+        } as RowTypeValue<AnyContext>);
+
+        expect(Context.instance.get('arg1')).toBeInstanceOf(NativeContent);
+        expect(Context.instance.get('arg1').valueOf()).toBeUndefined();
     });
 });
 

@@ -36,7 +36,7 @@ class ObjectWrapper implements StoreMap {
 /**
  *
  */
-export class StoreWrapper {
+export class StoreWrapper implements StoreMap {
     public readonly store: StoreMap;
     public readonly storeName: string;
 

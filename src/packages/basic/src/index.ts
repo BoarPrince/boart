@@ -1,6 +1,7 @@
 import { GeneratorHandler, Runtime, ValueReplacerHandler } from '@boart/core';
 import {
     CharGenerator,
+    ContextReplacer,
     DateTimeGenerator,
     EnvironmentReplacer,
     FakeGenerator,
@@ -59,6 +60,7 @@ function initialize(): void {
     ValueReplacerHandler.instance.add('text', new TextReplacer());
     ValueReplacerHandler.instance.add('generate', new GenerateReplacer());
     ValueReplacerHandler.instance.add('ref', new ReferenceReplacer());
+    ValueReplacerHandler.instance.add('context', new ContextReplacer());
 
     GeneratorHandler.instance.addItems([
         new CharGenerator(),

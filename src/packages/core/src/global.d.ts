@@ -1,7 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import 'jest-extended';
+import { Context } from './store/Context';
+import { Store } from './store/Store';
 
 declare global {
+    var _storeInstance: Store;
+    var _contextInstance: Context;
+
     /**
      *
      */

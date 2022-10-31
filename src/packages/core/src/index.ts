@@ -28,6 +28,7 @@ import { Runtime } from './runtime/Runtime';
 import { LocalContext, RuntimeContext, RuntimeResultContext, StepContext, TestContext } from './runtime/RuntimeContext';
 import { RuntimePriority } from './runtime/RuntimePriority';
 import { RuntimeStatus } from './runtime/RuntimeStatus';
+import { Context } from './store/Context';
 import { Store } from './store/Store';
 import { StoreMap } from './store/StoreMap';
 import { StoreWrapper } from './store/StoreWrapper';
@@ -45,6 +46,8 @@ import { ParaType } from './types/ParaType';
 import { ScopeType } from './types/ScopeType';
 import { ScopedType } from './types/ScopedType';
 import { SelectorType } from './types/SelectorType';
+import { DefaultOperatorParser } from './value/DefaultOperatorParser';
+import { OperatorType } from './value/OperatorType';
 import { ValueReplacer } from './value/ValueReplacer';
 import { ValueReplacerHandler } from './value/ValueReplacerHandler';
 
@@ -57,10 +60,12 @@ export {
     BaseRowType,
     ContentInstance,
     ContentType,
+    Context,
     DataContent,
     DataContentBase,
     DataContentHelper,
     DataType,
+    DefaultOperatorParser,
     EnvLoader,
     ExecutionContext,
     ExecutionEngine,
@@ -77,6 +82,7 @@ export {
     NativeContent,
     NullContent,
     ObjectContent,
+    OperatorType,
     ParaType,
     RowDefinition,
     RowValidator,
