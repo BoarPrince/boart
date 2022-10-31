@@ -36,7 +36,7 @@ export default class DataTableHandler extends TableHandlerBaseImpl<DataContext, 
      *
      */
     addGroupRowDefinition(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>) {
-        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic'));
+        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
 

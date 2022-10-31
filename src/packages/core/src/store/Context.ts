@@ -41,7 +41,7 @@ export class Context implements StoreMap {
      *
      */
     get(key: string): ContentType {
-        return DataContentHelper.create(this.contextMap.get(key));
+        return this.contextMap.get(key);
     }
 
     /**

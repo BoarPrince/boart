@@ -1,8 +1,6 @@
 import 'jest-extended';
 
-import fs from 'fs';
-
-import { BasicDataGroupDefinition } from '@boart/basic';
+import { BasicDataGroupDefinition, BasicGroupDefinition } from '@boart/basic';
 import {
     EnvLoader,
     GeneratorHandler,
@@ -10,6 +8,9 @@ import {
     NativeContent,
     NullContent,
     ObjectContent,
+    Runtime,
+    RuntimeStatus,
+    StepContext,
     Store,
     TableHandler,
     TableHandlerBaseImpl,
@@ -90,6 +91,7 @@ class MockTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<Da
      */
     protected addGroupRowDefinition(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>) {
         tableHandler.addGroupRowDefinition(BasicDataGroupDefinition);
+        tableHandler.addGroupRowDefinition(BasicGroupDefinition);
     }
 
     /*<*
@@ -1110,9 +1112,9 @@ describe('generate', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                   |
              |----------|-------------------------|
-             |payload#a | \${generate:@nameA:hex} |
-             |payload#b | \${generate:@nameB:hex} |
-             |payload#c | \${generate:@nameA:hex} |
+             |payload#a | \${generate:nameA@hex} |
+             |payload#b | \${generate:nameB@hex} |
+             |payload#c | \${generate:nameA@hex} |
              |store     | var                     |`
         );
 
@@ -1136,7 +1138,7 @@ describe('generate', () => {
              |payload#a | \${generate:g:@nameA:hex} |
              |payload#b | \${generate:g:@nameB:hex} |
              |payload#c | \${generate:g:@nameA:hex} |
-             |payload#d | \${generate:@nameA:hex}   |
+             |payload#d | \${generate:nameA@hex}   |
              |store     | var                       |`
         );
 
@@ -1256,5 +1258,147 @@ describe('generate', () => {
         );
 
         expect(() => sut.handler.process(tableDef)).toThrowError(`error template generator, template: 'a' does not exist`);
+    });
+});
+
+/**
+ *
+ */
+describe('check run:xxx', () => {
+    /**
+     *
+     */
+    beforeEach(() => {
+        Store.instance.testStore.clear();
+        Store.instance.stepStore.clear();
+        Runtime.instance.stepRuntime.current = new StepContext();
+        Runtime.instance.stepRuntime.current.status = RuntimeStatus.notExecuted;
+    });
+
+    /**
+     *
+     */
+    it('run:only default', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      |value  |
+             |------------|-------|
+             |run:only:a  | a     |
+             |payload     | x     |
+             |store       | var   |`
+        );
+
+        await sut.handler.process(tableDef);
+        expect(Store.instance.testStore.get('var').valueOf()).toBe('x');
+    });
+
+    /**
+     *
+     */
+    it('run:only not-matching', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      |value  |
+             |------------|-------|
+             |run:only:a  | b     |
+             |payload     | x     |
+             |store       | var   |`
+        );
+
+        await sut.handler.process(tableDef);
+        expect(Store.instance.testStore.get('var')).toBeNull();
+    });
+
+    /**
+     *
+     */
+    it('run:only use context replacer', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      |value                |
+             |------------|---------------------|
+             |run:only:a  | a                   |
+             |payload     | \${context:arg1:-z} |
+             |store       | var                 |`
+        );
+
+        await sut.handler.process(tableDef);
+        expect(Store.instance.testStore.get('var')?.valueOf()).toBe('z');
+    });
+
+    /**
+     *
+     */
+    it('run:only use context replacer with arg', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      |value                |
+             |------------|---------------------|
+             |run:only:a  | a:y                 |
+             |payload     | \${context:arg1:-z} |
+             |store       | var                 |`
+        );
+
+        await sut.handler.process(tableDef);
+        expect(Store.instance.testStore.get('var')?.valueOf()).toBe('y');
+    });
+
+    /**
+     *
+     */
+    it('run:only use context replacer with arg', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      |value                |
+             |------------|---------------------|
+             |run:only:a  | a:y                 |
+             |payload     | \${context:arg1:-z} |
+             |store       | var                 |`
+        );
+
+        await sut.handler.process(tableDef);
+        expect(Store.instance.testStore.get('var')?.valueOf()).toBe('y');
+    });
+
+    /**
+     *
+     */
+    it('run:only use context replacer with named arg', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      |value                |
+             |------------|---------------------|
+             |run:only:a  | a:y@para            |
+             |payload     | \${context:para}    |
+             |store       | var                 |`
+        );
+
+        await sut.handler.process(tableDef);
+        expect(Store.instance.testStore.get('var')?.valueOf()).toBe('y');
+    });
+
+    /**
+     *
+     */
+    it('run:only use context replacer with default arg', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      |value                |
+             |------------|---------------------|
+             |run:only:a  | ::y@para::, a       |
+             |payload     | \${context:para}    |
+             |store       | var                 |`
+        );
+
+        await sut.handler.process(tableDef);
+        expect(Store.instance.testStore.get('var')?.valueOf()).toBe('y');
+    });
+
+    /**
+     *
+     */
+    it('run:only use context replacer but arg not defined', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      |value             |
+             |------------|------------------|
+             |run:only:a  | a                |
+             |payload     | \${context:para} |
+             |store       | var              |`
+        );
+
+        await expect(() => sut.handler.process(tableDef)).rejects.toThrowError("context 'para' not defined");
     });
 });

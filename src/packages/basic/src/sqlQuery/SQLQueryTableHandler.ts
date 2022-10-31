@@ -1,16 +1,5 @@
-import {
-    GroupRowDefinition,
-    RowDefinition,
-    TableHandler,
-    TableHandlerBaseImpl,
-    TableRowType
-} from '@boart/core';
-import {
-    PropertySetterExecutionUnit,
-    RequiredValidator,
-    RowTypeValue,
-    UniqueValidator
-} from '@boart/core-impl';
+import { GroupRowDefinition, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
+import { PropertySetterExecutionUnit, RequiredValidator, RowTypeValue, UniqueValidator } from '@boart/core-impl';
 
 import { SQLQueryContext } from './SQLQueryContext';
 import { SQLQueryExecutionUnit } from './SQLQueryExecutionUnit';
@@ -54,7 +43,7 @@ export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryC
      *
      */
     addGroupRowDefinition(tableHandler: TableHandler<SQLQueryContext, RowTypeValue<SQLQueryContext>>) {
-        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic'));
+        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
 

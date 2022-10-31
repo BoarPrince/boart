@@ -49,7 +49,7 @@ export default class RabbitBindTableHandler extends TableHandlerBaseImpl<RabbitB
      *
      */
     addGroupRowDefinition(tableHandler: TableHandler<RabbitBindContext, RowTypeValue<RabbitBindContext>>) {
-        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic'));
+        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
 

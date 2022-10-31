@@ -65,7 +65,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
      *
      */
     addGroupRowDefinition(tableHandler: TableHandler<RestCallContext, RowTypeValue<RestCallContext>>) {
-        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic'));
+        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
 

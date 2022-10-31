@@ -56,7 +56,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
      *
      */
     addGroupRowDefinition(tableHandler: TableHandler<RestAuthorizeContext, RowTypeValue<RestAuthorizeContext>>) {
-        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic'));
+        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
 
         tableHandler.removeRowDefinition('payload');

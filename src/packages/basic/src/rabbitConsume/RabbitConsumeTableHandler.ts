@@ -57,7 +57,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
      *
      */
     addGroupRowDefinition(tableHandler: TableHandler<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>) {
-        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic'));
+        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
 

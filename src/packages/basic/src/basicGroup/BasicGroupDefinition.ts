@@ -11,8 +11,8 @@ import {
     WaitExecutionUnit
 } from '@boart/core-impl';
 
-if (!GroupRowDefinition.contains('basic')) {
-    const basicGroup = GroupRowDefinition.getInstance<AnyContext, RowTypeValue<AnyContext>>('basic');
+if (!GroupRowDefinition.contains('basic-group-definition')) {
+    const basicGroup = GroupRowDefinition.getInstance<AnyContext, RowTypeValue<AnyContext>>('basic-group-definition');
 
     basicGroup.addRowDefinition(
         new RowDefinition({

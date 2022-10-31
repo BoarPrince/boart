@@ -59,7 +59,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
      *
      */
     addGroupRowDefinition(tableHandler: TableHandler<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>) {
-        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic'));
+        tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
 
