@@ -1,11 +1,9 @@
-import { ScopedType, ScopeType, Store, StoreWrapper, ValueReplacer } from '@boart/core';
+import { DefaultOperatorParser, OperatorType, ScopedType, ScopeType, Store, StoreWrapper, ValueReplacer } from '@boart/core';
 
 /**
  *
  */
 export class StoreReplacer implements ValueReplacer {
-    private static readonly re = /^(?<property>[^:]+)((?<operator>:.)(?<default>.+))?$/;
-
     readonly name = 'store';
     readonly nullable = true;
     private _stores: Array<StoreWrapper>;
@@ -62,25 +60,23 @@ export class StoreReplacer implements ValueReplacer {
      *
      */
     replace(definition: string, store: StoreWrapper, scope: ScopeType): string {
-        const match = definition.match(StoreReplacer.re);
-        if (!match) {
-            throw new Error(`store expression '${definition}' not valid`);
-        }
+        const defaultOperator = DefaultOperatorParser.parse(definition);
 
-        const property = match.groups.property;
-        const content = this.getPropertyValue(property, store, scope, !!match.groups.operator);
+        const property = defaultOperator.property;
+        const content = this.getPropertyValue(property, store, scope, !!defaultOperator.operator);
 
         if (!content) {
-            switch (match.groups.operator) {
-                case ':-':
-                    return match.groups.default;
-                case ':=':
-                    store.put(property, match.groups.default);
-                    return match.groups.default;
-                case undefined:
+            switch (defaultOperator.operator.type) {
+                case OperatorType.Default:
+                    return defaultOperator.defaultValue;
+                case OperatorType.DefaultAssignment:
+                    store.put(property, defaultOperator.defaultValue);
+                    return defaultOperator.defaultValue;
+                case OperatorType.None:
                     return null;
+                case OperatorType.Unknown:
                 default:
-                    throw Error(`store default operator '${match.groups.operator}' not valid (${definition})`);
+                    throw Error(`store default operator '${defaultOperator.operator.value}' not valid (${definition})`);
             }
         }
 
