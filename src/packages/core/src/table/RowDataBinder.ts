@@ -139,7 +139,8 @@ export class RowDataBinder {
         const keyIndex = headerCells.indexOf(this.columnMetaInfo.key);
         const indexNameMapping = new Map<string, number>();
 
-        this.columnMetaInfo.values.forEach((col) => {
+        const metaInfoValues = this.columnMetaInfo.values;
+        metaInfoValues.forEach((col) => {
             indexNameMapping.set(col, headerCells.indexOf(col));
         });
 
@@ -164,10 +165,14 @@ export class RowDataBinder {
                 o[c] = ValueReplacerHandler.instance.replace(valueEntry[c]);
                 return o;
             };
+
             rows.push({
                 key: cells[keyIndex],
-                values: this.columnMetaInfo.values.reduce((o, c) => values(o, c), {}),
-                values_replaced: this.columnMetaInfo.values.reduce((o, c) => valuesReplaced(o, c), {})
+                values: metaInfoValues.reduce((o, c) => values(o, c), {}),
+                get values_replaced() {
+                    // lazy replace
+                    return metaInfoValues.reduce((o, c) => valuesReplaced(o, c), {});
+                }
             });
         }
 

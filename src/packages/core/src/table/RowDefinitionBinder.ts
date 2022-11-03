@@ -132,13 +132,16 @@ export class RowDefinitionBinder<
             // checks if the binding could be fullfilled
             this.checkBinding(row, rowDef);
 
+            let lazyValue: Record<string, string>;
             return new type({
                 _metaDefinition: rowDef.definition,
                 key: rowDef.key,
                 keyPara: rowDef.para,
                 selector: rowDef.selector,
                 values: row.values,
-                values_replaced: row.values_replaced
+                get values_replaced() {
+                    return !lazyValue ? (lazyValue = row.values_replaced) : lazyValue;
+                }
             });
         });
     }
