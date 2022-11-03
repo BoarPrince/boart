@@ -1,4 +1,4 @@
-import { Context, DataContentHelper, DefaultOperatorParser, OperatorType, ScopedType, ValueReplacer } from '@boart/core';
+import { Context, DefaultOperatorParser, OperatorType, ScopedType, ValueReplacer } from '@boart/core';
 
 /**
  *

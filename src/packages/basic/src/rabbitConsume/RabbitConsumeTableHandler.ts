@@ -160,7 +160,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
                     'config',
                     'count_min'
                 ),
-                validators: [new IntValidator('value')]
+                validators: [new IntValidator('value', true)]
             })
         );
 
@@ -172,7 +172,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
                     'config',
                     'count_min'
                 ),
-                validators: [new IntValidator('value')]
+                validators: [new IntValidator('value', true)]
             })
         );
 

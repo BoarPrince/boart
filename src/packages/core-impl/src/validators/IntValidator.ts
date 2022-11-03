@@ -10,12 +10,12 @@ export class IntValidator implements RowValidator {
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    validate(row: BaseRowMetaDefinition<any, any>) {
+    validate(row: BaseRowMetaDefinition<any, any>): void {
         if (!Object.keys(row.values).some((key) => key === this.columnName)) {
             throw Error(`Validator: '${this.constructor.name}' => column '${this.columnName}' is not defined`);
         }
 
-        const value = row.values[this.columnName];
+        const value = row.values_replaced[this.columnName];
         if (value == null && this.allowNull) {
             return;
         } else {
