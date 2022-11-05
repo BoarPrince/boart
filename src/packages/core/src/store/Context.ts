@@ -1,15 +1,20 @@
 import { ContentType } from '../data/ContentType';
+import { DataContent } from '../data/DataContent';
 import { DataContentHelper } from '../data/DataContentHelper';
+import { ObjectContent } from '../data/ObjectContent';
 
 import { Store } from './Store';
 import { StoreMap } from './StoreMap';
+import { StoreWrapper } from './StoreWrapper';
 
 /**
- *
+ * Uses Execution Context
+ * or value by Context.put
  */
 export class Context implements StoreMap {
     private static readonly Key = ':#:context:#:';
-    private contextMap = new Map<string, ContentType>();
+    private context: DataContent = new ObjectContent();
+    private contextMap = new StoreWrapper({}, 'context');
 
     /***
      *
@@ -33,15 +38,28 @@ export class Context implements StoreMap {
     /**
      *
      */
+    setContext(context: object): void {
+        this.context = DataContentHelper.create(context);
+    }
+
+    /**
+     *
+     */
     put(key: string, value: ContentType): void {
-        this.contextMap.set(key, value);
+        this.contextMap.put(key, value);
     }
 
     /**
      *
      */
     get(key: string): ContentType {
-        return this.contextMap.get(key);
+        // try context value
+        const contextValue = DataContentHelper.getByPath(key, this.context, true);
+        if (contextValue.isNullOrUndefined()) {
+            // if context not exists, try map value
+            return this.contextMap.get(key, true);
+        }
+        return contextValue;
     }
 
     /**

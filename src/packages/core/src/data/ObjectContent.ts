@@ -172,6 +172,6 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
      *
      */
     isNullOrUndefined() {
-        return Object.keys(this.value).length === 0;
+        return this.value == null;
     }
 }

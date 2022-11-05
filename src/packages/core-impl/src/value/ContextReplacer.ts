@@ -1,4 +1,4 @@
-import { Context, DefaultOperatorParser, OperatorType, ScopedType, ValueReplacer } from '@boart/core';
+import { Context, DataContentHelper, DefaultOperatorParser, OperatorType, ScopedType, ValueReplacer } from '@boart/core';
 
 /**
  *
@@ -28,8 +28,7 @@ export class ContextReplacer implements ValueReplacer {
         }
 
         const value = Context.instance.get(defaultOperator.property);
-        // if (!DataContentHelper.isNullOrUndefined(value)) {
-        if (!!value) {
+        if (!DataContentHelper.isNullOrUndefined(value)) {
             return value.toString();
         }
 

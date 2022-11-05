@@ -1,5 +1,6 @@
 import { Runtime } from '../runtime/Runtime';
 import { RuntimeStatus } from '../runtime/RuntimeStatus';
+import { Context } from '../store/Context';
 import { BaseRowType } from '../table/BaseRowType';
 import { TableRowType } from '../table/TableRowType';
 
@@ -42,12 +43,17 @@ export class ExecutionEngine<
             return this.context;
         }
 
+        Context.instance.setContext(this.context.config);
         await this.executeByType(rows, TableRowType.Configuration);
+
+        Context.instance.setContext(this.context.preExecution);
         await this.executeByType(rows, TableRowType.PreProcessing);
 
         await this.executeMainUnit(rows);
 
+        Context.instance.setContext(this.context.execution);
         await this.executeByType(rows, TableRowType.PostProcessing);
+
         return this.context;
     }
 

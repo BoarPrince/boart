@@ -14,15 +14,19 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
     /**
      *
      */
-    private parseJSON(data: DataContent | string, type: string): Record<string, string> {
+    private parseJSON(data: object | string, type: string): Record<string, string> {
         if (!data || DataContentHelper.isNullOrUndefined(data)) {
             return {};
         }
 
-        try {
-            return JSON.parse(data.toString());
-        } catch (error) {
-            throw Error(`${type} cannot be parsed as a valid json\n${data.toString()}`);
+        if (DataContentHelper.isContent(data)) {
+            try {
+                return JSON.parse(data.toString());
+            } catch (error) {
+                throw Error(`${type} cannot be parsed as a valid json\n${data.toString()}`);
+            }
+        } else {
+            return data as Record<string, string>;
         }
     }
 

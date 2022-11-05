@@ -1017,3 +1017,35 @@ it('context must be re-created', async () => {
     context = await sut.handler.process(tableRows);
     expect(context.preExecution.payload).toBeNull();
 });
+
+/**
+ *
+ */
+it('use context replace', async () => {
+    fetchMock.doMock('ok');
+    const tableRows = MarkdownTableReader.convert(
+        `|action       |value                  |
+         |-------------|-----------------------|
+         | method:post | http://xxx            |
+         | payload     | {"a": 1}              |
+         | payload#b   | \${context:payload.a} |`
+    );
+
+    const context = await sut.handler.process(tableRows);
+
+    expect(context.preExecution.payload.valueOf()).toStrictEqual({ a: 1, b: 1 });
+    expect(fetchMock.mock.calls).toEqual([
+        [
+            'http://xxx',
+            {
+                body: '{"a":1,"b":1}',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                mode: 'no-cors',
+                referrerPolicy: 'unsafe-url'
+            }
+        ]
+    ]);
+});
