@@ -198,6 +198,13 @@ step('Data manage <table>', async (table) => {
 /**
  *
  */
+step('Data manage, continue <table>', { continueOnFailure: true }, async (table) => {
+    await dataTableHandler.handler.process(table);
+});
+
+/**
+ *
+ */
 step('Print store', () => {
     console.log(' ');
     const keys = Object.keys(gauge.dataStore.scenarioStore.store);

@@ -1,6 +1,6 @@
 {
   "companyDto": {
-    "id": "${store:ob-companyId:=${generate:uuid}}",
+    "id": "${generate:t:tpl:company.id}",
     "name": "${store:ob-companyName:=${generate:s:fake:company:name}-${generate:s:random:4}}",
     "state": "CREATED",
     "referer": "LANDING_PAGE",
@@ -12,7 +12,7 @@
   },
   "addressDto": {
     "id": "${store:ob-carrierId:=${generate:uuid}}",
-    "companyId": "${store:ob-companyId}",
+    "companyId": "${generate:t:tpl:company.id}",
     "street": "${generate:t:fake:address:street}",
     "zipCode": "${generatet::fake:address:zipCode}",
     "city": "${generate:t:fake:address:city}",
@@ -28,11 +28,11 @@
       "country": "49",
       "number": "1743284130"
     },
-    "companyId": "${store:ob-companyId}"
+    "companyId": "${generate:t:tpl:company.id}"
   },
   "userDetail": {
     "id": "${store:ob-userId:=${generate:uuid}}",
-    "companyId": "${store:ob-companyId}",
+    "companyId": "${generate:t:tpl:company.id}",
     "email": "${store:ob-email}",
     "languageCode": "en"
   }

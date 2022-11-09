@@ -1,6 +1,6 @@
 {
   "CorrelationId": null,
-  "CompanyId": "${store:ob-companyId:=${generate:uuid}}",
+  "CompanyId": "${generate:t:tpl:company.id}",
   "username": "${store:ob-email:=jitpaytest+ob${generate:t:random:4}@gmail.com}",
   "email": "${store:ob-email:=jitpaytest+ob${generate:t:random:4}@gmail.com}",
   "password": "${env:default_password}",
@@ -13,7 +13,7 @@
   "Roles": "",
   "UserId": "${store:ob-userId:=${generate:uuid}}",
   "CustomerId": null,
-  "activationCode": "${store:ob-companyId:=${generate:uuid}}",
+  "activationCode": "${generate:t:tpl:company.id}",
   "SubsidiaryId": "${store:ob-carrierId:=${generate:uuid}}",
   "LegitimationStatus": 1,
   "PasswordHint": "${env:default_password}",

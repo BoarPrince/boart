@@ -1,6 +1,5 @@
 {
   "id": "${generate:uuid}",
-  "email": "${store:response-user.email:-undefined}",
   "cardLimit": 1000,
   "pin": "${generate:s:random:6}",
   "dayDrivingTime": 0,
@@ -10,8 +9,6 @@
   "dispositionInternalNumber": "${generate:s:random:6}",
   "employeeNumber": "${generate:s:random:6}",
   "workStatus": "REST",
-  "lastname": "${store:response-user.lastname:-undefined}",
-  "firstname": "${store:response-user.firstname:-undefined}",
   "carrierId": "${store:response-ca#id:-undefined}",
   "phoneNumbers": [
     {

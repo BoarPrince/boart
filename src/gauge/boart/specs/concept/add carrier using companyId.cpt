@@ -1,4 +1,4 @@
-# add carrier
+# add carrier, companyId: <companyId>, response: <response>
 
 * Rest call
       | action                 | value                       |
@@ -7,5 +7,6 @@
       | description            | Create a Carrier            |
       | group                  | Initial Create              |
       | payload                | <file:request-carrier.json> |
+      | payload#companyId      | <companyId>                 |
       | expected:header#status | 200                         |
-      | store                  | response-ca                  |
+      | store                  | <response>                  |

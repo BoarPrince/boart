@@ -57,7 +57,7 @@ tags: md-4.2, delete-event
 
 * add user
 
-* add driver
+* add driver only
 
 * queues bind "driver"
 
@@ -98,10 +98,10 @@ tags: md-4.3
 * add user
 
   add first driver
-* add driver
+* add driver only
 
   add a second driver
-* add driver
+* add driver only
 
   read the second created driver
 * Rest call
@@ -182,3 +182,166 @@ tags: md-4.3
    |description           |Get all Drivers of the carrier (must still 2 drivers)|
    |expected:header#status|200                                                  |
    |expected:count#content|2                                                    |
+
+## 1.4. E-Mail must be defined when creating a driver (error when not)
+
+tags: md-4.4
+
+* Test description
+
+   |action     |value                                        |
+   |-----------|---------------------------------------------|
+   |description|Add a driver to company                      |
+   |           |Must throw an error when email is not defined|
+   |priority   |high                                         |
+
+* add company and carrier
+
+* Rest call
+
+   |action                |value                                                                           |
+   |----------------------|--------------------------------------------------------------------------------|
+   |method:post           |/api/driver                                                                     |
+   |description           |Add a Driver (Email not defined)                                                |
+   |payload               |<file:request-driver-only.json>                                                 |
+   |payload#email         |undefined                                                                       |
+   |payload#firstname     |undefined                                                                       |
+   |payload#lastname      |undefined                                                                       |
+   |expected:header#status|400                                                                             |
+   |expected#description  |{firstname=must not be null, email=must not be null, lastname=must not be null},|
+
+
+## 1.5. E-Mail must be defined when creating a driver
+
+tags: md-4.5
+
+* Test description
+
+   |action     |value                  |
+   |-----------|-----------------------|
+   |description|Add a driver to company|
+   |priority   |high                   |
+
+* add company and carrier
+
+* Rest call
+
+   |action                |value                          |
+   |----------------------|-------------------------------|
+   |method:post           |/api/driver                    |
+   |description           |Add a Driver (Email is defined)|
+   |payload               |<file:request-driver-only.json>|
+   |expected:header#status|200                            |
+
+## 1.6. E-Mail of driver must be empty when creating the driver in cascaded user event
+
+tags: md-4.6
+
+* Test description
+
+   |action     |value                       |
+   |-----------|----------------------------|
+   |description|Add a user/driver to company|
+   |priority   |high                        |
+
+* add company and carrier
+
+* Rest call
+
+   |action                |value                                              |
+   |----------------------|---------------------------------------------------|
+   |method:post           |/api/user                                          |
+   |description           |Add a User/Driver (Email for driver is not defined)|
+   |payload               |<file:request-user.json>                           |
+   |payload#driver        |<file:request-driver.json>                         |
+   |expected:header#status|200                                                |
+
+## 1.7. E-Mail of driver must be empty when creating the driver in cascaded user event (error when defined)
+
+tags: md-4.7
+
+* Test description
+
+   |action     |value                                    |
+   |-----------|-----------------------------------------|
+   |description|Add a user/driver to company             |
+   |           |Must throw an error when email is defined|
+   |priority   |high                                     |
+
+* add company and carrier
+
+* Rest call
+
+   |action                       |value                                          |
+   |-----------------------------|-----------------------------------------------|
+   |method:post                  |/api/user                                      |
+   |description                  |Add a User/Driver (Email for driver is defined)|
+   |payload                      |<file:request-user.json>                       |
+   |payload#driver               |<file:request-driver-only.json>                |
+   |expected:header#status       |400                                            |
+   |expected:contains#description|driver.firstname=must be null                  |
+   |expected:contains#description|driver.email=must be null                      |
+   |expected:contains#description|driver.lastname=must be null                   |
+
+## 1.8. E-Mail of driver must be empty when creating the driver in cascaded carrier event
+
+tags: md-4.8
+
+* Test description
+
+   |action     |value                                           |
+   |-----------|------------------------------------------------|
+   |description|Add a carrier (including user/driver) to company|
+   |priority   |high                                            |
+
+* request admin bearer
+
+* add company, response: "request-co"
+
+* Rest call
+
+   |action                           |value                                                                  |
+   |---------------------------------|-----------------------------------------------------------------------|
+   |method:post                      |/api/carrier                                                           |
+   |description                      |Add a Carrier (including User/Driver) (Email for driver is not defined)|
+   |payload                          |<file:request-carrier.json>                                            |
+   |payload#companyId                |${store:request-co.id}                                                 |
+   |payload#users[0]                 |<file:request-user.json>                                               |
+   |payload#users[0].carrierIds[0]   |${context:payload.id}                                                  |
+   |payload#users[0].driver          |<file:request-driver.json>                                             |
+   |payload#users[0].driver.carrierId|${context:payload.id}                                                  |
+   |expected:header#status           |200                                                                    |
+
+## 1.9. E-Mail of driver must be empty when creating the driver in cascaded carrier event (error when defined)
+
+tags: md-4.9
+
+* Test description
+
+   |action     |value                                           |
+   |-----------|------------------------------------------------|
+   |description|Add a carrier (including user/driver) to company|
+   |           |Must throw an error when email is defined       |
+   |priority   |high                                            |
+
+* request admin bearer
+
+* add company, response: "request-co"
+
+* Rest call
+
+   |action                           |value                                          |
+   |---------------------------------|-----------------------------------------------|
+   |method:post                      |/api/carrier                                   |
+   |description                      |Add a User/Driver (Email for driver is defined)|
+   |payload                          |<file:request-carrier.json>                    |
+   |payload#companyId                |${store:request-co.id}                         |
+   |payload#users[0]                 |<file:request-user.json>                       |
+   |payload#users[0].carrierIds[0]   |${context:payload.id}                          |
+   |payload#users[0].driver          |<file:request-driver-only.json>                |
+   |payload#users[0].driver.carrierId|${context:payload.id}                          |
+   |expected:header#status           |200                                            |
+   |--expected:header#status         |400                                            |
+   |--expected:contains#description  |driver.firstname=must be null                  |
+   |--expected:contains#description  |driver.email=must be null                      |
+   |--expected:contains#description  |driver.lastname=must be null                   |

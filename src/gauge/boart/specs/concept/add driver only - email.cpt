@@ -1,0 +1,13 @@
+# add driver only, email: <email>
+
+* Rest call
+
+   | action                 | value                           |
+   |------------------------|---------------------------------|
+   | method:post            | /api/driver                     |
+   | description            | Add a Driver                    |
+   | payload                | <file:request-driver-only.json> |
+   | payload#email          | <email>                         |
+   | expected:header#status | 200                             |
+   | store                  | response-driver                 |
+

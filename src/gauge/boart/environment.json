@@ -43,6 +43,18 @@
     ]
   },
   "environment_reports_data_dir": "./reports",
+  "template_mapping": {
+    "user": {
+      "id": "${generate:uuid}",
+      "firstname": "${generate:fake:name:firstName}",
+      "lastname": "${generate:fake:name:lastName}",
+      "email": "jitpaytest+${generate:date.iso}:${generate:random:4}@gmail.com"
+    },
+    "company": {
+      "id": "${generate:uuid}",
+      "name": "${generate:fake:company:name}-${generate:random:4}"
+    }
+  },
   "path_mapping": {
     "/token": [
       "https://keycloak.dev.jitpay.eu/auth/realms/jitpay/protocol/openid-connect",

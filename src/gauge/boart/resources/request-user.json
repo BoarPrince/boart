@@ -1,7 +1,7 @@
 {
   "id": "${generate:uuid}",
-  "email": "jitpaytest+ob${generate:s:random:4}@gmail.com",
-  "username": "jitpaytest+ob${generate:s:random:4}@gmail.com",
+  "email": "${generate:s:tpl:user.email}",
+  "username": "${generate:s:tpl:user.email}",
   "password": "${env:default_password}",
   "passwordHint": "${env:default_password}",
   "phoneNumbers": [

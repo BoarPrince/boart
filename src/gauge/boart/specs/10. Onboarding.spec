@@ -54,7 +54,7 @@ tags: ob-10.1
 
    |action                                   |value                                             |
    |-----------------------------------------|--------------------------------------------------|
-   |method:get                               |/api/company/${store:ob-companyId}                |
+   |method:get                               |/api/company/${generate:t:tpl:company.id}         |
    |description                              |Request onboarded company                         |
    |                                         |And check that the user contains the correct roles|
    |expected:header#status                   |200                                               |
@@ -151,7 +151,7 @@ tags: ob-10.4
    |----------------------|---------------------------------|
    |method:post           |<portal>/api/company             |
    |payload               |<file:request-portal-debtor.json>|
-   |description           |Create a Debtor                  |
+   |description           |Create a portal debtor           |
    |expected:header#status|201                              |
    |store#taxNumber       |company.taxId                    |
    |store#name            |company.name                     |
@@ -164,3 +164,177 @@ tags: ob-10.4
 
 * queues check "company-consumer, fleet-error, md-error"
 
+## 1.5. Id's must match after onboarding event when debtor already exists (tax - match)
+
+tags: ob-10.5
+
+* Test description
+
+   |action     |value|
+   |-----------|-----|
+   |description|XXXX |
+   |priority   |high |
+
+* queues bind "fleet-event-bus, portal-error"
+
+* RabbitMQ publish
+
+   |action                  |value                         |
+   |------------------------|------------------------------|
+   |description             |Send onboarding event manually|
+   |exchange                |com.jitpay.company.onboarding |
+   |wait:after:sec          |3                             |
+   |routing                 |JitpayServicesSync.RoutingKey |
+   |payload                 |<file:event-onboarding.json>  |
+   |payload#companyDto.state|CREATED                       |
+
+* RabbitMQ publish
+
+   |action                  |value                         |
+   |------------------------|------------------------------|
+   |description             |Send onboarding event manually|
+   |exchange                |com.jitpay.company.onboarding |
+   |wait:after:sec          |3                             |
+   |routing                 |JitpayServicesSync.RoutingKey |
+   |payload                 |<file:event-onboarding.json>  |
+   |payload#companyDto.state|REGISTERED                    |
+
+* queues check "fleet-event-bus, portal-error"
+
+## 1.6. If portal is sending the event (fleet event bus) more than one time, the carrier must always be the same (manual check)
+
+tags: ob-10.6
+
+* Test description
+
+   |action     |value                                                                                          |
+   |-----------|-----------------------------------------------------------------------------------------------|
+   |description|portal can send the fleet_event_bus event more than one times.                                 |
+   |           |In any case the carrierId should not be changed by the master data backend.                    |
+   |           |* Master data is updating the keycloak subsidiary all the time with the first created carrierId|
+   |           |* The first update has eventType: CREATE, all other updates has the eventType: UPDATE          |
+   |priority   |high                                                                                           |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                            |
+   |----------------------|---------------------------------|
+   |method:post           |/api/company                     |
+   |description           |Create a Company without jitpayId|
+   |group                 |Initial Create                   |
+   |payload               |<file:request-company.json>      |
+   |payload#jitPayId      |                                 |
+   |expected:header#status|200                              |
+   |store                 |response-co                      |
+
+* add carrier
+
+* add user
+
+* queues bind "company, carrier, user, identity-claim"
+
+@@@@@@ @ @@@@@   @@@@  @@@@@    @@@@@@ @    @ @@@@@@ @    @ @@@@@
+@      @ @    @ @        @      @      @    @ @      @@   @   @
+@@@@@  @ @    @  @@@@    @      @@@@@  @    @ @@@@@  @ @  @   @
+@      @ @@@@@       @   @      @      @    @ @      @  @ @   @
+@      @ @   @  @    @   @      @       @  @  @      @   @@   @
+@      @ @    @  @@@@    @      @@@@@@   @@   @@@@@@ @    @   @
+
+* RabbitMQ publish
+
+   |action                         |value                              |
+   |-------------------------------|-----------------------------------|
+   |description                    |Send onboarding event manually     |
+   |exchange                       |fleet_event_bus                    |
+   |routing                        |OnBoardingFleetEvent               |
+   |wait:after:sec                 |2                                  |
+   |payload                        |<file:event-portal-onboarding.json>|
+   |payload#Taker.companyId        |${store:response-co.id}            |
+   |payload#Taker.UserDetail.userId|${store:response-user.id}          |
+
+* queues check "company, carrier, user, identity-claim"
+
+* Data manage, continue
+
+   |action                 |value                              |
+   |-----------------------|-----------------------------------|
+   |in                     |${store:event-company}             |
+   |description            |EventType of Company must be CREATE|
+   |group                  |Check Queues                       |
+   |expected#eventType     |CREATE                             |
+   |expected#carriers[0].id|${store:response-ca.id}            |
+
+* Data manage, continue
+
+   |action            |value                              |
+   |------------------|-----------------------------------|
+   |in                |${store:event-carrier}             |
+   |description       |EventType of Carrier must be CREATE|
+   |group             |Check Queues                       |
+   |expected#eventType|CREATE                             |
+   |expected#id       |${store:response-ca.id}            |
+
+* Data manage, continue
+
+   |action               |value                                             |
+   |---------------------|--------------------------------------------------|
+   |in                   |${store:event-identity-claim}                     |
+   |description          |Claim Update must contain the correct subsidiaryId|
+   |group                |Check Queues                                      |
+   |expected#SubsidiaryId|${store:response-ca.id}                           |
+   |expected#Email       |${store:response-user.email}                      |
+
+ @@@@  @@@@@@  @@@@   @@@@  @    @ @@@@@     @@@@@@ @    @ @@@@@@ @    @ @@@@@
+@      @      @    @ @    @ @@   @ @    @    @      @    @ @      @@   @   @
+ @@@@  @@@@@  @      @    @ @ @  @ @    @    @@@@@  @    @ @@@@@  @ @  @   @
+     @ @      @      @    @ @  @ @ @    @    @      @    @ @      @  @ @   @
+@    @ @      @    @ @    @ @   @@ @    @    @       @  @  @      @   @@   @
+ @@@@  @@@@@@  @@@@   @@@@  @    @ @@@@@     @@@@@@   @@   @@@@@@ @    @   @
+
+* RabbitMQ publish
+
+   |action                         |value                                      |
+   |-------------------------------|-------------------------------------------|
+   |description                    |Send onboarding event manually, second time|
+   |                               |with changed customerId                    |
+   |exchange                       |fleet_event_bus                            |
+   |routing                        |OnBoardingFleetEvent                       |
+   |wait:after:sec                 |2                                          |
+   |payload                        |<file:event-portal-onboarding.json>        |
+   |payload#Taker.companyId        |${store:response-co.id}                    |
+   |payload#Taker.UserDetail.userId|${store:response-user.id}                  |
+   |payload#Taker.subsidiaryId     |${generate:uuid}                           |
+
+* queues check "company, carrier, user, identity-claim"
+
+* Data manage, continue
+
+   |action                 |value                                               |
+   |-----------------------|----------------------------------------------------|
+   |in                     |${store:event-company}                              |
+   |description            |EventType of Company must be UPDATE for second event|
+   |group                  |Check Queues                                        |
+   |expected#eventType     |UPDATE                                              |
+   |expected#carriers[0].id|${store:response-ca.id}                             |
+
+* Data manage, continue
+
+   |action            |value                                                   |
+   |------------------|--------------------------------------------------------|
+   |in                |${store:event-carrier}                                  |
+   |description       |EventType of Carrier must be UPDATE for the second event|
+   |group             |Check Queues                                            |
+   |expected#eventType|UPDATE                                                  |
+   |expected#id       |${store:response-ca.id}                                 |
+
+* Data manage, continue
+
+   |action               |value                                             |
+   |---------------------|--------------------------------------------------|
+   |in                   |${store:event-identity-claim}                     |
+   |description          |Claim Update must contain the correct subsidiaryId|
+   |group                |Check Queues                                      |
+   |expected#SubsidiaryId|${store:response-ca.id}                           |
+   |expected#Email       |${store:response-user.email}                      |

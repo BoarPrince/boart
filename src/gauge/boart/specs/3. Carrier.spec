@@ -250,3 +250,78 @@ tags: cascading-deletion, md-3.4, JIT-456, env-local
    |expected:header#status   |200                                       |
    |expected:count#carrierIds|1                                         |
    |expected#carrierIds[0]   |${store:response-ca2.id}                  |
+
+## 1.5. Cascading Response / Event must contain vehicles too
+
+tags: cascading-resposne, MD-209, md-3.5
+
+* Test description
+
+   |action     |value                                                   |
+   |-----------|--------------------------------------------------------|
+   |description|Carrier Event and Response must contain all child events|
+   |ticket     |MD-209                                                  |
+   |priority   |high                                                    |
+
+* request admin bearer
+
+* add company and carrier
+
+comment * add carrier, companyId: "${store:response-co.id}", response: "response-ca2"
+
+* add user
+* add driver only, email: "${store:response-user.email}"
+* add user
+* add driver only, email: "${store:response-user.email}"
+* add user
+* add driver only, email: "${store:response-user.email}"
+
+* add vehicle
+* add vehicle
+* add vehicle
+
+* Rest call
+
+   |action                            |value                                                            |
+   |----------------------------------|-----------------------------------------------------------------|
+   |method:get                        |/api/carrier/${store:response-ca.id}                             |
+   |description                       |Carrier request must contain all childs (users, driver, vehicles)|
+   |expected:header#status            |200                                                              |
+   |expected:count#vehicles           |3                                                                |
+   |expected:count#users              |3                                                                |
+   |expected:not:empty#users[0].driver|                                                                 |
+   |group                             |Check Response                                                   |
+
+* Rest call
+
+   |action                                        |value                                                                      |
+   |----------------------------------------------|---------------------------------------------------------------------------|
+   |method:get                                    |/api/company/${store:response-co.id}                                       |
+   |description                                   |Company request must contain all childs (carriers, users, driver, vehicles)|
+   |expected:header#status                        |200                                                                        |
+   |expected:count#carriers[0].vehicles           |3                                                                          |
+   |expected:count#carriers[0].users              |3                                                                          |
+   |expected:not:empty#carriers[0].users[0].driver|                                                                           |
+   |group                                         |Check Response                                                             |
+
+* queues bind "company, carrier"
+
+* Rest call
+
+   |action                |value                                                |
+   |----------------------|-----------------------------------------------------|
+   |method:get            |/api/maintenance/sync/carrier/${store:response-ca.id}|
+   |description           |Trigger carrier event                                |
+   |expected:header#status|202                                                  |
+   |group                 |Trigger Event                                        |
+
+* Rest call
+
+   |action                |value                                                |
+   |----------------------|-----------------------------------------------------|
+   |method:get            |/api/maintenance/sync/company/${store:response-co.id}|
+   |description           |Trigger company event                                |
+   |expected:header#status|202                                                  |
+   |group                 |Trigger Event                                        |
+
+* queues check "company, carrier"
