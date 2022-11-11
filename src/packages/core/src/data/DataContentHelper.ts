@@ -111,6 +111,18 @@ export class DataContentHelper {
      *
      */
     public static isObject(variable: ContentType): boolean {
+        if (!variable) {
+            return false;
+        }
+
+        if (Array.isArray(variable)) {
+            return false;
+        }
+
+        // if (typeof variable === 'object') {
+        //     return true;
+        // }
+
         if (!DataContentHelper.isContent(variable)) {
             return false;
         }

@@ -1,4 +1,4 @@
-import { DataContent, DataContentHelper, ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@boart/core';
+import { DataContentHelper, ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@boart/core';
 import { PDFContent, RowTypeValue } from '@boart/core-impl';
 import { RestHttp } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
@@ -19,14 +19,16 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
             return {};
         }
 
-        if (DataContentHelper.isContent(data)) {
-            try {
+        try {
+            if (DataContentHelper.isContent(data)) {
                 return JSON.parse(data.toString());
-            } catch (error) {
-                throw Error(`${type} cannot be parsed as a valid json\n${data.toString()}`);
+            } else if (typeof data === 'string') {
+                return JSON.parse(data);
+            } else {
+                return data as Record<string, string>;
             }
-        } else {
-            return data as Record<string, string>;
+        } catch (error) {
+            throw Error(`${type} cannot be parsed as a valid json\n${data.toString()}`);
         }
     }
 
@@ -54,7 +56,7 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
                 return rest.form_data(payload, authorization, header);
             }
             case 'post-param': {
-                const payload = Object.assign(preContext.param.getValue(), this.parseJSON(preContext.payload, 'payload'));
+                const payload = Object.assign({}, preContext.param.getValue(), this.parseJSON(preContext.payload, 'payload'));
                 return rest.post_param(payload, authorization, header);
             }
         }
