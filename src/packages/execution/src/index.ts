@@ -1,5 +1,6 @@
 import './fetch-polyfill';
-import { MSSQLHandler, MSSQLQueryResult } from './mssql/MSSQLHandler';
+import { MSSQLHandler } from './mssql/MSSQLHandler';
+import { MSSQLQueryResult } from './mssql/MSSQLQueryResult';
 import { RabbitQueueHandler } from './rabbit/RabbitQueueHandler';
 import { RabbitQueueMessage } from './rabbit/RabbitQueueMessage';
 import { RabbitQueueMessageConsumer } from './rabbit/RabbitQueueMessageConsumer';

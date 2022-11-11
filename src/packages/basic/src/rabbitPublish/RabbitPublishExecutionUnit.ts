@@ -1,4 +1,4 @@
-import { ExecutionUnit } from '@boart/core';
+import { DataContentHelper, ExecutionUnit } from '@boart/core';
 import { RowTypeValue } from '@boart/core-impl';
 import { RabbitQueueHandler } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
@@ -22,12 +22,12 @@ export class RabbitPublishExecutionUnit implements ExecutionUnit<RabbitPublishCo
         const config = { ...context.config, password: undefined };
         StepReport.instance.addInputItem('Rabbit publish (configuration)', 'json', config);
 
-        if (!context.preExecution.header.isObject()) {
+        if (!DataContentHelper.isObject(context.preExecution.header)) {
             throw Error(`header must key valued, but it's not`);
         }
 
         const handlerInstance = RabbitQueueHandler.getInstance(context.config);
-        const headers = context.preExecution.header.getObject();
+        const headers = context.preExecution.header;
 
         StepReport.instance.addInputItem('Rabbit publish (header)', 'object', { ...context.preExecution, payload: undefined });
 
@@ -35,8 +35,8 @@ export class RabbitPublishExecutionUnit implements ExecutionUnit<RabbitPublishCo
             StepReport.instance.addInputItem('Rabbit publish to queue (payload)', 'json', context.preExecution.payload);
             await handlerInstance.sendToQueue(
                 context.config.queue_or_exhange,
-                context.preExecution.payload.toJSON(),
-                headers,
+                JSON.stringify(context.preExecution.payload.valueOf()),
+                headers.valueOf() as Record<string, unknown>,
                 context.preExecution.correlationId,
                 context.preExecution.messageId
             );
@@ -47,8 +47,8 @@ export class RabbitPublishExecutionUnit implements ExecutionUnit<RabbitPublishCo
                 await handlerInstance.sendToExchange(
                     context.config.queue_or_exhange,
                     routing,
-                    context.preExecution.payload.toJSON(),
-                    headers,
+                    JSON.stringify(context.preExecution.payload.valueOf()),
+                    headers.valueOf() as Record<string, unknown>,
                     context.preExecution.correlationId,
                     context.preExecution.messageId
                 );

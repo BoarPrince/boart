@@ -1,4 +1,4 @@
-import { DataContent, ExecutionContext, ObjectContent } from '@boart/core';
+import { ExecutionContext } from '@boart/core';
 
 import { PublishType } from './RabbitPublishType';
 
@@ -19,8 +19,8 @@ export interface RabbitPublishConfigContext {
  *
  */
 export interface RabbitPublishPreExecutionContext {
-    payload: DataContent;
-    header: ObjectContent;
+    payload: object;
+    header: object;
     correlationId: string;
     messageId: string;
     routing: Array<string>;

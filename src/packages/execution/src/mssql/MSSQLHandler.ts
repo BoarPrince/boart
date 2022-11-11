@@ -1,45 +1,6 @@
-import { ContentType } from '@boart/core';
-import sql, { config, ConnectionPool, IResult } from 'mssql';
+import sql, { config, ConnectionPool, Request } from 'mssql';
 
-/**
- *
- */
-export class MSSQLQueryResult {
-    /**
-     *
-     */
-    constructor(public result: IResult<unknown>) {}
-
-    /**
-     *
-     */
-    getStringOrObjectArray(): ContentType {
-        if (!this.result.recordset) {
-            // update
-            return this.result.rowsAffected;
-        } else {
-            // select
-            const columns = Object.keys(this.result.recordset.columns);
-            const result = this.result.recordset.length === 1 ? (this.result.recordset[0] as ContentType) : this.result.recordset;
-            return columns.length === 1 ? result[columns[0]] : result;
-        }
-    }
-
-    /**
-     *
-     */
-    get affectedRows() {
-        return this.result.rowsAffected;
-    }
-
-    /**
-     *
-     */
-    get rowCount() {
-        // const result = this._result.recordset[0];
-        return this.result.recordset.length;
-    }
-}
+import { MSSQLQueryResult } from './MSSQLQueryResult';
 
 /**
  * https://github.com/tediousjs/node-mssql
@@ -80,10 +41,10 @@ export class MSSQLHandler {
     /**
      *
      */
-    async query(queryStr): Promise<MSSQLQueryResult> {
+    async query(queryStr: string): Promise<MSSQLQueryResult> {
         const pool = await this.connect();
         try {
-            const request = new sql.Request();
+            const request = new Request();
             const result = await request.query(queryStr);
             return new MSSQLQueryResult(result);
         } finally {

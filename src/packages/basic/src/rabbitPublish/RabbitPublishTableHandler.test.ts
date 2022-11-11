@@ -107,7 +107,7 @@ describe('default', () => {
         await sut.handler.process(tableRows);
 
         expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.preExecution.payload.getValue()).toEqual({ a: 1 });
+        expect(sut.handler.executionEngine.context.preExecution.payload.valueOf()).toEqual({ a: 1 });
     });
 
     /**
@@ -124,7 +124,7 @@ describe('default', () => {
         await sut.handler.process(tableRows);
 
         expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.preExecution.payload.getValue()).toEqual({ a: 1 });
+        expect(sut.handler.executionEngine.context.preExecution.payload.valueOf()).toEqual({ a: 1 });
     });
 
     /**
@@ -143,8 +143,8 @@ describe('default', () => {
         await sut.handler.process(tableRows);
 
         expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.preExecution.payload.getValue()).toEqual({ a: 1 });
-        expect(sut.handler.executionEngine.context.preExecution.header.getValue()).toEqual({ h1: 'x', h2: 'y' });
+        expect(sut.handler.executionEngine.context.preExecution.payload.valueOf()).toEqual({ a: 1 });
+        expect(sut.handler.executionEngine.context.preExecution.header.valueOf()).toEqual({ h1: 'x', h2: 'y' });
     });
 
     /**
@@ -161,7 +161,7 @@ describe('default', () => {
         await sut.handler.process(tableRows);
 
         expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.preExecution.payload.getValue()).toEqual({ a: 1 });
+        expect(sut.handler.executionEngine.context.preExecution.payload.valueOf()).toEqual({ a: 1 });
     });
 
     /**
@@ -179,7 +179,7 @@ describe('default', () => {
         await sut.handler.process(tableRows);
 
         expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.preExecution.payload.getValue()).toEqual({ a: 1, b: 2 });
+        expect(sut.handler.executionEngine.context.preExecution.payload.valueOf()).toEqual({ a: 1, b: 2 });
     });
 });
 
@@ -197,9 +197,9 @@ describe('data', () => {
         it('default publish - queue', async () => {
             const tableRows = MarkdownTableReader.convert(
                 `| action  | value    |
-           |---------|----------|
-           | queue   | queue    |
-           | payload | {"a": 1} |`
+                 |---------|----------|
+                 | queue   | queue    |
+                 | payload | {"a": 1} |`
             );
 
             await sut.handler.process(tableRows);
@@ -721,10 +721,10 @@ describe('error handling', () => {
     it('header must be well defined', async () => {
         const tableRows = MarkdownTableReader.convert(
             `| action   | value    |
-         |----------|----------|
-         | exchange | exchange |
-         | header   | h1       |
-         | payload  | {"a": 1} |`
+             |----------|----------|
+             | exchange | exchange |
+             | header   | h1       |
+             | payload  | {"a": 1} |`
         );
 
         await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError("header must key valued, but it's not");
