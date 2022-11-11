@@ -10,7 +10,9 @@ import { GroupExecutionUnit } from './execution/misc/ExecutionUnit.Group';
 import { OutStoreExecutionUnit } from './execution/misc/ExecutionUnit.OutStore';
 import { WaitExecutionUnit } from './execution/misc/ExecutionUnit.Wait';
 import { PropertySetterExecutionUnit } from './execution/property-setter/PropertySetterExecutionUnit';
+import { RunEnvExecutionUnit } from './execution/run/ExecutionUnit.RunEnv';
 import { RunNotExecutionUnit } from './execution/run/ExecutionUnit.RunNot';
+import { RunNotEmptyExecutionUnit } from './execution/run/ExecutionUnit.RunNotEmpty';
 import { RunOnlyExecutionUnit } from './execution/run/ExecutionUnit.RunOnly';
 import { TransformJPathExecutionUnit } from './execution/transform/ExecutionUnit.TransformJPath';
 import { TransformJsonLogicExecutionUnit } from './execution/transform/ExecutionUnit.TransformJsonLogic';
@@ -76,7 +78,9 @@ export {
     RequiredValidator,
     RowTypeValue,
     RunOnlyExecutionUnit,
+    RunEnvExecutionUnit,
     RunNotExecutionUnit,
+    RunNotEmptyExecutionUnit,
     StoreReplacer,
     TemplateGenerator,
     TextReplacer,

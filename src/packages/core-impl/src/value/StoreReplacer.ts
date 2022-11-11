@@ -78,8 +78,19 @@ export class StoreReplacer implements ValueReplacer {
                 default:
                     throw Error(`store default operator '${defaultOperator.operator.value}' not valid (${definition})`);
             }
+        } else {
+            switch (defaultOperator.operator.type) {
+                case OperatorType.Unknown:
+                    switch (defaultOperator.operator.value) {
+                        case 'lowercase':
+                            return content.toLowerCase();
+                        case 'upercase':
+                            return content.toUpperCase();
+                    }
+                    break;
+                default:
+                    return content;
+            }
         }
-
-        return content;
     }
 }

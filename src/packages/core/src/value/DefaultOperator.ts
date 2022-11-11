@@ -27,4 +27,11 @@ export class DefaultOperator {
                 this.type = OperatorType.Unknown;
         }
     }
+
+    /**
+     *
+     */
+    get isDefault(): boolean {
+        return this.type != OperatorType.None && this.type != OperatorType.Unknown ? true : false;
+    }
 }

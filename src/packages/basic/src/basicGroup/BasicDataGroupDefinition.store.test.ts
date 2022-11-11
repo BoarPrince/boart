@@ -973,7 +973,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - recursive usage - simple data', async () => {
+    it('use store default-assignment - recursive usage - simple data - number', async () => {
         Store.instance.testStore.put('b', 3);
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                      |
@@ -987,6 +987,25 @@ describe('out store from payload', () => {
 
         expect(result.valueOf()).toStrictEqual({ a: 3 });
         expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 3 });
+    });
+
+    /**
+     *
+     */
+    it('use store default-assignment - recursive usage - simple data - string', async () => {
+        Store.instance.testStore.put('b', '-3-');
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                      |
+             |----------|----------------------------|
+             |payload#a | \${store:a.p:=\${store:b}} |
+             |store     | var                        |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: '-3-' });
+        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: '-3-' });
     });
 
     /**
@@ -1006,6 +1025,25 @@ describe('out store from payload', () => {
 
         expect(result.valueOf()).toStrictEqual({ a: { p: 3 } });
         expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: { p: 3 } });
+    });
+
+    /**
+     *
+     */
+    it('use store default-assignment - recursive usage - array', async () => {
+        Store.instance.testStore.put('b', [1, 2]);
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                      |
+             |----------|----------------------------|
+             |payload#a | \${store:a.p:=\${store:b}} |
+             |store     | var                        |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toStrictEqual({ a: [1, 2] });
+        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: [1, 2] });
     });
 
     /**
@@ -1112,9 +1150,9 @@ describe('generate', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                   |
              |----------|-------------------------|
-             |payload#a | \${generate:nameA@hex} |
-             |payload#b | \${generate:nameB@hex} |
-             |payload#c | \${generate:nameA@hex} |
+             |payload#a | \${generate:@nameA:hex} |
+             |payload#b | \${generate:@nameB:hex} |
+             |payload#c | \${generate:@nameA:hex} |
              |store     | var                     |`
         );
 
@@ -1138,7 +1176,7 @@ describe('generate', () => {
              |payload#a | \${generate:g:@nameA:hex} |
              |payload#b | \${generate:g:@nameB:hex} |
              |payload#c | \${generate:g:@nameA:hex} |
-             |payload#d | \${generate:nameA@hex}   |
+             |payload#d | \${generate:@nameA:hex}   |
              |store     | var                       |`
         );
 
@@ -1246,7 +1284,7 @@ describe('generate', () => {
     /**
      *
      */
-    it('use template generator, but template not found', () => {
+    it('use template generator - but template not found', async () => {
         delete globalThis._templateHandlerInstance;
         jest.spyOn(EnvLoader, 'getSettings').mockImplementation(() => ({}));
 
@@ -1257,7 +1295,9 @@ describe('generate', () => {
              |store   | var                |`
         );
 
-        expect(() => sut.handler.process(tableDef)).toThrowError(`error template generator, template: 'a' does not exist`);
+        await expect(async () => sut.handler.process(tableDef)).rejects.toThrowError(
+            `error template generator, template: 'a' does not exist`
+        );
     });
 });
 

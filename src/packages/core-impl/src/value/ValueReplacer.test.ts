@@ -324,7 +324,7 @@ describe('store', () => {
         const sut: ValueReplacer = new StoreReplacer();
         const store = Store.instance.testStore;
 
-        expect(() => sut.replace('x:=', store, null)).toThrowError(`expression 'x:=' not valid`);
+        expect(() => sut.replace('x:=', store, null)).toThrowError(`expression 'x:=' requires a default value`);
     });
 
     /**

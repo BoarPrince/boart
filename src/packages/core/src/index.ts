@@ -46,6 +46,7 @@ import { ParaType } from './types/ParaType';
 import { ScopeType } from './types/ScopeType';
 import { ScopedType } from './types/ScopedType';
 import { SelectorType } from './types/SelectorType';
+import { DefaultOperator } from './value/DefaultOperator';
 import { DefaultOperatorParser } from './value/DefaultOperatorParser';
 import { OperatorType } from './value/OperatorType';
 import { ValueReplacer } from './value/ValueReplacer';
@@ -65,6 +66,7 @@ export {
     DataContentBase,
     DataContentHelper,
     DataType,
+    DefaultOperator,
     DefaultOperatorParser,
     EnvLoader,
     ExecutionContext,
