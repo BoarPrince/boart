@@ -14,6 +14,18 @@ export class SQLQueryExecutionUnit implements ExecutionUnit<SQLQueryContext, Row
     /**
      *
      */
+    private parseJSON(data: string): object {
+        try {
+            const parsedData = JSON.parse(data) as object;
+            return typeof parsedData === 'object' ? parsedData : null;
+        } catch (_) {
+            return null;
+        }
+    }
+
+    /**
+     *
+     */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async execute(context: SQLQueryContext, _row: RowTypeValue<SQLQueryContext>): Promise<void> {
         //#region rest call executing
@@ -42,11 +54,18 @@ export class SQLQueryExecutionUnit implements ExecutionUnit<SQLQueryContext, Row
         //#endregion
 
         //#region setting result to context
-        context.execution.header.asDataContentObject().set('rows', result.result.rowsAffected[0]);
+        context.execution.header.asDataContentObject().set('rows', result.affectedRows[0]);
 
         const resultValue = result.getStringOrObjectArray();
         if (typeof resultValue === 'string') {
-            context.execution.data = new TextContent(resultValue);
+            const jsonResult = this.parseJSON(resultValue);
+            if (!!jsonResult) {
+                context.execution.data = new ObjectContent(
+                    Array.isArray(jsonResult) && jsonResult.length === 1 ? (jsonResult[0] as object) : jsonResult
+                );
+            } else {
+                context.execution.data = new TextContent(resultValue);
+            }
         } else if (typeof resultValue === 'boolean') {
             context.execution.data = new NativeContent(resultValue);
         } else if (typeof resultValue === 'number') {
