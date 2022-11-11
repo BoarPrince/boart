@@ -543,7 +543,7 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('z', val);
         } catch (error) {
-            expect(error.message).toBe('getting "z" not possible, because "z" is not an object or an array');
+            expect(error.message).toBe('getting "z" not possible, because "z" is not an object or an array.\nData context:\n"a"');
             return;
         }
 
@@ -559,7 +559,7 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('a.c', val);
         } catch (error) {
-            expect(error.message).toBe('getting "a.c" not possible, because "c" is not an object or an array');
+            expect(error.message).toBe('getting "a.c" not possible, because "c" is not an object or an array.\nData context:\n"b"');
             return;
         }
 
@@ -575,7 +575,13 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('z', val);
         } catch (error) {
-            expect(error.message).toBe('getting "z" not possible, because "z" is not an object or an array');
+            expect(error.message).toBe(
+                `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
+                    val.valueOf(),
+                    null,
+                    '  '
+                )}`
+            );
             return;
         }
 
@@ -592,7 +598,13 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('z', propValue);
         } catch (error) {
-            expect(error.message).toBe('getting "z" not possible, because "z" is not an object or an array');
+            expect(error.message).toBe(
+                `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
+                    propValue.valueOf(),
+                    null,
+                    '  '
+                )}`
+            );
             return;
         }
 
@@ -608,7 +620,13 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('z', val);
         } catch (error) {
-            expect(error.message).toBe('getting "z" not possible, because "z" is not an object or an array');
+            expect(error.message).toBe(
+                `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
+                    val.valueOf(),
+                    null,
+                    '  '
+                )}`
+            );
             return;
         }
 
@@ -634,7 +652,7 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('a.b', data);
         } catch (error) {
-            expect(error.message).toBe('getting "a.b" not possible, because "a" is not an object or an array');
+            expect(error.message).toBe(`getting "a.b" not possible, because "a" is not an object or an array.\nData context:\n"abc"`);
             return;
         }
         fail('expection was not thrown');
@@ -648,7 +666,13 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('a.c', data);
         } catch (error) {
-            expect(error.message).toBe('getting "a.c" not possible, because "c" is not an object or an array');
+            expect(error.message).toBe(
+                `getting "a.c" not possible, because "c" is not an object or an array.\nData context:\n${JSON.stringify(
+                    { b: 'c' },
+                    null,
+                    '  '
+                )}`
+            );
             return;
         }
         fail('expection was not thrown');
@@ -670,7 +694,7 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('a.b.c', data);
         } catch (error) {
-            expect(error.message).toBe('getting "a.b.c" not possible, because "c" is not an object or an array');
+            expect(error.message).toBe('getting "a.b.c" not possible, because "c" is not an object or an array.');
             return;
         }
         fail('expection was not thrown');
@@ -683,7 +707,7 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('a.b.c', null);
         } catch (error) {
-            expect(error.message).toBe('getting "a.b.c" not possible, because "a" is not an object or an array');
+            expect(error.message).toBe('getting "a.b.c" not possible, because "a" is not an object or an array.');
             return;
         }
         fail('expection was not thrown');
@@ -697,7 +721,13 @@ describe('deep getting', () => {
         try {
             DataContentHelper.getByPath('a.b.d', data);
         } catch (error) {
-            expect(error.message).toBe('getting "a.b.d" not possible, because "d" is not an object or an array');
+            expect(error.message).toBe(
+                `getting "a.b.d" not possible, because "d" is not an object or an array.\nData context:\n${JSON.stringify(
+                    { c: 'd' },
+                    null,
+                    '  '
+                )}`
+            );
             return;
         }
         fail('expection was not thrown');

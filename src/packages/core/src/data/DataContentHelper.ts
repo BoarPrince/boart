@@ -175,8 +175,9 @@ export class DataContentHelper {
     /**
      *
      */
-    private static throwRecursiveError(property: string, current: string) {
-        throw Error(`getting "${property}" not possible, because "${current}" is not an object or an array`);
+    private static throwRecursiveError(property: string, current: string, content?: ContentType) {
+        const contentMsg = !content ? '' : `\nData context:\n${JSON.stringify(content, null, '  ')}`;
+        throw Error(`getting "${property}" not possible, because "${current}" is not an object or an array.${contentMsg}`);
     }
 
     /**
@@ -198,11 +199,11 @@ export class DataContentHelper {
             const propertyOptional = property.isOptional || optional;
             const contentValueAsObject = contentValue?.asDataContentObject();
             if (contentValueAsObject == null) {
-                DataContentHelper.throwRecursiveError(property.path, property.key);
+                DataContentHelper.throwRecursiveError(property.path, property.key, contentValue?.getValue());
             }
 
             if (!propertyOptional && !Object.keys(contentValue.getValue()).includes(property.key)) {
-                DataContentHelper.throwRecursiveError(property.path, property.key);
+                DataContentHelper.throwRecursiveError(property.path, property.key, contentValue.getValue());
             }
 
             const propertyValue = contentValueAsObject.get(property.key);
