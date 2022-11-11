@@ -13,7 +13,7 @@ import { StoreWrapper } from './StoreWrapper';
  */
 export class Context implements StoreMap {
     private static readonly Key = ':#:context:#:';
-    private context: DataContent = new ObjectContent();
+    private context: object = {};
     private contextMap = new StoreWrapper({}, 'context');
 
     /***
@@ -39,7 +39,7 @@ export class Context implements StoreMap {
      *
      */
     setContext(context: object): void {
-        this.context = DataContentHelper.create(context);
+        this.context = context;
     }
 
     /**
@@ -54,7 +54,9 @@ export class Context implements StoreMap {
      */
     get(key: string): ContentType {
         // try context value
-        const contextValue = DataContentHelper.getByPath(key, this.context, true);
+        // to-do: getByPath must use native objects
+        const context = DataContentHelper.create(this.context.valueOf());
+        const contextValue = DataContentHelper.getByPath(key, context, true);
         if (contextValue.isNullOrUndefined()) {
             // if context not exists, try map value
             return this.contextMap.get(key, true);

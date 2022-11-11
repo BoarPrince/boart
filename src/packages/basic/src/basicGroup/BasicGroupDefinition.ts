@@ -6,6 +6,8 @@ import {
     GroupExecutionUnit,
     ParaValidator,
     RowTypeValue,
+    RunEnvExecutionUnit,
+    RunNotEmptyExecutionUnit,
     RunNotExecutionUnit,
     RunOnlyExecutionUnit,
     WaitExecutionUnit
@@ -26,6 +28,22 @@ if (!GroupRowDefinition.contains('basic-group-definition')) {
         new RowDefinition({
             type: TableRowType.PreConfiguration,
             executionUnit: new RunNotExecutionUnit(),
+            validators: null
+        })
+    );
+
+    basicGroup.addRowDefinition(
+        new RowDefinition({
+            type: TableRowType.PreConfiguration,
+            executionUnit: new RunNotEmptyExecutionUnit(),
+            validators: null
+        })
+    );
+
+    basicGroup.addRowDefinition(
+        new RowDefinition({
+            type: TableRowType.PreConfiguration,
+            executionUnit: new RunEnvExecutionUnit(),
             validators: null
         })
     );

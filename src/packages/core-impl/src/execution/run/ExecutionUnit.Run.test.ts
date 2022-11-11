@@ -73,8 +73,7 @@ describe('run:only', () => {
             actionPara: 'b'
         } as RowTypeValue<AnyContext>);
 
-        expect(Context.instance.get('arg1')).toBeInstanceOf(NativeContent);
-        expect(Context.instance.get('arg1').valueOf()).toBeUndefined();
+        expect(Context.instance.get('arg1')).toBeNull();
     });
 });
 
