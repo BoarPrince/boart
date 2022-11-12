@@ -109,7 +109,12 @@ export class JsonLogic {
      */
     public transform(rule: string, jsonData: string): ContentType {
         const result = this.evaluate(rule, jsonData);
-        return result.data;
+        if (Array.isArray(result.data) && result.data.length === 1) {
+            // json logic retrieves an array as result
+            return result.data[0];
+        } else {
+            return result.data;
+        }
     }
 
     /**
