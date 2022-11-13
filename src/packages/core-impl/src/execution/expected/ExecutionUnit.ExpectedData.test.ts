@@ -19,6 +19,7 @@ import { RowTypeValue } from '../../RowTypeValue';
 import { ExpectedDataExecutinoUnit } from './ExecutionUnit.ExpectedData';
 import { ExpectedOperator } from './ExpectedOperator';
 import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
+import { ExpectedOperatorImplementation } from './ExpectedOperator.Implementation';
 
 /**
  *
@@ -78,6 +79,13 @@ class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<
         });
     }
 }
+
+/**
+ *
+ */
+beforeAll(() => {
+    ExpectedOperatorImplementation.addAll();
+});
 
 /**
  *
@@ -422,6 +430,8 @@ describe('check expected:data execution units with operators', () => {
          *
          */
         constructor(public name: string) {}
+        validators?: RowValidator[];
+        canCaseInsesitive: true;
     }
 
     /**
@@ -501,7 +511,7 @@ describe('check expected:data execution units with operators', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data:not:op3', '']
+                    cells: ['expected:data:op3:not', '']
                 }
             ]
         });
@@ -573,10 +583,9 @@ describe('check expected:data execution units with operators', () => {
         });
 
         expect(operator.check).toBeCalledTimes(1);
-        expect(operator.check.mock.calls[0][0]).toBeObject();
-        expect(operator.check.mock.calls[0][0]).toBeInstanceOf(NativeContent);
+        expect(operator.check.mock.calls[0][0]).toBeInteger();
         expect(operator.check.mock.calls[0][1]).toBeString();
-        expect(operator.check).toBeCalledWith(dataToCheck, 'b');
+        expect(operator.check).toBeCalledWith(dataToCheck.valueOf(), 'b');
     });
 
     /**
@@ -610,9 +619,8 @@ describe('check expected:data execution units with operators', () => {
 
         expect(operator.check).toBeCalledTimes(1);
         expect(operator.check.mock.calls[0][0]).toBeObject();
-        expect(operator.check.mock.calls[0][0]).toBeInstanceOf(ObjectContent);
         expect(operator.check.mock.calls[0][1]).toBeString();
-        expect(operator.check).toBeCalledWith(dataToCheck, 'b');
+        expect(operator.check).toBeCalledWith(dataToCheck.valueOf(), 'b');
     });
 
     /**
@@ -692,7 +700,8 @@ describe('check expected:data execution units with operators', () => {
         const operator: ExpectedOperator = {
             name: 'opv',
             validators: [validator],
-            check: jest.fn()
+            check: jest.fn(),
+            canCaseInsesitive: false
         };
 
         ExpectedOperatorInitializer.instance.addOperator(operator);
@@ -719,5 +728,159 @@ describe('check expected:data execution units with operators', () => {
                 ]
             });
         }).rejects.toThrowError('validator error');
+    });
+});
+
+/*
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * E X P E C T E D   U S I N G   C I
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
+describe('check expected:data ci operator', () => {
+    let tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>;
+
+    /**
+     *
+     */
+    beforeEach(() => {
+        ExpectedOperatorInitializer.instance.clear();
+        tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
+    });
+
+    /**
+     *
+     */
+    class TestOperator implements ExpectedOperator {
+        check = jest.fn().mockReturnValue({
+            result: true
+        });
+
+        /**
+         *
+         */
+        constructor(public name: string) {}
+        validators?: RowValidator[];
+        canCaseInsesitive = true;
+    }
+
+    /**
+     *
+     */
+    it('with ci the string values are transformed to lowercase values', async () => {
+        const operator = new TestOperator('op1');
+        ExpectedOperatorInitializer.instance.addOperator(operator);
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+
+        const dataToCheck = new TextContent('UPPER-CASE');
+        intialContext.data = dataToCheck;
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: ['expected:data:op1:ci', 'UPPER-CASE']
+                }
+            ]
+        });
+
+        expect(operator.check).toBeCalledTimes(1);
+        expect(operator.check.mock.calls[0][0]).toBeString();
+        expect(operator.check.mock.calls[0][1]).toBeString();
+        expect(operator.check).toBeCalledWith(dataToCheck.toString().toLowerCase(), 'upper-case');
+    });
+
+    /**
+     *
+     */
+    it('default operator has ci too', async () => {
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+
+        const dataToCheck = new TextContent('upper-case');
+        intialContext.data = dataToCheck;
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: ['expected:data:ci', 'UPPER-CASE']
+                }
+            ]
+        });
+    });
+
+    /**
+     *
+     */
+    it('default operator has ci:not too - fails', async () => {
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+
+        const dataToCheck = new TextContent('upper-case');
+        intialContext.data = dataToCheck;
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+
+        await expect(() =>
+            tableHandler.process({
+                headers: {
+                    cells: ['action', 'value']
+                },
+                rows: [
+                    {
+                        cells: ['expected:data:ci:not', 'UPPER-CASE']
+                    }
+                ]
+            })
+        ).rejects.toThrowError('error: expected:data\n\tci:not: UPPER-CASE\n\tactual: upper-case');
+    });
+
+    /**
+     *
+     */
+    it('default operator has ci:not too - succeed', async () => {
+        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+
+        const dataToCheck = new TextContent('upper-cas');
+        intialContext.data = dataToCheck;
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: ['expected:data:ci:not', 'UPPER-CASE']
+                }
+            ]
+        });
     });
 });

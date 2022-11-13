@@ -15,6 +15,7 @@ import DataContentBase from './data/DataContentBase';
 import { DataContentHelper } from './data/DataContentHelper';
 import { DataType } from './data/DataType.enum';
 import { NativeContent } from './data/NativeContent';
+import { NativeType } from './data/NativeType';
 import { NullContent } from './data/NullContent';
 import { ObjectContent } from './data/ObjectContent';
 import { TextContent } from './data/TextContent';
@@ -82,6 +83,7 @@ export {
     LocalContext,
     MarkdownTableReader,
     NativeContent,
+    NativeType,
     NullContent,
     ObjectContent,
     OperatorType,

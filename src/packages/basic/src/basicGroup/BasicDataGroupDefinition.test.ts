@@ -515,12 +515,12 @@ describe('check expected operators', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action                    |value |
              |--------------------------|------|
-             |expected:header:not:count | 3    |`
+             |expected:header:count:not | 3    |`
         );
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError('error: expected:header:not, value: 3, actual: 3');
+        }).rejects.toThrowError('error: expected:header\n\tcount:not: 3');
     });
 
     /**
@@ -547,12 +547,12 @@ describe('check expected operators', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action                    |value |
              |--------------------------|------|
-             |expected:header:not:count | 3    |`
+             |expected:header:count:not | 3    |`
         );
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError('error: expected:header:not, value: 3, actual: 3');
+        }).rejects.toThrowError('error: expected:header\n\tcount:not: 3');
     });
 });
 
@@ -803,7 +803,7 @@ describe('check transformed jpath', () => {
              |-------------------------------|-----|
              |data:config#b.c.d              | e   |
              |transform:jpath                | .b  |
-             |expected:transformed:not:empty |     |`
+             |expected:transformed:empty:not |     |`
         );
 
         await sut.handler.process(tableDef);
@@ -1007,7 +1007,7 @@ describe('check transformed jsonLogic', () => {
              |-------------------------------|--------------|
              |data:config#b.c.d              | e            |
              |transform:jsonLogic            | {"var": "b"} |
-             |expected:transformed:not:empty |              |`
+             |expected:transformed:empty:not |              |`
         );
 
         await sut.handler.process(tableDef);

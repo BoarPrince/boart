@@ -1,4 +1,3 @@
-import { NativeContent, NullContent, ObjectContent, TextContent } from '@boart/core';
 import 'jest-extended';
 
 import { ExpectedOperatorImplementation } from './ExpectedOperator.Implementation';
@@ -15,7 +14,7 @@ describe('regexp', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -23,7 +22,7 @@ describe('regexp', () => {
      *
      */
     it('check textcontent', async () => {
-        const result = await sut.check(new TextContent('aba'), '.b.');
+        const result = await sut.check('aba', '.b.');
         expect(result.result).toBeTruthy();
     });
 
@@ -31,7 +30,7 @@ describe('regexp', () => {
      *
      */
     it('check textcontent false', async () => {
-        const result = await sut.check(new TextContent('aba'), '.c.');
+        const result = await sut.check('aba', '.c.');
         expect(result.result).toBeFalsy();
     });
 });
@@ -48,7 +47,7 @@ describe('contains', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -56,7 +55,7 @@ describe('contains', () => {
      *
      */
     it('check string', async () => {
-        const result = await sut.check(new TextContent('aba'), 'b');
+        const result = await sut.check('aba', 'b');
         expect(result.result).toBeTruthy();
     });
 
@@ -64,7 +63,7 @@ describe('contains', () => {
      *
      */
     it('check string false', async () => {
-        const result = await sut.check(new TextContent('aba'), 'c');
+        const result = await sut.check('aba', 'c');
         expect(result.result).toBeFalsy();
     });
 
@@ -72,7 +71,7 @@ describe('contains', () => {
      *
      */
     it('check array', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), 'c');
+        const result = await sut.check(['a', 'b', 'c'], 'c');
         expect(result.result).toBeTruthy();
     });
 
@@ -80,7 +79,7 @@ describe('contains', () => {
      *
      */
     it('check array false', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), 'd');
+        const result = await sut.check(['a', 'b', 'c'], 'd');
         expect(result.result).toBeFalsy();
     });
 
@@ -88,7 +87,7 @@ describe('contains', () => {
      *
      */
     it('check object', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), 'c');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, 'c');
         expect(result.result).toBeTruthy();
     });
 
@@ -96,7 +95,7 @@ describe('contains', () => {
      *
      */
     it('check object false', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), 'd');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, 'd');
         expect(result.result).toBeFalsy();
     });
 
@@ -104,7 +103,7 @@ describe('contains', () => {
      *
      */
     it('check number', async () => {
-        const result = await sut.check(new NativeContent(232), '3');
+        const result = await sut.check(232, '3');
         expect(result.result).toBeFalsy();
     });
 });
@@ -121,7 +120,7 @@ describe('empty', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeTruthy();
     });
 
@@ -129,7 +128,7 @@ describe('empty', () => {
      *
      */
     it('check string', async () => {
-        const result = await sut.check(new TextContent(''), '');
+        const result = await sut.check('', '');
         expect(result.result).toBeTruthy();
     });
 
@@ -137,7 +136,7 @@ describe('empty', () => {
      *
      */
     it('check string false', async () => {
-        const result = await sut.check(new TextContent('aba'), '');
+        const result = await sut.check('aba', '');
         expect(result.result).toBeFalsy();
     });
 
@@ -145,7 +144,7 @@ describe('empty', () => {
      *
      */
     it('check array', async () => {
-        const result = await sut.check(new ObjectContent([]), '');
+        const result = await sut.check([], '');
         expect(result.result).toBeTruthy();
     });
 
@@ -153,7 +152,7 @@ describe('empty', () => {
      *
      */
     it('check array false', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        const result = await sut.check(['a', 'b', 'c'], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -161,7 +160,7 @@ describe('empty', () => {
      *
      */
     it('check object', async () => {
-        const result = await sut.check(new ObjectContent({}), '');
+        const result = await sut.check({}, '');
         expect(result.result).toBeTruthy();
     });
 
@@ -169,7 +168,7 @@ describe('empty', () => {
      *
      */
     it('check object false', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -177,7 +176,7 @@ describe('empty', () => {
      *
      */
     it('check number 0', async () => {
-        const result = await sut.check(new NativeContent(0), '');
+        const result = await sut.check(0, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -185,7 +184,7 @@ describe('empty', () => {
      *
      */
     it('check number <> 0', async () => {
-        const result = await sut.check(new NativeContent(2), '');
+        const result = await sut.check(2, '');
         expect(result.result).toBeFalsy();
     });
 });
@@ -202,7 +201,7 @@ describe('count', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -210,7 +209,7 @@ describe('count', () => {
      *
      */
     it('check null / 0', async () => {
-        const result = await sut.check(new NullContent(), '0');
+        const result = await sut.check(null, '0');
         expect(result.result).toBeTruthy();
     });
 
@@ -218,7 +217,7 @@ describe('count', () => {
      *
      */
     it('check string', async () => {
-        const result = await sut.check(new TextContent('aaa'), '3');
+        const result = await sut.check('aaa', '3');
         expect(result.result).toBeTruthy();
     });
 
@@ -226,7 +225,7 @@ describe('count', () => {
      *
      */
     it('check string false', async () => {
-        const result = await sut.check(new TextContent('aba'), '4');
+        const result = await sut.check('aba', '4');
         expect(result.result).toBeFalsy();
     });
 
@@ -234,7 +233,7 @@ describe('count', () => {
      *
      */
     it('check string containing number', async () => {
-        const result = await sut.check(new TextContent('5'), '5');
+        const result = await sut.check('5', '5');
         expect(result.result).toBeTruthy();
     });
 
@@ -242,7 +241,7 @@ describe('count', () => {
      *
      */
     it('check array empty', async () => {
-        const result = await sut.check(new ObjectContent([]), '0');
+        const result = await sut.check([], '0');
         expect(result.result).toBeTruthy();
     });
 
@@ -250,7 +249,7 @@ describe('count', () => {
      *
      */
     it('check array', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '3');
+        const result = await sut.check(['a', 'b', 'c'], '3');
         expect(result.result).toBeTruthy();
     });
 
@@ -258,7 +257,7 @@ describe('count', () => {
      *
      */
     it('check array false 1', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '4');
+        const result = await sut.check(['a', 'b', 'c'], '4');
         expect(result.result).toBeFalsy();
     });
 
@@ -266,7 +265,7 @@ describe('count', () => {
      *
      */
     it('check array false 2', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        const result = await sut.check(['a', 'b', 'c'], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -274,7 +273,7 @@ describe('count', () => {
      *
      */
     it('check object empty', async () => {
-        const result = await sut.check(new ObjectContent({}), '0');
+        const result = await sut.check({}, '0');
         expect(result.result).toBeTruthy();
     });
 
@@ -282,7 +281,7 @@ describe('count', () => {
      *
      */
     it('check object', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '3');
         expect(result.result).toBeTruthy();
     });
 
@@ -290,7 +289,7 @@ describe('count', () => {
      *
      */
     it('check object false', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '4');
         expect(result.result).toBeFalsy();
     });
 
@@ -298,7 +297,7 @@ describe('count', () => {
      *
      */
     it('check number 0', async () => {
-        const result = await sut.check(new NativeContent(0), '0');
+        const result = await sut.check(0, '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -306,7 +305,7 @@ describe('count', () => {
      *
      */
     it('check number <> 0', async () => {
-        const result = await sut.check(new NativeContent(2), '2');
+        const result = await sut.check(2, '2');
         expect(result.result).toBeFalsy();
     });
 });
@@ -323,7 +322,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -331,7 +330,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check null / 0', async () => {
-        const result = await sut.check(new NullContent(), '0');
+        const result = await sut.check(null, '0');
         expect(result.result).toBeTruthy();
     });
 
@@ -339,7 +338,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check null / 1', async () => {
-        const result = await sut.check(new NullContent(), '1');
+        const result = await sut.check(null, '1');
         expect(result.result).toBeFalsy();
     });
 
@@ -347,7 +346,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check string equal', async () => {
-        const result = await sut.check(new TextContent('aaa'), '3');
+        const result = await sut.check('aaa', '3');
         expect(result.result).toBeTruthy();
     });
 
@@ -355,7 +354,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check string greater', async () => {
-        const result = await sut.check(new TextContent('aaa'), '2');
+        const result = await sut.check('aaa', '2');
         expect(result.result).toBeTruthy();
     });
 
@@ -363,7 +362,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check string false', async () => {
-        const result = await sut.check(new TextContent('aba'), '4');
+        const result = await sut.check('aba', '4');
         expect(result.result).toBeFalsy();
     });
 
@@ -371,7 +370,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check array empty', async () => {
-        const result = await sut.check(new ObjectContent([]), '0');
+        const result = await sut.check([], '0');
         expect(result.result).toBeTruthy();
     });
 
@@ -379,7 +378,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check array equal', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '3');
+        const result = await sut.check(['a', 'b', 'c'], '3');
         expect(result.result).toBeTruthy();
     });
 
@@ -387,7 +386,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check array greater', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '2');
+        const result = await sut.check(['a', 'b', 'c'], '2');
         expect(result.result).toBeTruthy();
     });
 
@@ -395,7 +394,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check array false 1', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '4');
+        const result = await sut.check(['a', 'b', 'c'], '4');
         expect(result.result).toBeFalsy();
     });
 
@@ -403,7 +402,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check array false 2', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        const result = await sut.check(['a', 'b', 'c'], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -411,7 +410,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check object empty', async () => {
-        const result = await sut.check(new ObjectContent({}), '0');
+        const result = await sut.check({}, '0');
         expect(result.result).toBeTruthy();
     });
 
@@ -419,7 +418,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check object equal', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '3');
         expect(result.result).toBeTruthy();
     });
 
@@ -427,7 +426,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check object greater', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '2');
         expect(result.result).toBeTruthy();
     });
 
@@ -435,7 +434,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check object false', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '4');
         expect(result.result).toBeFalsy();
     });
 
@@ -443,7 +442,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check number 0', async () => {
-        const result = await sut.check(new NativeContent(0), '0');
+        const result = await sut.check(0, '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -451,7 +450,7 @@ describe('count:equal-greater', () => {
      *
      */
     it('check number <> 0', async () => {
-        const result = await sut.check(new NativeContent(2), '2');
+        const result = await sut.check(2, '2');
         expect(result.result).toBeFalsy();
     });
 });
@@ -468,7 +467,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -476,7 +475,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check null / 0', async () => {
-        const result = await sut.check(new NullContent(), '0');
+        const result = await sut.check(null, '0');
         expect(result.result).toBeTruthy();
     });
 
@@ -484,7 +483,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check null / -1', async () => {
-        const result = await sut.check(new NullContent(), '-1');
+        const result = await sut.check(null, '-1');
         expect(result.result).toBeFalsy();
     });
 
@@ -492,7 +491,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check string equal', async () => {
-        const result = await sut.check(new TextContent('aaa'), '3');
+        const result = await sut.check('aaa', '3');
         expect(result.result).toBeTruthy();
     });
 
@@ -500,7 +499,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check string smaller', async () => {
-        const result = await sut.check(new TextContent('aaa'), '4');
+        const result = await sut.check('aaa', '4');
         expect(result.result).toBeTruthy();
     });
 
@@ -508,7 +507,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check string false', async () => {
-        const result = await sut.check(new TextContent('aba'), '2');
+        const result = await sut.check('aba', '2');
         expect(result.result).toBeFalsy();
     });
 
@@ -516,7 +515,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check array empty', async () => {
-        const result = await sut.check(new ObjectContent([]), '0');
+        const result = await sut.check([], '0');
         expect(result.result).toBeTruthy();
     });
 
@@ -524,7 +523,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check array equal', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '3');
+        const result = await sut.check(['a', 'b', 'c'], '3');
         expect(result.result).toBeTruthy();
     });
 
@@ -532,7 +531,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check array smaller', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '4');
+        const result = await sut.check(['a', 'b', 'c'], '4');
         expect(result.result).toBeTruthy();
     });
 
@@ -540,7 +539,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check array false 1', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '2');
+        const result = await sut.check(['a', 'b', 'c'], '2');
         expect(result.result).toBeFalsy();
     });
 
@@ -548,7 +547,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check array false 2', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        const result = await sut.check(['a', 'b', 'c'], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -556,7 +555,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check object empty', async () => {
-        const result = await sut.check(new ObjectContent({}), '0');
+        const result = await sut.check({}, '0');
         expect(result.result).toBeTruthy();
     });
 
@@ -564,7 +563,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check object equal', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '3');
         expect(result.result).toBeTruthy();
     });
 
@@ -572,7 +571,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check object smaller', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '4');
         expect(result.result).toBeTruthy();
     });
 
@@ -580,7 +579,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check object false', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '2');
         expect(result.result).toBeFalsy();
     });
 
@@ -588,7 +587,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check number 0', async () => {
-        const result = await sut.check(new NativeContent(0), '0');
+        const result = await sut.check(0, '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -596,7 +595,7 @@ describe('count:equal-smaller', () => {
      *
      */
     it('check number <> 0', async () => {
-        const result = await sut.check(new NativeContent(2), '2');
+        const result = await sut.check(2, '2');
         expect(result.result).toBeFalsy();
     });
 });
@@ -613,7 +612,7 @@ describe('greater', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -621,7 +620,7 @@ describe('greater', () => {
      *
      */
     it('check null / 0', async () => {
-        const result = await sut.check(new NullContent(), '0');
+        const result = await sut.check(null, '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -629,7 +628,7 @@ describe('greater', () => {
      *
      */
     it('check null / -1', async () => {
-        const result = await sut.check(new NullContent(), '-1');
+        const result = await sut.check(null, '-1');
         expect(result.result).toBeTruthy();
     });
 
@@ -637,7 +636,7 @@ describe('greater', () => {
      *
      */
     it('check string equal', async () => {
-        const result = await sut.check(new TextContent('aaa'), '3');
+        const result = await sut.check('aaa', '3');
         expect(result.result).toBeFalsy();
     });
 
@@ -645,7 +644,7 @@ describe('greater', () => {
      *
      */
     it('check string greater', async () => {
-        const result = await sut.check(new TextContent('aaa'), '2');
+        const result = await sut.check('aaa', '2');
         expect(result.result).toBeTruthy();
     });
 
@@ -653,7 +652,7 @@ describe('greater', () => {
      *
      */
     it('check string false', async () => {
-        const result = await sut.check(new TextContent('aba'), '4');
+        const result = await sut.check('aba', '4');
         expect(result.result).toBeFalsy();
     });
 
@@ -661,7 +660,7 @@ describe('greater', () => {
      *
      */
     it('check array empty', async () => {
-        const result = await sut.check(new ObjectContent([]), '0');
+        const result = await sut.check([], '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -669,7 +668,7 @@ describe('greater', () => {
      *
      */
     it('check array equal', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '3');
+        const result = await sut.check(['a', 'b', 'c'], '3');
         expect(result.result).toBeFalsy();
     });
 
@@ -677,7 +676,7 @@ describe('greater', () => {
      *
      */
     it('check array greater', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '2');
+        const result = await sut.check(['a', 'b', 'c'], '2');
         expect(result.result).toBeTruthy();
     });
 
@@ -685,7 +684,7 @@ describe('greater', () => {
      *
      */
     it('check array false 1', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '4');
+        const result = await sut.check(['a', 'b', 'c'], '4');
         expect(result.result).toBeFalsy();
     });
 
@@ -693,7 +692,7 @@ describe('greater', () => {
      *
      */
     it('check array false 2', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        const result = await sut.check(['a', 'b', 'c'], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -701,7 +700,7 @@ describe('greater', () => {
      *
      */
     it('check object empty', async () => {
-        const result = await sut.check(new ObjectContent({}), '0');
+        const result = await sut.check({}, '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -709,7 +708,7 @@ describe('greater', () => {
      *
      */
     it('check object equal', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '3');
         expect(result.result).toBeFalsy();
     });
 
@@ -717,7 +716,7 @@ describe('greater', () => {
      *
      */
     it('check object greater', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '2');
         expect(result.result).toBeTruthy();
     });
 
@@ -725,7 +724,7 @@ describe('greater', () => {
      *
      */
     it('check object false', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '4');
         expect(result.result).toBeFalsy();
     });
 
@@ -733,7 +732,7 @@ describe('greater', () => {
      *
      */
     it('check number 0', async () => {
-        const result = await sut.check(new NativeContent(0), '0');
+        const result = await sut.check(0, '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -741,7 +740,7 @@ describe('greater', () => {
      *
      */
     it('check number greater', async () => {
-        const result = await sut.check(new NativeContent(3), '2');
+        const result = await sut.check(3, '2');
         expect(result.result).toBeTruthy();
     });
 });
@@ -758,7 +757,7 @@ describe('smaller', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -766,7 +765,7 @@ describe('smaller', () => {
      *
      */
     it('check null / 0', async () => {
-        const result = await sut.check(new NullContent(), '0');
+        const result = await sut.check(null, '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -774,7 +773,7 @@ describe('smaller', () => {
      *
      */
     it('check null / 1', async () => {
-        const result = await sut.check(new NullContent(), '1');
+        const result = await sut.check(null, '1');
         expect(result.result).toBeTruthy();
     });
 
@@ -782,7 +781,7 @@ describe('smaller', () => {
      *
      */
     it('check string equal', async () => {
-        const result = await sut.check(new TextContent('aaa'), '3');
+        const result = await sut.check('aaa', '3');
         expect(result.result).toBeFalsy();
     });
 
@@ -790,7 +789,7 @@ describe('smaller', () => {
      *
      */
     it('check string smaller', async () => {
-        const result = await sut.check(new TextContent('aaa'), '4');
+        const result = await sut.check('aaa', '4');
         expect(result.result).toBeTruthy();
     });
 
@@ -798,7 +797,7 @@ describe('smaller', () => {
      *
      */
     it('check string false', async () => {
-        const result = await sut.check(new TextContent('aba'), '2');
+        const result = await sut.check('aba', '2');
         expect(result.result).toBeFalsy();
     });
 
@@ -806,7 +805,7 @@ describe('smaller', () => {
      *
      */
     it('check array empty', async () => {
-        const result = await sut.check(new ObjectContent([]), '0');
+        const result = await sut.check([], '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -814,7 +813,7 @@ describe('smaller', () => {
      *
      */
     it('check array equal', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '3');
+        const result = await sut.check(['a', 'b', 'c'], '3');
         expect(result.result).toBeFalsy();
     });
 
@@ -822,7 +821,7 @@ describe('smaller', () => {
      *
      */
     it('check array smaller', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '4');
+        const result = await sut.check(['a', 'b', 'c'], '4');
         expect(result.result).toBeTruthy();
     });
 
@@ -830,7 +829,7 @@ describe('smaller', () => {
      *
      */
     it('check array false 1', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '2');
+        const result = await sut.check(['a', 'b', 'c'], '2');
         expect(result.result).toBeFalsy();
     });
 
@@ -838,7 +837,7 @@ describe('smaller', () => {
      *
      */
     it('check array false 2', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        const result = await sut.check(['a', 'b', 'c'], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -846,7 +845,7 @@ describe('smaller', () => {
      *
      */
     it('check object empty', async () => {
-        const result = await sut.check(new ObjectContent({}), '0');
+        const result = await sut.check({}, '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -854,7 +853,7 @@ describe('smaller', () => {
      *
      */
     it('check object equal', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '3');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '3');
         expect(result.result).toBeFalsy();
     });
 
@@ -862,7 +861,7 @@ describe('smaller', () => {
      *
      */
     it('check object smaller', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '4');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '4');
         expect(result.result).toBeTruthy();
     });
 
@@ -870,7 +869,7 @@ describe('smaller', () => {
      *
      */
     it('check object false', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '2');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '2');
         expect(result.result).toBeFalsy();
     });
 
@@ -878,7 +877,7 @@ describe('smaller', () => {
      *
      */
     it('check number 0', async () => {
-        const result = await sut.check(new NativeContent(0), '0');
+        const result = await sut.check(0, '0');
         expect(result.result).toBeFalsy();
     });
 
@@ -886,7 +885,7 @@ describe('smaller', () => {
      *
      */
     it('check number smaller', async () => {
-        const result = await sut.check(new NativeContent(3), '4');
+        const result = await sut.check(3, '4');
         expect(result.result).toBeTruthy();
     });
 });
@@ -903,7 +902,7 @@ describe('IsArray', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -911,7 +910,7 @@ describe('IsArray', () => {
      *
      */
     it('check string', async () => {
-        const result = await sut.check(new TextContent('aaa'), '');
+        const result = await sut.check('aaa', '');
         expect(result.result).toBeFalsy();
     });
 
@@ -919,7 +918,7 @@ describe('IsArray', () => {
      *
      */
     it('check array empty', async () => {
-        const result = await sut.check(new ObjectContent([]), '');
+        const result = await sut.check([], '');
         expect(result.result).toBeTruthy();
     });
 
@@ -927,7 +926,7 @@ describe('IsArray', () => {
      *
      */
     it('check array', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        const result = await sut.check(['a', 'b', 'c'], '');
         expect(result.result).toBeTruthy();
     });
 
@@ -935,7 +934,7 @@ describe('IsArray', () => {
      *
      */
     it('check object empty', async () => {
-        const result = await sut.check(new ObjectContent({}), '');
+        const result = await sut.check({}, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -943,7 +942,7 @@ describe('IsArray', () => {
      *
      */
     it('check object equal', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -951,7 +950,7 @@ describe('IsArray', () => {
      *
      */
     it('check number 0', async () => {
-        const result = await sut.check(new NativeContent(0), '');
+        const result = await sut.check(0, '');
         expect(result.result).toBeFalsy();
     });
 });
@@ -968,7 +967,7 @@ describe('IsObject', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -988,7 +987,7 @@ describe('IsObject', () => {
      *
      */
     it('check string', async () => {
-        const result = await sut.check(new TextContent('aaa'), '');
+        const result = await sut.check('aaa', '');
         expect(result.result).toBeFalsy();
     });
 
@@ -996,7 +995,7 @@ describe('IsObject', () => {
      *
      */
     it('check array empty', async () => {
-        const result = await sut.check(new ObjectContent([]), '');
+        const result = await sut.check([], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1004,7 +1003,7 @@ describe('IsObject', () => {
      *
      */
     it('check array', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        const result = await sut.check(['a', 'b', 'c'], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1012,7 +1011,7 @@ describe('IsObject', () => {
      *
      */
     it('check object empty', async () => {
-        const result = await sut.check(new ObjectContent({}), '');
+        const result = await sut.check({}, '');
         expect(result.result).toBeTruthy();
     });
 
@@ -1020,7 +1019,7 @@ describe('IsObject', () => {
      *
      */
     it('check object equal', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '');
         expect(result.result).toBeTruthy();
     });
 
@@ -1028,7 +1027,7 @@ describe('IsObject', () => {
      *
      */
     it('check number 0', async () => {
-        const result = await sut.check(new NativeContent(0), '');
+        const result = await sut.check(0, '');
         expect(result.result).toBeFalsy();
     });
 });
@@ -1045,7 +1044,7 @@ describe('isNull', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeTruthy();
     });
 
@@ -1053,7 +1052,7 @@ describe('isNull', () => {
      *
      */
     it('check undefined', async () => {
-        const result = await sut.check(new NativeContent(undefined), '');
+        const result = await sut.check(undefined, '');
         expect(result.result).toBeTruthy();
     });
 
@@ -1061,7 +1060,7 @@ describe('isNull', () => {
      *
      */
     it('check string', async () => {
-        const result = await sut.check(new TextContent(''), '');
+        const result = await sut.check('', '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1069,7 +1068,7 @@ describe('isNull', () => {
      *
      */
     it('check string false', async () => {
-        const result = await sut.check(new TextContent('aba'), '');
+        const result = await sut.check('aba', '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1077,7 +1076,7 @@ describe('isNull', () => {
      *
      */
     it('check array', async () => {
-        const result = await sut.check(new ObjectContent([]), '');
+        const result = await sut.check([], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1085,7 +1084,7 @@ describe('isNull', () => {
      *
      */
     it('check array false', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        const result = await sut.check(['a', 'b', 'c'], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1093,7 +1092,7 @@ describe('isNull', () => {
      *
      */
     it('check object', async () => {
-        const result = await sut.check(new ObjectContent({}), '');
+        const result = await sut.check({}, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1101,7 +1100,7 @@ describe('isNull', () => {
      *
      */
     it('check object false', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1109,7 +1108,7 @@ describe('isNull', () => {
      *
      */
     it('check number 0', async () => {
-        const result = await sut.check(new NativeContent(0), '');
+        const result = await sut.check(0, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1117,7 +1116,7 @@ describe('isNull', () => {
      *
      */
     it('check number <> 0', async () => {
-        const result = await sut.check(new NativeContent(2), '');
+        const result = await sut.check(2, '');
         expect(result.result).toBeFalsy();
     });
 });
@@ -1134,7 +1133,7 @@ describe('isNumber', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1142,7 +1141,7 @@ describe('isNumber', () => {
      *
      */
     it('check undefined', async () => {
-        const result = await sut.check(new NativeContent(undefined), '');
+        const result = await sut.check(undefined, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1150,7 +1149,7 @@ describe('isNumber', () => {
      *
      */
     it('check string', async () => {
-        const result = await sut.check(new TextContent(''), '');
+        const result = await sut.check('', '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1158,7 +1157,7 @@ describe('isNumber', () => {
      *
      */
     it('check string, containing number', async () => {
-        const result = await sut.check(new TextContent('1'), '');
+        const result = await sut.check('1', '');
         expect(result.result).toBeTruthy();
     });
 
@@ -1166,7 +1165,7 @@ describe('isNumber', () => {
      *
      */
     it('check string false', async () => {
-        const result = await sut.check(new TextContent('aba'), '');
+        const result = await sut.check('aba', '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1174,7 +1173,7 @@ describe('isNumber', () => {
      *
      */
     it('check array', async () => {
-        const result = await sut.check(new ObjectContent([]), '');
+        const result = await sut.check([], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1182,7 +1181,7 @@ describe('isNumber', () => {
      *
      */
     it('check array false', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), '');
+        const result = await sut.check(['a', 'b', 'c'], '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1190,7 +1189,7 @@ describe('isNumber', () => {
      *
      */
     it('check object', async () => {
-        const result = await sut.check(new ObjectContent({}), '');
+        const result = await sut.check({}, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1198,7 +1197,7 @@ describe('isNumber', () => {
      *
      */
     it('check object false', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), '');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1206,7 +1205,7 @@ describe('isNumber', () => {
      *
      */
     it('check number 0', async () => {
-        const result = await sut.check(new NativeContent(0), '');
+        const result = await sut.check(0, '');
         expect(result.result).toBeTruthy();
     });
 
@@ -1214,7 +1213,7 @@ describe('isNumber', () => {
      *
      */
     it('check number <> 0', async () => {
-        const result = await sut.check(new NativeContent(2), '');
+        const result = await sut.check(2, '');
         expect(result.result).toBeTruthy();
     });
 
@@ -1222,7 +1221,7 @@ describe('isNumber', () => {
      *
      */
     it('check boolean false', async () => {
-        const result = await sut.check(new NativeContent(false), '');
+        const result = await sut.check(false, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1230,7 +1229,7 @@ describe('isNumber', () => {
      *
      */
     it('check boolean true', async () => {
-        const result = await sut.check(new NativeContent(true), '');
+        const result = await sut.check(true, '');
         expect(result.result).toBeFalsy();
     });
 });
@@ -1247,7 +1246,7 @@ describe('startsWith', () => {
      *
      */
     it('check null', async () => {
-        const result = await sut.check(new NullContent(), '');
+        const result = await sut.check(null, '');
         expect(result.result).toBeFalsy();
     });
 
@@ -1255,7 +1254,7 @@ describe('startsWith', () => {
      *
      */
     it('check string', async () => {
-        const result = await sut.check(new TextContent('aba'), 'ab');
+        const result = await sut.check('aba', 'ab');
         expect(result.result).toBeTruthy();
     });
 
@@ -1263,7 +1262,7 @@ describe('startsWith', () => {
      *
      */
     it('check string false', async () => {
-        const result = await sut.check(new TextContent('aba'), 'c');
+        const result = await sut.check('aba', 'c');
         expect(result.result).toBeFalsy();
     });
 
@@ -1271,7 +1270,7 @@ describe('startsWith', () => {
      *
      */
     it('check array', async () => {
-        const result = await sut.check(new ObjectContent(['a', 'b', 'c']), 'c');
+        const result = await sut.check(['a', 'b', 'c'], 'c');
         expect(result.result).toBeFalsy();
     });
 
@@ -1279,7 +1278,7 @@ describe('startsWith', () => {
      *
      */
     it('check object', async () => {
-        const result = await sut.check(new ObjectContent({ a: 1, b: 1, c: 1 }), 'c');
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, 'c');
         expect(result.result).toBeFalsy();
     });
 });

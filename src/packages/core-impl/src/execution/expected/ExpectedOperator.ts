@@ -1,4 +1,5 @@
-import { DataContent, RowValidator } from '@boart/core';
+import { RowValidator } from '@boart/core';
+import { NativeType } from 'core/src/data/NativeType';
 
 /**
  *
@@ -14,5 +15,6 @@ export interface ExpectedOperatorResult {
 export interface ExpectedOperator {
     readonly name: string;
     readonly validators?: Array<RowValidator>;
-    check(value: DataContent, expectedValue?: string): ExpectedOperatorResult | Promise<ExpectedOperatorResult>;
+    readonly canCaseInsesitive: boolean;
+    check(value: NativeType, expectedValue?: string): ExpectedOperatorResult | Promise<ExpectedOperatorResult>;
 }

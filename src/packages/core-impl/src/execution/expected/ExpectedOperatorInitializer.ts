@@ -37,6 +37,13 @@ export class ExpectedOperatorInitializer {
     /**
      *
      */
+    public exists(name: string): boolean {
+        return !!this._operators.toArray().find((o) => o.name === name);
+    }
+
+    /**
+     *
+     */
     public addOperator(operator: ExpectedOperator, ignoreEqual = false): void {
         const existingOperator = this._operators.toArray().find((o) => o.name === operator.name);
 

@@ -1,4 +1,13 @@
-import { DataContent, DataContentHelper, ExecutionContext, ExecutionUnit, ParaType, RowValidator, SelectorType } from '@boart/core';
+import {
+    DataContent,
+    DataContentHelper,
+    ExecutionContext,
+    ExecutionUnit,
+    NativeType,
+    ParaType,
+    RowValidator,
+    SelectorType
+} from '@boart/core';
 
 import { RowTypeValue } from '../../RowTypeValue';
 import { ParaValidator } from '../../validators/ParaValidator';
@@ -23,33 +32,63 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     /**
      *
      */
+    private generateNotOperator(operator: ExpectedOperator): ExpectedOperator {
+        return {
+            name: operator.name + (!!operator.name ? ':' : '') + 'not',
+            canCaseInsesitive: operator.canCaseInsesitive,
+            check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
+                const result = await operator.check(value, expectedValue);
+                return {
+                    result: !result.result
+                };
+            }
+        };
+    }
+
+    /**
+     *
+     */
+    private generateCIOperator(operator: ExpectedOperator): ExpectedOperator {
+        const lowercase = (value: NativeType): string => value?.toString()?.toLowerCase() || '';
+
+        return {
+            name: operator.name + (!!operator.name ? ':' : '') + 'ci',
+            canCaseInsesitive: true,
+            check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
+                const result = await operator.check(lowercase(value), lowercase(expectedValue));
+                return {
+                    result: result.result
+                };
+            }
+        };
+    }
+
+    /**
+     *
+     */
     constructor(private firstLevelType?: keyof DataContext['execution'], private secondLevelType?: string) {
         ExpectedOperatorInitializer.instance.operators.subscribe((operator) => {
             this.operators.push(operator);
-            this.operators.push({
-                name: 'not:' + operator.name,
-                check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
-                    const result = await operator.check(value, expectedValue);
-                    return {
-                        result: !result.result,
-                        errorMessage: ':not' + (result.errorMessage || '')
-                    };
-                }
-            });
+
+            // add not: operator
+            this.operators.push(this.generateNotOperator(operator));
+
+            // add :ci operator
+            if (operator.canCaseInsesitive) {
+                const ciOperator = this.generateCIOperator(operator);
+                this.operators.push(ciOperator);
+                this.operators.push(this.generateNotOperator(ciOperator));
+            }
         });
 
         // add default implementation
-        this.operators.push({
-            name: '',
-            check: (value, expectedValue) => ExpectedOperatorImplementation.equals.check(value, expectedValue)
-        });
-        // add default negate
-        this.operators.push({
-            name: 'not',
-            check: (value: DataContent, expectedValue: string): ExpectedOperatorResult => ({
-                result: expectedValue.toString() != value.getText()
-            })
-        });
+        if (!ExpectedOperatorInitializer.instance.exists('')) {
+            ExpectedOperatorInitializer.instance.addOperator({
+                name: '',
+                canCaseInsesitive: true,
+                check: (value, expectedValue) => ExpectedOperatorImplementation.equals.check(value, expectedValue)
+            });
+        }
     }
 
     /**
@@ -98,7 +137,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
             validator.validate(row.data, null);
         });
 
-        const expectedResult = await operator.check(data, row.value.toString());
+        const expectedResult = await operator.check(data.getValue(), row.value.toString());
 
         if (expectedResult.result === false) {
             const description = this.description + (!row.selector ? '' : '#' + row.selector);

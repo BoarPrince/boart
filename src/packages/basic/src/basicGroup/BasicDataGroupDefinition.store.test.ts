@@ -1447,11 +1447,11 @@ describe('check run:xxx', () => {
      */
     it('run:only executes - validators must be executed', async () => {
         const tableDef = MarkdownTableReader.convert(
-            `|action      |value             |
-             |------------|------------------|
-             |run:only:a  | a                |
+            `|action      |value           |
+             |------------|----------------|
+             |run:only:a  | a              |
              |payload     | \${store:var1} |
-             |store       | var              |`
+             |store       | var            |`
         );
 
         await expect(() => sut.handler.process(tableDef)).rejects.toThrowError("can't find value of 'store:var1'");
