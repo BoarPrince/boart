@@ -413,7 +413,7 @@ describe('check row validators', () => {
             [[Symbol('a:2')], null],
             [[Symbol('a:3')], null],
             [[Symbol('a:3'), Symbol('a:4'), Symbol('a:5')], null],
-            [[Symbol('a:1'), Symbol('a:2')], `Exactly one of the keys 'a:1, a:2' must exists, but 'a:1, a:2' exists`], //
+            [[Symbol('a:1'), Symbol('a:2')], `Only one of the keys 'a:1, a:2' must exists, but 'a:1, a:2' exists`], //
             [[Symbol('a:4'), Symbol('a:5')], `One of the following keys 'a:4, a:5' must exists, but no one exists`] //
         ])(`check xor happy path (keys: '%s', error message: 's'`, (keys: symbol[], errorMessage: string) => {
             const sut = new ValidationHandler([new XORValidator(keys)]);

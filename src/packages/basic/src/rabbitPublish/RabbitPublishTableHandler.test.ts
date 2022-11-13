@@ -665,7 +665,7 @@ describe('error handling', () => {
         );
 
         expect(() => sut.handler.process(tableRows)).toThrowError(
-            "key 'exchange' depends on key: 'type -> value:exchange', but it does not exist!"
+            "Only one of the keys 'queue, exchange' must exists, but 'queue, exchange' exists"
         );
     });
 

@@ -31,7 +31,7 @@ export class XORValidator implements GroupValidator {
         if (existingKeys.length === 0) {
             throw Error(`One of the following keys '${keys?.join(', ')}' must exists, but no one exists`);
         } else if (existingKeys.length > 1) {
-            throw Error(`Exactly one of the keys '${keys?.join(', ')}' must exists, but '${existingKeys?.join(', ')}' exists`);
+            throw Error(`Only one of the keys '${keys?.join(', ')}' must exists, but '${existingKeys?.join(', ')}' exists`);
         }
     }
 }
