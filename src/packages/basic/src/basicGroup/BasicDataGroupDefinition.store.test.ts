@@ -1441,4 +1441,37 @@ describe('check run:xxx', () => {
 
         await expect(() => sut.handler.process(tableDef)).rejects.toThrowError("context 'para' not defined");
     });
+
+    /**
+     *
+     */
+    it('run:only executes - validators must be executed', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      |value             |
+             |------------|------------------|
+             |run:only:a  | a                |
+             |payload     | \${store:var1} |
+             |store       | var              |`
+        );
+
+        await expect(() => sut.handler.process(tableDef)).rejects.toThrowError("can't find value of 'store:var1'");
+    });
+
+    /**
+     *
+     */
+    it('run:only does not execute - validators must not be executed', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action      |value           |
+             |------------|----------------|
+             |run:only:a  | b              |
+             |payload     | \${store:var1} |
+             |store       | var            |`
+        );
+
+        // process runs without problems
+        await sut.handler.process(tableDef);
+
+        expect(Runtime.instance.stepRuntime.current.status).toBe(RuntimeStatus.stopped);
+    });
 });

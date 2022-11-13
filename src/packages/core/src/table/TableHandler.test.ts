@@ -1,3 +1,5 @@
+import { ExecutionEngine } from '../execution/ExecutionEngine';
+
 import { AnyBaseRowType } from './BaseRowType';
 import { GroupRowDefinition } from './GroupRowDefinition';
 import { RowDefinition } from './RowDefinition';
@@ -62,7 +64,8 @@ describe('check TableHandler', () => {
     it('process rows', async () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const executionEngineMock: any = {
-            execute: jest.fn()
+            execute: jest.fn(),
+            preExecute: jest.fn().mockReturnValue(Promise.resolve(true))
         };
 
         const sut = new TableHandler(RowWithOneValue, () => executionEngineMock);
@@ -93,6 +96,46 @@ describe('check TableHandler', () => {
 
         expect(callPara[0].action).toBe('a');
         expect(callPara[0].value).toBe('b');
+
+        expect(executionEngineMock.preExecute) //
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            .toHaveBeenCalledBefore(executionEngineMock.execute);
+    });
+
+    /**
+     *
+     */
+    it('processing rows stopped - becaue run:', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const executionEngineMock: any = {
+            execute: jest.fn(),
+            preExecute: jest.fn().mockReturnValue(Promise.resolve(false))
+        };
+
+        const sut = new TableHandler(RowWithOneValue, () => executionEngineMock);
+
+        sut.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('a'),
+                type: TableRowType.PostProcessing,
+                executionUnit: null,
+                validators: null
+            })
+        );
+
+        await sut.process({
+            headers: {
+                cells: ['my-action', 'my-value']
+            },
+            rows: [
+                {
+                    cells: ['a', 'b']
+                }
+            ]
+        });
+
+        expect(executionEngineMock.preExecute).toHaveBeenCalled();
+        expect(executionEngineMock.execute).not.toHaveBeenCalled();
     });
 
     /**

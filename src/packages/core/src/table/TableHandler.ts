@@ -106,10 +106,23 @@ export class TableHandler<
         );
         const rows = definitionBinder.bind(this.rowType);
 
-        const validator = new ValidationHandler<TExecutionContext, TRowType>(this.groupValidations);
-        validator.validate(rows);
-
         this.executionEngine = this.executionEngineCreator();
-        return this.executionEngine.execute(rows);
+
+        const validator = new ValidationHandler<TExecutionContext, TRowType>(this.groupValidations);
+        validator.preValidate(rows);
+
+        return this.executionEngine
+            .preExecute(rows)
+            .then((canProceed) => {
+                if (canProceed) {
+                    validator.validate(rows);
+                    return this.executionEngine.execute(rows);
+                } else {
+                    return this.executionEngine.context;
+                }
+            })
+            .catch((errorReason) => {
+                throw errorReason;
+            });
     }
 }

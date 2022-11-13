@@ -37,12 +37,17 @@ export class ExecutionEngine<
     /**
      *
      */
-    async execute(rows: ReadonlyArray<TRowType>): Promise<TExecutionContext> {
+    async preExecute(rows: ReadonlyArray<TRowType>): Promise<boolean> {
         await this.executeByType(rows, TableRowType.PreConfiguration);
-        if (Runtime.instance.stepRuntime.current?.status === RuntimeStatus.stopped) {
-            return this.context;
-        }
+        return Runtime.instance.stepRuntime.current?.status === RuntimeStatus.stopped //
+            ? false
+            : true;
+    }
 
+    /**
+     *
+     */
+    async execute(rows: ReadonlyArray<TRowType>): Promise<TExecutionContext> {
         Context.instance.setContext(this.context.config);
         await this.executeByType(rows, TableRowType.Configuration);
 

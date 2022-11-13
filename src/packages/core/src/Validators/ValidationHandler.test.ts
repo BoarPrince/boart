@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { AnyBaseRowType } from '../table/BaseRowType';
 import { RowDefinition } from '../table/RowDefinition';
+import { TableRowType } from '../table/TableRowType';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
 
@@ -124,6 +126,88 @@ describe('check row validators', () => {
 
             expect(validator.validate).toBeCalledTimes(1);
             expect(validator.validate).toBeCalledWith([rowData].map((row) => row.data));
+        });
+
+        /**
+         *
+         */
+        it('do not call validator when preValidate is called', () => {
+            /**
+             * Mock Validator
+             */
+            const validator = {
+                name: 'test',
+                validate: jest.fn()
+            } as RowValidator;
+
+            const sut = new ValidationHandler(null);
+            const rowData: AnyBaseRowType = {
+                data: {
+                    key: 'a:a',
+                    keyPara: null,
+                    selector: null,
+                    values: {
+                        value1: 'a'
+                    },
+                    values_replaced: {
+                        value1: 'a'
+                    },
+                    _metaDefinition: new RowDefinition({
+                        key: null,
+                        type: TableRowType.PostProcessing,
+                        executionUnit: null,
+                        parameterType: ParaType.False,
+                        selectorType: SelectorType.Optional,
+                        validators: [validator]
+                    })
+                }
+            };
+
+            sut.preValidate([rowData]);
+            expect(validator.validate).toBeCalledTimes(0);
+        });
+
+        /**
+         *
+         */
+        it('call validator when preValidate is called', () => {
+            /**
+             * Mock Validator
+             */
+            const validator = {
+                name: 'test',
+                validate: jest.fn()
+            } as RowValidator;
+
+            const sut = new ValidationHandler(null);
+            const rowData: AnyBaseRowType = {
+                data: {
+                    key: 'a:a',
+                    keyPara: null,
+                    selector: null,
+                    values: {
+                        value1: 'a'
+                    },
+                    values_replaced: {
+                        value1: 'a'
+                    },
+                    _metaDefinition: new RowDefinition({
+                        key: null,
+                        type: TableRowType.PreConfiguration,
+                        executionUnit: null,
+                        parameterType: ParaType.False,
+                        selectorType: SelectorType.Optional,
+                        validators: [validator]
+                    })
+                }
+            };
+
+            sut.preValidate([rowData]);
+            expect(validator.validate).toBeCalledTimes(1);
+            expect(validator.validate).toBeCalledWith(
+                rowData.data,
+                [rowData].map((row) => row.data)
+            );
         });
     });
 });
