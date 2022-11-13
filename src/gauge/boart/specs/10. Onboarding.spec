@@ -338,3 +338,25 @@ tags: ob-10.6
    |group                |Check Queues                                      |
    |expected#SubsidiaryId|${store:response-ca.id}                           |
    |expected#Email       |${store:response-user.email}                      |
+
+ @@@@  @    @ @@@@@@  @@@@  @    @     @@@@  @        @@    @  @    @  @@@@
+@    @ @    @ @      @    @ @   @     @    @ @       @  @   @  @@  @@ @
+@      @@@@@@ @@@@@  @      @@@@      @      @      @    @  @  @ @@ @  @@@@
+@      @    @ @      @      @  @      @      @      @@@@@@  @  @    @      @
+@    @ @    @ @      @    @ @   @     @    @ @      @    @  @  @    @ @    @
+ @@@@  @    @ @@@@@@  @@@@  @    @     @@@@  @@@@@@ @    @  @  @    @  @@@@
+
+* get user claims, username: "${store:response-user.email}", password: "${env:default_password}"
+
+* Data manage
+
+   |action               |value                               |
+   |---------------------|------------------------------------|
+   |in                   |${store:response_claims}            |
+   |description          |Claims must contain the correct Id's|
+   |                     |CompanyId, SubsidiaryId, UserId     |
+   |run:env              |development, staging                |
+   |expected#companyName |${store:response-co.companyName}    |
+   |expected#companyId   |${store:response-co.id}             |
+   |expected#userId      |${store:response-user.id}           |
+   |expected#subsidiaryId|${store:response-ca.id}             |

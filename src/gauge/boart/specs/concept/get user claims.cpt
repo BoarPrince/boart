@@ -6,8 +6,9 @@
     |-------------|------------------------------------------------|
     | url         | /token                                         |
     | grantType   | password                                       |
-    | description | Get bearer token for user                     |
+    | description | Get bearer token for user                      |
     |             | <username>                                     |
+    |run:env      | development, staging                           |
     | scope       | openid app_api jitpay.role email roles profile |
     | clientId    | jitpay_portal_angular_application_client       |
     | username    | <username>                                     |

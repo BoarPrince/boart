@@ -6,7 +6,7 @@
     "test:": "gauge run",
     "_test:local": "export runtime_environent=local && gauge run --tags=\"md-4.3\"",
     "test:local": "export runtime_environent=local && gauge run --tags=\"ob-10.6\"",
-    "test:dev": "export runtime_environent=development && gauge run --tags=\"md-3\"",
+    "test:dev": "export runtime_environent=development && gauge run --tags=\"sb-11\"",
     "update": "rm -rf node_modules/@boart && npm update",
     "update:and:test": "npm run update && npm run test"
   },

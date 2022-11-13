@@ -223,3 +223,10 @@ step('Print store', () => {
         console.log(value);
     });
 });
+
+/**
+ *
+ */
+step('Console.log <message>', (message) => {
+    console.log('#### log ####', message);
+});

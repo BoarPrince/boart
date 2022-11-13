@@ -24,7 +24,9 @@
   "carrierIds": [
     "${store:response-ca#id:-undefined}"
   ],
-  "roles": [],
+  "roles": [
+    "CarrierAdmin"
+  ],
   "createDate": "2022-09-20T15:37:06.4+02:00",
   "modifiedDate": "2022-09-20T15:37:06.4+02:00"
 }
