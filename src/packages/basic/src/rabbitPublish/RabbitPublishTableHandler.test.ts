@@ -658,10 +658,10 @@ describe('error handling', () => {
     it('queue and exchange cannot used together', () => {
         const tableRows = MarkdownTableReader.convert(
             `| action    | value    |
-         |-----------|----------|
-         | queue     | queue    |
-         | exchange  | exchange |
-         | payload   | {"a": 1} |`
+             |-----------|----------|
+             | queue     | queue    |
+             | exchange  | exchange |
+             | payload   | {"a": 1} |`
         );
 
         expect(() => sut.handler.process(tableRows)).toThrowError(
@@ -672,7 +672,7 @@ describe('error handling', () => {
     /**
      *
      */
-    it('using queue depends on type => queue', () => {
+    it('using queue depends on type => queue', async () => {
         const tableRows = MarkdownTableReader.convert(
             `| action    | value    |
          |-----------|----------|
@@ -681,7 +681,7 @@ describe('error handling', () => {
          | payload   | {"a": 1} |`
         );
 
-        expect(() => sut.handler.process(tableRows)).toThrowError(
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
             "key 'queue' depends on key: 'type -> value:queue', but it does not exist!"
         );
     });
@@ -702,15 +702,16 @@ describe('error handling', () => {
     /**
      *
      */
-    it('routingKey can only be used with type => exchange', () => {
+    it('routingKey can only be used with type => exchange', async () => {
         const tableRows = MarkdownTableReader.convert(
-            `| action    | value |
-             |-----------|-------|
-             | queue     | queue |
-             | routing   | xxx   |`
+            `| action    | value    |
+             |-----------|----------|
+             | queue     | queue    |
+             | payload   | {"a": 1} |
+             | routing   | xxx      |`
         );
 
-        expect(() => sut.handler.process(tableRows)).toThrowError(
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
             "key 'routing' depends on key: 'type -> value:exchange', but it does not exist!"
         );
     });
