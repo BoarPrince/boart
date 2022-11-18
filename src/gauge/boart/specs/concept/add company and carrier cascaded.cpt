@@ -4,13 +4,14 @@
 
 * Rest call
 
-   |action                         |value                                                 |
-   |-------------------------------|------------------------------------------------------|
-   |method:post                    |/api/company                                          |
-   |payload                        |<file:request-company.json>                           |
-   |payload#carriers[0]            |<file:request-carrier.json>                           |
-   |payload#carriers[0].companyId  |undefined                                             |
-   |description                    |Create a cascaded Company request (including Carrier) |
-   |expected:header#status         |200                                                   |
-   |store                          |response-co                                           |
-   |store#carriers[0]              |response-ca                                           |
+   | action                        | value                                                 |
+   |-------------------------------|-------------------------------------------------------|
+   | method:post                   | /api/company                                          |
+   | payload                       | <file:request-company.json>                           |
+   | payload#carriers[0]           | <file:request-carrier.json>                           |
+   | payload#carriers[0].companyId | undefined                                             |
+   | description                   | Create a cascaded Company request (including Carrier) |
+   | group                         | Initial Create                                        |
+   | expected:header#status        | 200                                                   |
+   | store                         | response-co                                           |
+   | store#carriers[0]             | response-ca                                           |

@@ -1,0 +1,215 @@
+# check db backend sync, company: <companyInfo>, carrier: <carrierInfo>, user: <userInfo>, driver: <driverInfo>, vehicle: <vehicleInfo>
+
+* Data manage
+
+   | action      | value         |
+   |-------------|---------------|
+   | in          | <companyInfo> |
+   | wait:before | 2             |
+   | store       | companyInfo   |
+
+* Data manage
+
+   | action        | value         |
+   |---------------|---------------|
+   | run:not-empty | <carrierInfo> |
+   | in            | <carrierInfo> |
+   | store         | carrierInfo   |
+
+* Data manage
+
+   | action        | value      |
+   |---------------|------------|
+   | run:not-empty | <userInfo> |
+   | in            | <userInfo> |
+   | store         | userInfo   |
+
+* Data manage
+
+   | action        | value        |
+   |---------------|--------------|
+   | run:not-empty | <driverInfo> |
+   | in            | <driverInfo> |
+   | store         | driverInfo   |
+
+* Data manage
+
+   | action        | value         |
+   |---------------|---------------|
+   | run:not-empty | <vehicleInfo> |
+   | in            | <vehicleInfo> |
+   | store         | vehicleInfo   |
+
+@@@@@@@
+@       @      @@@@@@ @@@@@@ @@@@@
+@       @      @      @        @
+@@@@@   @      @@@@@  @@@@@    @
+@       @      @      @        @
+@       @      @      @        @
+@       @@@@@@ @@@@@@ @@@@@@   @
+
+* SQL query, continue
+
+   | action               | value                  |
+   |----------------------|------------------------|
+   | description          | Read Fleet Database    |
+   | -------------        | -------------          |
+   | group                | Check DB               |
+   | -------------        | -------------          |
+   | database             | Jitfleet               |
+   | -------------        | -------------          |
+   | query                | <file:query-fleet.sql> |
+   | -------------        | -------------          |
+   | expected:header#rows | 1                      |
+   | store                | result-fleet           |
+
+* Data manage, continue
+   | action             | value                                 |
+   |--------------------|---------------------------------------|
+   | description        | Check Fleet synchronisation (company) |
+   | group              | Check DB                              |
+   | run:not-empty      | ${store?:result-fleet}                |
+   | in                 | ${store:result-fleet}                 |
+   | expected#NAME      | ${store:companyInfo.companyName}      |
+   | expected#JITPAY_ID | ${store:companyInfo.jitPayId}         |
+
+* Data manage, continue
+   | action           | value                                           |
+   |------------------|-------------------------------------------------|
+   | description      | Check Fleet synchronisation (company - address) |
+   | group            | Check DB                                        |
+   | run:not-empty    | ${store?:companyInfo.addresses}                 |
+   | in               | ${store?:result-fleet.ADDRESS[0]}               |
+   | expected#CITY    | ${store:companyInfo.addresses[0].city}          |
+   | expected#STREET  | ${store:companyInfo.addresses[0].street}        |
+   | expected#ZIPCODE | ${store:companyInfo.addresses[0].zipCode}       |
+
+* Data manage, continue
+   | action                            | value                                 |
+   |-----------------------------------|---------------------------------------|
+   | description                       | Check Fleet synchronisation (carrier) |
+   | group                             | Check DB                              |
+   | run:not-empty                     | <carrierInfo>                         |
+   | in                                | ${store:result-fleet}                 |
+   | expected:equals:ci#CARRIERS[0].ID | ${store:carrierInfo.id}               |
+   | expected#CARRIERS[0].NAME         | ${store:carrierInfo.carrierName}      |
+
+* Data manage, continue
+   | action                         | value                              |
+   |--------------------------------|------------------------------------|
+   | description                    | Check Fleet synchronisation (user) |
+   | group                          | Check DB                           |
+   | run:not-empty                  | <userInfo>                         |
+   | in                             | ${store:result-fleet}              |
+   | expected:equals:ci#USERS[0].ID | ${store:userInfo.id}               |
+   | expected#USERS[0].USERNAME     | ${store:userInfo.username}         |
+
+* Data manage, continue
+   | action                           | value                                |
+   |----------------------------------|--------------------------------------|
+   | description                      | Check Fleet synchronisation (driver) |
+   | group                            | Check DB                             |
+   | run:not-empty                    | <driverInfo>                         |
+   | in                               | ${store:result-fleet}                |
+   | expected:equals:ci#DRIVERS[0].ID | ${store:driverInfo.id}               |
+   | expected#DRIVERS[0].EMAIL        | ${store:userInfo.email}              |
+
+* Data manage, continue
+   | action                            | value                                 |
+   |-----------------------------------|---------------------------------------|
+   | description                       | Check Fleet synchronisation (vehicle) |
+   | group                             | Check DB                              |
+   | run:not-empty                     | <vehicleInfo>                         |
+   | in                                | ${store:result-fleet}                 |
+   | expected:equals:ci#VEHICLES[0].ID | ${store:vehicleInfo.id}               |
+   | expected#VEHICLES[0].PLATE        | ${store:vehicleInfo.plate}            |
+
+@@@@@@@
+@       @    @ @@@@@@ @
+@       @    @ @      @
+@@@@@   @    @ @@@@@  @
+@       @    @ @      @
+@       @    @ @      @
+@        @@@@  @@@@@@ @@@@@@
+
+* SQL query, continue
+  | action               | value                 |
+  |----------------------|-----------------------|
+  | run:not-empty        | <carrierInfo>         |
+  | -------------        | -------------         |
+  | description          | Read Fuel Database    |
+  | -------------        | -------------         |
+  | group                | Check DB              |
+  | -------------        | -------------         |
+  | database             | JitCash               |
+  | -------------        | -------------         |
+  | query                | <file:query-fuel.sql> |
+  | -------------        | -------------         |
+  | expected:header#rows | 1                     |
+  | expected#deleted     | false                 |
+  | store                | result-fuel           |
+
+* Data manage, continue
+   | action                | value                                |
+   |-----------------------|--------------------------------------|
+   | description           | Check Fuel synchronisation (carrier) |
+   | group                 | Check DB                             |
+   | run:not-empty         | <carrierInfo>                        |
+   | in                    | ${store:result-fuel}                 |
+   | expected#carrier_name | ${store:carrierInfo.carrierName}     |
+   | expected#initial_pin  | ${store:carrierInfo.initialPin}      |
+
+* Data manage, continue
+   | action                          | value                                           |
+   |---------------------------------|-------------------------------------------------|
+   | description                     | Check Fuel synchronisation (user)               |
+   | group                           | Check DB                                        |
+   | run:not-empty                   | <userInfo>                                      |
+   | in                              | ${store:result-fuel}                            |
+   | expected:jsonLogic:true         | {"some" : [                                     |
+   |                                 | {"var":"users"},                                |
+   |                                 | {"==" : [{"var":"id"}, "${store:userInfo.id}"]} |
+   |                                 | ]}                                              |
+   | transform:jsonLogic             | {"filter":[                                     |
+   |                                 | {"var":"users"},                                |
+   |                                 | {"===":[{"var":"id"}, "${store:userInfo.id}"]}  |
+   |                                 | ]}                                              |
+   | expected:transformed#username   | ${store:userInfo.username}                      |
+   | expected:transformed#first_name | ${store:userInfo.firstname}                     |
+   | expected:transformed#last_name  | ${store:userInfo.lastname}                      |
+
+* Data manage, continue
+   | action                     | value                                                       |
+   |----------------------------|-------------------------------------------------------------|
+   | description                | Check Fuel synchronisation (driver)                         |
+   | group                      | Check DB                                                    |
+   | run:not-empty              | <driverInfo>                                                |
+   | in                         | ${store:result-fuel}                                        |
+   | expected:jsonLogic:true    | {"some" : [                                                 |
+   |                            | {"var":"drivers"},                                          |
+   |                            | {"===" : [{"var":"external_id"}, "${store:driverInfo.id}"]} |
+   |                            | ]}                                                          |
+   | transform:jsonLogic        | {"filter":[                                                 |
+   |                            | {"var":"drivers"},                                          |
+   |                            | {"===":[{"var":"external_id"}, "${store:driverInfo.id}"]}   |
+   |                            | ]}                                                          |
+   | expected:transformed#email | ${store:driverInfo.email:-${store:userInfo.email}}          |
+
+* Data manage, continue
+   | action                     | value                                                        |
+   |----------------------------|--------------------------------------------------------------|
+   | description                | Check Fuel synchronisation (vehicle)                         |
+   | group                      | Check DB                                                     |
+   | run:not-empty              | <vehicleInfo>                                                |
+   | in                         | ${store:result-fuel}                                         |
+   | expected:jsonLogic:true    | {"some" : [                                                  |
+   |                            | {"var":"vehicles"},                                          |
+   |                            | {"===" : [{"var":"external_id"}, "${store:vehicleInfo.id}"]} |
+   |                            | ]}                                                           |
+   | transform:jsonLogic        | {"filter":[                                                  |
+   |                            | {"var":"vehicles"},                                          |
+   |                            | {"===":[{"var":"external_id"}, "${store:vehicleInfo.id}"]}   |
+   |                            | ]}                                                           |
+   | expected:transformed#plate | ${store:vehicleInfo.plate}                                   |
+
+

@@ -1,0 +1,11 @@
+# add company, response: <response>
+
+* Rest call
+      | action                 | value                       |
+      |------------------------|-----------------------------|
+      | method:post            | /api/company                |
+      | payload                | <file:request-company.json> |
+      | description            | Create a Company            |
+      | group                  | Initial Create              |
+      | expected:header#status | 200                         |
+      | store                  | <response>                  |

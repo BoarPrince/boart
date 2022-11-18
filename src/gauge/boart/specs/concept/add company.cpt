@@ -1,11 +1,5 @@
-# add company, response: <response>
+# add company
 
-* Rest call
-      | action                 | value                       |
-      |------------------------|-----------------------------|
-      | method:post            | /api/company                |
-      | payload                | <file:request-company.json> |
-      | description            | Create a Company            |
-      | group                  | Initial Create              |
-      | expected:header#status | 200                         |
-      | store                  | <response>                  |
+* request admin bearer
+
+* add company, response: "response-co"

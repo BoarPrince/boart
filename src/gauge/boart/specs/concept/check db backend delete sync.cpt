@@ -1,0 +1,91 @@
+# check db backend delete sync, company: <companyId>, carrier: <carrierId>, child: <childId>, <checkList>
+
+* Data manage
+
+   | action | value       |
+   |--------|-------------|
+   | in     | <companyId> |
+   | store  | companyId   |
+
+* Data manage
+
+   | action | value       |
+   |--------|-------------|
+   | in     | <carrierId> |
+   | store  | carrierId   |
+
+* Data manage
+
+   | action | value     |
+   |--------|-----------|
+   | in     | <childId> |
+   | store  | childId   |
+
+@@@@@@@
+@       @      @@@@@@ @@@@@@ @@@@@
+@       @      @      @        @
+@@@@@   @      @@@@@  @@@@@    @
+@       @      @      @        @
+@       @      @      @        @
+@       @@@@@@ @@@@@@ @@@@@@   @
+
+* SQL query, continue
+
+   | action        | value                  |
+   |---------------|------------------------|
+   | description   | Read Fleet Database    |
+   | ------------- | -------------          |
+   | group         | Check DB               |
+   | ------------- | -------------          |
+   | database      | Jitfleet               |
+   | ------------- | -------------          |
+   | query         | <file:query-fleet.sql> |
+   | ------------- | -------------          |
+   | store         | result-fleet           |
+
+* Data manage, continue
+   | action           | value                                 |
+   |------------------|---------------------------------------|
+   | description      | Check Fleet synchronisation (company) |
+   | group            | Check DB                              |
+   | run:only:company | <checkList>                           |
+   | in               | ${store:result-fleet}                 |
+   | expected:empty   |                                       |
+
+* Data manage, continue
+   | action                   | value                                        |
+   |--------------------------|----------------------------------------------|
+   | description              | Check Fuel synchronisation (vehicle)         |
+   | group                    | Check DB                                     |
+   | run:only:carrier         | <checkList>                                  |
+   | in                       | ${store:result-fuel}                         |
+   | expected:jsonLogic:false | {"some" : [                                  |
+   |                          | {"var":"CARRIERS"},                          |
+   |                          | {"===" : [{"var":"id"}, "${store:childId}"]} |
+   |                          | ]}                                           | |
+
+@@@@@@@
+@       @    @ @@@@@@ @
+@       @    @ @      @
+@@@@@   @    @ @@@@@  @
+@       @    @ @      @
+@       @    @ @      @
+@        @@@@  @@@@@@ @@@@@@
+
+* SQL query, continue
+  | action               | value                 |
+  |----------------------|-----------------------|
+  | run:not-empty        | ${store:carrierId}    |
+  | -------------        | -------------         |
+  | description          | Read Fuel Database    |
+  | -------------        | -------------         |
+  | group                | Check DB              |
+  | -------------        | -------------         |
+  | database             | JitCash               |
+  | -------------        | -------------         |
+  | query                | <file:query-fuel.sql> |
+  | -------------        | -------------         |
+  | expected:header#rows | 1                     |
+  | expected#deleted     | false                 |
+  | store                | result-fuel           |
+

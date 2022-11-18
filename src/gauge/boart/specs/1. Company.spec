@@ -280,3 +280,31 @@ tags: company-create-cascading-queue-event, md-1.7
    |expected#userId      |${store:response-company.carriers[0].users[0].id}                                                               |
    |expected#subsidiaryId|${store:response-company.carriers[0].id}                                                                        |
    |expected#name        |${store:response-company.carriers[0].users[0].firstname} ${store:response-company.carriers[0].users[0].lastname}|
+
+## 1.8. Delete must trigger event queue
+
+tags: md-1.8
+
+* Test description
+
+   |action     |value                               |
+   |-----------|------------------------------------|
+   |description|Delete should trigger a delete event|
+   |priority   |high                                |
+
+* request admin bearer
+
+* add company
+
+* queues bind "company"
+
+* Rest call
+
+   |action                |value                               |
+   |----------------------|------------------------------------|
+   |method:delete         |/api/company/${store:response-co.id}|
+   |description           |Delete a Company                    |
+   |wait:before           |5                                   |
+   |expected:header#status|204                                 |
+
+* queues check "company"

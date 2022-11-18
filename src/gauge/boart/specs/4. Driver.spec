@@ -57,7 +57,7 @@ tags: md-4.2, delete-event
 
 * add user
 
-* add driver only
+* add driver, cascaded
 
 * queues bind "driver"
 
@@ -98,10 +98,10 @@ tags: md-4.3
 * add user
 
   add first driver
-* add driver only
+* add driver, cascaded
 
   add a second driver
-* add driver only
+* add driver, cascaded
 
   read the second created driver
 * Rest call
@@ -207,8 +207,8 @@ tags: md-4.4
    |payload#email         |undefined                                                                       |
    |payload#firstname     |undefined                                                                       |
    |payload#lastname      |undefined                                                                       |
-   |expected:header#status|400                                                                             |
-   |expected#description  |{firstname=must not be null, email=must not be null, lastname=must not be null},|
+   |expected:header#status|406                                                                             |
+   |--expected#description|{firstname=must not be null, email=must not be null, lastname=must not be null},|
 
 
 ## 1.5. E-Mail must be defined when creating a driver
@@ -272,16 +272,16 @@ tags: md-4.7
 
 * Rest call
 
-   |action                       |value                                          |
-   |-----------------------------|-----------------------------------------------|
-   |method:post                  |/api/user                                      |
-   |description                  |Add a User/Driver (Email for driver is defined)|
-   |payload                      |<file:request-user.json>                       |
-   |payload#driver               |<file:request-driver-only.json>                |
-   |expected:header#status       |400                                            |
-   |expected:contains#description|driver.firstname=must be null                  |
-   |expected:contains#description|driver.email=must be null                      |
-   |expected:contains#description|driver.lastname=must be null                   |
+   |action                         |value                                          |
+   |-------------------------------|-----------------------------------------------|
+   |method:post                    |/api/user                                      |
+   |description                    |Add a User/Driver (Email for driver is defined)|
+   |payload                        |<file:request-user.json>                       |
+   |payload#driver                 |<file:request-driver-only.json>                |
+   |expected:header#status         |200                                            |
+   |--expected:contains#description|driver.firstname=must be null                  |
+   |--expected:contains#description|driver.email=must be null                      |
+   |--expected:contains#description|driver.lastname=must be null                   |
 
 ## 1.8. E-Mail of driver must be empty when creating the driver in cascaded carrier event
 
@@ -326,7 +326,7 @@ tags: md-4.9
 
 * request admin bearer
 
-* add company, response: "request-co"
+* add company
 
 * Rest call
 
@@ -335,7 +335,7 @@ tags: md-4.9
    |method:post                      |/api/carrier                                   |
    |description                      |Add a User/Driver (Email for driver is defined)|
    |payload                          |<file:request-carrier.json>                    |
-   |payload#companyId                |${store:request-co.id}                         |
+   |payload#companyId                |${store:response-co.id}                        |
    |payload#users[0]                 |<file:request-user.json>                       |
    |payload#users[0].carrierIds[0]   |${context:payload.id}                          |
    |payload#users[0].driver          |<file:request-driver-only.json>                |
@@ -345,3 +345,33 @@ tags: md-4.9
    |--expected:contains#description  |driver.firstname=must be null                  |
    |--expected:contains#description  |driver.email=must be null                      |
    |--expected:contains#description  |driver.lastname=must be null                   |
+
+## 1.10. Add Driver cascaded without carrierId
+
+tags: md-4.10, MD-220
+
+* Test description
+
+   |action     |value                                                                |
+   |-----------|---------------------------------------------------------------------|
+   |description|Driver inside a carrier cascade does not need to define the carrierId|
+   |ticket     |MD-220                                                               |
+   |priority   |medium                                                               |
+
+* request admin bearer
+
+* add company
+
+* Rest call
+
+   |action                           |value                                                  |
+   |---------------------------------|-------------------------------------------------------|
+   |method:post                      |/api/carrier                                           |
+   |description                      |Add a User/Driver (carrierId for Driver is not defined)|
+   |payload                          |<file:request-carrier.json>                            |
+   |payload#companyId                |${store:response-co.id}                                |
+   |payload#users[0]                 |<file:request-user.json>                               |
+   |payload#users[0].carrierIds[0]   |${context:payload.companyId}                           |
+   |payload#users[0].driver          |<file:request-driver-only.json>                        |
+   |payload#users[0].driver.carrierId|undefined                                              |
+   |expected:header#status           |200                                                    |
