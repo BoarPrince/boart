@@ -1474,4 +1474,59 @@ describe('check run:xxx', () => {
 
         expect(Runtime.instance.stepRuntime.current.status).toBe(RuntimeStatus.stopped);
     });
+
+    /**
+     *
+     */
+    it('run:not-empty does not execute when value is an empty string', async () => {
+        Store.instance.testStore.put('var1', '');
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action        |value           |
+             |--------------|----------------|
+             |run:not-empty | \${store:var1} |
+             |payload       | a              |
+             |store         | var            |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        expect(Runtime.instance.stepRuntime.current.status).toBe(RuntimeStatus.stopped);
+        expect(Store.instance.testStore.get('var')).toBeNull();
+    });
+
+    /**
+     *
+     */
+    xit('run:not-empty does not execute when value is null', async () => {
+        Store.instance.testStore.put('var1', null);
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action        |value           |
+             |--------------|----------------|
+             |run:not-empty | \${store:var1} |
+             |payload       | a              |
+             |store         | var            |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        expect(Runtime.instance.stepRuntime.current.status).toBe(RuntimeStatus.stopped);
+        expect(Store.instance.testStore.get('var')).toBeNull();
+    });
+
+    /**
+     *
+     */
+    it('run:not-empty does not execute when store is not defined', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action        |value           |
+             |--------------|----------------|
+             |run:not-empty | \${store:var1} |
+             |payload       | a              |
+             |store         | var            |`
+        );
+
+        await expect(async () => await sut.handler.process(tableDef)).rejects.toThrowError("can't find value of 'store:var1'");
+    });
 });

@@ -158,7 +158,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
         property: string,
         checkNull: boolean
     ): string {
-        if (!value && !(nullable && optional)) {
+        if (value == null && !(nullable && optional)) {
             if (checkNull === true) {
                 throw new Error(`can't find value of '${identifier}:${property}'`);
             }

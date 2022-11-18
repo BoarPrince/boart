@@ -70,6 +70,6 @@ export default abstract class DataContentBase implements DataContent {
      *
      */
     isNullOrUndefined() {
-        return !this.getValue();
+        return this.getValue() == null;
     }
 }

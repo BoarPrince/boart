@@ -47,7 +47,7 @@ export class StoreReplacer implements ValueReplacer {
         if (!scope) {
             for (const store of this.stores) {
                 const storeContent = store.get(property, optional)?.toString();
-                if (!!storeContent) {
+                if (storeContent != null) {
                     return storeContent;
                 }
             }
@@ -65,7 +65,7 @@ export class StoreReplacer implements ValueReplacer {
         const property = defaultOperator.property;
         const content = this.getPropertyValue(property, store, scope, !!defaultOperator.operator);
 
-        if (!content) {
+        if (content == null) {
             switch (defaultOperator.operator.type) {
                 case OperatorType.Default:
                     return defaultOperator.defaultValue;
