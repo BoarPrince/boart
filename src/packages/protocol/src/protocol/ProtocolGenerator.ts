@@ -374,7 +374,7 @@ export class ProtocolGenerator {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         fs.writeFileSync(filename, htmlContent, 'utf-8');
 
-        console.log('Protocol generated to =>', filename);
+        console.log('Protocol generated to =>', 'file://' + path.resolve(filename));
     }
 
     /**
