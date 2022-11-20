@@ -417,4 +417,15 @@ describe('check valueHandler (nullable, optional)', () => {
         const result = sut.replace('--${store:x}--');
         expect(result).toBe('--aaa--');
     });
+
+    /**
+     *
+     */
+    it('value can be empty', () => {
+        const replacer = new NullableReplacerMock('', false);
+        sut.add('store', replacer);
+
+        const result = sut.replace('--${store:x}--');
+        expect(result).toBe('----');
+    });
 });

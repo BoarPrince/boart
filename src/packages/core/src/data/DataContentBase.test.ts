@@ -76,4 +76,12 @@ describe('check data content base', () => {
         const sut = new NativeContent(null);
         expect(sut.getText()).toBeUndefined();
     });
+
+    /**
+     *
+     */
+    it('check empty text', () => {
+        const sut = new TextContent('');
+        expect(sut.isNullOrUndefined()).toBeFalsy();
+    });
 });
