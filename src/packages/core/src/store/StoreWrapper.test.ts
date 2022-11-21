@@ -23,6 +23,10 @@ class MockStore implements StoreMap {
         return this.map.get(key);
     }
 
+    has(key: string): boolean {
+        return this.map.has(key);
+    }
+
     clear() {
         return this.map.clear();
     }

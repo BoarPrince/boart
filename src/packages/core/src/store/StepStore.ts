@@ -30,6 +30,13 @@ export class StepStore implements StoreMap {
     /**
      *
      */
+    has(key: string): boolean {
+        return this.store.has(key);
+    }
+
+    /**
+     *
+     */
     put(key: string, value: DataContent | string): ReadonlyMap<string, DataContent | string> {
         return this.store.set(key, value);
     }

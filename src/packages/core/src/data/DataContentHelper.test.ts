@@ -540,14 +540,9 @@ describe('deep getting', () => {
     it('get deep property from string', () => {
         const val = new ObjectContent('a');
 
-        try {
-            DataContentHelper.getByPath('z', val);
-        } catch (error) {
-            expect(error.message).toBe('getting "z" not possible, because "z" is not an object or an array.\nData context:\n"a"');
-            return;
-        }
-
-        throw Error('error must be thrown if property does not exists');
+        expect(() => DataContentHelper.getByPath('z', val)).toThrowError(
+            'getting "z" not possible, because "z" is not an object or an array.\nData context:\n"a"'
+        );
     });
 
     /**
@@ -572,20 +567,12 @@ describe('deep getting', () => {
     it('get deep but property does not exists (2)', () => {
         const val = new ObjectContent('{"a": "b"}');
 
-        try {
-            DataContentHelper.getByPath('z', val);
-        } catch (error) {
-            expect(error.message).toBe(
-                `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
-                    val.valueOf(),
-                    null,
-                    '  '
-                )}`
-            );
-            return;
-        }
-
-        throw Error('error must be thrown if property does not exists');
+        const errorMsg = `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
+            val.valueOf(),
+            null,
+            '  '
+        )}`;
+        expect(() => DataContentHelper.getByPath('z', val)).toThrowError(errorMsg);
     });
 
     /**
@@ -595,20 +582,12 @@ describe('deep getting', () => {
         const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
         const propValue = DataContentHelper.getByPath('d', val);
 
-        try {
-            DataContentHelper.getByPath('z', propValue);
-        } catch (error) {
-            expect(error.message).toBe(
-                `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
-                    propValue.valueOf(),
-                    null,
-                    '  '
-                )}`
-            );
-            return;
-        }
-
-        throw Error('error must be thrown if property does not exists');
+        const errorMsg = `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
+            propValue.valueOf(),
+            null,
+            '  '
+        )}`;
+        expect(() => DataContentHelper.getByPath('z', propValue)).toThrowError(errorMsg);
     });
 
     /**
@@ -617,20 +596,12 @@ describe('deep getting', () => {
     it('get deep property from object value (wrong path, first element)', () => {
         const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
 
-        try {
-            DataContentHelper.getByPath('z', val);
-        } catch (error) {
-            expect(error.message).toBe(
-                `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
-                    val.valueOf(),
-                    null,
-                    '  '
-                )}`
-            );
-            return;
-        }
-
-        throw Error('error must be thrown if property does not exists');
+        const errorMsg = `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
+            val.valueOf(),
+            null,
+            '  '
+        )}`;
+        expect(() => DataContentHelper.getByPath('z', val)).toThrowError(errorMsg);
     });
 
     /**
@@ -689,15 +660,12 @@ describe('deep getting', () => {
     /**
      *
      */
-    it('try getting null value (deep)', () => {
+    it('try getting null value - deep', () => {
         const data = new ObjectContent({ a: { b: null } });
-        try {
-            DataContentHelper.getByPath('a.b.c', data);
-        } catch (error) {
-            expect(error.message).toBe('getting "a.b.c" not possible, because "c" is not an object or an array.');
-            return;
-        }
-        fail('expection was not thrown');
+
+        expect(() => DataContentHelper.getByPath('a.b.c', data)).toThrowError(
+            'getting "a.b.c" not possible, because "c" is not an object or an array.'
+        );
     });
 
     /**
@@ -731,6 +699,268 @@ describe('deep getting', () => {
             return;
         }
         fail('expection was not thrown');
+    });
+});
+
+/**
+ *
+ */
+describe('deep has', () => {
+    /**
+     *
+     */
+    it('deep has property (object) - leaf', () => {
+        const val = new ObjectContent({
+            a: {
+                b: {
+                    c: {
+                        d: 'e'
+                    }
+                }
+            }
+        });
+        const result = DataContentHelper.hasPath('a#b#c#d', val);
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('deep has property (object) - root', () => {
+        const val = new ObjectContent({
+            a: {
+                b: {
+                    c: {
+                        d: 'e'
+                    }
+                }
+            }
+        });
+        const result = DataContentHelper.hasPath('a', val);
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('deep has property (object) - multiple keys', () => {
+        const val = new ObjectContent({
+            a: {
+                b: {
+                    c: {
+                        d: 'e'
+                    }
+                }
+            }
+        });
+        const result = DataContentHelper.getByPath('a.b.c', val);
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('deep has property (object) - multiple keys - datacontent', () => {
+        const val = new ObjectContent({
+            a: {
+                b: new ObjectContent({
+                    c: new ObjectContent({
+                        d: 'e'
+                    })
+                })
+            }
+        });
+        const result = DataContentHelper.getByPath('a.b.c', val);
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('has deep property (string) from object value', () => {
+        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
+        const propValue = DataContentHelper.getByPath('d', val);
+        const result = DataContentHelper.hasPath('e', propValue);
+
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('has deep property with array (first level)', () => {
+        const val = new ObjectContent({ a: [{ b: 'c' }, { d: 'e' }] });
+        const result = DataContentHelper.hasPath('a.0.b', val);
+
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('has deep property with array (second level)', () => {
+        const val = new ObjectContent({ a: [{ b: 'c' }, { d: ['e', 7] }] });
+        const result = DataContentHelper.hasPath('a.1.d.1', val);
+
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('has deep property with array (second level, array syntax)', () => {
+        const val = new ObjectContent({ a: [{ b: 'c' }, { d: ['e', 7] }] });
+        const result = DataContentHelper.hasPath('a[1].d[1]', val);
+
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('has deep property with array (two levels, array syntax)', () => {
+        const val = new ObjectContent({ a: [{ b: 'c' }, ['e', 7]] });
+        const result = DataContentHelper.hasPath('a[1][1]', val);
+
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('has deep property with array (starting with array, array syntax)', () => {
+        const val = new ObjectContent(['a', ['b', { c: 7 }]]);
+        const result = DataContentHelper.hasPath('[1][1].c', val);
+
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('has deep property from string', () => {
+        const val = new ObjectContent('a');
+
+        const result = DataContentHelper.hasPath('z', val);
+        expect(result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('has deep but property does not exists (1)', () => {
+        const val = new ObjectContent('{"a": "b"}');
+
+        const result = DataContentHelper.hasPath('a.c', val);
+        expect(result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('has deep but property does not exists (2)', () => {
+        const val = new ObjectContent('{"a": "b"}');
+
+        const result = DataContentHelper.hasPath('z', val);
+        expect(result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('has deep property from object value (wrong path, second element)', () => {
+        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
+        const propValue = DataContentHelper.getByPath('d', val);
+
+        const result = DataContentHelper.hasPath('z', propValue);
+        expect(result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('has deep property from object value (wrong path, first element)', () => {
+        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
+
+        const result = DataContentHelper.hasPath('z', val);
+        expect(result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('has deep property from recursice containing ObjectContents', () => {
+        const val = new ObjectContent({ a: new ObjectContent({ b: new ObjectContent({ c: new TextContent('d') }) }) });
+        const result = DataContentHelper.hasPath('a.b.c', val);
+
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('check getting value from none DataContent', () => {
+        const data = new TextContent('abc');
+        const result = DataContentHelper.hasPath('a.b', data);
+
+        expect(result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('check getting with wrong path', () => {
+        const data = new ObjectContent({ a: { b: 'c' } });
+        const result = DataContentHelper.hasPath('a.c', data);
+
+        expect(result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('check getting null value', () => {
+        const result = DataContentHelper.hasPath('a.b', new ObjectContent({ a: { b: null } }));
+
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('check getting undefined value', () => {
+        const result = DataContentHelper.hasPath('a.b', new ObjectContent({ a: { b: undefined } }));
+
+        expect(result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('check getting null value - deep', () => {
+        const data = new ObjectContent({ a: { b: null } });
+        const result = DataContentHelper.hasPath('a.b.c', data);
+
+        expect(result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('check if content data is null', () => {
+        const result = DataContentHelper.hasPath('a.b.c', null);
+
+        expect(result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('check get wrong path value', () => {
+        const data = new ObjectContent({ a: { b: new ObjectContent({ c: 'd' }) } });
+        const result = DataContentHelper.hasPath('a.b.d', data);
+
+        expect(result).toBeFalsy();
     });
 });
 

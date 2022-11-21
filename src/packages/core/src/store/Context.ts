@@ -1,7 +1,5 @@
 import { ContentType } from '../data/ContentType';
-import { DataContent } from '../data/DataContent';
 import { DataContentHelper } from '../data/DataContentHelper';
-import { ObjectContent } from '../data/ObjectContent';
 
 import { Store } from './Store';
 import { StoreMap } from './StoreMap';
@@ -53,15 +51,29 @@ export class Context implements StoreMap {
      *
      */
     get(key: string): ContentType {
-        // try context value
-        // to-do: getByPath must use native objects
-        const context = DataContentHelper.create(this.context.valueOf());
+        // try context value...
+        const context = DataContentHelper.create(this.context);
         const contextValue = DataContentHelper.getByPath(key, context, true);
+
         if (contextValue.isNullOrUndefined()) {
-            // if context not exists, try map value
+            // ...if context not exists, try map value
             return this.contextMap.get(key, true);
         }
         return contextValue;
+    }
+
+    /**
+     *
+     */
+    has(key: string): boolean {
+        // try context value...
+        const context = DataContentHelper.create(this.context);
+
+        if (!DataContentHelper.hasPath(key, context)) {
+            // ...if context not exists, try map value
+            return this.contextMap.has(key);
+        }
+        return true;
     }
 
     /**

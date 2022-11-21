@@ -30,6 +30,11 @@ class ObjectWrapper implements StoreMap {
     /**
      *
      */
+    has = (key: string) => Object.keys(this.map).includes(key);
+
+    /**
+     *
+     */
     clear = () => (this.map = {});
 }
 
@@ -100,6 +105,25 @@ export class StoreWrapper implements StoreMap {
 
         const dataContentValue = DataContentHelper.create(contentValue);
         return DataContentHelper.getByPath(properties.nofirst(), dataContentValue, optional);
+    }
+
+    /**
+     *
+     */
+    has(key: string): boolean {
+        const properties = PropertyParser.parseProperty(key);
+
+        if (properties.length === 0) {
+            return false;
+        }
+
+        if (!this.store.has(properties.first().key)) {
+            return false;
+        }
+
+        const contentValue = this.store.get(properties.first().key);
+        const dataContentValue = DataContentHelper.create(contentValue);
+        return !DataContentHelper.getByPath(properties.nofirst(), dataContentValue, true).isNullOrUndefined();
     }
 
     /**

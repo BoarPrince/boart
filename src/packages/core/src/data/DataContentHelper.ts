@@ -208,26 +208,59 @@ export class DataContentHelper {
 
         let contentValue = value;
         for (const property of selectorOrProperties) {
-            const propertyOptional = property.isOptional || optional;
             const contentValueAsObject = contentValue?.asDataContentObject();
             if (contentValueAsObject == null) {
                 DataContentHelper.throwRecursiveError(property.path, property.key, contentValue?.getValue());
             }
 
-            if (!propertyOptional && !Object.keys(contentValue.getValue()).includes(property.key)) {
-                DataContentHelper.throwRecursiveError(property.path, property.key, contentValue.getValue());
-            }
-
             const propertyValue = contentValueAsObject.get(property.key);
-            if (propertyValue == null && propertyOptional === true) {
-                contentValue = null;
-                break;
-            } else {
-                contentValue = DataContentHelper.create(propertyValue);
+            const prevContentValue = contentValue;
+            contentValue = DataContentHelper.create(propertyValue);
+            if (propertyValue == null) {
+                if (property.isOptional || optional) {
+                    break;
+                } else if (!contentValueAsObject.has(property.key)) {
+                    DataContentHelper.throwRecursiveError(property.path, property.key, prevContentValue.getValue());
+                }
             }
         }
 
-        return DataContentHelper.create(contentValue);
+        return contentValue;
+    }
+
+    /**
+     *
+     */
+    public static hasPath(selector: string, value: DataContent): boolean;
+    public static hasPath(properties: PropertyIterable, value: DataContent): boolean;
+    public static hasPath(selectorOrProperties: string | PropertyIterable, value: DataContent): boolean {
+        if (typeof selectorOrProperties == 'string') {
+            selectorOrProperties = PropertyParser.parseProperty(selectorOrProperties);
+        }
+
+        if (selectorOrProperties.length === 0) {
+            return true;
+        }
+
+        let contentValue = value;
+        for (const property of selectorOrProperties) {
+            const contentValueAsObject = contentValue?.asDataContentObject();
+            if (contentValueAsObject == null) {
+                return false;
+            }
+
+            const propertyValue = contentValueAsObject.get(property.key);
+            contentValue = DataContentHelper.create(propertyValue);
+            if (propertyValue == null) {
+                if (property.isOptional) {
+                    break;
+                } else if (!contentValueAsObject.has(property.key)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

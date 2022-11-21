@@ -143,22 +143,21 @@ describe('check object content', () => {
     /**
      *
      */
-    it('check isNullOrUndefined', () => {
+    it('check isNullOrUndefined after clearing', () => {
         const sut = new ObjectContent('{"a": "1"');
         expect(sut.isNullOrUndefined()).toBeFalse();
+
         sut.clear();
         expect(sut.keys()).toEqual([]);
-        expect(sut.isNullOrUndefined()).toBeTrue();
+        expect(sut.isNullOrUndefined()).toBeFalsy();
     });
+
     /**
      *
      */
     it('check isNullOrUndefined', () => {
-        const sut = new ObjectContent('{"a": "1"');
-        expect(sut.isNullOrUndefined()).toBeFalse();
-        sut.clear();
-        expect(sut.keys()).toEqual([]);
-        expect(sut.isNullOrUndefined()).toBeTrue();
+        const sut = new ObjectContent(null);
+        expect(sut.isNullOrUndefined()).toBeFalsy();
     });
 
     /**
@@ -167,6 +166,6 @@ describe('check object content', () => {
     it('check isNullOrUndefined (empty init', () => {
         const sut = new ObjectContent();
         expect(sut.asDataContentObject()).toBe(sut);
-        expect(sut.isNullOrUndefined()).toBeTrue();
+        expect(sut.isNullOrUndefined()).toBeFalsy();
     });
 });

@@ -17,6 +17,10 @@ class NullStoreMap implements StoreMap {
     get(): ContentType {
         return null;
     }
+    has(): boolean {
+        return true;
+    }
+
     clear(): void {
         // do nothing
     }
