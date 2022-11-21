@@ -62,7 +62,7 @@
    | expected:jsonLogic:false | {"some" : [                                  |
    |                          | {"var":"CARRIERS"},                          |
    |                          | {"===" : [{"var":"id"}, "${store:childId}"]} |
-   |                          | ]}                                           | |
+   |                          | ]}                                           |
 
 @@@@@@@
 @       @    @ @@@@@@ @
