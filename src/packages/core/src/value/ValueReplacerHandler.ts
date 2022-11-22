@@ -194,7 +194,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     /**
      *
      */
-    private stringReplacer(r: ValueReplaceItem, optional: boolean, scope: string, property: string, checkNull: boolean) {
+    private stringReplacer(r: ValueReplaceItem, optional: boolean, scope: string, property: string, selector: string, checkNull: boolean) {
         property = ValueReplacerHandler.replaceCurlyBrackets(property, ReplacementMode.RetractBrackets);
         const defaultScope = r.replacer.defaultScopeType(property);
         const store = ValueReplacerHandler.getStore(scope || defaultScope);
@@ -221,7 +221,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
                       return !!property &&
                           // replacer must fit
                           property.replacer === r.identifier
-                          ? this.stringReplacer(r, property.isOptional, property.scope, property.name, checkNull)
+                          ? this.stringReplacer(r, property.isOptional, property.scope, property.property, property.selector, checkNull)
                           : v;
                   }, matchedValue);
               });
