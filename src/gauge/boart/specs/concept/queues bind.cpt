@@ -59,6 +59,15 @@
   | group           | Bind Queues       |
 
 * RabbitMQ bind
+  | action           | value              |
+  |------------------|--------------------|
+  | run:only:vehicle | <queue-list>       |
+  | exchange         | vehicle            |
+  | queue            | test.md.vehicle    |
+  | description      | Bind vehicle queue |
+  | group            | Bind Queues        |
+
+* RabbitMQ bind
   | action                   | value                             |
   |--------------------------|-----------------------------------|
   | run:only:fleet-event-bus | <queue-list>                      |

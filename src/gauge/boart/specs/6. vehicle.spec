@@ -16,6 +16,8 @@ tags: add-vehicle, md-6.1
 
 * add company and carrier
 
+* queues bind "vehicle"
+
 * Rest call
 
    |action                |value                      |
@@ -25,6 +27,8 @@ tags: add-vehicle, md-6.1
    |description           |Add a new vehicle          |
    |expected:header#status|200                        |
    |store                 |response-vehicle           |
+
+* queues check "vehicle"
 
 * Rest call
 

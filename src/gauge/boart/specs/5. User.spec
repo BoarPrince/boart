@@ -8,10 +8,10 @@ tags: md-5.1
 
 * Test description
 
-   |action     |value                |
-   |-----------|---------------------|
-   |description|Add a user to company|
-   |priority   |high                 |
+   |action     |value                   |
+   |-----------|------------------------|
+   |description|Add an user to a company|
+   |priority   |high                    |
 
 * add company and carrier
 
