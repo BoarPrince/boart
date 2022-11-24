@@ -1,6 +1,6 @@
 # 1. Sync Backends Driver
 
-tags: env-all, sb-11, sb-11-4
+tags: env-all, sb-11, sb-11-4, masterdata-sync
 
 ## 1.1. Add a Driver
 

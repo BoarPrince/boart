@@ -22,7 +22,7 @@
   "source": "Onboarding",
   "locale": "de",
   "carrierIds": [
-    "${store:response-ca#id:-undefined}"
+    "${store:response-ca.id:-undefined}"
   ],
   "roles": [
     "CarrierAdmin"

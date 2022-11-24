@@ -1,6 +1,6 @@
 # 1. Driver - MasterData
 
-tags: env-all, master-data, md-4
+tags: env-all, master-data, md-4, masterdata
 
 ## 1.1. Add a Driver
 

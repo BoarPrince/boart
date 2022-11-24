@@ -4,10 +4,11 @@
   "scripts": {
     "test": "gauge run --tags=\"md-3.1\"",
     "test:": "gauge run",
-    "_test:local": "export runtime_environent=local && gauge run --tags=\"md-4.3\"",
-    "test:local": "export runtime_environent=local && gauge run --tags=\"md-4\"",
+    "test:local": "export runtime_environent=local && gauge run --tags=\"masterdata\"",
+    "_test:local": "export runtime_environent=local && gauge run",
     "_test:dev": "export runtime_environent=development && gauge run --tags=\"sb-11-4\"",
-    "test:dev": "export runtime_environent=development && gauge run --tags=\"md-4.10\"",
+    "test:dev": "export runtime_environent=development && gauge run --tags=\"md-3.7\"",
+    "test:stage": "export runtime_environent=staging && gauge run --tags=\"masterdata\"",
     "update": "rm -rf node_modules/@boart && npm update",
     "update:and:test": "npm run update && npm run test"
   },

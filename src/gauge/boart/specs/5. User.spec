@@ -1,6 +1,6 @@
 # 1. User - MasterData
 
-tags: env-all, master-data, user, md-5
+tags: env-all, master-data, user, md-5, masterdata
 
 ## 1.1. Add a User
 
@@ -35,13 +35,19 @@ tags: md-5.1
 
 * RabbitMQ consume, continue
 
-   |action                     |value                                |
-   |---------------------------|-------------------------------------|
-   |queue                      |test.md.user                         |
-   |group                      |Check Queues                         |
-   |description                |User Event must be fired             |
-   |                           |And Phonenumber must also be inlucded|
-   |expected:count#phoneNumbers|1                                    |
+   |action                      |value                                |
+   |----------------------------|-------------------------------------|
+   |queue                       |test.md.user                         |
+   |group                       |Check Queues                         |
+   |description                 |User Event must be fired             |
+   |                            |And Phonenumber must also be inlucded|
+   |expected:count#phoneNumbers |1                                    |
+   |expected:empty:not#eventId  |                                     |
+   |expected:string#eventId     |                                     |
+   |expected:empty:not#eventType|                                     |
+   |expected:string#eventType   |                                     |
+   |expected:empty:not#eventDate|                                     |
+   |expected:string#eventDate   |                                     |
 
 ## 1.2. Add a User (with cascaded Driver)
 
@@ -334,6 +340,140 @@ tags: md-5.8
 
    |action                |value                              |
    |----------------------|-----------------------------------|
-   |method:get            |/api/user/${store:response-user#id}|
+   |method:get            |/api/user/${store:response-user.id}|
    |description           |Read user again                    |
    |expected:header#status|200                                |
+
+## 1.9. Update User with phonenumber description
+
+tags: md-5.9
+
+* Test description
+
+   |action     |value                                                  |
+   |-----------|-------------------------------------------------------|
+   |description|Update a user with updating the phonenumber description|
+   |ticket     |MD-154                                                 |
+   |priority   |high                                                   |
+
+* request admin bearer
+
+* add company and carrier
+
+* Rest call
+
+   |action                    |value                          |
+   |--------------------------|-------------------------------|
+   |method:post               |/api/user                      |
+   |description               |Add an User (LegiStatus = None)|
+   |payload                   |<file:request-user.json>       |
+   |payload#legitimationStatus|None                           |
+   |expected:header#status    |200                            |
+   |store                     |response-user                  |
+
+* Rest call
+
+   |action                             |value                              |
+   |-----------------------------------|-----------------------------------|
+   |method:put                         |/api/user/${store:response-user.id}|
+   |description                        |Change Phonenumber description     |
+   |payload                            |${store:response-user}             |
+   |payload#phoneNumbers[0].description|lirum                              |
+   |expected:header#status             |200                                |
+
+* Rest call
+
+   |action                              |value                              |
+   |------------------------------------|-----------------------------------|
+   |method:get                          |/api/user/${store:response-user.id}|
+   |description                         |Read user again                    |
+   |expected:header#status              |200                                |
+   |expected#phoneNumbers[0].description|lirum                              |
+
+* Rest call
+
+   |action                             |value                              |
+   |-----------------------------------|-----------------------------------|
+   |method:put                         |/api/user/${store:response-user.id}|
+   |description                        |Empty phone number description     |
+   |payload                            |${store:response-user}             |
+   |payload#phoneNumbers[0].description|                                   |
+   |expected:header#status             |200                                |
+
+* Rest call
+
+   |action                              |value                                             |
+   |------------------------------------|--------------------------------------------------|
+   |method:get                          |/api/user/${store:response-user.id}               |
+   |description                         |Read user with empty phonenumber description again|
+   |expected:header#status              |200                                               |
+   |expected#phoneNumbers[0].description|                                                  |
+
+## 1.10. Add a user without id
+
+tags: md-5.10
+
+* Test description
+
+   |action     |value                            |
+   |-----------|---------------------------------|
+   |description|Add a user without any defined id|
+   |           |* user does not have an id       |
+   |           |* phonenumber does not have an id|
+   |priority   |high                             |
+
+* request admin bearer
+
+* add company and carrier
+
+* Rest call
+
+   |action                    |value                   |
+   |--------------------------|------------------------|
+   |method:post               |/api/user               |
+   |description               |Create a user           |
+   |payload                   |<file:request-user.json>|
+   |payload#id                |undefined               |
+   |payload#phoneNumbers[0].id|undefined               |
+   |payload#carrierIds[0]     |${store:response-ca.id} |
+   |expected:header#status    |200                     |
+
+## 1.11. Add a cascaded user without ids
+
+tags: cascading-deletion, md-5.11
+
+* Test description
+
+   |action     |value                                      |
+   |-----------|-------------------------------------------|
+   |description|Add a cascaded user without any defined ids|
+   |           |* user does not have an id                 |
+   |           |* driver does not have an id               |
+   |           |* phonenumber does not have an id          |
+   |priority   |high                                       |
+
+* request admin bearer
+
+* add company and carrier
+
+* Rest call
+
+   |action                           |value                                  |
+   |---------------------------------|---------------------------------------|
+   |method:post                      |/api/user                              |
+   |description                      |Create cascaded User (including driver)|
+   |payload                          |<file:request-user.json>               |
+   |payload#.id                      |undefined                              |
+   |payload#.carrierIds              |undefined                              |
+   |payload#.phoneNumbers[0].id      |undefined                              |
+   |payload#carrierIds[0]            |${store:response-ca.id}                |
+   |payload#driver                   |<file:request-driver.json>             |
+   |payload#driver.id                |undefined                              |
+   |payload#driver.carrierId         |undefined                              |
+   |payload#driver.email             |undefined                              |
+   |payload#driver.firstname         |undefined                              |
+   |payload#driver.lastname          |undefined                              |
+   |payload#driver.phoneNumbers[0].id|undefined                              |
+   |expected:header#status           |200                                    |
+
+

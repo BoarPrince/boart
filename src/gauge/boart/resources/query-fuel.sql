@@ -60,4 +60,4 @@ SELECT
 FROM
   carrier ca
 WHERE
-  ca.external_id = '${store:carrierInfo.id:-${store:carrierId}}' FOR JSON PATH
+  ca.external_id = '${store:carrierInfo.id}' FOR JSON PATH

@@ -37,7 +37,7 @@
   ],
   "companyName": "${generate:s:fake:company:name}-${generate:s:random:4}",
   "documentStorageDirectoryName": "",
-  "jitPayId": "K${generate:s:random:4}",
+  "jitPayId": "K${generate:s:random:10}",
   "legalForm": "GmbH_de",
   "taxId": "${generate:s:random:10}"
 }

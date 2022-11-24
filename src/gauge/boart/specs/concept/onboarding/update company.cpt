@@ -5,7 +5,7 @@
 
       | action                 | value                                                                |
       |------------------------|----------------------------------------------------------------------|
-      | method:get             | <ob>/new-api/onboarding-process/${store:response-register#companyId} |
+      | method:get             | <ob>/new-api/onboarding-process/${store:response-register.companyId} |
       | description            | Start onboarding                                                     |
       | group                  | Update Company                                                       |
       | expected:header#status | 200                                                                  |
@@ -15,7 +15,7 @@
 
       | action                 | value                                                     |
       |------------------------|-----------------------------------------------------------|
-      | method:get             | <ob>/new-api/company/${store:response-register#companyId} |
+      | method:get             | <ob>/new-api/company/${store:response-register.companyId} |
       | description            | Read company information                                  |
       | group                  | Update Company                                            |
       | expected:header#status | 200                                                       |
@@ -49,7 +49,7 @@
       |                        | "id": "${store:response-register.contactPersonId}",               |
       |                        | "firstName": "${generate:t:fake:name:firstName}",                 |
       |                        | "lastName": "${generate:t:fake:name:lastName}",                   |
-      |                        | "email": "${store:response-register#email}",                      |
+      |                        | "email": "${store:response-register.email}",                      |
       |                        | "telephoneNumber": {                                              |
       |                        | "country": "49",                                                  |
       |                        | "number": "1743284130"                                            |

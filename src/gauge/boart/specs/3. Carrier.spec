@@ -1,6 +1,6 @@
 # 1. Carrier - MasterData
 
-tags: env-all, master-data, user, md-3
+tags: env-all, master-data, user, md-3, masterdata
 
 ## 1.1. Delete a Carrier and check if event payload is correct
 
@@ -130,21 +130,21 @@ tags: cascading-deletion, md-3.3, JIT-456, env-local
 
 * Rest call
 
-   |action                      |value                                        |
-   |----------------------------|---------------------------------------------|
-   |method:post                 |/api/carrier                                 |
-   |description                 |Create cascaded Carrier                      |
-   |payload                     |<file:request-carrier.json>                  |
-   |payload#companyId           |${store:response-co.id}                      |
-   |payload#users[0]            |<file:request-user.json>                     |
-   |payload#drivers[0]          |<file:request-driver.json>                   |
-   |payload#drivers[0].email    |jitpaytest+ob${generate:s:random:4}@gmail.com|
-   |payload#drivers[0].firstname|${generate:t:fake:name:firstName}            |
-   |payload#drivers[0].lastname |${generate:t:fake:name:lastName}             |
-   |payload#vehicles[0]         |<file:request-vehicle.json>                  |
-   |store:payload               |request-ca                                   |
-   |expected:header#status      |200                                          |
-   |store                       |response-ca                                  |
+   |action                      |value                                         |
+   |----------------------------|----------------------------------------------|
+   |method:post                 |/api/carrier                                  |
+   |description                 |Create cascaded Carrier                       |
+   |payload                     |<file:request-carrier.json>                   |
+   |payload#companyId           |${store:response-co.id}                       |
+   |payload#users[0]            |<file:request-user.json>                      |
+   |payload#drivers[0]          |<file:request-driver.json>                    |
+   |payload#drivers[0].email    |jitpaytest+ob${generate:s:random:10}@gmail.com|
+   |payload#drivers[0].firstname|${generate:t:fake:name:firstName}             |
+   |payload#drivers[0].lastname |${generate:t:fake:name:lastName}              |
+   |payload#vehicles[0]         |<file:request-vehicle.json>                   |
+   |store:payload               |request-ca                                    |
+   |expected:header#status      |200                                           |
+   |store                       |response-ca                                   |
 
 * Rest call
 
@@ -289,7 +289,7 @@ comment * add carrier, companyId: "${store:response-co.id}", response: "response
    |expected:header#status            |200                                                              |
    |expected:count#vehicles           |3                                                                |
    |expected:count#users              |3                                                                |
-   |expected:not:empty#users[0].driver|                                                                 |
+   |expected:empty:not#users[0].driver|                                                                 |
    |group                             |Check Response                                                   |
 
 * Rest call
@@ -301,7 +301,7 @@ comment * add carrier, companyId: "${store:response-co.id}", response: "response
    |expected:header#status                        |200                                                                        |
    |expected:count#carriers[0].vehicles           |3                                                                          |
    |expected:count#carriers[0].users              |3                                                                          |
-   |expected:not:empty#carriers[0].users[0].driver|                                                                           |
+   |expected:empty:not#carriers[0].users[0].driver|                                                                           |
    |group                                         |Check Response                                                             |
 
 * queues bind "company, carrier"
@@ -325,3 +325,81 @@ comment * add carrier, companyId: "${store:response-co.id}", response: "response
    |group                 |Trigger Event                                        |
 
 * queues check "company, carrier"
+
+## 1.6. Add a carrier without ids
+
+tags: cascading-deletion, md-3.6
+
+* Test description
+
+   |action     |value                               |
+   |-----------|------------------------------------|
+   |description|Add a carrier without any defined id|
+   |           |* carrier does not have an id       |
+   |           |* address does not have an id       |
+   |           |* phonenumber does not have an id   |
+   |priority   |high                                |
+
+* request admin bearer
+
+* add company, response: "response-co"
+
+* Rest call
+
+   |action                    |value                      |
+   |--------------------------|---------------------------|
+   |method:post               |/api/carrier               |
+   |description               |Create cascaded Carrier    |
+   |payload                   |<file:request-carrier.json>|
+   |payload#id                |undefined                  |
+   |payload#addresses[0].id   |undefined                  |
+   |payload#phoneNumbers[0].id|undefined                  |
+   |payload#companyId         |${store:response-co.id}    |
+   |expected:header#status    |200                        |
+
+## 1.7. Add a cascaded carrier without ids
+
+tags: cascading-deletion, md-3.7
+
+* Test description
+
+   |action     |value                                         |
+   |-----------|----------------------------------------------|
+   |description|Add a cascaded carrier without any defined ids|
+   |           |* user does not have an id                    |
+   |           |* carrier does not have an id                 |
+   |           |* address does not have an id                 |
+   |           |* phonenumber does not have an id             |
+   |priority   |high                                          |
+
+* request admin bearer
+
+* add company, response: "response-co"
+
+* Rest call
+
+   |action                               |value                                |
+   |-------------------------------------|-------------------------------------|
+   |method:post                          |/api/carrier                         |
+   |description                          |Create cascaded Carrier              |
+   |payload                              |<file:request-carrier.json>          |
+   |payload#id                           |undefined                            |
+   |payload#addresses[0].id              |undefined                            |
+   |payload#phoneNumbers[0].id           |undefined                            |
+   |payload#users[0]                     |<file:request-user.json>             |
+   |payload#users[0].id                  |undefined                            |
+   |payload#users[0].carrierIds          |undefined                            |
+   |payload#users[0].phoneNumbers[0].id  |undefined                            |
+   |payload#drivers[0]                   |<file:request-driver.json>           |
+   |payload#drivers[0].id                |undefined                            |
+   |payload#drivers[0].carrierId         |undefined                            |
+   |payload#drivers[0].email             |${context:payload#users[0].email}    |
+   |payload#drivers[0].firstname         |${context:payload#users[0].firstname}|
+   |payload#drivers[0].lastname          |${context:payload#users[0].lastname} |
+   |payload#drivers[0].phoneNumbers[0].id|undefined                            |
+   |payload#vehicles[0]                  |<file:request-vehicle.json>          |
+   |payload#vehicles[0].id               |undefined                            |
+   |payload#vehicles[0].carrierId        |undefined                            |
+   |payload#companyId                    |${store:response-co.id}              |
+   |expected:header#status               |200                                  |
+

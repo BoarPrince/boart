@@ -1,6 +1,6 @@
 # 1. Company - MasterData
 
-tags: env-all, master-data, md-1
+tags: env-all, master-data, md-1, masterdata
 
 ## 1.1. Add a company
 
@@ -161,15 +161,15 @@ tags: company-search, md-1-4
    |method:get                     |/api/company                    |
    |description                    |Search company by name          |
    |query#size                     |100                             |
-   |query#searchString             |${store:response-co#companyName}|
+   |query#searchString             |${store:response-co.companyName}|
    |expected:header#status         |200                             |
    |expected:count#content         |1                               |
-   |expected#content[0].id         |${store:response-co#id}         |
-   |expected#content[0].companyName|${store:response-co#companyName}|
+   |expected#content[0].id         |${store:response-co.id}         |
+   |expected#content[0].companyName|${store:response-co.companyName}|
 
 ## 1.5. Text search company jitpayId (/api/companysearchString=abc)
 
-tags: company-search, md-1-4
+tags: company-search, md-1-5
 
 * Test description
 
@@ -188,15 +188,15 @@ tags: company-search, md-1-4
    |method:get                  |/api/company                 |
    |description                 |Search company by jitpayId   |
    |query#size                  |100                          |
-   |query#searchString          |${store:response-co#jitPayId}|
+   |query#searchString          |${store:response-co.jitPayId}|
    |expected:header#status      |200                          |
    |expected:count#content      |1                            |
-   |expected#content[0].id      |${store:response-co#id}      |
-   |expected#content[0].jitPayId|${store:response-co#jitPayId}|
+   |expected#content[0].id      |${store:response-co.id}      |
+   |expected#content[0].jitPayId|${store:response-co.jitPayId}|
 
 ## 1.6. Check queue event (creationDate, modifiedDate)
 
-tags: company-create-event, md-1-9
+tags: company-create-event, md-1-6
 
 * Test description
 
@@ -218,8 +218,8 @@ tags: company-create-event, md-1-9
    |action                         |value                 |
    |-------------------------------|----------------------|
    |in                             |${store:event-company}|
-   |expected:not:empty#createDate  |                      |
-   |expected:not:empty#modifiedDate|                      |
+   |expected:empty:not#createDate  |                      |
+   |expected:empty:not#modifiedDate|                      |
 
 ## 1.7. Check queue event, cascading creation with queue (creationDate, modifiedDate)
 
@@ -240,17 +240,17 @@ tags: company-create-cascading-queue-event, md-1.7
 
 * Rest call
 
-   |action                         |value                                                         |
-   |-------------------------------|--------------------------------------------------------------|
-   |method:post                    |/api/company                                                  |
-   |payload                        |<file:request-company.json>                                   |
-   |payload#carriers[0]            |<file:request-carrier.json>                                   |
-   |payload#carriers[0].id         |undefined                                                     |
-   |payload#carriers[0].users[0]   |<file:request-user.json>                                      |
-   |payload#carriers[0].users[0].id|undefined                                                     |
-   |description                    |Create a cascaded Company request (including Carrier and users|
-   |expected:header#status         |200                                                           |
-   |store                          |response-company                                              |
+   |action                         |value                                                          |
+   |-------------------------------|---------------------------------------------------------------|
+   |method:post                    |/api/company                                                   |
+   |payload                        |<file:request-company.json>                                    |
+   |payload#carriers[0]            |<file:request-carrier.json>                                    |
+   |payload#carriers[0].id         |undefined                                                      |
+   |payload#carriers[0].users[0]   |<file:request-user.json>                                       |
+   |payload#carriers[0].users[0].id|undefined                                                      |
+   |description                    |Create a cascaded Company request (including Carrier and users)|
+   |expected:header#status         |200                                                            |
+   |store                          |response-company                                               |
 
 * queues check "company, carrier, user, identity"
 
@@ -261,8 +261,11 @@ tags: company-create-cascading-queue-event, md-1.7
    |in                              |${store:event-company}                                |
    |description                     |Company event must contain createDate and modifiedDate|
    |                                |Carrier and User must also be included                |
-   |expected:not:empty#createDate   |                                                      |
-   |expected:not:empty#modifiedDate |                                                      |
+   |expected#eventType              |CREATE                                                |
+   |expected:empty:not#createDate   |                                                      |
+   |expected:empty:not#modifiedDate |                                                      |
+   |expected:string#createDate      |                                                      |
+   |expected:string#modifiedDate    |                                                      |
    |expected:count#carriers         |1                                                     |
    |expected:count#carriers[0].users|1                                                     |
 
@@ -273,6 +276,7 @@ tags: company-create-cascading-queue-event, md-1.7
    |action               |value                                                                                                           |
    |---------------------|----------------------------------------------------------------------------------------------------------------|
    |in                   |${store:response_claims}                                                                                        |
+   |run:env              |development, staging                                                                                            |
    |description          |Claims must contain the correct Id's                                                                            |
    |                     |CompanyId, SubsidiaryId, UserId                                                                                 |
    |expected#companyName |${store:response-company.companyName}                                                                           |
@@ -308,3 +312,81 @@ tags: md-1.8
    |expected:header#status|204                                 |
 
 * queues check "company"
+
+## 1.9. Add a company without ids
+
+tags: md-1.9
+
+* Test description
+
+   |action     |value                               |
+   |-----------|------------------------------------|
+   |description|Add a company without any defined id|
+   |           |* company does not have an id       |
+   |           |* address does not have an id       |
+   |           |* phonenumber does not have an id   |
+   |priority   |medium                              |
+
+* request admin bearer
+
+* Rest call
+
+   |action                    |value                                 |
+   |--------------------------|--------------------------------------|
+   |method:post               |/api/company                          |
+   |description               |Create company without pre-defined Ids|
+   |payload                   |<file:request-company.json>           |
+   |payload#id                |undefined                             |
+   |payload#addresses[0].id   |undefined                             |
+   |payload#phoneNumbers[0].id|undefined                             |
+   |expected:header#status    |200                                   |
+
+## 1.10. Add a cascaded company without ids
+
+tags: cascading-deletion, md-1.10
+
+* Test description
+
+   |action     |value                                         |
+   |-----------|----------------------------------------------|
+   |description|Add a cascaded company without any defined ids|
+   |           |* company does not have an id                 |
+   |           |* carrier does not have an id                 |
+   |           |* user does not have an id                    |
+   |           |* address does not have an id                 |
+   |           |* phonenumber does not have an id             |
+   |priority   |high                                          |
+
+* request admin bearer
+
+* Rest call
+
+   |action                                           |value                                            |
+   |-------------------------------------------------|-------------------------------------------------|
+   |method:post                                      |/api/company                                     |
+   |description                                      |Create cascaded Carrier                          |
+   |payload                                          |<file:request-company.json>                      |
+   |payload#id                                       |undefined                                        |
+   |payload#addresses[0].id                          |undefined                                        |
+   |payload#phoneNumbers[0].id                       |undefined                                        |
+   |payload#carriers[0]                              |<file:request-carrier.json>                      |
+   |payload#carriers[0].id                           |undefined                                        |
+   |payload#carriers[0].addresses[0].id              |undefined                                        |
+   |payload#carriers[0].phoneNumbers[0].id           |undefined                                        |
+   |payload#carriers[0].companyId                    |undefined                                        |
+   |payload#carriers[0].users[0]                     |<file:request-user.json>                         |
+   |payload#carriers[0].users[0].id                  |undefined                                        |
+   |payload#carriers[0].users[0].carrierIds          |undefined                                        |
+   |payload#carriers[0].users[0].phoneNumbers[0].id  |undefined                                        |
+   |payload#carriers[0].drivers[0]                   |<file:request-driver.json>                       |
+   |payload#carriers[0].drivers[0].id                |undefined                                        |
+   |payload#carriers[0].drivers[0].carrierId         |undefined                                        |
+   |payload#carriers[0].drivers[0].email             |${context:payload#carriers[0].users[0].email}    |
+   |payload#carriers[0].drivers[0].firstname         |${context:payload#carriers[0].users[0].firstname}|
+   |payload#carriers[0].drivers[0].lastname          |${context:payload#carriers[0].users[0].lastname} |
+   |payload#carriers[0].drivers[0].phoneNumbers[0].id|undefined                                        |
+   |payload#carriers[0].vehicles[0]                  |<file:request-vehicle.json>                      |
+   |payload#carriers[0].vehicles[0].id               |undefined                                        |
+   |payload#carriers[0].vehicles[0].carrierId        |undefined                                        |
+   |expected:header#status                           |200                                              |
+

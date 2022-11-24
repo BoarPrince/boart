@@ -1,6 +1,6 @@
 # 1. Vehicle - MasterData
 
-tags: vehicle, env-all, master-data
+tags: vehicle, env-all, masterdata
 
 
 ## 1.1. Add Vehicle

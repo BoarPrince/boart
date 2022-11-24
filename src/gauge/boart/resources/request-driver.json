@@ -9,7 +9,7 @@
   "dispositionInternalNumber": "${generate:s:random:6}",
   "employeeNumber": "${generate:s:random:6}",
   "workStatus": "REST",
-  "carrierId": "${store:response-ca#id:-undefined}",
+  "carrierId": "${store:response-ca.id:-undefined}",
   "phoneNumbers": [
     {
       "id": "${generate:uuid}",

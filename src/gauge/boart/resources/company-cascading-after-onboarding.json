@@ -1,11 +1,11 @@
 {
   "eventType": "CREATE",
   "eventDate": "2022-09-20T15:37:06.892633+02:00",
-  "eventId": "${store:ob_info#eventId:=${generate:uuid}}",
-  "id": "${store:ob_info#companyId:=${generate:s:uuid}}",
+  "eventId": "${store:ob_info.eventId:=${generate:uuid}}",
+  "id": "${store:ob_info.companyId:=${generate:s:uuid}}",
   "phoneNumbers": [
     {
-      "id": "${store:ob_info#phoneNumberId:=${generate:uuid}}",
+      "id": "${store:ob_info.phoneNumberId:=${generate:uuid}}",
       "description": "Defined during Onboarding",
       "number": 1743284130,
       "countryPrefix": 49,
@@ -24,7 +24,7 @@
   "customers": [],
   "carriers": [
     {
-      "id": "${store:ob_info#carrierId:=${generate:uuid}}",
+      "id": "${store:ob_info.carrierId:=${generate:uuid}}",
       "currency": "",
       "initialPin": "",
       "preferredCardIssuer": "NONE",
@@ -35,14 +35,14 @@
       "defaultVehicleLimit": 2000,
       "addresses": [
         {
-          "id": "${store:ob_info#carrierAddressId:=${generate:uuid}}",
-          "street": "${store:ob_info#street:=${generate:fake:address:street}}",
-          "zipCode": "${store:ob_info#zipCode:=${generate:fake:address:zipCode}}",
-          "city": "${store:ob_info#city:=${generate:fake:address:city}}",
+          "id": "${store:ob_info.carrierAddressId:=${generate:uuid}}",
+          "street": "${store:ob_info.street:=${generate:fake:address:street}}",
+          "zipCode": "${store:ob_info.zipCode:=${generate:fake:address:zipCode}}",
+          "city": "${store:ob_info.city:=${generate:fake:address:city}}",
           "country": "DE",
-          "firstname": "${store:ob_info#firstName:=${generate:s:fake:name:firstName}}",
-          "lastname": "${store:ob_info#lastName:=${generate:s:fake:name:lastName}}",
-          "email": "${store:ob_info#email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
+          "firstname": "${store:ob_info.firstName:=${generate:s:fake:name:firstName}}",
+          "lastname": "${store:ob_info.lastName:=${generate:s:fake:name:lastName}}",
+          "email": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
           "countryPrefix": 49,
           "phoneNumber": 1743284130,
           "type": "BILLING"
@@ -50,7 +50,7 @@
       ],
       "phoneNumbers": [
         {
-          "id": "${store:ob_info#carrierPhoneNumberId:=${generate:uuid}}",
+          "id": "${store:ob_info.carrierPhoneNumberId:=${generate:uuid}}",
           "description": "Defined dur ing Onboarding",
           "number": 1743284130,
           "countryPrefix": 49,
@@ -61,11 +61,11 @@
       ],
       "users": [
         {
-          "id": "${store:ob_info#userId:=${generate:uuid}}",
-          "email": "${store:ob_info#email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
+          "id": "${store:ob_info.userId:=${generate:uuid}}",
+          "email": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
           "phoneNumbers": [
             {
-              "id": "${store:ob_info#userPhoneNumberId:=${generate:uuid}}",
+              "id": "${store:ob_info.userPhoneNumberId:=${generate:uuid}}",
               "description": "Defined during Onboarding",
               "number": 1743284130,
               "countryPrefix": 49,
@@ -74,42 +74,42 @@
               "favorite": false
             }
           ],
-          "username": "${store:ob_info#email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
-          "lastname": "${store:ob_info#lastName:=${generate:s:fake:name:lastName}}",
-          "firstname": "${store:ob_info#firstName:=${generate:s:fake:name:firstName}}",
-          "activationCode": "${store:ob_info#activationCode:=${generate:s:uuid}}",
+          "username": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
+          "lastname": "${store:ob_info.lastName:=${generate:s:fake:name:lastName}}",
+          "firstname": "${store:ob_info.firstName:=${generate:s:fake:name:firstName}}",
+          "activationCode": "${store:ob_info.activationCode:=${generate:s:uuid}}",
           "legitimationStatus": "LegimitationStarted",
           "source": "Onboarding",
           "carrierIds": [
-            "${store:ob_info#carrierId:=${generate:uuid}}"
+            "${store:ob_info.carrierId:=${generate:uuid}}"
           ],
           "roles": [],
           "createDate": "2022-09-20T15:37:06.4+02:00",
           "modifiedDate": "2022-09-20T15:37:06.4+02:00"
         }
       ],
-      "carrierName": "${store:ob_info#companyName:=${generate:fake:company:name}}",
-      "companyId": "${store:ob_info#companyId:=${generate:s:uuid}}",
+      "carrierName": "${store:ob_info.companyName:=${generate:fake:company:name}}",
+      "companyId": "${store:ob_info.companyId:=${generate:s:uuid}}",
       "createDate": "2022-09-20T13:37:06.750882Z",
       "modifiedDate": "2022-09-20T13:37:06.750882Z"
     }
   ],
   "addresses": [
     {
-      "id": "${store:ob_info#addressId:=${generate:uuid}}",
-      "street": "${store:ob_info#street:=${generate:fake:address:street}}",
-      "zipCode": "${store:ob_info#zipCode:=${generate:fake:address:zipCode}}",
-      "city": "${store:ob_info#city:=${generate:fake:address:city}}",
+      "id": "${store:ob_info.addressId:=${generate:uuid}}",
+      "street": "${store:ob_info.street:=${generate:fake:address:street}}",
+      "zipCode": "${store:ob_info.zipCode:=${generate:fake:address:zipCode}}",
+      "city": "${store:ob_info.city:=${generate:fake:address:city}}",
       "country": "DE",
-      "firstname": "${store:ob_info#firstName:=${generate:s:fake:name:firstName}}",
-      "lastname": "${store:ob_info#lastName:=${generate:s:fake:name:lastName}}",
-      "email": "${store:ob_info#email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
+      "firstname": "${store:ob_info.firstName:=${generate:s:fake:name:firstName}}",
+      "lastname": "${store:ob_info.lastName:=${generate:s:fake:name:lastName}}",
+      "email": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
       "countryPrefix": 49,
       "phoneNumber": 1743284130,
       "type": "BILLING"
     }
   ],
-  "companyName": "${store:ob_info#companyName:=${generate:fake:company:name}}",
+  "companyName": "${store:ob_info.companyName:=${generate:fake:company:name}}",
   "documentStorageDirectoryName": "",
   "jitPayId": "${store:jitpayId:=${generate:s:random:4}}",
   "legalForm": "GmbH_de",

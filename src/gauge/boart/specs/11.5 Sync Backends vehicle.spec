@@ -1,6 +1,6 @@
 # 1. Sync Backends Vehicle
 
-tags: env-all, sb-11, sb-11-5
+tags: env-all, sb-11, sb-11-5, masterdata-sync
 
 ## 1.1. Add a Vehicle
 

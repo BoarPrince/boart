@@ -1,6 +1,6 @@
 # 1. Sync Backends Carrier
 
-tags: env-all, sb-11, sb-11-2
+tags: env-all, sb-11, sb-11-2, masterdata-sync
 
 ## 1.1. Add a carrier
 

@@ -13,5 +13,5 @@
   "capacity": 4,
   "plate": "BS ${generate:char:2}-${generate:random:4}",
   "description": "${generate:fake:lorem:sentence}",
-  "carrierId": "${store:response-ca#id:-undefined}"
+  "carrierId": "${store:response-ca.id:-undefined}"
 }

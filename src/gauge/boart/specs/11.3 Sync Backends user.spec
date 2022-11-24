@@ -1,6 +1,6 @@
 # 1. Sync Backends User
 
-tags: env-all, sb-11, sb-11-3
+tags: env-all, sb-11, sb-11-3, masterdata-sync
 
 ## 1.1. Add a User
 

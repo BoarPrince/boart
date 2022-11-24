@@ -1,6 +1,6 @@
 # 1. Sync Backends Company
 
-tags: env-all, sb-11, sb-11-1
+tags: env-all, sb-11, sb-11-1, masterdata-sync
 
 ## 1.1. Add company
 

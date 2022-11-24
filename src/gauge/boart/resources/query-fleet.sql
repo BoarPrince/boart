@@ -103,4 +103,4 @@ SELECT
 FROM
   Company co
 WHERE
-  co.id = '${store:companyInfo.id:-${store:companyId}}' FOR JSON PATH
+  co.id = '${store:companyInfo.id}' FOR JSON PATH
