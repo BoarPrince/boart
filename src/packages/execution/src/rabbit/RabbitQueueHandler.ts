@@ -49,10 +49,11 @@ export class RabbitQueueHandler {
 
         return new Promise((resolve, reject) => {
             connection.on('error', (error) => reject(error));
+            channel.on('error', (error) => reject(error));
             runable(channel)
                 .then((rValue: TReturnType) => resolve(rValue))
                 .catch((error) => {
-                    channel.close().finally(() => reject(error));
+                    channel.close().catch(() => reject(error));
                 });
         });
     }
@@ -92,6 +93,7 @@ export class RabbitQueueHandler {
 
         let isClosed = false;
 
+        channel.on('error', (error) => console.error(error));
         channel.close = () => {
             if (isClosed) {
                 return;
