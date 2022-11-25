@@ -910,6 +910,42 @@ describe('out store from payload', () => {
     /**
      *
      */
+    it('use store default - with undefined', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                  |
+             |----------|------------------------|
+             |payload#a   | \${store:a:-undefined} |
+             |payload#b   | 2 |
+             |store     | var                    |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toEqual({ a: undefined, b: 2 });
+    });
+
+    /**
+     *
+     */
+    it('use store default - with undefined in string', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `|action    | value                    |
+             |----------|--------------------------|
+             |payload#a | "\${store:a:-undefined}" |
+             |payload#b | 2                        |
+             |store     | var                      |`
+        );
+
+        await sut.handler.process(tableDef);
+        const result = Store.instance.testStore.get('var');
+
+        expect(result.valueOf()).toEqual({ a: 'undefined', b: 2 });
+    });
+
+    /**
+     *
+     */
     it('use store default-assignment - with property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |

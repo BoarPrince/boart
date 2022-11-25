@@ -1172,6 +1172,14 @@ describe('isNumber', () => {
     /**
      *
      */
+    it('check mix of string and number', async () => {
+        const result = await sut.check('1-a-1', '');
+        expect(result.result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
     it('check array', async () => {
         const result = await sut.check([], '');
         expect(result.result).toBeFalsy();

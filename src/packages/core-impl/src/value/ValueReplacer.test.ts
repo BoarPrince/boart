@@ -253,6 +253,18 @@ describe('store', () => {
     /**
      *
      */
+    xit('with default -> undefined', () => {
+        const sut: ValueReplacer = new StoreReplacer();
+        const store = Store.instance.testStore;
+
+        const replacedValue = sut.replace('xxxxx##yyyy:-undefined', store, null);
+
+        expect(replacedValue).toBeUndefined();
+    });
+
+    /**
+     *
+     */
     it('test scope - value defined', () => {
         Store.instance.testStore.put('x', 1);
         const sut: ValueReplacer = new StoreReplacer();

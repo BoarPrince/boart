@@ -61,6 +61,7 @@ const on = {
  */
 const channel = {
     isClosed: false,
+    on: jest.fn<void, [string, (unknown) => void]>(),
     init: (): void => {
         channel.isClosed = false;
     },

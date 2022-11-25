@@ -554,6 +554,60 @@ describe('check expected operators', () => {
             await sut.handler.process(tableDef);
         }).rejects.toThrowError('error: expected:header\n\tcount:not: 3');
     });
+
+    /**
+     *
+     */
+    it('expected int', async () => {
+        intialContext.data = new ObjectContent({ a: '11', b: 11, c: '1-1' });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action             |value |
+             |-------------------|------|
+             |expected:int#a     |      |
+             |expected:int#b     |      |
+             |expected:int:not#c |      |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+
+    /**
+     *
+     */
+    it('expected number', async () => {
+        intialContext.data = new ObjectContent({ a: '11', b: 11, c: '11.1', d: 11.1, e: '11.1.1' });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action                |value |
+             |----------------------|------|
+             |expected:number#a     |      |
+             |expected:number#b     |      |
+             |expected:number#c     |      |
+             |expected:number#d     |      |
+             |expected:number:not#e |      |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+
+    /**
+     *
+     */
+    it('expected string', async () => {
+        intialContext.data = new ObjectContent({ a: '11', b: 'dd', c: '11.1', d: 11.1 });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action                |value |
+             |----------------------|------|
+             |expected:string:not#a |      |
+             |expected:string#b     |      |
+             |expected:string:not#c |      |
+             |expected:string:not#d |      |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
 });
 
 /**

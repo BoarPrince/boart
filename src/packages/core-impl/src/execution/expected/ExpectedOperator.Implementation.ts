@@ -26,6 +26,7 @@ export class ExpectedOperatorImplementation {
             return value?.toString();
         }
     }
+
     /**
      *
      */
@@ -287,7 +288,38 @@ export class ExpectedOperatorImplementation {
             canCaseInsesitive: false,
             check: (value: NativeType): ExpectedOperatorResult => {
                 return {
-                    result: !isNaN(parseInt(ExpectedOperatorImplementation.valueToString(value)))
+                    result: /^\d+(\.\d+)?$/.test(ExpectedOperatorImplementation.valueToString(value))
+                };
+            }
+        };
+    }
+
+    /**
+     *
+     */
+    static get isInt(): ExpectedOperator {
+        return {
+            name: 'int',
+            canCaseInsesitive: false,
+            check: (value: NativeType): ExpectedOperatorResult => {
+                return {
+                    result: /^\d+$/.test(ExpectedOperatorImplementation.valueToString(value))
+                };
+            }
+        };
+    }
+
+    /**
+     *
+     */
+    static get isString(): ExpectedOperator {
+        return {
+            name: 'string',
+            canCaseInsesitive: false,
+            check: (value: NativeType): ExpectedOperatorResult => {
+                return {
+                    result: typeof value === 'string',
+                    errorMessage: `, value is not of type string (type: ${value.constructor?.name}), actual:\n${JSON.stringify(value)}`
                 };
             }
         };
@@ -326,6 +358,8 @@ export class ExpectedOperatorImplementation {
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.isArray);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.isObject);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.isNumber);
+        ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.isInt);
+        ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.isString);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.isNull);
     }
 }
