@@ -1,9 +1,6 @@
-import { NativeType } from '@boart/core';
+import { ExpectedOperator, ExpectedOperatorInitializer, ExpectedOperatorResult, NativeType } from '@boart/core';
 
 import { IntValidator } from '../../validators/IntValidator';
-
-import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
-import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
 
 /**
  *
@@ -33,6 +30,37 @@ export class ExpectedOperatorImplementation {
     static get equals(): ExpectedOperator {
         return {
             name: 'equals',
+            description: {
+                id: '8f3f561f-c270-43bc-bacc-c3f11d4e81ce',
+                title: null,
+                description: `Checks a value for equality
+                              * can be defined explicity
+                              * it's default operator, in case of no defined operator`,
+                examples: [
+                    {
+                        title: 'Checks the response status of an rest call',
+                        example: `
+                        * Rest call
+
+                          | action                        |value               |
+                          |-------------------------------|--------------------|
+                          | method:post                   |/rest-url           |
+                          | payload                       |<file:payload.json> |
+                          | expected:header:equals#status |200                 |`
+                    },
+                    {
+                        title: 'Usage as default operator',
+                        example: `
+                        * Rest call
+
+                          | action                 |value               |
+                          |------------------------|--------------------|
+                          | method:post            |/rest-url           |
+                          | payload                |<file:payload.json> |
+                          | expected:header#status |200                 |`
+                    }
+                ]
+            },
             canCaseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => ({
                 result: expectedValue.toString() == ExpectedOperatorImplementation.valueToString(value),

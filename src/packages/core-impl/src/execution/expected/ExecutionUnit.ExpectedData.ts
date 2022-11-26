@@ -3,6 +3,9 @@ import {
     DataContentHelper,
     ExecutionContext,
     ExecutionUnit,
+    ExpectedOperator,
+    ExpectedOperatorInitializer,
+    ExpectedOperatorResult,
     NativeType,
     ParaType,
     RowValidator,
@@ -12,9 +15,7 @@ import {
 import { RowTypeValue } from '../../RowTypeValue';
 import { ParaValidator } from '../../validators/ParaValidator';
 
-import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
 import { ExpectedOperatorImplementation } from './ExpectedOperator.Implementation';
-import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
 
 /**
  * | action            | value |

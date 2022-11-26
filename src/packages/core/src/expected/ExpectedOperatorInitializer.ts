@@ -1,5 +1,6 @@
-import { ArraySubject } from '@boart/core';
 import { Observable } from 'rxjs';
+
+import { ArraySubject } from '../common/ArraySubject';
 
 import { ExpectedOperator } from './ExpectedOperator';
 

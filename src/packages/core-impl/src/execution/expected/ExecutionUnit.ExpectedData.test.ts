@@ -3,6 +3,8 @@ import {
     DataContent,
     ExecutionEngine,
     ExecutionUnit,
+    ExpectedOperator,
+    ExpectedOperatorInitializer,
     NativeContent,
     NullContent,
     ObjectContent,
@@ -17,8 +19,6 @@ import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
 
 import { ExpectedDataExecutinoUnit } from './ExecutionUnit.ExpectedData';
-import { ExpectedOperator } from './ExpectedOperator';
-import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
 import { ExpectedOperatorImplementation } from './ExpectedOperator.Implementation';
 
 /**

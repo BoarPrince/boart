@@ -23,6 +23,8 @@ import { ExecutionContext } from './execution/ExecutionContext';
 import { ExecutionEngine } from './execution/ExecutionEngine';
 import { ExecutionUnit } from './execution/ExecutionUnit';
 import { ExecutionUnitValidation } from './execution/ExecutionUnitValidation';
+import { ExpectedOperator, ExpectedOperatorResult } from './expected/ExpectedOperator';
+import { ExpectedOperatorInitializer } from './expected/ExpectedOperatorInitializer';
 import { Generator } from './generator/Generator';
 import { GeneratorHandler } from './generator/GeneratorHandler';
 import { Runtime } from './runtime/Runtime';
@@ -74,6 +76,9 @@ export {
     ExecutionEngine,
     ExecutionUnit,
     ExecutionUnitValidation,
+    ExpectedOperator,
+    ExpectedOperatorInitializer,
+    ExpectedOperatorResult,
     Generator,
     GeneratorHandler,
     GroupRowDefinition,
