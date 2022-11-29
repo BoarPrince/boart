@@ -1,4 +1,5 @@
 import { DataContent, DataContentHelper, ExecutionContext, ExecutionUnit, ParaType } from '@boart/core';
+import { Description } from 'core/src/description/Description';
 
 import { RowTypeValue } from '../../RowTypeValue';
 import { JsonLogic } from '../../jsonlogic/JsonLogic';
@@ -24,8 +25,13 @@ export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext
     /**
      *
      */
-    get description(): string {
-        return !this.firstLevelType ? 'expected:jsonLogic' : `expected:jsonLogic:${this.firstLevelType.toString()}`;
+    get description(): Description {
+        return {
+            id: '67deb7f1-9943-4e58-a335-6e19da22d3eb',
+            title: !this.firstLevelType ? 'expected:jsonLogic' : `expected:jsonLogic:${this.firstLevelType.toString()}`,
+            description: null,
+            examples: null
+        };
     }
 
     /**

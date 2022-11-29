@@ -1,13 +1,15 @@
 import { Observable } from 'rxjs';
 
 import { ArraySubject } from '../common/ArraySubject';
+import { Description } from '../description/Description';
+import { Descriptionable } from '../description/Descriptionable';
 
 import { ExpectedOperator } from './ExpectedOperator';
 
 /**
  *
  */
-export class ExpectedOperatorInitializer {
+export class ExpectedOperatorInitializer implements Descriptionable {
     private readonly _operators = new ArraySubject<ExpectedOperator>();
 
     /**
@@ -27,6 +29,16 @@ export class ExpectedOperatorInitializer {
     private constructor() {
         // singleton
     }
+
+    /**
+     *
+     */
+    public description: Description = {
+        id: '07c83a77-e3b1-400f-9966-2b7460f4c86a',
+        title: 'expected:operation:initializer',
+        description: 'xxx',
+        examples: null
+    };
 
     /**
      *
@@ -60,7 +72,14 @@ export class ExpectedOperatorInitializer {
     /**
      *
      */
-    get operators(): Observable<ExpectedOperator> {
+    get operators$(): Observable<ExpectedOperator> {
         return this._operators;
+    }
+
+    /**
+     *
+     */
+    get operators(): ReadonlyArray<ExpectedOperator> {
+        return this._operators.toArray();
     }
 }

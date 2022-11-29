@@ -1,5 +1,7 @@
 import { TypedGroupValidator } from '../Validators/GroupValidator';
 import { ValidationHandler } from '../Validators/ValidationHandler';
+import { Description } from '../description/Description';
+import { Descriptionable } from '../description/Descriptionable';
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionEngine } from '../execution/ExecutionEngine';
 
@@ -17,12 +19,18 @@ import { TableRows } from './TableRows';
 export class TableHandler<
     TExecutionContext extends ExecutionContext<object, object, object>,
     TRowType extends BaseRowType<TExecutionContext>
-> {
+> implements Descriptionable
+{
     private readonly columnMetaInfo: MetaInfo;
-
     private readonly rowDefinitions = new Map<string, RowDefinition<TExecutionContext, TRowType>>();
     private readonly groupValidations = new Array<TypedGroupValidator<TExecutionContext, TRowType>>();
+
+    public description?: Description | (() => Description);
     public executionEngine: ExecutionEngine<TExecutionContext, TRowType>;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public static tableHandlers: Array<TableHandler<any, any>>;
+
     /**
      *
      */
@@ -31,6 +39,7 @@ export class TableHandler<
         public readonly executionEngineCreator: () => ExecutionEngine<TExecutionContext, TRowType>
     ) {
         this.columnMetaInfo = TableMetaInfo.get(rowType);
+        // TableHandler.tableHandlers.push(this);
     }
 
     /**
@@ -69,6 +78,13 @@ export class TableHandler<
         }
 
         return this.rowDefinitions.get(key);
+    }
+
+    /**
+     *
+     */
+    getRowDefinitions(): Array<RowDefinition<TExecutionContext, TRowType>> {
+        return Array.from(this.rowDefinitions.values());
     }
 
     /**

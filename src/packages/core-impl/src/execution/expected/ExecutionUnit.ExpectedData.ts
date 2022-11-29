@@ -11,6 +11,7 @@ import {
     RowValidator,
     SelectorType
 } from '@boart/core';
+import { Description } from 'core/src/description/Description';
 
 import { RowTypeValue } from '../../RowTypeValue';
 import { ParaValidator } from '../../validators/ParaValidator';
@@ -68,7 +69,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
      *
      */
     constructor(private firstLevelType?: keyof DataContext['execution'], private secondLevelType?: string) {
-        ExpectedOperatorInitializer.instance.operators.subscribe((operator) => {
+        ExpectedOperatorInitializer.instance.operators$.subscribe((operator) => {
             this.operators.push(operator);
 
             // add not: operator
@@ -106,8 +107,13 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     /**
      *
      */
-    get description(): string {
-        return !this.firstLevelType ? 'expected' : `expected:${this.firstLevelType.toString()}`;
+    get description(): Description {
+        return {
+            id: '31f46a7e-8cc0-4ebf-ae63-a9d30a2cafb4',
+            title: !this.firstLevelType ? 'expected' : `expected:${this.firstLevelType.toString()}`,
+            description: null,
+            examples: null
+        };
     }
 
     /**
@@ -141,7 +147,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
         const expectedResult = await operator.check(data.getValue(), row.value.toString());
 
         if (expectedResult.result === false) {
-            const description = this.description + (!row.selector ? '' : '#' + row.selector);
+            const description = this.description.title + (!row.selector ? '' : '#' + row.selector);
             throw Error(
                 `error: ${description}` +
                     (!expectedResult.errorMessage

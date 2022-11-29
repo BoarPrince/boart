@@ -1,4 +1,5 @@
 import { DataContent, DataContentHelper, ExecutionUnit, key, ParaType, ScopeType, SelectorType, StoreWrapper } from '@boart/core';
+import { Description } from 'core/src/description/Description';
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -51,8 +52,13 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
     /**
      *
      */
-    get description(): string {
-        return this._key || !this.executionType ? 'store' : `store:${this.executionType}`;
+    get description(): Description {
+        return {
+            id: '149e81d9-d334-44c6-b690-212f5e25bf80',
+            title: this._key || !this.executionType ? 'store' : `store:${this.executionType}`,
+            description: null,
+            examples: null
+        };
     }
 
     /**

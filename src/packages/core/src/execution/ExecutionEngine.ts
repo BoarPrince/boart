@@ -21,7 +21,7 @@ export class ExecutionEngine<
      *
      */
     constructor(
-        private readonly mainExecutionUnit: () => ExecutionUnit<TExecutionContext, TRowType>,
+        public readonly mainExecutionUnit: () => ExecutionUnit<TExecutionContext, TRowType>,
         private readonly executionContextGenerator: () => TExecutionContext
     ) {
         this.initContext();

@@ -49,7 +49,13 @@ class ExecutionUnitMock implements ExecutionUnit<TestExecutionContext, any> {
     /**
      *
      */
-    description = 'mock';
+    description = {
+        id: '28c5f0a1-593f-4688-8dd4-81e189485902',
+        title: 'mock',
+        description: '',
+        examples: null
+    };
+
     /**
      *
      */

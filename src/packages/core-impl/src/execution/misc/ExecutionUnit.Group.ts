@@ -8,7 +8,12 @@ import { UniqueValidator } from '../../validators/UniqueValidator';
  *
  */
 export class GroupExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
-    readonly description = 'group';
+    readonly description = {
+        id: '31f46a7e-8cc0-4ebf-ae63-a9d30a2cafb4',
+        title: 'group',
+        description: null,
+        examples: null
+    };
     readonly parameterType = ParaType.False;
     readonly validators = [new UniqueValidator()];
 

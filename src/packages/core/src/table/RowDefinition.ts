@@ -1,4 +1,7 @@
 import { RowValidator } from '../Validators/RowValidator';
+import { Description } from '../description/Description';
+import { DescriptionHandler } from '../description/DescriptionHandler';
+import { Descriptionable } from '../description/Descriptionable';
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { ParaType } from '../types/ParaType';
@@ -22,7 +25,7 @@ type DefaultValue<TExecutionContext extends ExecutionContext<object, object, obj
 interface RowDefinitionPara<
     TExecutionContext extends ExecutionContext<object, object, object>,
     TRowType extends BaseRowType<TExecutionContext>
-> {
+> extends Descriptionable {
     readonly key?: symbol;
     readonly priority?: number;
     readonly type: TableRowType;
@@ -41,10 +44,12 @@ interface RowDefinitionPara<
 export class RowDefinition<
     TExecutionContext extends ExecutionContext<object, object, object>,
     TRowType extends BaseRowType<TExecutionContext>
-> {
+> implements Descriptionable
+{
     public key: symbol;
     public defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
     public defaultValueColumn?: symbol;
+    public description?: Description | (() => Description);
     public readonly priority: number = 0;
     public readonly type: TableRowType;
     public readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
@@ -56,8 +61,9 @@ export class RowDefinition<
      *
      */
     constructor(value: RowDefinitionPara<TExecutionContext, TRowType>) {
-        this.key = value.key || Symbol(value.executionUnit?.description);
+        this.key = value.key || Symbol(DescriptionHandler.solve(value.executionUnit?.description).title);
         this.type = value.type;
+        this.description = value.description;
         this.priority = value.priority || value.executionUnit?.priority || this.priority;
         this.defaultValue = value.defaultValue || value.default?.value || this.defaultValue;
         this.defaultValueColumn =

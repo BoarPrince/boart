@@ -52,7 +52,12 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
      *
      */
     protected mainExecutionUnit = () => ({
-        description: 'mock handler',
+        description: {
+            id: '78d7a946-01db-4b38-8fd9-ca5ff00f5c62',
+            title: 'mock handler',
+            description: null,
+            examples: null
+        },
         execute: jest.fn()
     });
 

@@ -1,6 +1,6 @@
-import { RowValidator } from '@boart/core';
-import { NativeType } from 'core/src/data/NativeType';
-import { Descriptionable } from 'core/src/documentation/Descriptionable';
+import { RowValidator } from '../Validators/RowValidator';
+import { NativeType } from '../data/NativeType';
+import { Descriptionable } from '../description/Descriptionable';
 
 /**
  *

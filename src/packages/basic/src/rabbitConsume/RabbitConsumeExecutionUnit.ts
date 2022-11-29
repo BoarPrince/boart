@@ -11,7 +11,12 @@ import { RabbitConsumeContext } from './RabbitConsumeContext';
 export class RabbitConsumeExecutionUnit
     implements ExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>, ExecutionUnitValidation<RabbitConsumeContext>
 {
-    public description = 'rabbit message queue - main';
+    public description = {
+        id: '5536aa8e-0441-4580-8b0b-442a072e7a8a',
+        title: 'rabbit message queue - main',
+        description: null,
+        examples: null
+    };
 
     private receivedMessage = 0;
 

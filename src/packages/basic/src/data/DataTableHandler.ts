@@ -35,7 +35,19 @@ export default class DataTableHandler extends TableHandlerBaseImpl<DataContext, 
     /**
      *
      */
-    addGroupRowDefinition(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>) {
+    addDocumentation(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>): void {
+        tableHandler.description = {
+            id: 'efb6a86f-a445-48ae-b21f-f7390dd78ff6',
+            title: '',
+            description: 'Handling with data',
+            examples: null
+        };
+    }
+
+    /**
+     *
+     */
+    addGroupRowDefinition(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>): void {
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
@@ -43,7 +55,7 @@ export default class DataTableHandler extends TableHandlerBaseImpl<DataContext, 
     /**
      *
      */
-    addRowDefinition(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>) {
+    addRowDefinition(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>): void {
         tableHandler.getRowDefinition('payload').key = Symbol('in');
     }
 

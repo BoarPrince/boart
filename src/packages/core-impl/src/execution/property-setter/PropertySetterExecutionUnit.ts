@@ -41,7 +41,12 @@ export class PropertySetterExecutionUnit<
     /**
      *
      */
-    readonly description = 'Generic Property Setter';
+    readonly description = {
+        id: '82256569-5168-49bc-8350-3ff8db5b55e1',
+        title: 'Generic Property Setter',
+        description: '',
+        examples: null
+    };
 
     /**
      * allow :null to set null

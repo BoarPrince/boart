@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'jest-extended';
+import { DescriptionHandler } from '../description/DescriptionHandler';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
@@ -210,16 +212,20 @@ describe('check binding with multiple definitions', () => {
         /**
          *
          */
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         class MockExecutionUnit implements ExecutionUnit<any, any> {
             constructor(description: string) {
-                this.description = description;
+                this.description = {
+                    id: null,
+                    title: description,
+                    description,
+                    examples: null
+                };
             }
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             execute(_context, _row): void {
                 // do noting in mock
             }
-            description: string;
+            description = null;
         }
 
         const rowDefinitions = [
@@ -253,7 +259,7 @@ describe('check binding with multiple definitions', () => {
         const rowWithDef = boundRows.find((def) => def.action === 'a2');
 
         expect(rowWithDef?.value1).toBe('b2');
-        expect(rowWithDef?.data._metaDefinition.executionUnit.description).toBe('unit2');
+        expect(DescriptionHandler.solve(rowWithDef?.data._metaDefinition.executionUnit.description).description).toBe('unit2');
     });
 
     /**

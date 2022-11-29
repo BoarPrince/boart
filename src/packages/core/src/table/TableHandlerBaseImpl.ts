@@ -59,7 +59,7 @@ export abstract class TableHandlerBaseImpl<
     /**
      *
      */
-    protected abstract addGroupRowDefinition(tableHandler: TableHandler<TExecutionContext, TRowType>);
-    protected abstract addRowDefinition(tableHandler: TableHandler<TExecutionContext, TRowType>);
-    protected abstract addGroupValidation(tableHandler: TableHandler<TExecutionContext, TRowType>);
+    protected abstract addGroupRowDefinition(tableHandler: TableHandler<TExecutionContext, TRowType>): void;
+    protected abstract addRowDefinition(tableHandler: TableHandler<TExecutionContext, TRowType>): void;
+    protected abstract addGroupValidation(tableHandler: TableHandler<TExecutionContext, TRowType>): void;
 }
