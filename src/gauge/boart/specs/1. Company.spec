@@ -390,3 +390,44 @@ tags: cascading-deletion, md-1.10
    |payload#carriers[0].vehicles[0].carrierId        |undefined                                        |
    |expected:header#status                           |200                                              |
 
+## 1.11. Getting companies must failed, when not authenticated
+
+tags: md-1-11
+
+* Test description
+
+   |action     |value                         |
+   |-----------|------------------------------|
+   |description|rest api must be authenticated|
+   |ticket     |MD-17                         |
+   |priority   |medium                        |
+
+* Rest call
+
+   |action                |value                 |
+   |----------------------|----------------------|
+   |method:get            |/api/company          |
+   |description           |Search company by name|
+   |query#size            |10                    |
+   |expected:header#status|401                   |
+
+## 1.12. Read all roles
+
+tags: md-1-12
+
+* Test description
+
+   |action     |value                 |
+   |-----------|----------------------|
+   |description|Roles must be loadable|
+   |priority   |medium                |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value        |
+   |----------------------|-------------|
+   |method:get            |/api/roles   |
+   |description           |Get all roles|
+   |expected:header#status|200          |
