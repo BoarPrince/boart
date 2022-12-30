@@ -119,3 +119,15 @@ it('index', () => {
         { isArrayIndex: false, isOptional: false, path: 'a.0.c', key: 'c' }
     ]);
 });
+
+/**
+ *
+ */
+it('optional index', () => {
+    const sut = PropertyParser.parseProperty('a[0].c?');
+    expect(sut.toArray()).toEqual([
+        { isArrayIndex: false, isOptional: false, path: 'a.0.c?', key: 'a' },
+        { isArrayIndex: true, isOptional: false, path: 'a.0.c?', key: '0' },
+        { isArrayIndex: false, isOptional: true, path: 'a.0.c?', key: 'c' }
+    ]);
+});
