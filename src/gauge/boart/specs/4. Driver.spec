@@ -375,3 +375,58 @@ tags: md-4.10, MD-220
    |payload#users[0].driver          |<file:request-driver-only.json>                        |
    |payload#users[0].driver.carrierId|undefined                                              |
    |expected:header#status           |200                                                    |
+
+## 1.11. Cascaded Driver event must contain E-Mail
+
+tags: md-4.11
+
+* Test description
+
+   |action     |value                                                          |
+   |-----------|---------------------------------------------------------------|
+   |description|Cascaded Driver Event must contain an email for user and driver|
+   |priority   |high                                                           |
+
+* add company and carrier
+
+* queues bind "driver, user"
+
+* Rest call
+
+   |action                |value                                              |
+   |----------------------|---------------------------------------------------|
+   |method:post           |/api/user                                          |
+   |description           |Add a User/Driver (Email for driver is not defined)|
+   |payload               |<file:request-user.json>                           |
+   |payload#driver        |<file:request-driver.json>                         |
+   |expected:header#status|200                                                |
+
+* queues check "driver, user"
+
+* Data manage
+
+   |action                      |value                                     |
+   |----------------------------|------------------------------------------|
+   |in                          |${store:event-driver}                     |
+   |description                 |Driver event must contain all informations|
+   |group                       |Check Queues                              |
+   |expected:empty:not#lastname |                                          |
+   |expected:empty:not#firstname|                                          |
+   |expected:empty:not#email    |                                          |
+
+* Data manage
+
+   |action                             |value                                          |
+   |-----------------------------------|-----------------------------------------------|
+   |in                                 |${store:event-user}                            |
+   |description                        |User/Driver event must contain all informations|
+   |group                              |Check Queues                                   |
+   |expected:empty:not#lastname        |                                               |
+   |expected:empty:not#firstname       |                                               |
+   |expected:empty:not#email           |                                               |
+   |expected:empty:not#driver.lastname |                                               |
+   |expected:empty:not#driver.firstname|                                               |
+   |expected:empty:not#driver.email    |                                               |
+   |expected#driver.lastname           |${store:event-user.lastname}                   |
+   |expected#driver.firstname          |${store:event-user.firstname}                  |
+   |expected#driver.email              |${store:event-user.email}                      |

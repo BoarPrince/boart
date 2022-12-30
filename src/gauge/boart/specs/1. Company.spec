@@ -4,7 +4,7 @@ tags: env-all, master-data, md-1, masterdata
 
 ## 1.1. Add a company
 
-tags: md-1.1
+tags: md-1.1a
 
 * Test description
 
@@ -31,6 +31,39 @@ tags: md-1.1
    |action                |value                                        |
    |----------------------|---------------------------------------------|
    |method:get            |/api/company/${store:companyId}              |
+   |description           |Check if newly added company can be requested|
+   |expected:header#status|200                                          |
+
+## 1.1. Add a company by message queue
+
+tags: md-1.1b
+
+* Test description
+
+   |action     |value                                              |
+   |-----------|---------------------------------------------------|
+   |description|Check if a company can be created via message queue|
+   |           |And can be loaded afterwards via rest api          |
+   |priority   |high                                               |
+
+* RabbitMQ publish
+
+   |action        |value                                               |
+   |--------------|----------------------------------------------------|
+   |description   |Send company creation event manually                |
+   |exchange      |company                                             |
+   |routing       |updatemasterdata                                    |
+   |payload       |<file:company-with-carrier-without-ids-request.json>|
+   |payload#id    |${generate:t:uuid}                                  |
+   |wait:after:sec|4                                                   |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                                        |
+   |----------------------|---------------------------------------------|
+   |method:get            |/api/company/${generate:t:uuid}              |
    |description           |Check if newly added company can be requested|
    |expected:header#status|200                                          |
 
@@ -431,3 +464,93 @@ tags: md-1-12
    |method:get            |/api/roles   |
    |description           |Get all roles|
    |expected:header#status|200          |
+
+## 1.13 Deep getting
+
+tags: md-1-13
+
+* Test description
+
+   |action     |value                                          |
+   |-----------|-----------------------------------------------|
+   |description|only with deep carriers and users are requested|
+   |priority   |medium                                         |
+
+* request admin bearer
+
+* queues bind "company"
+
+* Rest call
+
+   |action                                          |value                                                                                    |
+   |------------------------------------------------|-----------------------------------------------------------------------------------------|
+   |method:post                                     |/api/company                                                                             |
+   |payload                                         |<file:request-company.json>                                                              |
+   |payload#carriers[0]                             |<file:request-carrier.json>                                                              |
+   |payload#carriers[0].users[0]                    |<file:request-user.json>                                                                 |
+   |payload#carriers[0].vehicles[0]                 |<file:request-vehicle.json>                                                              |
+   |description                                     |Create a cascaded Company request (including Carrier and users)                          |
+   |                                                |addresses, bankDetails, phoneNumbers and Carrier details must be included in the response|
+   |expected:header#status                          |200                                                                                      |
+   |expected:count#addresses                        |1                                                                                        |
+   |expected:count#bankDetails                      |1                                                                                        |
+   |expected:count#phoneNumbers                     |1                                                                                        |
+   |expected:count#carriers                         |1                                                                                        |
+   |expected:count#carriers[0].addresses            |1                                                                                        |
+   |expected:count#carriers[0].phoneNumbers         |1                                                                                        |
+   |expected:count#carriers[0].users                |1                                                                                        |
+   |expected:count#carriers[0].users[0].phoneNumbers|1                                                                                        |
+   |expected:count#carriers[0].vehicles             |1                                                                                        |
+   |store#id                                        |companyId                                                                                |
+
+* Rest call
+
+   |action                                 |value                                                              |
+   |---------------------------------------|-------------------------------------------------------------------|
+   |method:get                             |/api/company/${store:companyId}                                    |
+   |description                            |Only get company informations (Adresses, BankDetails, Phonenumbers)|
+   |expected:header#status                 |200                                                                |
+   |expected:count#addresses               |1                                                                  |
+   |expected:count#bankDetails             |1                                                                  |
+   |expected:count#phoneNumbers            |1                                                                  |
+   |expected:count#carriers                |1                                                                  |
+   |expected:count#carriers[0].addresses   |1                                                                  |
+   |expected:count#carriers[0].phoneNumbers|1                                                                  |
+   |expected:count#carriers[0].users?      |0                                                                  |
+   |expected:count#carriers[0].vehicles?   |0                                                                  |
+
+* Rest call
+
+   |action                                          |value                          |
+   |------------------------------------------------|-------------------------------|
+   |method:get                                      |/api/company/${store:companyId}|
+   |query#deep                                      |true                           |
+   |description                                     |Get deep informations          |
+   |expected:header#status                          |200                            |
+   |expected:count#addresses                        |1                              |
+   |expected:count#bankDetails                      |1                              |
+   |expected:count#phoneNumbers                     |1                              |
+   |expected:count#carriers                         |1                              |
+   |expected:count#carriers[0].addresses            |1                              |
+   |expected:count#carriers[0].phoneNumbers         |1                              |
+   |expected:count#carriers[0].users                |1                              |
+   |expected:count#carriers[0].users[0].phoneNumbers|1                              |
+   |expected:count#carriers[0].vehicles             |1                              |
+
+* queues check "company"
+
+* Data manage
+
+   |action                                          |value                         |
+   |------------------------------------------------|------------------------------|
+   |in                                              |${store:event-company}        |
+   |description                                     |Company event must always deep|
+   |expected:count#addresses                        |1                             |
+   |expected:count#bankDetails                      |1                             |
+   |expected:count#phoneNumbers                     |1                             |
+   |expected:count#carriers                         |1                             |
+   |expected:count#carriers[0].addresses            |1                             |
+   |expected:count#carriers[0].phoneNumbers         |1                             |
+   |expected:count#carriers[0].users                |1                             |
+   |expected:count#carriers[0].users[0].phoneNumbers|1                             |
+   |expected:count#carriers[0].vehicles             |1                             |

@@ -175,6 +175,7 @@ tags: cascading-deletion, md-3.3, JIT-456, env-local
    |action                |value                                        |
    |----------------------|---------------------------------------------|
    |method:get            |/api/driver/${store:request-ca.drivers[0].id}|
+   |query#deep            |true                                         |
    |description           |Check that cascaded driver is deleted        |
    |expected:header#status|404                                          |
 
@@ -246,6 +247,7 @@ tags: cascading-deletion, md-3.4, JIT-456, env-local
    |action                   |value                                     |
    |-------------------------|------------------------------------------|
    |method:get               |/api/user/${store:response-ca.users[0].id}|
+   |query#deep               |true                                      |
    |description              |Check that cascaded user is not deleted   |
    |expected:header#status   |200                                       |
    |expected:count#carrierIds|1                                         |
@@ -285,6 +287,7 @@ comment * add carrier, companyId: "${store:response-co.id}", response: "response
    |action                            |value                                                            |
    |----------------------------------|-----------------------------------------------------------------|
    |method:get                        |/api/carrier/${store:response-ca.id}                             |
+   |query#deep                        |true                                                             |
    |description                       |Carrier request must contain all childs (users, driver, vehicles)|
    |expected:header#status            |200                                                              |
    |expected:count#vehicles           |3                                                                |
@@ -297,6 +300,7 @@ comment * add carrier, companyId: "${store:response-co.id}", response: "response
    |action                                        |value                                                                      |
    |----------------------------------------------|---------------------------------------------------------------------------|
    |method:get                                    |/api/company/${store:response-co.id}                                       |
+   |query#deep                                    |true                                                                       |
    |description                                   |Company request must contain all childs (carriers, users, driver, vehicles)|
    |expected:header#status                        |200                                                                        |
    |expected:count#carriers[0].vehicles           |3                                                                          |
@@ -403,3 +407,78 @@ tags: cascading-deletion, md-3.7
    |payload#companyId                    |${store:response-co.id}              |
    |expected:header#status               |200                                  |
 
+## 1.8 Deep getting
+
+tags: md-3-8
+
+* Test description
+
+   |action     |value                             |
+   |-----------|----------------------------------|
+   |description|only with deep users are requested|
+   |priority   |medium                            |
+
+* request admin bearer
+
+* add company, response: "response-co"
+
+* queues bind "carrier"
+
+* Rest call
+
+   |action                              |value                                                                |
+   |------------------------------------|---------------------------------------------------------------------|
+   |method:post                         |/api/carrier                                                         |
+   |payload                             |<file:request-carrier.json>                                          |
+   |payload#companyId                   |${store:response-co.id}                                              |
+   |payload#users[0]                    |<file:request-user.json>                                             |
+   |payload#vehicles[0]                 |<file:request-vehicle.json>                                          |
+   |description                         |Create a cascaded Carrier (including users)                          |
+   |                                    |addresses, bankDetails, phoneNumbers must be included in the response|
+   |expected:header#status              |200                                                                  |
+   |expected:count#addresses            |1                                                                    |
+   |expected:count#phoneNumbers         |1                                                                    |
+   |expected:count#users                |1                                                                    |
+   |expected:count#users[0].phoneNumbers|1                                                                    |
+   |expected:count#vehicles             |1                                                                    |
+   |store#id                            |carrierId                                                            |
+
+* Rest call
+
+   |action                     |value                                                              |
+   |---------------------------|-------------------------------------------------------------------|
+   |method:get                 |/api/carrier/${store:carrierId}                                    |
+   |description                |Only get carrier informations (Adresses, BankDetails, Phonenumbers)|
+   |expected:header#status     |200                                                                |
+   |expected:count#addresses   |1                                                                  |
+   |expected:count#phoneNumbers|1                                                                  |
+   |expected:count#users?      |0                                                                  |
+   |expected:count#vehicles?   |0                                                                  |
+
+* Rest call
+
+   |action                              |value                          |
+   |------------------------------------|-------------------------------|
+   |method:get                          |/api/carrier/${store:carrierId}|
+   |query#deep                          |true                           |
+   |description                         |Get deep informations          |
+   |expected:header#status              |200                            |
+   |expected:count#addresses            |1                              |
+   |expected:count#phoneNumbers         |1                              |
+   |expected:count#users                |1                              |
+   |expected:count#users[0].phoneNumbers|1                              |
+   |expected:count#vehicles             |1                              |
+
+* queues check "carrier"
+
+* Data manage
+
+   |action                              |value                         |
+   |------------------------------------|------------------------------|
+   |in                                  |${store:event-carrier}        |
+   |description                         |Carrier event must always deep|
+   |expected:count#addresses            |1                             |
+   |expected:count#phoneNumbers         |1                             |
+   |expected:count#users                |1                             |
+   |expected:count#users[0].phoneNumbers|1                             |
+   |expected:count#vehicles             |1                             |
