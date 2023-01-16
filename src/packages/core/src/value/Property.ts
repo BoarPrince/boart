@@ -4,6 +4,7 @@
 export class Property {
     readonly key: string;
     readonly isArrayIndex: boolean = false;
+    readonly isArrayDefinition: boolean = false;
     readonly isOptional: boolean = false;
 
     /**
@@ -17,6 +18,7 @@ export class Property {
             this.key = key;
         }
 
+        this.isArrayDefinition = this.key === '*' ? true : false;
         this.isArrayIndex = !isNaN(Number(this.key));
     }
 }

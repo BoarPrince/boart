@@ -1067,6 +1067,135 @@ describe('deep setting', () => {
 /**
  *
  */
+describe('wildcard', () => {
+    /**
+     *
+     */
+    it('only wildcard', () => {
+        const val = new ObjectContent({ a: [{ b: 1 }, { b: 2 }] });
+        const propValue = DataContentHelper.getByPath('a[*]', val);
+
+        expect(propValue.valueOf()).toEqual([{ b: 1 }, { b: 2 }]);
+    });
+
+    /**
+     *
+     */
+    it('get first level', () => {
+        const val = new ObjectContent({ a: [{ b: 1 }, { b: 2 }] });
+        const propValue = DataContentHelper.getByPath('a[*].b', val);
+
+        expect(propValue.valueOf()).toEqual([1, 2]);
+    });
+
+    /**
+     *
+     */
+    it('get first level, when not all entries are collectable', () => {
+        const val = new ObjectContent({ a: [{ b: 1 }, ['b', 2]] });
+        const propValue = DataContentHelper.getByPath('a[*].b', val);
+
+        expect(propValue.valueOf()).toEqual([1]);
+    });
+
+    /**
+     *
+     */
+    it('wildcard selects a none array element', () => {
+        const val = new ObjectContent({ a: [{ b: 1 }, { b: 2 }], b: { c: 3 } });
+
+        expect(() => DataContentHelper.getByPath('b[*]', val)).toThrowError(
+            'getting "b.*" not possible, because "*" is not an object or an array.\nData context:\n' +
+                JSON.stringify(
+                    {
+                        c: 3
+                    },
+                    null,
+                    '  '
+                )
+        );
+    });
+
+    /**
+     *
+     */
+    it('get second level', () => {
+        const val = new ObjectContent({ a: [{ b: [{ c: 3 }, { c: 4 }] }] });
+        const propValue = DataContentHelper.getByPath('a[*].b[*].c', val);
+
+        expect(propValue.valueOf()).toEqual([3, 4]);
+    });
+
+    /**
+     *
+     */
+    it('get third level - one element', () => {
+        const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: 4 }] }] });
+        const propValue = DataContentHelper.getByPath('a[*].b[*].c.d', val);
+
+        expect(propValue.valueOf()).toEqual([5]);
+    });
+
+    /**
+     *
+     */
+    it('get third level - more elements', () => {
+        const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: { d: 6 } }] }] });
+        const propValue = DataContentHelper.getByPath('a[*].b[*].c.d', val);
+
+        expect(propValue.valueOf()).toEqual([5, 6]);
+    });
+
+    /**
+     *
+     */
+    it('get third level - array elements', () => {
+        const val = new ObjectContent({ a: [{ b: [{ c: { d: [5, 6, 7] } }, { c: { d: [8, 9, 10] } }] }] });
+        const propValue = DataContentHelper.getByPath('a[*].b[*].c.d', val);
+
+        expect(propValue.valueOf()).toEqual([5, 6, 7, 8, 9, 10]);
+    });
+
+    /**
+     *
+     */
+    it('at least one element must have a parameter', () => {
+        const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: 4 }] }] });
+
+        expect(() => DataContentHelper.getByPath('a[*].b[*].d', val)).toThrowError(
+            `getting "a.*.b.*.d" not possible, because "d" is not an object or an array.\nData context:\n` +
+                JSON.stringify(
+                    [
+                        {
+                            c: {
+                                d: 5
+                            }
+                        },
+                        {
+                            c: 4
+                        }
+                    ],
+                    null,
+                    '  '
+                )
+        );
+    });
+
+    /**
+     *
+     */
+    it(`no property fits, but it's optional`, () => {
+        const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: 4 }] }] });
+
+        const propValue = DataContentHelper.getByPath('a[*].b[*].d?', val);
+
+        expect(propValue.valueOf()).toBeInstanceOf(NullContent);
+    });
+});
+
+/**
+ *
+ */
 describe('null or undefined', () => {
     /**
      *

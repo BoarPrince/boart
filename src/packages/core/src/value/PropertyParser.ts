@@ -30,8 +30,8 @@ export class PropertyParser {
      */
     public static parseProperty(selector: string): PropertyIterable {
         selector = (selector || '') //
-            .replace(/^\[(\d+)\]/g, '$1') // [0].x.x   -> 0.x.x
-            .replace(/\[(\d+)\]/g, '.$1'); // x.x[0].x -> x.x.0.x
+            .replace(/^\[(\d+|\*)\]/g, '$1') // [0].x.x   -> 0.x.x
+            .replace(/\[(\d+|\*)\]/g, '.$1'); // x.x[0].x -> x.x.0.x
         const keys = !selector ? [] : selector.split(/[#.]/);
 
         return new PropertyIterable(keys);

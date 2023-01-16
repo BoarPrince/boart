@@ -195,6 +195,14 @@ export class DataContentHelper {
     /**
      *
      */
+    private static throwRecursiveArrayError(property: string, current: string, content?: ContentType) {
+        const contentMsg = !content ? '' : `\nData context:\n${JSON.stringify(content, null, '  ')}`;
+        throw Error(`getting "${property}" not possible, because "${current}" does not used for an array.${contentMsg}`);
+    }
+
+    /**
+     *
+     */
     public static getByPath(selector: string, value: DataContent, optional?: boolean): DataContent;
     public static getByPath(properties: PropertyIterable, value: DataContent, optional?: boolean): DataContent;
     public static getByPath(selectorOrProperties: string | PropertyIterable, value: DataContent, optional = false): DataContent {
@@ -213,6 +221,9 @@ export class DataContentHelper {
                 DataContentHelper.throwRecursiveError(property.path, property.key, contentValue?.getValue());
             }
 
+            if (property.isArrayIndex && !Array.isArray(contentValueAsObject.valueOf())) {
+                DataContentHelper.throwRecursiveArrayError(property.path, property.key, contentValueAsObject);
+            }
             const propertyValue = contentValueAsObject.get(property.key);
             const prevContentValue = contentValue;
             contentValue = DataContentHelper.create(propertyValue);

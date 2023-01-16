@@ -20,7 +20,7 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
     /**
      *
      */
-    constructor(private value?: ContentType) {
+    constructor(protected value?: ContentType) {
         super();
 
         // check native null and NullContent
@@ -141,7 +141,11 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
      *
      */
     get(key: string): ContentType {
-        return this.value[key];
+        if (key === '*') {
+            return !Array.isArray(this.value) ? null : new WildcardObjectContent(this.value);
+        } else {
+            return this.value[key];
+        }
     }
 
     /**
@@ -173,5 +177,61 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
      */
     isNullOrUndefined() {
         return this.value == null;
+    }
+}
+
+/**
+ *
+ */
+class WildcardObjectContent extends ObjectContent {
+    /**
+     *
+     */
+    // constructor(value: Array<string | boolean | number | object | DataContent>) {
+    constructor(value: ContentType) {
+        super(value);
+    }
+
+    /**
+     *
+     */
+    has(key: string): boolean {
+        return Object.values(this.value).some((v) => !!v[key]);
+    }
+
+    /**
+     *
+     */
+    get(key: string): ContentType {
+        if (key == '*') {
+            return new WildcardObjectContent(this.value);
+        }
+
+        if (!this.has(key)) {
+            return null;
+        }
+
+        const collectedValue = this.value as Array<unknown>;
+
+        const collected = new Array<unknown>();
+        collectedValue.forEach((v) => {
+            if (Array.isArray(v[key])) {
+                (v[key] as Array<unknown>)?.forEach((elements) => collected.push(elements));
+            } else {
+                collected.push(v[key]);
+            }
+        });
+
+        return new WildcardObjectContent(collected);
+    }
+
+    /**
+     *
+     */
+    set(key: string, value: ContentType): DataContent {
+        Object.values(this.value).forEach((v) => {
+            v[key] = value;
+        });
+        return this;
     }
 }
