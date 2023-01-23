@@ -244,6 +244,14 @@ tags: cascading-deletion, md-3.4, JIT-456, env-local
 
 * Rest call
 
+   |action                |value                               |
+   |----------------------|------------------------------------|
+   |method:get            |/api/carrier/${store:response-ca.id}|
+   |description           |Check that Carrier is deleted       |
+   |expected:header#status|404                                 |
+
+* Rest call
+
    |action                   |value                                     |
    |-------------------------|------------------------------------------|
    |method:get               |/api/user/${store:response-ca.users[0].id}|
@@ -409,7 +417,7 @@ tags: cascading-deletion, md-3.7
 
 ## 1.8 Deep getting
 
-tags: md-3-8
+tags: md-3.8
 
 * Test description
 
@@ -482,3 +490,231 @@ tags: md-3-8
    |expected:count#users                |1                             |
    |expected:count#users[0].phoneNumbers|1                             |
    |expected:count#vehicles             |1                             |
+
+## 1.9 Get all carriers with no pagination parameteres
+
+tags: md-3.9, performance
+
+* Test description
+
+   |action     |value                                                                |
+   |-----------|---------------------------------------------------------------------|
+   |description|no pagination parameters defined. The default parameters must be used|
+   |priority   |medium                                                               |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                                                  |
+   |----------------------|-------------------------------------------------------|
+   |method:get            |/api/carrier                                           |
+   |description           |Get carrier informations, without pagination definition|
+   |expected:header#status|200                                                    |
+   |expected#size         |20                                                     |
+   |expected#number       |0                                                      |
+   |expected:count#content|20                                                     |
+   |expected#sort.sorted  |false                                                  |
+   |expected:contains:not |addresses                                              |
+   |expected:contains:not |phoneNumbers                                           |
+   |expected:contains:not |users                                                  |
+   |expected:contains:not |vehicles                                               |
+
+## 1.10 Get all carriers with pagination, but no sort order
+
+tags: md-3.10, performance
+
+* Test description
+
+   |action     |value                                           |
+   |-----------|------------------------------------------------|
+   |description|pagination parameters defined, but no sort order|
+   |priority   |medium                                          |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                   |
+   |----------------------|------------------------|
+   |method:get            |/api/carrier            |
+   |query#size            |2                       |
+   |query#page            |11                      |
+   |description           |Get carrier informations|
+   |expected:header#status|200                     |
+   |expected#size         |2                       |
+   |expected#number       |11                      |
+   |expected:count#content|2                       |
+   |expected#sort.sorted  |false                   |
+   |expected:contains:not |addresses               |
+   |expected:contains:not |phoneNumbers            |
+   |expected:contains:not |users                   |
+   |expected:contains:not |vehicles                |
+
+## 1.11. Get all carriers with pagination and sort order
+
+tags: md-3.11, performance
+
+* Test description
+
+   |action     |value                                       |
+   |-----------|--------------------------------------------|
+   |description|pagination parameters defined and sort order|
+   |priority   |medium                                      |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                   |
+   |----------------------|------------------------|
+   |method:get            |/api/carrier            |
+   |query#size            |2                       |
+   |query#page            |11                      |
+   |query#sort            |id                      |
+   |description           |Get carrier informations|
+   |expected:header#status|200                     |
+   |expected#size         |2                       |
+   |expected#number       |11                      |
+   |expected:count#content|2                       |
+   |expected#sort.sorted  |true                    |
+   |expected:contains:not |addresses               |
+   |expected:contains:not |phoneNumbers            |
+   |expected:contains:not |users                   |
+   |expected:contains:not |vehicles                |
+
+## 1.12. Get all carriers with pagination, sort order and searchString
+
+tags: md-3.12, performance
+
+* Test description
+
+   |action     |value                                                     |
+   |-----------|----------------------------------------------------------|
+   |description|pagination parameters, sort order and searchString defined|
+   |priority   |high                                                      |
+
+* request admin bearer
+
+* add company, response: "response-co"
+
+* Rest call
+
+   |action                |value                      |
+   |----------------------|---------------------------|
+   |method:post           |/api/carrier               |
+   |description           |Create Jitpay Carrier      |
+   |payload               |<file:request-carrier.json>|
+   |payload#carrierName   |JitPay 1 Gmbh              |
+   |payload#companyId     |${store:response-co.id}    |
+   |expected:header#status|200                        |
+
+* Rest call
+
+   |action                |value                      |
+   |----------------------|---------------------------|
+   |method:post           |/api/carrier               |
+   |description           |Create Jitpay Carrier      |
+   |payload               |<file:request-carrier.json>|
+   |payload#carrierName   |JitPay 2 Gmbh              |
+   |payload#companyId     |${store:response-co.id}    |
+   |expected:header#status|200                        |
+
+* Rest call
+
+   |action                |value                      |
+   |----------------------|---------------------------|
+   |method:post           |/api/carrier               |
+   |description           |Create Jitpay Carrier      |
+   |payload               |<file:request-carrier.json>|
+   |payload#carrierName   |JitPay 3 Gmbh              |
+   |payload#companyId     |${store:response-co.id}    |
+   |expected:header#status|200                        |
+
+
+* Rest call
+
+   |action                             |value                   |
+   |-----------------------------------|------------------------|
+   |method:get                         |/api/carrier            |
+   |query#size                         |2                       |
+   |query#page                         |0                       |
+   |query#sort                         |id                      |
+   |query#searchString                 |jitpay                  |
+   |description                        |Get carrier informations|
+   |expected:header#status             |200                     |
+   |expected#size                      |2                       |
+   |expected#number                    |0                       |
+   |expected:count#content             |2                       |
+   |expected#sort.sorted               |true                    |
+   |expected:containsKey:not#content[*]|addresses               |
+   |expected:containsKey:not#content[*]|phoneNumbers            |
+   |expected:containsKey:not#content[*]|users                   |
+   |expected:containsKey:not#content[*]|vehicles                |
+   |expected:containsKey#content[*]    |jitPayId                |
+
+## 1.13. Update carrier without deletion of cascaded child entities
+
+tags: md-3.13
+
+* Test description
+
+   |action     |value                                             |
+   |-----------|--------------------------------------------------|
+   |description|While updating a carrier without child definition.|
+   |           |No child entity must be deleted.                  |
+   |priority   |high                                              |
+
+* request admin bearer
+
+* add company, carrier and user
+
+* Rest call
+
+   |action                     |value                                                                        |
+   |---------------------------|-----------------------------------------------------------------------------|
+   |method:get                 |/api/carrier/${store:response-ca.id}                                         |
+   |description                |Only get carrier (Adresses, BankDetails, Phonenumbers) without child entities|
+   |expected:header#status     |200                                                                          |
+   |expected:count#addresses   |1                                                                            |
+   |expected:count#phoneNumbers|1                                                                            |
+   |expected:count#users?      |0                                                                            |
+   |expected:count#vehicles?   |0                                                                            |
+   |store                      |carrier-response                                                             |
+
+* Rest call
+
+   |action                |value                               |
+   |----------------------|------------------------------------|
+   |method:put            |/api/carrier/${store:response-ca.id}|
+   |description           |Update carrier without any changes  |
+   |payload               |${store:carrier-response}           |
+   |expected:header#status|200                                 |
+
+* Rest call
+
+   |action                |value                                                             |
+   |----------------------|------------------------------------------------------------------|
+   |method:get            |/api/user/carrier/${store:response-ca.id}                         |
+   |description           |Read user of the carrier and check that it still contains the user|
+   |expected:header#status|200                                                               |
+   |expected:count#content|1                                                                 |
+
+* Rest call
+
+   |action                |value                                                         |
+   |----------------------|--------------------------------------------------------------|
+   |method:put            |/api/carrier/${store:response-ca.id}                          |
+   |description           |Update carrier again, but now with empty users list (users:[])|
+   |payload               |${store:carrier-response}                                     |
+   |payload#users         |[]                                                            |
+   |expected:header#status|200                                                           |
+
+* Rest call
+
+   |action                |value                                                                   |
+   |----------------------|------------------------------------------------------------------------|
+   |method:get            |/api/user/carrier/${store:response-ca.id}                               |
+   |description           |Read user of the carrier again and check that now user should be deleted|
+   |expected:header#status|200                                                                     |
+   |expected:count#content|0                                                                       |

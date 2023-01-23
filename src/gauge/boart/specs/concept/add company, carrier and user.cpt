@@ -1,0 +1,18 @@
+# add company, carrier and user
+
+* request admin bearer
+
+* add company, response: "response-co"
+
+* add carrier, companyId: "${store:response-co.id}", response: "response-ca"
+
+* Rest call
+
+   |action                |value                   |
+   |----------------------|------------------------|
+   |method:post           |/api/user               |
+   |description           |Add an User             |
+   |payload               |<file:request-user.json>|
+   | group                | Initial Create         |
+   |expected:header#status|200                     |
+   |store                 |response-user           |

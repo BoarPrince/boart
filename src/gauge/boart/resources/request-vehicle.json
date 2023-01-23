@@ -11,7 +11,7 @@
   "length": 4,
   "weight": 4,
   "capacity": 4,
-  "plate": "BS ${generate:char:2}-${generate:random:4}",
+  "plate": "ÖHR ${generate:char:2}-${generate:random:8}",
   "description": "${generate:fake:lorem:sentence}",
   "carrierId": "${store:response-ca.id:-undefined}"
 }

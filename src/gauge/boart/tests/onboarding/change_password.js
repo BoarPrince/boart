@@ -11,6 +11,7 @@ step(
         username = ValueReplacerHandler.replace(username);
         password = ValueReplacerHandler.replace(password);
         new_password = ValueReplacerHandler.replace(new_password);
+
         const url = `${UrlLoader.url('<ob>/smart-onboarding/register')}/${company_id}?lang=en`;
 
         StepReport.report('Change Password', 'Register') //

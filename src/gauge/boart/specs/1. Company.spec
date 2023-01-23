@@ -175,7 +175,7 @@ tags: md-1.3
 
 ## 1.4. Text search company name (/api/companysearchString=abc)
 
-tags: company-search, md-1-4
+tags: company-search, md-1.4
 
 * Test description
 
@@ -202,7 +202,7 @@ tags: company-search, md-1-4
 
 ## 1.5. Text search company jitpayId (/api/companysearchString=abc)
 
-tags: company-search, md-1-5
+tags: company-search, md-1.5
 
 * Test description
 
@@ -229,7 +229,7 @@ tags: company-search, md-1-5
 
 ## 1.6. Check queue event (creationDate, modifiedDate)
 
-tags: company-create-event, md-1-6
+tags: company-create-event, md-1.6
 
 * Test description
 
@@ -425,7 +425,7 @@ tags: cascading-deletion, md-1.10
 
 ## 1.11. Getting companies must failed, when not authenticated
 
-tags: md-1-11
+tags: md-1.11
 
 * Test description
 
@@ -446,7 +446,7 @@ tags: md-1-11
 
 ## 1.12. Read all roles
 
-tags: md-1-12
+tags: md-1.12
 
 * Test description
 
@@ -467,7 +467,7 @@ tags: md-1-12
 
 ## 1.13 Deep getting
 
-tags: md-1-13
+tags: md-1.13
 
 * Test description
 
@@ -554,3 +554,157 @@ tags: md-1-13
    |expected:count#carriers[0].users                |1                             |
    |expected:count#carriers[0].users[0].phoneNumbers|1                             |
    |expected:count#carriers[0].vehicles             |1                             |
+
+## 1.14. Update a company (company is reloaded)
+
+tags: md-1.14, MD-259
+
+* Test description
+
+   |action     |value                                                                                            |
+   |-----------|-------------------------------------------------------------------------------------------------|
+   |description|Check if a company can be created via the rest api                                               |
+   |           |And can be updated afterwards. Before updating and after creating, the company is re-loaded again|
+   |ticket     |MD-259                                                                                           |
+   |priority   |high                                                                                             |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                                               |
+   |----------------------|----------------------------------------------------|
+   |method:post           |/api/company                                        |
+   |description           |Create a Company (send post request)                |
+   |payload               |<file:company-with-carrier-without-ids-request.json>|
+   |expected:header#status|200                                                 |
+   |store                 |response                                            |
+
+* Rest call
+
+   |action                 |value                            |
+   |-----------------------|---------------------------------|
+   |method:get             |/api/company/${store:response.id}|
+   |description            |Read previously created commpany |
+   |expected:header#status |200                              |
+   |expected:count#carriers|1                                |
+   |store                  |reload-response                  |
+
+
+* Rest call
+
+   |action                |value                                   |
+   |----------------------|----------------------------------------|
+   |method:put            |/api/company/${store:reload-response.id}|
+   |payload               |${store:reload-response}                |
+   |payload#companyName   |x-x-x                                   |
+   |description           |Update previously created commpany      |
+   |expected:header#status|200                                     |
+
+* Rest call
+
+   |action                |value                                        |
+   |----------------------|---------------------------------------------|
+   |method:get            |/api/company/${store:reload-response.id}     |
+   |description           |Check if newly added company can be requested|
+   |expected:header#status|200                                          |
+   |expected#companyName  |x-x-x                                        |
+
+## 1.15. Update a company, containing one carrier (Carrier is removed from payload)
+
+tags: md-1.15, MD-259
+
+* Test description
+
+   |action     |value                                                  |
+   |-----------|-------------------------------------------------------|
+   |description|Check if a company can be created via the rest api     |
+   |           |And can be updated without the previously added carrier|
+   |ticket     |MD-259                                                 |
+   |priority   |high                                                   |
+
+* request admin bearer
+
+* add company and carrier
+
+* Rest call
+
+   |action                |value                               |
+   |----------------------|------------------------------------|
+   |method:get            |/api/company/${store:response-co.id}|
+   |description           |Read previously created commpany    |
+   |expected:header#status|200                                 |
+   |store                 |reload-response                     |
+
+
+* Rest call
+
+   |action                |value                                   |
+   |----------------------|----------------------------------------|
+   |method:put            |/api/company/${store:reload-response.id}|
+   |payload               |${store:reload-response}                |
+   |payload#carriers      |[]                                      |
+   |payload#companyName   |x-x-x                                   |
+   |description           |Update previously created commpany      |
+   |expected:header#status|200                                     |
+
+* Rest call
+
+   |action                 |value                                        |
+   |-----------------------|---------------------------------------------|
+   |method:get             |/api/company/${store:reload-response.id}     |
+   |description            |Check if newly added company can be requested|
+   |expected:header#status |200                                          |
+   |expected:count#carriers|0                                            |
+   |expected#companyName   |x-x-x                                        |
+
+## 1.16. Update a company, containing two carriers (Carriers are removed from payload)
+
+tags: md-1.16, MD-259
+
+* Test description
+
+   |action     |value                                                   |
+   |-----------|--------------------------------------------------------|
+   |description|Check if a company can be created via the rest api      |
+   |           |And can be updated without the previously added carriers|
+   |ticket     |MD-259                                                  |
+   |priority   |high                                                    |
+
+* request admin bearer
+
+* add company and carrier
+
+* add carrier
+
+* Rest call
+
+   |action                |value                               |
+   |----------------------|------------------------------------|
+   |method:get            |/api/company/${store:response-co.id}|
+   |description           |Read previously created commpany    |
+   |expected:header#status|200                                 |
+   |store                 |reload-response                     |
+
+
+* Rest call
+
+   |action                 |value                                   |
+   |-----------------------|----------------------------------------|
+   |method:put             |/api/company/${store:reload-response.id}|
+   |payload                |${store:reload-response}                |
+   |payload#carriers       |[]                                      |
+   |payload#companyName    |x-x-x                                   |
+   |description            |Update previously created commpany      |
+   |expected:count#carriers|0                                       |
+   |expected:header#status |200                                     |
+
+* Rest call
+
+   |action                 |value                                        |
+   |-----------------------|---------------------------------------------|
+   |method:get             |/api/company/${store:reload-response.id}     |
+   |description            |Check if newly added company can be requested|
+   |expected:header#status |200                                          |
+   |expected:count#carriers|0                                            |
+   |expected#companyName   |x-x-x                                        |

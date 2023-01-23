@@ -476,4 +476,70 @@ tags: cascading-deletion, md-5.11
    |payload#driver.phoneNumbers[0].id|undefined                              |
    |expected:header#status           |200                                    |
 
+## 1.12. Search users of a carrier
 
+tags: cascading-deletion, md-5.12
+
+* Test description
+
+   |action     |value                                      |
+   |-----------|-------------------------------------------|
+   |description|Search users of a previosly created carrier|
+   |           |* new user contains three users            |
+   |priority   |high                                       |
+
+* request admin bearer
+
+* add company and carrier
+
+* add user "user-1"
+
+* add user "user-2"
+
+* add user "user-3"
+
+* Rest call
+
+   |action                |value                                            |
+   |----------------------|-------------------------------------------------|
+   |description           |Read users of the carrier without a search-string|
+   |                      |It must return three users                       |
+   |method:get            |/api/user/carrier/${store:response-ca.id}        |
+   |expected:header#status|200                                              |
+   |expected:count#content|3                                                |
+
+* Rest call
+
+   |action                |value                                                  |
+   |----------------------|-------------------------------------------------------|
+   |description           |Read users of the carrier with a search string (user-1)|
+   |                      |The result must contain one user                       |
+   |method:get            |/api/user/carrier/${store:response-ca.id}              |
+   |query#searchString    |user-1                                                 |
+   |expected:header#status|200                                                    |
+   |expected:count#content|1                                                      |
+
+* Rest call
+
+   |action                |value                                                  |
+   |----------------------|-------------------------------------------------------|
+   |description           |Read users of the carrier with a search string (user-2)|
+   |                      |The result must contain one user                       |
+   |method:get            |/api/user/carrier/${store:response-ca.id}              |
+   |query#searchString    |user-2                                                 |
+   |expected:header#status|200                                                    |
+   |expected:count#content|1                                                      |
+
+* Rest call
+
+   |action                |value                                                 |
+   |----------------------|------------------------------------------------------|
+   |description           |Read users of the carrier with a search string (user-)|
+   |                      |The result must contain all users                     |
+   |method:get            |/api/user/carrier/${store:response-ca.id}             |
+   |query#searchString    |user-                                                 |
+   |expected:header#status|200                                                   |
+   |expected:count#content|3                                                     |
+
+
+   Read XXXXX

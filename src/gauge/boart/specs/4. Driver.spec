@@ -430,3 +430,57 @@ tags: md-4.11
    |expected#driver.lastname           |${store:event-user.lastname}                   |
    |expected#driver.firstname          |${store:event-user.firstname}                  |
    |expected#driver.email              |${store:event-user.email}                      |
+
+## 1.12. Search assigned Vehicle
+
+tags: md-4.12
+
+* Test description
+
+   |action     |value                                      |
+   |-----------|-------------------------------------------|
+   |description|Assigned Vehicle (plate) must be searchable|
+   |priority   |high                                       |
+
+* add company and carrier
+
+* add driver, cascaded
+
+* add vehicle
+
+* Rest call
+
+   |action                |value                                                                                  |
+   |----------------------|---------------------------------------------------------------------------------------|
+   |method:put            |/api/assignment/vehicle/${store:response-vehicle.id}/driver/${store:response-driver.id}|
+   |description           |Assign vehicle to the driver                                                           |
+   |expected:header#status|202                                                                                    |
+
+* Rest call
+
+   |action                |value                                  |
+   |----------------------|---------------------------------------|
+   |method:get            |/api/driver/${store:response-driver.id}|
+   |description           |Get Driver with associated Vehicle     |
+   |expected:header#status|200                                    |
+   |expected#vehicleId    |${store:response-vehicle.id}           |
+
+* Rest call
+
+   |action                |value                                 |
+   |----------------------|--------------------------------------|
+   |method:get            |/api/driver                           |
+   |query#searchString    |${store:response-vehicle.plate}       |
+   |description           |Search assigned Vehicle (all vehicles)|
+   |expected:header#status|200                                   |
+   |expected#totalElements|1                                     |
+
+* Rest call
+
+   |action                |value                                      |
+   |----------------------|-------------------------------------------|
+   |method:get            |/api/driver/carrier/${store:response-ca.id}|
+   |query#searchString    |${store:response-vehicle.plate}            |
+   |description           |Search assigned Vehicle (carrier vehicles) |
+   |expected:header#status|200                                        |
+   |expected#totalElements|1                                          |

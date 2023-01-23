@@ -4,8 +4,9 @@
 
    | action                 | value                    |
    |------------------------|--------------------------|
-   | method:post            | /api/user                |
    | description            | Add an User              |
+   |                        | <firstname>              |
+   | method:post            | /api/user                |
    | payload                | <file:request-user.json> |
    | payload#firstname      | <firstname>              |
    | expected:header#status | 200                      |
