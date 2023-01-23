@@ -110,6 +110,79 @@ describe('contains', () => {
 
 /**
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * C O N T A I N S  K E Y
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ */
+describe('containsKey', () => {
+    const sut = ExpectedOperatorImplementation.containsKey;
+
+    /**
+     *
+     */
+    it('check null', async () => {
+        const result = await sut.check(null, '');
+        expect(result.result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('check string', async () => {
+        const result = await sut.check('aba', 'b');
+        expect(result.result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('check array', async () => {
+        const result = await sut.check(['a', 'b', 'c'], 'a');
+        expect(result.result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('check array', async () => {
+        const result = await sut.check(['a', 'b', 'c'], '0');
+        expect(result.result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('check object value', async () => {
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, '1');
+        expect(result.result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('check object', async () => {
+        const result = await sut.check({ a: 1, b: 1, c: 1 }, 'c');
+        expect(result.result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('check objects in array', async () => {
+        const result = await sut.check([{ a: 1, b: 1, c: 1 }, { c: 2 }], 'c');
+        expect(result.result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('check objects in array, but not all entries contains the key', async () => {
+        const result = await sut.check([{ a: 1, b: 1, c: 1 }, { d: 2 }], 'c');
+        expect(result.result).toBeFalsy();
+    });
+});
+
+/**
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * E M P T Y
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */

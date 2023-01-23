@@ -138,6 +138,49 @@ export class ExpectedOperatorImplementation {
     /**
      *
      */
+    static get containsKey(): ExpectedOperator {
+        return {
+            name: 'containsKey',
+            canCaseInsesitive: true,
+
+            check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
+                const negativeResult = {
+                    result: false
+                };
+                const positiveResult = {
+                    result: true
+                };
+
+                if (value == null) {
+                    return negativeResult;
+                } else if (Array.isArray(value)) {
+                    for (const v of value) {
+                        if (typeof v === 'object' && !Array.isArray(v)) {
+                            const result = Object.keys(v as object).includes(expectedValue);
+                            if (!result) {
+                                return negativeResult;
+                            }
+                        } else if (v === expectedValue) {
+                            return positiveResult;
+                        } else {
+                            return negativeResult;
+                        }
+                    }
+                    return positiveResult;
+                } else if (typeof value === 'object') {
+                    return {
+                        result: Object.keys(value).includes(expectedValue)
+                    };
+                } else {
+                    return negativeResult;
+                }
+            }
+        };
+    }
+
+    /**
+     *
+     */
     private static getCount(value: NativeType, allowNumber = true): { key?: string; length: number } {
         if (value == null) {
             return {
