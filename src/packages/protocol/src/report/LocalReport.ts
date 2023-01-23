@@ -30,7 +30,7 @@ export class LocalReport {
      *
      */
     public static getNumber(location: string, name: string): string {
-        const numberRegexp = /^([\d]+[\d.]*)/;
+        const numberRegexp = /^(\d+(\d+.)*)/;
         const nameMatch = name?.match(numberRegexp);
         const nameNumber = !nameMatch ? '' : nameMatch[1].replace(/[.]$/, '');
 
