@@ -54,7 +54,7 @@ export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeCo
                 if (retries === 0) {
                     throw error;
                 }
-                await new Promise<void>((resolve) => setTimeout(() => resolve(), context.config.retryPause));
+                await new Promise<void>((resolve) => setTimeout(() => resolve(), context.config.retryPause * 1000));
             }
         }
 
