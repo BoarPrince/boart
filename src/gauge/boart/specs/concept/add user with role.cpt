@@ -1,0 +1,13 @@
+# add user with role <role>
+
+* Rest call
+
+   |action                |value                   |
+   |----------------------|------------------------|
+   |method:post           |/api/user               |
+   |description           |Add an User with role:  |
+   |                      |<role>              |
+   |payload               |<file:request-user.json>|
+   |payload#roles[0]      |<role>                  |
+   |expected:header#status|200                     |
+   |store                 |response-user           |

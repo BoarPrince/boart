@@ -718,3 +718,72 @@ tags: md-3.13
    |description           |Read user of the carrier again and check that now user should be deleted|
    |expected:header#status|200                                                                     |
    |expected:count#content|0                                                                       |
+
+
+## 1.14. Carrier Admin can only read his assigned Carriers
+
+tags: md-3.14, carrier-admin, env:development, env:staging
+
+* Test description
+
+   |action     |value                                                 |
+   |-----------|------------------------------------------------------|
+   |description|A CarrierAdmin can only read his own assigned Carriers|
+   |priority   |high                                                  |
+
+* request admin bearer
+
+* add company, carrier and user
+
+* request user bearer, username: "${store:response-user.email}", password: "${env:default_password}"
+
+* Rest call
+
+   |action                |value                                                                  |
+   |----------------------|-----------------------------------------------------------------------|
+   |method:get            |/api/carrier                                                           |
+   |description           |Read associated Carrier                                                |
+   |                      |It must exactly one carrier and this must be the previously created one|
+   |expected:header#status|200                                                                    |
+   |expected:count#content|1                                                                      |
+   |expected#content[0].id|${store:response-ca.id}                                                |
+
+## 1.15. Carrier Admin can only search his associated carriers
+
+tags: md-3.15, carrier-admin, env:development, env:staging
+
+* Test description
+
+   |action     |value                                                   |
+   |-----------|--------------------------------------------------------|
+   |description|A CarrierAdmin can only search his own assigned Carriers|
+   |priority   |high                                                    |
+
+* request admin bearer
+
+* add company, carrier and user
+
+* request user bearer, username: "${store:response-user.email}", password: "${env:default_password}"
+
+* Rest call
+
+   |action                |value                                                                   |
+   |----------------------|------------------------------------------------------------------------|
+   |method:get            |/api/carrier                                                            |
+   |query#searchString    |${store:response-co.jitPayId}                                           |
+   |description           |Search associated Carrier                                               |
+   |                      |It must exactly one carrier and this must be the previously created one.|
+   |                      |Searching with the unique JitpayId: ${store:response-co.jitPayId}       |
+   |expected:header#status|200                                                                     |
+   |expected:count#content|1                                                                       |
+   |expected#content[0].id|${store:response-ca.id}                                                 |
+
+* Rest call
+
+   |action                |value                                                   |
+   |----------------------|--------------------------------------------------------|
+   |method:get            |/api/carrier                                            |
+   |query#searchString    |UNKNOWN-${store:response-co.jitPayId}-UNKNOWN           |
+   |description           |Search Response must be empty if no carrier can be found|
+   |expected:header#status|200                                                     |
+   |expected:count#content|0                                                       |

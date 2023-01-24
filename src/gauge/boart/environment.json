@@ -48,7 +48,7 @@
       "id": "${generate:uuid}",
       "firstname": "${generate:fake:name:firstName}",
       "lastname": "${generate:fake:name:lastName}",
-      "email": "jitpaytest+${generate:date.iso}:${generate:random:4}@gmail.com"
+      "email": "jitpaytest+${generate:date.iso}:${generate:random:8}@gmail.com"
     },
     "company": {
       "id": "${generate:uuid}",
@@ -66,6 +66,11 @@
       "http://localhost:8090"
     ],
     "/api": [
+      "https://master-data.dev.jitpay.eu",
+      "https://master-data.stage.jitpay.eu",
+      "http://localhost:8090"
+    ],
+    "/actuator": [
       "https://master-data.dev.jitpay.eu",
       "https://master-data.stage.jitpay.eu",
       "http://localhost:8090"

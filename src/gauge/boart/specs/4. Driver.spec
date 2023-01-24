@@ -183,9 +183,55 @@ tags: md-4.3
    |expected:header#status|200                                                  |
    |expected:count#content|2                                                    |
 
-## 1.4. E-Mail must be defined when creating a driver (error when not)
+## 1.4. Driver Id must be defined in Keycloak
 
 tags: md-4.4
+
+* Test description
+
+   |action     |value                                                                 |
+   |-----------|----------------------------------------------------------------------|
+   |description|Driver Id must be defined in Keycloak after creating a new User/Driver|
+   |priority   |high                                                                  |
+
+* add company and carrier
+
+* queues bind "identity, identity-claim"
+
+* Rest call
+
+   |action                |value                     |
+   |----------------------|--------------------------|
+   |method:post           |/api/user                 |
+   |description           |Add a User/Driver         |
+   |payload               |<file:request-user.json>  |
+   |payload#driver        |<file:request-driver.json>|
+   |expected:header#status|200                       |
+   |store                 |response-user             |
+
+* queues check "identity, identity-claim"
+
+* get user claims, username: "${store:response-user.email}", password: "${env:default_password}"
+
+* Data manage
+
+   |action               |value                                                           |
+   |---------------------|----------------------------------------------------------------|
+   |in                   |${store:response_claims}                                        |
+   |run:env              |development, staging                                            |
+   |description          |Claims must contain the correct Id's                            |
+   |                     |CompanyId, SubsidiaryId, UserId and Driverid                    |
+   |expected#driverId    |${store:response-user.driver.id}                                |
+   |expected#companyName |${store:response-co.companyName}                                |
+   |expected#companyId   |${store:response-co.id}                                         |
+   |expected#subsidiaryId|${store:response-ca.id}                                         |
+   |expected#userId      |${store:response-user.id}                                       |
+   |--expected#name      |${store:response-user.firstname} ${store:response-user.lastname}|
+
+
+## 1.5. E-Mail must be defined when creating a driver (error when not)
+
+tags: md-4.5
 
 * Test description
 
@@ -211,9 +257,9 @@ tags: md-4.4
    |--expected#description|{firstname=must not be null, email=must not be null, lastname=must not be null},|
 
 
-## 1.5. E-Mail must be defined when creating a driver
+## 1.7. E-Mail must be defined when creating a driver
 
-tags: md-4.5
+tags: md-4.7
 
 * Test description
 
@@ -256,9 +302,9 @@ tags: md-4.6
    |payload#driver        |<file:request-driver.json>                         |
    |expected:header#status|200                                                |
 
-## 1.7. E-Mail of driver must be empty when creating the driver in cascaded user event (error when defined)
+## 1.8. E-Mail of driver must be empty when creating the driver in cascaded user event (error when defined)
 
-tags: md-4.7
+tags: md-4.8
 
 * Test description
 
@@ -283,9 +329,9 @@ tags: md-4.7
    |--expected:contains#description|driver.email=must be null                      |
    |--expected:contains#description|driver.lastname=must be null                   |
 
-## 1.8. E-Mail of driver must be empty when creating the driver in cascaded carrier event
+## 1.9. E-Mail of driver must be empty when creating the driver in cascaded carrier event
 
-tags: md-4.8
+tags: md-4.9
 
 * Test description
 
@@ -312,9 +358,9 @@ tags: md-4.8
    |payload#users[0].driver.carrierId|${context:payload.id}                                                  |
    |expected:header#status           |200                                                                    |
 
-## 1.9. E-Mail of driver must be empty when creating the driver in cascaded carrier event (error when defined)
+## 1.10. E-Mail of driver must be empty when creating the driver in cascaded carrier event (error when defined)
 
-tags: md-4.9
+tags: md-4.10
 
 * Test description
 
@@ -346,9 +392,9 @@ tags: md-4.9
    |--expected:contains#description  |driver.email=must be null                      |
    |--expected:contains#description  |driver.lastname=must be null                   |
 
-## 1.10. Add Driver cascaded without carrierId
+## 1.11. Add Driver cascaded without carrierId
 
-tags: md-4.10, MD-220
+tags: md-4.11, MD-220
 
 * Test description
 
@@ -376,9 +422,9 @@ tags: md-4.10, MD-220
    |payload#users[0].driver.carrierId|undefined                                              |
    |expected:header#status           |200                                                    |
 
-## 1.11. Cascaded Driver event must contain E-Mail
+## 1.12. Cascaded Driver event must contain E-Mail
 
-tags: md-4.11
+tags: md-4.12
 
 * Test description
 
@@ -431,9 +477,9 @@ tags: md-4.11
    |expected#driver.firstname          |${store:event-user.firstname}                  |
    |expected#driver.email              |${store:event-user.email}                      |
 
-## 1.12. Search assigned Vehicle
+## 1.13. Search assigned Vehicle
 
-tags: md-4.12
+tags: md-4.13
 
 * Test description
 
@@ -484,3 +530,4 @@ tags: md-4.12
    |description           |Search assigned Vehicle (carrier vehicles) |
    |expected:header#status|200                                        |
    |expected#totalElements|1                                          |
+

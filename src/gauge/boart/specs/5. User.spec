@@ -541,5 +541,265 @@ tags: cascading-deletion, md-5.12
    |expected:header#status|200                                                   |
    |expected:count#content|3                                                     |
 
+## 1.13. Carrier Admin can add Users
+
+tags: md-5.13, carrier-admin, env:development, env:staging
+
+* Test description
+
+   |action     |value                                                   |
+   |-----------|--------------------------------------------------------|
+   |description|Add users to a carrier as CarrierAdmin and search for it|
+   |priority   |high                                                    |
+
+* request admin bearer
+
+* add company, carrier and user
+
+* request user bearer, username: "${store:response-user.email}", password: "${env:default_password}"
+
+* add user "first 1"
+* Save value: "${store:response-user.email}" to store: "email-of-first-1"
+
+* add user "first 2"
+
+* add user "first 3"
+
+* Rest call
+
+   |action                |value                                    |
+   |----------------------|-----------------------------------------|
+   |method:get            |/api/user/carrier/${store:response-ca.id}|
+   |description           |Carrier must be able to read all users   |
+   |expected:header#status|200                                      |
+   |expected:count#content|4                                        |
+
+* Rest call
+
+   |action                   |value                                                |
+   |-------------------------|-----------------------------------------------------|
+   |method:get               |/api/user/carrier/${store:response-ca.id}            |
+   |query#searchString       |first 1                                              |
+   |query#page               |0                                                    |
+   |query#size               |0                                                    |
+   |query#sort               |firstname,asc                                        |
+   |description              |Carrier must be able to search for the assigned users|
+   |expected:header#status   |200                                                  |
+   |expected:count#content   |1                                                    |
+   |expected#content[0].email|${store:email-of-first-1}                            |
+
+## 1.14. Carrier Admin cannot add an User with Role "JitpayAdmin"
+
+tags: md-5.14, env:development, env:staging
+
+* Test description
+
+   |action     |value                              |
+   |-----------|-----------------------------------|
+   |description|Backend must prevent adding an user|
+   |           |with role "JitpayAdmin"            |
+   |priority   |high                               |
+
+* request admin bearer
+
+* add company and carrier
+
+* add user with role "CarrierAdmin"
+
+* request user bearer, username: "${store:response-user.email}", password: "${env:default_password}"
+
+* Rest call
+
+   |action                |value                                          |
+   |----------------------|-----------------------------------------------|
+   |method:post           |/api/user                                      |
+   |run:env               |development, staging                           |
+   |description           |Add a user with role JitpayAdmin is not allowed|
+   |payload               |<file:request-user.json>                       |
+   |payload#roles[0]      |JitpayAdmin                                    |
+   |expected:header#status|403                                            |
+
+## 1.15. Carrier Admin can add an User with Role "CarrierAdmin"
+
+tags: md-5.15, env:development, env:staging
+
+* Test description
+
+   |action     |value                              |
+   |-----------|-----------------------------------|
+   |description|Backend must prevent adding an user|
+   |           |with role "CarrierAdmin"           |
+   |priority   |high                               |
+
+* request admin bearer
+
+* add company and carrier
+
+* add user with role "CarrierAdmin"
+
+* request user bearer, username: "${store:response-user.email}", password: "${env:default_password}"
+
+* Rest call
+
+   |action                |value                                        |
+   |----------------------|---------------------------------------------|
+   |method:post           |/api/user                                    |
+   |run:env               |development, staging                         |
+   |description           |Add an User with role CarrierAdmin is allowed|
+   |payload               |<file:request-user.json>                     |
+   |payload#roles[0]      |CarrierAdmin                                 |
+   |expected:header#status|200                                          |
+
+* Rest call
+
+   |action                |value                                                         |
+   |----------------------|--------------------------------------------------------------|
+   |method:post           |/api/user                                                     |
+   |run:env               |development, staging                                          |
+   |description           |Add an User with role CarrierManager is allowd as CarrierAdmin|
+   |payload               |<file:request-user.json>                                      |
+   |payload#roles[0]      |CarrierManager                                                |
+   |expected:header#status|200                                                           |
+
+* Rest call
+
+   |action                |value                                                 |
+   |----------------------|------------------------------------------------------|
+   |method:post           |/api/user                                             |
+   |run:env               |development, staging                                  |
+   |description           |Add an User with role Driver is allowd as CarrierAdmin|
+   |payload               |<file:request-user.json>                              |
+   |payload#roles[0]      |Driver                                                |
+   |expected:header#status|200                                                   |
+
+
+## 1.16. Carrier Manager can onlay add an User with Role "Driver"
+
+tags: md-5.16, env:development, env:staging
+
+* Test description
+
+   |action     |value                             |
+   |-----------|----------------------------------|
+   |description|Backend must check adding an users|
+   |           |for role "CarrierManager"         |
+   |priority   |high                              |
+
+* request admin bearer
+
+* add company and carrier
+
+* add user with role "CarrierManager"
+
+* request user bearer, username: "${store:response-user.email}", password: "${env:default_password}"
+
+* Rest call
+
+   |action                |value                                          |
+   |----------------------|-----------------------------------------------|
+   |method:post           |/api/user                                      |
+   |run:env               |development, staging                           |
+   |description           |Add an User with role JItpayAdmin is not allowd|
+   |payload               |<file:request-user.json>                       |
+   |payload#roles[0]      |JitpayAdmin                                    |
+   |expected:header#status|403                                            |
+
+* Rest call
+
+   |action                |value                                           |
+   |----------------------|------------------------------------------------|
+   |method:post           |/api/user                                       |
+   |run:env               |development, staging                            |
+   |description           |Add an User with role CarrierAdmin is not allowd|
+   |payload               |<file:request-user.json>                        |
+   |payload#roles[0]      |CarrierAdmin                                    |
+   |expected:header#status|403                                             |
+
+* Rest call
+
+   |action                |value                                                               |
+   |----------------------|--------------------------------------------------------------------|
+   |method:post           |/api/user                                                           |
+   |run:env               |development, staging                                                |
+   |description           |Add an User with role CarrierManager is not allowd as CarrierManager|
+   |payload               |<file:request-user.json>                                            |
+   |payload#roles[0]      |CarrierManager                                                      |
+   |expected:header#status|403                                                                 |
+
+* Rest call
+
+   |action                |value                                                   |
+   |----------------------|--------------------------------------------------------|
+   |method:post           |/api/user                                               |
+   |run:env               |development, staging                                    |
+   |description           |Add an User with role Driver is allowd as CarrierManager|
+   |payload               |<file:request-user.json>                                |
+   |payload#roles[0]      |Driver                                                  |
+   |expected:header#status|200                                                     |
+
+## 1.17. Driver cannot create any other user
+
+tags: md-5.17, env:development, env:staging
+
+* Test description
+
+   |action     |value                                               |
+   |-----------|----------------------------------------------------|
+   |description|Driver itself cannot create any other user or driver|
+   |priority   |high                                                |
+
+* request admin bearer
+
+* add company and carrier
+
+* add user with role "Driver"
+
+* request user bearer, username: "jitpaytest+2023-01-24:6567@gmail.com", password: "${env:default_password}"
+ request user bearer, username: "${store:response-user.email}", password: "${env:default_password}"
+
+* Rest call
+
+   |action                |value                                          |
+   |----------------------|-----------------------------------------------|
+   |method:post           |/api/user                                      |
+   |run:env               |development, staging                           |
+   |description           |Add an User with role JItpayAdmin is not allowd|
+   |payload               |<file:request-user.json>                       |
+   |payload#roles[0]      |JitpayAdmin                                    |
+   |expected:header#status|403                                            |
+
+* Rest call
+
+   |action                |value                                           |
+   |----------------------|------------------------------------------------|
+   |method:post           |/api/user                                       |
+   |run:env               |development, staging                            |
+   |description           |Add an User with role CarrierAdmin is not allowd|
+   |payload               |<file:request-user.json>                        |
+   |payload#roles[0]      |CarrierAdmin                                    |
+   |expected:header#status|403                                             |
+
+* Rest call
+
+   |action                |value                                                               |
+   |----------------------|--------------------------------------------------------------------|
+   |method:post           |/api/user                                                           |
+   |run:env               |development, staging                                                |
+   |description           |Add an User with role CarrierManager is not allowd as CarrierManager|
+   |payload               |<file:request-user.json>                                            |
+   |payload#roles[0]      |CarrierManager                                                      |
+   |expected:header#status|403                                                                 |
+
+* Rest call
+
+   |action                |value                                                   |
+   |----------------------|--------------------------------------------------------|
+   |method:post           |/api/user                                               |
+   |run:env               |development, staging                                    |
+   |description           |Add an User with role Driver is allowd as CarrierManager|
+   |payload               |<file:request-user.json>                                |
+   |payload#roles[0]      |Driver                                                  |
+   |expected:header#status|200                                                     |
+
 
    Read XXXXX

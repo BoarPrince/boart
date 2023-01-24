@@ -1,0 +1,16 @@
+# request user bearer, username: <username>, password: <password>
+
+* Rest authorize
+
+    | action      | value                                                                                                                                    |
+    |-------------|------------------------------------------------------------------------------------------------------------------------------------------|
+    | wait:before | 2                                                                                                                                        |
+    | description | Reads the bearer token for user:                                                                                                                                   |
+    |             | <username>                                                                                                                               |
+    | url         | /token                                                                                                                                   |
+    | grantType   | password                                                                                                                                 |
+    | scope       | openid profile email jitpay.role roles kgs_api app_api portal_api |
+    | clientId    | jitpay_portal_angular_application_client                                                                                                                          |
+    | username    | <username>                                                                                                                  |
+    | password    | <password>                                                                                                              |
+    | retry:count | 2                                                                                                                                        |

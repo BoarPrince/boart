@@ -92,7 +92,7 @@
   |-------------------------|---------------------------------------------------|
   | run:only:identity-claim | <queue-list>                                      |
   | exchange                | Identity.claimupdate.Exchange.MasterData          |
-  | --routing                 | Identity.UserSync                                 |
+  | --routing               | Identity.UserSync                                 |
   | queue                   | test.md.identity-claim                            |
   | description             | Bind identity/keycloak queue (Masterdata, Claims) |
   | group                   | Bind Queues                                       |
