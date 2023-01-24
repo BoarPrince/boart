@@ -11,7 +11,7 @@ const {
     DataTableHandler,
     SQLQueryTableHandler
 } = require('@boart/basic');
-const { Store, Runtime, RuntimeStatus } = require('@boart/core');
+const { Store, ValueReplacerHandler, Runtime, RuntimeStatus } = require('@boart/core');
 
 /**
  *
@@ -200,6 +200,15 @@ step('Data manage <table>', async (table) => {
  */
 step('Data manage, continue <table>', { continueOnFailure: true }, async (table) => {
     await dataTableHandler.handler.process(table);
+});
+
+/**
+ *
+ */
+step('Save value: <value> to store: <store>', (value, store) => {
+    const resolved_value = ValueReplacerHandler.replace(value);
+    const resolved_store = ValueReplacerHandler.replace(store);
+    gauge.dataStore.scenarioStore.put(resolved_store, resolved_value);
 });
 
 /**
