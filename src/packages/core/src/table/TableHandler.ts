@@ -1,5 +1,5 @@
-import { TypedGroupValidator } from '../Validators/GroupValidator';
-import { ValidationHandler } from '../Validators/ValidationHandler';
+import { TypedGroupValidator } from '../validators/GroupValidator';
+import { ValidationHandler } from '../validators/ValidationHandler';
 import { Description } from '../description/Description';
 import { Descriptionable } from '../description/Descriptionable';
 import { ExecutionContext } from '../execution/ExecutionContext';

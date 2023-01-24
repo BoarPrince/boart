@@ -1,4 +1,4 @@
-import { RowValidator } from '../Validators/RowValidator';
+import { RowValidator } from '../validators/RowValidator';
 import { Descriptionable } from '../description/Descriptionable';
 import { BaseRowType } from '../table/BaseRowType';
 import { ParaType } from '../types/ParaType';

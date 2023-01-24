@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { TypedGroupValidator } from '../Validators/GroupValidator';
+import { TypedGroupValidator } from '../validators/GroupValidator';
 import { ArraySubject } from '../common/ArraySubject';
 import { ExecutionContext } from '../execution/ExecutionContext';
 

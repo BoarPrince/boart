@@ -1,4 +1,4 @@
-import { RowValidator } from '../Validators/RowValidator';
+import { RowValidator } from '../validators/RowValidator';
 import { Description } from '../description/Description';
 import { DescriptionHandler } from '../description/DescriptionHandler';
 import { Descriptionable } from '../description/Descriptionable';

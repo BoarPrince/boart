@@ -1,6 +1,6 @@
-import { GroupValidator } from './Validators/GroupValidator';
-import { RowValidator } from './Validators/RowValidator';
-import { ValidationHandler } from './Validators/ValidationHandler';
+import { GroupValidator } from './validators/GroupValidator';
+import { RowValidator } from './validators/RowValidator';
+import { ValidationHandler } from './validators/ValidationHandler';
 import { ArraySubject } from './common/ArraySubject';
 import { EnvLoader } from './common/EnvLoader';
 import { JsonHelper } from './common/JsonHelper';
