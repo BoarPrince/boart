@@ -14,15 +14,15 @@
 
 * RabbitMQ consume, continue
 
-   | action          | value                                |
-   |-----------------|--------------------------------------|
-   | run:only:vehicle | <queue-list>                        |
-   | queue           | test.md.vehicle                      |
-   | group           | Check Queues                         |
-   | description     | Check Masterdata (Vehicle) -> Extern |
-   | count:max       | <max>                                |
-   | count:min       | <min>                                |
-   | store           | event-vehicle                        |
+   | action           | value                                |
+   |------------------|--------------------------------------|
+   | run:only:vehicle | <queue-list>                         |
+   | queue            | test.md.vehicle                      |
+   | group            | Check Queues                         |
+   | description      | Check Masterdata (Vehicle) -> Extern |
+   | count:max        | <max>                                |
+   | count:min        | <min>                                |
+   | store            | event-vehicle                        |
 
 * RabbitMQ consume, continue
 
@@ -44,7 +44,7 @@
    | queue            | test.md.company                        |
    | group            | Check Queues                           |
    | description      | Check Masterdata (Company) -> External |
-   | count:max        | ${context:max:-null}                    |
+   | count:max        | ${context:max:-null}                   |
    | count:min        | ${context:min:-1}                      |
    | store            | event-company                          |
 
@@ -108,6 +108,7 @@
    | count:max         | <max>                             |
    | count:min         | <min>                             |
    | store             | event-identity                    |
+   | store:header      | event-identity-header             |
 
 * RabbitMQ consume, continue
 
@@ -120,6 +121,7 @@
    | count:max               | <max>                                      |
    | count:min               | <min>                                      |
    | store                   | event-identity-claim                       |
+   | store:header            | event-identity-claim-header                |
 
 * RabbitMQ consume, continue
 

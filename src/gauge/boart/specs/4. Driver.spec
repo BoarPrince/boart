@@ -211,6 +211,22 @@ tags: md-4.4
 
 * queues check "identity, identity-claim"
 
+* Data manage
+
+   |action           |value                                               |
+   |-----------------|----------------------------------------------------|
+   |in               |${store:event-identity}                             |
+   |description      |DriverId must be defined when Identity Event is send|
+   |expected#DriverId|${store:response-user.driver.id}                    |
+
+* Data manage
+
+   |action                       |value                                               |
+   |-----------------------------|----------------------------------------------------|
+   |in                           |${store:event-identity-header}                      |
+   |description                  |Creation Event must fired before claims update event|
+   |expected:smaller#receivedTime|${store:event-identity-claim-header.receivedTime}   |
+
 * get user claims, username: "${store:response-user.email}", password: "${env:default_password}"
 
 * Data manage
