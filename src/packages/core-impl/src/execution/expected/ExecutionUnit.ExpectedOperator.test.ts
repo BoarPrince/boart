@@ -816,6 +816,14 @@ describe('greater', () => {
         const result = await sut.check(3, '2');
         expect(result.result).toBeTruthy();
     });
+
+    /**
+     *
+     */
+    it('check date greater', async () => {
+        const result = await sut.check('2019-01-25T09:03:31.205Z', '2019-01-25T09:03:31.204Z');
+        expect(result.result).toBeTruthy();
+    });
 });
 
 /**
@@ -959,6 +967,14 @@ describe('smaller', () => {
      */
     it('check number smaller', async () => {
         const result = await sut.check(3, '4');
+        expect(result.result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('check date smaller', async () => {
+        const result = await sut.check('2019-01-25T09:03:31.203Z', '2019-01-25T09:03:31.204Z');
         expect(result.result).toBeTruthy();
     });
 });

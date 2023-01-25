@@ -27,15 +27,31 @@ export class ExpectedOperatorImplementation {
     /**
      *
      */
+    private static parseInt(value: NativeType): number {
+        const valueAsString: string = value?.toString();
+
+        if (/^[\-.,0-9]+$/.test(valueAsString) && !isNaN(parseInt(valueAsString))) {
+            return parseInt(valueAsString);
+        }
+
+        if (!isNaN(Date.parse(valueAsString))) {
+            return Date.parse(valueAsString);
+        }
+
+        return NaN;
+    }
+
+    /**
+     *
+     */
     static get equals(): ExpectedOperator {
         return {
             name: 'equals',
             description: {
-                id: '8f3f561f-c270-43bc-bacc-c3f11d4e81ce',
+                id: 'expected:equals',
                 title: null,
-                description: `Checks a value for equality
-                              * can be defined explicity
-                              * it's default operator, in case of no defined operator`,
+                description: `* Checks a value for equality
+                              * It's default operator, in case of no defined operator`,
                 examples: [
                     {
                         title: 'Checks the response status of an rest call',
@@ -46,7 +62,7 @@ export class ExpectedOperatorImplementation {
                           |-------------------------------|--------------------|
                           | method:post                   |/rest-url           |
                           | payload                       |<file:payload.json> |
-                          | expected:header:equals#status |200                 |`
+                          | *expected:header:equals#status* |200                 |`
                     },
                     {
                         title: 'Usage as default operator',
@@ -57,7 +73,7 @@ export class ExpectedOperatorImplementation {
                           |------------------------|--------------------|
                           | method:post            |/rest-url           |
                           | payload                |<file:payload.json> |
-                          | expected:header#status |200                 |`
+                          | *expected:header#status* |200                 |`
                     }
                 ]
             },
@@ -202,13 +218,17 @@ export class ExpectedOperatorImplementation {
                 key: `keys: '${objectKeys.join(',')}'`,
                 length: objectKeys.length
             };
-        } else if (typeof value === 'string' && isNaN(parseInt(value))) {
+        } else if (typeof value === 'string' && isNaN(ExpectedOperatorImplementation.parseInt(value))) {
             return {
                 length: value.length
             };
-        } else if (typeof value === 'string' && !isNaN(parseInt(value))) {
+        } else if (typeof value === 'string' && !isNaN(ExpectedOperatorImplementation.parseInt(value))) {
             return {
-                length: parseInt(value)
+                length: ExpectedOperatorImplementation.parseInt(value)
+            };
+        } else if (typeof value === 'string' && !isNaN(Date.parse(value))) {
+            return {
+                length: Date.parse(value)
             };
         } else {
             return {
@@ -226,7 +246,7 @@ export class ExpectedOperatorImplementation {
             canCaseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value);
-                const expected = parseInt(expectedValue);
+                const expected = ExpectedOperatorImplementation.parseInt(expectedValue);
                 return {
                     result: count.length === Number.MIN_VALUE ? false : count.length < expected
                 };
@@ -243,7 +263,7 @@ export class ExpectedOperatorImplementation {
             canCaseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value);
-                const expected = parseInt(expectedValue);
+                const expected = ExpectedOperatorImplementation.parseInt(expectedValue);
                 return {
                     result: count.length === Number.MIN_VALUE ? false : count.length > expected
                 };
@@ -261,7 +281,7 @@ export class ExpectedOperatorImplementation {
             canCaseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value, false);
-                const expected = parseInt(expectedValue);
+                const expected = ExpectedOperatorImplementation.parseInt(expectedValue);
                 return {
                     result: count.length === Number.MIN_VALUE ? false : count.length === expected,
                     errorMessage: `, value: ${expectedValue}, actual: ${count.length}`
@@ -279,7 +299,7 @@ export class ExpectedOperatorImplementation {
             canCaseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value, false);
-                const expected = parseInt(expectedValue);
+                const expected = ExpectedOperatorImplementation.parseInt(expectedValue);
                 return {
                     result: count.length === Number.MIN_VALUE ? false : count.length >= expected
                 };
@@ -296,7 +316,7 @@ export class ExpectedOperatorImplementation {
             canCaseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value, false);
-                const expected = parseInt(expectedValue);
+                const expected = ExpectedOperatorImplementation.parseInt(expectedValue);
                 return {
                     result: count.length === Number.MIN_VALUE ? false : count.length <= expected
                 };
@@ -420,6 +440,7 @@ export class ExpectedOperatorImplementation {
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.regexp);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.startsWith);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.contains);
+        ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.containsKey);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.smaller);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.greater);
         ExpectedOperatorInitializer.instance.addOperator(ExpectedOperatorImplementation.count);
