@@ -1,6 +1,6 @@
-import { RowValidator } from '../validators/RowValidator';
 import { NativeType } from '../data/NativeType';
 import { Descriptionable } from '../description/Descriptionable';
+import { RowValidator } from '../validators/RowValidator';
 
 /**
  *

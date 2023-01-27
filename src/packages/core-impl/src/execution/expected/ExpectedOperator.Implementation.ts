@@ -30,7 +30,8 @@ export class ExpectedOperatorImplementation {
     private static parseInt(value: NativeType): number {
         const valueAsString: string = value?.toString();
 
-        if (/^[\-.,0-9]+$/.test(valueAsString) && !isNaN(parseInt(valueAsString))) {
+        const numberRegexp = /^\s*-?\s*[.,0-9]+$/;
+        if (numberRegexp.test(valueAsString) && !isNaN(parseInt(valueAsString))) {
             return parseInt(valueAsString);
         }
 

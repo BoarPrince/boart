@@ -144,7 +144,9 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
             validator.validate(row.data, null);
         });
 
-        const expectedResult = await operator.check(data.getValue(), row.value.toString());
+        const value = data.getValue();
+        const expectedValue = row.value.toString();
+        const expectedResult = await operator.check(value, expectedValue);
 
         if (expectedResult.result === false) {
             const description = this.description.title + (!row.selector ? '' : '#' + row.selector);
