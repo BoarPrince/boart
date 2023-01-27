@@ -31,7 +31,7 @@
     "companyId": "${generate:t:tpl:company.id}"
   },
   "userDetail": {
-    "id": "${store:ob-userId:=${generate:uuid}}",
+    "id": "${store:ob-userId:=${generate:t:tpl:user.id}}",
     "companyId": "${generate:t:tpl:company.id}",
     "email": "${store:ob-email}",
     "languageCode": "en"

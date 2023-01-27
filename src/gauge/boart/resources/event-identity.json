@@ -11,7 +11,7 @@
   "LastName": "${generate:t:fake:name:lastName}",
   "EntityType": null,
   "Roles": "",
-  "UserId": "${store:ob-userId:=${generate:uuid}}",
+  "UserId": "${store:ob-userId:=${generate:t:tpl:user.id}}",
   "CustomerId": null,
   "activationCode": "${generate:t:tpl:company.id}",
   "SubsidiaryId": "${store:ob-carrierId:=${generate:uuid}}",

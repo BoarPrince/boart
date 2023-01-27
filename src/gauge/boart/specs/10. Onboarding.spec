@@ -4,7 +4,7 @@ tags: env-all, onboarding, ob-10
 
 ## 1.1. Send Onboarding Events manually
 
-tags: ob-10.1
+tags: ob-10.1, manual
 
 * Test description
 
@@ -13,7 +13,7 @@ tags: ob-10.1
    |description|Send Onboarding Event to Masterdata|
    |priority   |high                               |
 
-* queues bind "company, user"
+* queues bind "company, user, md-error"
 
 * RabbitMQ publish
 
@@ -21,10 +21,10 @@ tags: ob-10.1
    |--------------|--------------------------------------|
    |description   |Send onboarding event manually        |
    |exchange      |com.jitpay.company.onboarding         |
+   |wait:after:sec|4                                     |
    |routing       |JitpayServicesSync.RoutingKey         |
    |routing       |company-onboarding-data-sync-to-portal|
    |payload       |<file:event-onboarding.json>          |
-   |wait:after:sec|4                                     |
 
 * RabbitMQ publish
 
@@ -36,7 +36,7 @@ tags: ob-10.1
    |routing       |OnBoardingFleetEvent                 |
    |payload       |<file:event-portal-onboarding.json>  |
 
-* queues check "company, user"
+* queues check "company, user, md-error"
 
 * Data manage
 
@@ -55,22 +55,83 @@ tags: ob-10.1
    |action                                   |value                                             |
    |-----------------------------------------|--------------------------------------------------|
    |method:get                               |/api/company/${generate:t:tpl:company.id}         |
+   |query#deep                               |true                                              |
    |description                              |Request onboarded company                         |
    |                                         |And check that the user contains the correct roles|
    |expected:header#status                   |200                                               |
    |expected:count#carriers[0].users[0].roles|2                                                 |
    |expected#carriers[0].users[0].roles      |["CarrierAdmin","CustomerAdmin"]                  |
 
-## 1.2. Send Onboarding Events manually and check id's
+## 1.1.1 Onboarding Using Rest API (manually)
 
-tags: ob-10.2
+tags: ob-10.1.1, manual, env:development, env:local
 
 * Test description
 
-   |action     |value                                                      |
-   |-----------|-----------------------------------------------------------|
-   |description|Send Onboarding Event to Masterdata manually and check id's|
-   |priority   |high                                                       |
+   |action     |value                 |
+   |-----------|----------------------|
+   |description|Onboard using Rest API|
+   |priority   |high                  |
+
+* queues bind "company, user"
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                       |
+   |----------------------|----------------------------|
+   |method:post           |/api/onboarding             |
+   |description           |onboard a new user          |
+   |payload               |<file:event-onboarding.json>|
+   |expected:header#status|200                         |
+
+* Rest call
+
+   |action                |value                                     |
+   |----------------------|------------------------------------------|
+   |method:put            |/api/onboarding                           |
+   |description           |update onboarded company with portal event|
+   |payload               |<file:event-portal-onboarding.json>       |
+   |expected:header#status|200                                       |
+
+* queues check "company, user"
+
+* Data manage
+
+   |action                                   |value                                             |
+   |-----------------------------------------|--------------------------------------------------|
+   |in                                       |${store:event-company}                            |
+   |description                              |Check Masterdata -> External Event                |
+   |                                         |And check that the user contains the correct roles|
+   |expected:count#carriers[0].users[0].roles|2                                                 |
+   |expected#carriers[0].users[0].roles      |["CarrierAdmin","CustomerAdmin"]                  |
+
+* Rest call
+
+   |action                                   |value                                             |
+   |-----------------------------------------|--------------------------------------------------|
+   |method:get                               |/api/company/${generate:t:tpl:company.id}         |
+   |query#deep                               |true                                              |
+   |description                              |Request onboarded company                         |
+   |                                         |And check that the user contains the correct roles|
+   |expected:header#status                   |200                                               |
+   |expected:count#carriers[0].users[0].roles|2                                                 |
+   |expected#carriers[0].users[0].roles      |["CarrierAdmin","CustomerAdmin"]                  |
+
+## 1.2. Send Onboarding Events and check id's (manually)
+
+tags: ob-10.2, manual, env:staging, env:development
+
+* Test description
+
+   |action     |value                                                                       |
+   |-----------|----------------------------------------------------------------------------|
+   |description|Send Onboarding Event to Masterdata manually and check id's                 |
+   |           |* User is generated by identity event                                       |
+   |           |* Onboard Event (create) is send to exchange 'com.jitpay.company.onboarding'|
+   |           |* Portal Event (update) is send to exchange 'fleet_event_bus'               |
+   |priority   |high                                                                        |
 
 * queues bind "user, company, carrier, company-onboarding, fleet-event-bus, identity, fleet-error, md-error"
 
@@ -84,33 +145,54 @@ tags: ob-10.2
    |payload       |<file:event-identity.json>                           |
    |wait:after:sec|4                                                    |
 
-* RabbitMQ publish
+* request admin bearer
+* Rest call
 
-   |action        |value                         |
-   |--------------|------------------------------|
-   |description   |Send onboarding event manually|
-   |exchange      |com.jitpay.company.onboarding |
-   |wait:after:sec|2                             |
-   |routing       |JitpayServicesSync.RoutingKey |
-   |payload       |<file:event-onboarding.json>  |
+   |action                |value                         |
+   |----------------------|------------------------------|
+   |method:post           |/api/onboarding               |
+   |description           |Send onboarding event via rest|
+   |payload               |<file:event-onboarding.json>  |
+   |expected:header#status|200                           |
 
-* RabbitMQ publish
+comment * RabbitMQ publish
+comment
+comment    |action        |value                         |
+comment    |--------------|------------------------------|
+comment    |description   |Send onboarding event manually|
+comment    |exchange      |com.jitpay.company.onboarding |
+comment    |wait:after:sec|2                             |
+comment    |routing       |JitpayServicesSync.RoutingKey |
+comment    |payload       |<file:event-onboarding.json>  |
 
-   |action        |value                                |
-   |--------------|-------------------------------------|
-   |description   |Send portal onboarding event manually|
-   |exchange      |fleet_event_bus                      |
-   |wait:after:sec|4                                    |
-   |routing       |OnBoardingFleetEvent                 |
-   |payload       |<file:event-portal-onboarding.json>  |
+* queues check "fleet-error, md-error"
+
+* Rest call
+
+   |action                |value                              |
+   |----------------------|-----------------------------------|
+   |method:put            |/api/onboarding                    |
+   |description           |Send portal onboarding via rest    |
+   |payload               |<file:event-portal-onboarding.json>|
+   |expected:header#status|200                                |
+
+comment * RabbitMQ publish
+comment
+comment    |action        |value                                |
+comment    |--------------|-------------------------------------|
+comment    |description   |Send portal onboarding event manually|
+comment    |exchange      |fleet_event_bus                      |
+comment    |wait:after:sec|4                                    |
+comment    |routing       |OnBoardingFleetEvent                 |
+comment    |payload       |<file:event-portal-onboarding.json>  |
 
 * queues check "user, company, carrier, company-onboarding, fleet-event-bus, identity, fleet-error, md-error"
 
 * onboarding - check matching ids, email: "${store:ob-email}", group: "check IDs", wait: "0", not: "portal"
 
-## 1.3. Id's must match after onboarding
+## 1.3. Id's must match after onboarding (register)
 
-tags: ob-10.3
+tags: ob-10.3, register, env:development, env:staging
 
 * Test description
 
@@ -130,9 +212,9 @@ comment * onboarding - check matching ids, email: "${store:response-register.ema
 
 comment * onboarding - check matching ids, email: "jitpaytest+onb39492@gmail.com", group: "check IDs", wait: "0"
 
-## 1.4. Id's must match after onboarding event when debtor already exists (tax - match)
+## 1.4. Id's must match after onboarding event when debtor already exists (tax - match, register)
 
-tags: ob-10.4
+tags: ob-10.4, register, env:development, env:staging
 
 * Test description
 
@@ -164,9 +246,9 @@ tags: ob-10.4
 
 * queues check "company-consumer, fleet-error, md-error"
 
-## 1.5. Id's must match after onboarding event when debtor already exists (tax - match)
+## 1.5. Id's must match after onboarding event when debtor already exists (tax - match, manually)
 
-tags: ob-10.5
+tags: ob-10.5, manual, env:staging, env:development
 
 * Test description
 
@@ -201,9 +283,9 @@ tags: ob-10.5
 
 * queues check "fleet-event-bus, portal-error"
 
-## 1.6. If portal is sending the event (fleet event bus) more than one time, the carrier must always be the same (manual check)
+## 1.6. If portal is sending the event (fleet event bus) more than one time, the carrier must always be the same (manually)
 
-tags: ob-10.6
+tags: ob-10.6, manual
 
 * Test description
 

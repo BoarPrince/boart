@@ -4,7 +4,7 @@ tags: env-all, master-data, md-1, masterdata
 
 ## 1.1. Health Check
 
-tags: md-1.1a
+tags: md-0.1
 
 * Test description
 
@@ -21,4 +21,18 @@ tags: md-1.1a
    |method:get            |/actuator/health |
    |description           |Call Health check|
    |expected:header#status|200              |
+
+
+## 1.2. Read Version
+
+tags: md-0-2
+
+* Rest call
+
+   |action                 |value                                         |
+   |-----------------------|----------------------------------------------|
+   |method:get             |/info/version                                 |
+   |description            |Reads the version of the running backend      |
+   |expected:status        |200                                           |
+   |expected:jsonLogic:true|{"==" : [{ "var" : "version" }, "v.0.0.61" ] }|
 
