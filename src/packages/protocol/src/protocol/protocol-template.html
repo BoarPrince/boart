@@ -511,7 +511,7 @@
                         stepDescItems.push(`<div class="step-header group collapsed" data-bs-toggle="collapse" href="#detail-${step.id}">`);
                         stepDescItems.push(statusIcon(step.status));
 
-                        stepDescItems.push(`${step.description}`);
+                        stepDescItems.push(`${step.description.replace(/^\s+/, '').replace(/\n/g, '<br>')}`);
                         stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
                         stepDescItems.push(`</div>`);
 
@@ -527,7 +527,7 @@
                         stepDescItems.push(`<div class="step-header" data-bs-toggle="collapse" href="#detail-${step.id}">`);
 
                         stepDescItems.push(statusIcon(step.status));
-                        stepDescItems.push(`${step.description}`);
+                        stepDescItems.push(`${step.description.replace(/^\s+/, '').replace(/\n/g, '<br>')}`);
                         stepDescItems.push(`<span class="duration">${formatDuration(step.duration)} s</span>`);
                         stepDescItems.push('</div>');
 
@@ -585,7 +585,7 @@
                         // Description
                         '<dl class="row">' +
                             ' <dt class="col-2">Description</dt>' +
-                            `  <dd class="col-10">${test.descriptions.replace('\n', '<br>')}</dd>` +
+                            `  <dd class="col-10">${test.descriptions.replace(/^\s+/, '').replace(/\n/g, '<br>')}</dd>` +
                             '</dl>',
                         !!test.descriptions
                     ) +
