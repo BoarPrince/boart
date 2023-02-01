@@ -673,7 +673,7 @@ tags: md-5.15, env:development, env:staging
    |expected:header#status|200                                                   |
 
 
-## 1.16. Carrier Manager can onlay add an User with Role "Driver"
+## 1.16. Carrier Manager can only add an User with Role "Driver"
 
 tags: md-5.16, env:development, env:staging
 

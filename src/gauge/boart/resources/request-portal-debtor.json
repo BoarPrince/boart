@@ -1,50 +1,50 @@
 {
-  "name": "${generate:s:fake:company:name}-${generate:s:random:4}",
-  "nameAddition": "Einzelunternehmer",
-  "vatId": null,
-  "taxNumber": "${generate:s:random:10}",
-  "commercialRegisterNumber": "HRB 12222",
-  "registryCourt": "Amtsgericht Braunschweig",
-  "homePage": "",
-  "originPlatform": "",
-  "salesManager": "",
-  "score": 123,
-  "riskQuota": 2,
-  "financialDataSource": "KYCnow",
-  "trafficLightState": "UNKNOWN",
-  "jitpayRating": 3,
   "addresses": [
     {
-      "id": "",
-      "street": "${generate:fake:address:street}",
-      "zipCode": "${generate:fake:address:zipCode}",
       "city": "${generate:fake:address:city}",
-      "countryCode": "DE",
-      "subsidiaryIdentifier": "",
-      "type": "MASTER",
       "contactPersonDto": {
-        "id": "",
-        "firstName": "${generate:t:fake:name:firstName}",
-        "lastName": "${generate:t:fake:name:lastName}",
         "email": "jitpaytest+debtor${generate:t:random:4}@gmail.com",
+        "firstName": "${generate:t:fake:name:firstName}",
+        "id": null,
+        "lastName": "${generate:t:fake:name:lastName}",
         "telephoneNumber": "+491743284130"
       },
-      "markForDeletion": false
+      "countryCode": "DE",
+      "street": "${generate:fake:address:street}",
+      "subsidiaryIdentifier": null,
+      "type": "MASTER",
+      "zipCode": "${generate:fake:address:zipCode}"
     }
   ],
+  "bankData": null,
+  "commercialRegisterNumber": "HRB 12222",
+  "companyOnboardThrough": "FACEBOOK",
+  "creditor": null,
   "debtor": {
-    "insuranceId": "",
-    "factoringFee": 1,
-    "prohibitionOfAssignment": false,
     "active": true,
-    "statusRemark": "",
     "agreedToFactoringAt": null,
+    "factoringFee": 1,
+    "insuranceId": null,
     "lawCountryCode": "DE",
-    "vibanNumber": "",
     "platforms": [
-      {
-        "id": "2700edf4-d4da-4b85-93c3-4f6714182da0"
-      }
-    ]
-  }
+      "TIMOCOM",
+      "JITpay"
+    ],
+    "prohibitionOfAssignment": false,
+    "statusRemark": null
+  },
+  "externalIds": [],
+  "financialDataSource": "KYCnow",
+  "homePage": null,
+  "jitpayRating": 3,
+  "name": "${generate:s:fake:company:name}-${generate:s:random:4}",
+  "nameAddition": "Einzelunternehmer",
+  "originPlatform": "JITPAY",
+  "registryCourt": "Amtsgericht Braunschweig",
+  "riskQuota": 2,
+  "salesManager": null,
+  "score": 123,
+  "taxNumber": "${generate:s:random:10}",
+  "trafficLightState": "GREEN",
+  "vatId": null
 }

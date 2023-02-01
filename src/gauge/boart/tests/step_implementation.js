@@ -11,7 +11,9 @@ const {
     DataTableHandler,
     SQLQueryTableHandler
 } = require('@boart/basic');
-const { Store, ValueReplacerHandler, Runtime, RuntimeStatus } = require('@boart/core');
+const { DescriptionHandler, Store, ValueReplacerHandler, Runtime, RuntimeStatus } = require('@boart/core');
+const stream = require('stream');
+const { exit } = require('process');
 
 /**
  *
@@ -106,6 +108,16 @@ afterStep((context) => {
         status: RuntimeStatus.status(context.currentStep.isFailed)
     });
 });
+
+// /**
+//  *
+//  */
+// afterStep(() => {
+//     DescriptionHandler.instance.describe();
+//     // process.stdout.destroy(); // = stream.Writable();
+//     // process.stderr.destroy(); // = stream.Writable();
+//     process.exit(0);
+// });
 
 /**
  *

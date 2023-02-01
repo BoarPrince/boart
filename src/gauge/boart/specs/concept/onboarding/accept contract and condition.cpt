@@ -1,7 +1,7 @@
 
 # onboarding - accept contract and condition
 
-* Rest call, continue
+* Rest call
 
       | action                 | value                                                                  |
       |------------------------|------------------------------------------------------------------------|
@@ -14,7 +14,7 @@
       |                        | }                                                                      |
       | expected:header#status | 200                                                                    |
 
-* Rest call, continue
+* Rest call
 
       | action                 | value                                                                  |
       |------------------------|------------------------------------------------------------------------|
@@ -27,7 +27,7 @@
       |                        | }                                                                      |
       | expected:header#status | 200                                                                    |
 
-* Rest call, continue
+* Rest call
 
       | action                 | value                                                                  |
       |------------------------|------------------------------------------------------------------------|
@@ -40,7 +40,7 @@
       |                        | }                                                                      |
       | expected:header#status | 200                                                                    |
 
-* Rest call, continue
+* Rest call
 
       | action                 | value                                                                  |
       |------------------------|------------------------------------------------------------------------|
