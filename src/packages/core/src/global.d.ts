@@ -1,9 +1,11 @@
+import { DescriptionHandler } from './description/DescriptionHandler';
 import { Context } from './store/Context';
 import { Store } from './store/Store';
 
 declare global {
     var _storeInstance: Store;
     var _contextInstance: Context;
+    var _descriptionHandlerInstance: DescriptionHandler;
 
     /**
      *

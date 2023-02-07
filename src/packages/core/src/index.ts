@@ -1,6 +1,3 @@
-import { GroupValidator } from './validators/GroupValidator';
-import { RowValidator } from './validators/RowValidator';
-import { ValidationHandler } from './validators/ValidationHandler';
 import { ArraySubject } from './common/ArraySubject';
 import { EnvLoader } from './common/EnvLoader';
 import { JsonHelper } from './common/JsonHelper';
@@ -19,6 +16,7 @@ import { NativeType } from './data/NativeType';
 import { NullContent } from './data/NullContent';
 import { ObjectContent } from './data/ObjectContent';
 import { TextContent } from './data/TextContent';
+import { DescriptionHandler } from './description/DescriptionHandler';
 import { ExecutionContext } from './execution/ExecutionContext';
 import { ExecutionEngine } from './execution/ExecutionEngine';
 import { ExecutionUnit } from './execution/ExecutionUnit';
@@ -42,6 +40,7 @@ import { MarkdownTableReader } from './table/MarkdownTableReader';
 import { RowDefinition } from './table/RowDefinition';
 import { TableHandler } from './table/TableHandler';
 import { TableHandlerBaseImpl } from './table/TableHandlerBaseImpl';
+import { TableHandlerInstances } from './table/TableHandlerInstances';
 import { key, value } from './table/TableRowDecorator';
 import { TableRowType } from './table/TableRowType';
 import { TableRows } from './table/TableRows';
@@ -49,6 +48,9 @@ import { ParaType } from './types/ParaType';
 import { ScopeType } from './types/ScopeType';
 import { ScopedType } from './types/ScopedType';
 import { SelectorType } from './types/SelectorType';
+import { GroupValidator } from './validators/GroupValidator';
+import { RowValidator } from './validators/RowValidator';
+import { ValidationHandler } from './validators/ValidationHandler';
 import { DefaultOperator } from './value/DefaultOperator';
 import { DefaultOperatorParser } from './value/DefaultOperatorParser';
 import { OperatorType } from './value/OperatorType';
@@ -71,6 +73,7 @@ export {
     DataType,
     DefaultOperator,
     DefaultOperatorParser,
+    DescriptionHandler,
     EnvLoader,
     ExecutionContext,
     ExecutionEngine,
@@ -109,6 +112,7 @@ export {
     StoreMap,
     StoreWrapper,
     TableHandler,
+    TableHandlerInstances,
     TableHandlerBaseImpl,
     TableRows,
     TableRowType,
