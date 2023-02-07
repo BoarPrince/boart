@@ -1,10 +1,11 @@
-import { GeneratorHandler, Runtime, ValueReplacerHandler } from '@boart/core';
+import { GeneratorHandler, Runtime, TableHandlerInstances, ValueReplacerHandler } from '@boart/core';
 import {
     CharGenerator,
     ContextReplacer,
     DateTimeGenerator,
     EnvironmentReplacer,
     FakeGenerator,
+    FileReplacer,
     GenerateReplacer,
     HexGenerator,
     IbanGenerator,
@@ -61,6 +62,9 @@ function initialize(): void {
     ValueReplacerHandler.instance.add('generate', new GenerateReplacer());
     ValueReplacerHandler.instance.add('ref', new ReferenceReplacer());
     ValueReplacerHandler.instance.add('context', new ContextReplacer());
+    ValueReplacerHandler.instance.add('file', new FileReplacer());
+
+    TableHandlerInstances.instance.add(new RestCallTableHandler().handler);
 
     GeneratorHandler.instance.addItems([
         new CharGenerator(),

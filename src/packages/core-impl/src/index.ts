@@ -39,6 +39,7 @@ import { ValueValidator } from './validators/ValueValidator';
 import { XORValidator } from './validators/XORValidator';
 import { ContextReplacer } from './value/ContextReplacer';
 import { EnvironmentReplacer } from './value/EnvironmentReplacer';
+import { FileReplacer } from './value/FileReplacer';
 import { GenerateReplacer } from './value/GenerateReplacer';
 import { ReferenceReplacer } from './value/ReferenceReplacer';
 import { StoreReplacer } from './value/StoreReplacer';
@@ -63,6 +64,7 @@ export {
     ExpectedDataExecutinoUnit,
     ExpectedJsonLogicExecutionUnit,
     FakeGenerator,
+    FileReplacer,
     GenerateReplacer,
     GroupExecutionUnit,
     HexGenerator,
