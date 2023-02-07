@@ -1,9 +1,9 @@
-import { TypedGroupValidator } from '../validators/GroupValidator';
-import { ValidationHandler } from '../validators/ValidationHandler';
 import { Description } from '../description/Description';
 import { Descriptionable } from '../description/Descriptionable';
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionEngine } from '../execution/ExecutionEngine';
+import { TypedGroupValidator } from '../validators/GroupValidator';
+import { ValidationHandler } from '../validators/ValidationHandler';
 
 import { BaseRowType } from './BaseRowType';
 import { GroupRowDefinition } from './GroupRowDefinition';
@@ -25,11 +25,8 @@ export class TableHandler<
     private readonly rowDefinitions = new Map<string, RowDefinition<TExecutionContext, TRowType>>();
     private readonly groupValidations = new Array<TypedGroupValidator<TExecutionContext, TRowType>>();
 
-    public description?: Description | (() => Description);
+    // only public, because of use in tests
     public executionEngine: ExecutionEngine<TExecutionContext, TRowType>;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public static tableHandlers: Array<TableHandler<any, any>>;
 
     /**
      *
@@ -39,7 +36,14 @@ export class TableHandler<
         public readonly executionEngineCreator: () => ExecutionEngine<TExecutionContext, TRowType>
     ) {
         this.columnMetaInfo = TableMetaInfo.get(rowType);
-        // TableHandler.tableHandlers.push(this);
+    }
+
+    /**
+     *
+     */
+    public get description(): Description | (() => Description) {
+        const executionEngine = this.executionEngineCreator();
+        return executionEngine.mainExecutionUnit().description;
     }
 
     /**
