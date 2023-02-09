@@ -7,5 +7,6 @@ export enum TableRowType {
     Configuration,
     PreProcessing,
     InProcessing,
-    PostProcessing
+    PostProcessing,
+    PostProcessingForced
 }

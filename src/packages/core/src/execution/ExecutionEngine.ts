@@ -1,3 +1,4 @@
+import { throwError } from 'rxjs';
 import { Runtime } from '../runtime/Runtime';
 import { RuntimeStatus } from '../runtime/RuntimeStatus';
 import { Context } from '../store/Context';
@@ -54,9 +55,13 @@ export class ExecutionEngine<
         Context.instance.setContext(this.context.preExecution);
         await this.executeByType(rows, TableRowType.PreProcessing);
 
-        await this.executeMainUnit(rows);
+        try {
+            await this.executeMainUnit(rows);
+        } finally {
+            Context.instance.setContext(this.context.execution);
+            await this.executeByType(rows, TableRowType.PostProcessingForced, false);
+        }
 
-        Context.instance.setContext(this.context.execution);
         await this.executeByType(rows, TableRowType.PostProcessing);
 
         return this.context;
@@ -81,13 +86,23 @@ export class ExecutionEngine<
     /**
      *
      */
-    private async executeByType(rows: ReadonlyArray<TRowType>, type: TableRowType): Promise<void> {
+    private async executeByType(rows: ReadonlyArray<TRowType>, type: TableRowType, throwErrors = true): Promise<void> {
         const rowsByType = rows //
             .filter((row) => row.data._metaDefinition.type === type)
             .sort((row1, row2) => row2.data._metaDefinition.priority - row1.data._metaDefinition.priority);
 
+        const executer = throwErrors
+            ? (row: TRowType) => row.data._metaDefinition.executionUnit.execute(this.context, row)
+            : (row: TRowType) => {
+                  try {
+                      return row.data._metaDefinition.executionUnit.execute(this.context, row);
+                  } catch (error) {
+                      /* do not throw any errors */
+                  }
+              };
+
         for (const row of rowsByType) {
-            await row.data._metaDefinition.executionUnit.execute(this.context, row);
+            await executer(row);
         }
     }
 }
