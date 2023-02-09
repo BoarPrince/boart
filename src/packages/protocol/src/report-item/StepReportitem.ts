@@ -17,6 +17,7 @@ export interface StepReportItem {
     duration: number;
     group: string;
     description: string;
+    links: Array<[string, string]>;
     input: Record<string, StepReportDataItem>;
     result: Record<string, StepReportDataItem>;
 }

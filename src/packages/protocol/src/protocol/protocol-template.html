@@ -406,6 +406,17 @@
                     stepDetail.push('</div>');
                 }
 
+                // links
+                if (step.links.length > 0) {
+                    stepDetail.push('<div class="detail-description">');
+                    step.links
+                        .filter((link) => !!link.link)
+                        .forEach((link) => {
+                            stepDetail.push(`<div>link: <a href="${link.link}" target="_">${link.name}</a></div>`);
+                        });
+                    stepDetail.push('</div>');
+                }
+
                 // screenshots
                 if (!!step.screenshots && step.screenshots.length > 0) {
                     stepDetail.push(`<div class="card">

@@ -12,6 +12,7 @@ export interface StepItem {
     startTime: string;
     type: string;
     group: string;
+    links: Array<{ name: string; link: string }>;
     description: string;
     detailDescription: string[];
     steps: Array<StepItem>;

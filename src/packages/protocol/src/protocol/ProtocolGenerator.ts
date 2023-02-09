@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { EnvLoader, RuntimeContext, RuntimePriority, RuntimeStatus } from '@boart/core';
 
@@ -57,7 +57,6 @@ export class ProtocolGenerator {
     private readReport(): RuntimeContext {
         const filename = EnvLoader.instance.mapReportData(`boart-runtime-data.json`);
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         const fileContent: string = fs.readFileSync(filename, 'utf-8');
         return ProtocolGenerator.jsonParse(fileContent);
     }
@@ -69,12 +68,10 @@ export class ProtocolGenerator {
         runtimeDefinition.localContext.forEach((locaItem) => {
             const filename = EnvLoader.instance.mapReportData(locaItem.id + '.json');
 
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             if (!fs.existsSync(filename)) {
                 return;
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
             const content: string = fs.readFileSync(filename, 'utf-8');
             this.localItems.set(locaItem.id, ProtocolGenerator.jsonParse(content));
         });
@@ -97,12 +94,10 @@ export class ProtocolGenerator {
             localItem.testContext.forEach((testItem) => {
                 const filename = EnvLoader.instance.mapReportData(testItem.id + '.json');
 
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 if (!fs.existsSync(filename)) {
                     return;
                 }
 
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                 const content: string = fs.readFileSync(filename, 'utf-8');
                 const item = ProtocolGenerator.jsonParse<TestReportItem>(content);
                 item.tags = concatTags(item.tags, localItem.tags);
@@ -117,12 +112,10 @@ export class ProtocolGenerator {
                 testItem.stepContext.forEach((stepItem) => {
                     const filename = EnvLoader.instance.mapReportData(stepItem.id + '.json');
 
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                     if (!fs.existsSync(filename)) {
                         return;
                     }
 
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     const content: string = fs.readFileSync(filename, 'utf-8');
                     const item = ProtocolGenerator.jsonParse<StepReportItem>(content);
                     item.localReportItemId = localItem.id;
@@ -222,6 +215,16 @@ export class ProtocolGenerator {
     /**
      *
      */
+    generateLinks(links: Array<[string, string]>): Array<{ name: string; link: string }> {
+        return links?.map((link) => ({
+            name: link[0],
+            link: link[1]
+        }));
+    }
+
+    /**
+     *
+     */
     private groupingStepItems(stepItems: Array<StepItem>, testNumber: string): Array<StepItem> {
         const groupedStepItems = new Array<StepItem>();
         let currentGroupStepItem: StepItem = null;
@@ -243,6 +246,7 @@ export class ProtocolGenerator {
                     steps: [stepItem],
                     errorMessage: null,
                     detailDescription: null,
+                    links: null,
                     input: null,
                     output: null
                 };
@@ -298,6 +302,7 @@ export class ProtocolGenerator {
                 group: stepItem.group,
                 description: stepDescription.shift(),
                 detailDescription: stepDescription,
+                links: this.generateLinks(stepItem.links),
                 steps: null,
                 input: this.generateDataItems(stepItem.input),
                 output: this.generateDataItems(stepItem.result)
@@ -355,7 +360,6 @@ export class ProtocolGenerator {
         const filename = EnvLoader.instance.mapReportData('test-protocol.json');
         const protocolData = JSON.stringify(protocol);
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         fs.writeFileSync(filename, protocolData, 'utf-8');
         return protocolData;
     }
@@ -364,14 +368,11 @@ export class ProtocolGenerator {
      *
      */
     private generateHtml(protocolData: string): void {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         const template: string = fs.readFileSync(path.resolve(__dirname, 'protocol-template.html'), 'utf-8');
 
         const htmlContent = template.replace('${protocol_data}', protocolData);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
         const filename = EnvLoader.instance.mapReportData(path.join('..', 'test-protocol.html'));
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         fs.writeFileSync(filename, htmlContent, 'utf-8');
 
         console.log('Protocol generated to =>', 'file://' + path.resolve(filename));

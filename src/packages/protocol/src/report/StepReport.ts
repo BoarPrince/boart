@@ -44,6 +44,7 @@ export class StepReport {
     private _type: string;
     private readonly resultItem = new Map<string, StepReportDataItem>();
     private readonly inputItems = new Map<string, StepReportDataItem>();
+    private readonly linkItems = new Array<[string, string]>();
 
     /**
      *
@@ -97,7 +98,8 @@ export class StepReport {
             group: currentStepRuntime.group,
             description: currentStepRuntime.descriptions.join('\n'),
             input: fromEntries(this.inputItems),
-            result: fromEntries(this.resultItem)
+            result: fromEntries(this.resultItem),
+            links: this.linkItems
         };
         const data = JSON.stringify(objectData);
 
@@ -156,6 +158,13 @@ export class StepReport {
             type,
             data: StepReport.tryConvertToObject(data?.valueOf())
         });
+    }
+
+    /**
+     *
+     */
+    public addLink(name: string, link: string) {
+        this.linkItems.push([name, link]);
     }
 
     /**
