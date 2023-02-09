@@ -107,10 +107,10 @@ export class DescriptionHandler {
         return typeof description === 'function'
             ? description()
             : {
-                  id: description.id || '',
-                  title: description.title || '',
-                  description: this.adjustIndent(description.description || ''),
-                  examples: description.examples
+                  id: description?.id || '',
+                  title: description?.title || '',
+                  description: this.adjustIndent(description?.description || ''),
+                  examples: description?.examples
               };
     }
 }
