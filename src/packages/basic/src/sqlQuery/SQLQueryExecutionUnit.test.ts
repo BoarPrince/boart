@@ -246,6 +246,7 @@ describe('text result', () => {
                     type: 'text'
                 }
             },
+            links: [],
             result: {
                 'SQL Query result (header)': {
                     data: {

@@ -88,7 +88,7 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
         return (
             nonNullValue(context.execution.transformed, null) ||
             nonNullValue(context.execution.data, null) ||
-            nonNullValue(context.preExecution.payload)
+            nonNullValue(context.preExecution?.payload)
         );
     }
 

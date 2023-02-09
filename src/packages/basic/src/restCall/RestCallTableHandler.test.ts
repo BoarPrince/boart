@@ -946,6 +946,7 @@ describe('report', () => {
                     type: 'json'
                 }
             },
+            links: [],
             result: {
                 'Rest call result (header)': {
                     description: 'Rest call result (header)',

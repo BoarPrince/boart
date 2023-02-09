@@ -7,6 +7,7 @@ import { ExpectedJsonLogicExecutionUnit } from './execution/expected/ExecutionUn
 import { ExpectedOperatorImplementation } from './execution/expected/ExpectedOperator.Implementation';
 import { DescriptionExecutionUnit } from './execution/misc/ExecutionUnit.Description';
 import { GroupExecutionUnit } from './execution/misc/ExecutionUnit.Group';
+import { LinkExecutionUnit } from './execution/misc/ExecutionUnit.Link';
 import { OutStoreExecutionUnit } from './execution/misc/ExecutionUnit.OutStore';
 import { WaitExecutionUnit } from './execution/misc/ExecutionUnit.Wait';
 import { PropertySetterExecutionUnit } from './execution/property-setter/PropertySetterExecutionUnit';
@@ -72,6 +73,7 @@ export {
     IntValidator,
     ISODateGenerator,
     OutStoreExecutionUnit,
+    LinkExecutionUnit,
     ParaValidator,
     PDFContent,
     PropertySetterExecutionUnit,

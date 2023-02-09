@@ -911,6 +911,7 @@ describe('reports', () => {
                     }
                 }
             },
+            links: [],
             result: {
                 'Rabbit consume (received messages)': {
                     description: 'Rabbit consume (received messages)',
@@ -1048,6 +1049,7 @@ describe('reports', () => {
                     }
                 }
             },
+            links: [],
             result: {
                 'Rabbit consume (received messages)': {
                     description: 'Rabbit consume (received messages)',

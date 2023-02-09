@@ -4,6 +4,7 @@ import {
     DataContext,
     DescriptionExecutionUnit,
     GroupExecutionUnit,
+    LinkExecutionUnit,
     ParaValidator,
     RowTypeValue,
     RunEnvExecutionUnit,
@@ -71,6 +72,15 @@ if (!GroupRowDefinition.contains('basic-group-definition')) {
             key: Symbol('description'),
             type: TableRowType.Configuration,
             executionUnit: new DescriptionExecutionUnit(),
+            validators: null
+        })
+    );
+
+    basicGroup.addRowDefinition(
+        new RowDefinition({
+            key: Symbol('link'),
+            type: TableRowType.PostProcessingForced,
+            executionUnit: new LinkExecutionUnit(),
             validators: null
         })
     );

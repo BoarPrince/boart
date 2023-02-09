@@ -313,6 +313,7 @@ it('reporting', async () => {
                 type: 'json'
             }
         },
+        links: [],
         result: {
             'Rest authorize (curl)': {
                 data: expect.anything() as string,
