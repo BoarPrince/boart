@@ -1,5 +1,8 @@
 # queues check <queue-list>, min: <min>, max: <max>
 
+* Save value: <min> to store: "min"
+* Save value: <max> to store: "max"
+
 * RabbitMQ consume, continue
 
    | action           | value                |
@@ -11,18 +14,6 @@
    | count:max        | ${context:max:-null} |
    | count:min        | ${context:min:-1}    |
    | store            | event-company        |
-
-* RabbitMQ consume, continue
-
-   | action          | value                               |
-   |-----------------|-------------------------------------|
-   | run:only:driver | <queue-list>                        |
-   | queue           | test.md.driver                      |
-   | group           | Check Queues                        |
-   | description     | driver crud event |
-   | count:max       | <max>                               |
-   | count:min       | <min>                               |
-   | store           | event-driver                        |
 
 * RabbitMQ consume, continue
 
@@ -62,28 +53,42 @@
 
 * RabbitMQ consume, continue
 
-   | action                    | value                    |
-   |---------------------------|--------------------------|
-   | run:only:company-consumer | <queue-list>             |
-   | queue                     | test.md.company-consumer |
-   | group                     | Check Queues             |
-   | description               | company md crud event    |
-   | count:max                 | <max>                    |
-   | count:min                 | <min>                    |
-   | store                     | event-company-consumer   |
+   | action                    | value                                                       |
+   |---------------------------|-------------------------------------------------------------|
+   | run:only:company-consumer | <queue-list>                                                |
+   | queue                     | test.md.company-consumer                                    |
+   | group                     | Check Queues                                                |
+   | description               | company md crud event, min: ${store:min}, max: ${store:max} |
+   | timeout                   | 5                                                           |
+   | count:max                 | <max>                                                       |
+   | count:min                 | <min>                                                       |
+   | store                     | event-company-consumer                                      |
 
 * RabbitMQ consume, continue
 
-   | action                      | value                    |
-   |-----------------------------|--------------------------|
-   | run:only:company-onboarding | <queue-list>             |
-   | description                 | onboarding - create      |
-   | group                       | Check Queues             |
-   | queue                       | test.ob.company          |
-   | timeout                     | 20                       |
-   | count:max                   | <max>                    |
-   | count:min                   | <min>                    |
-   | store                       | event-company-onboarding |
+   | action                      | value                   |
+   |-----------------------------|-------------------------|
+   | run:only:company-onboarding | <queue-list>            |
+   | description                 | onboarding - create     |
+   | group                       | Check Queues            |
+   | queue                       | test.ob-create.company  |
+   | timeout                     | 20                      |
+   | count:max                   | <max>                   |
+   | count:min                   | <min>                   |
+   | store                       | event-onboarding-create |
+
+* RabbitMQ consume, continue
+
+   | action                      | value                   |
+   |-----------------------------|-------------------------|
+   | run:only:company-onboarding | <queue-list>            |
+   | description                 | onboarding - update     |
+   | group                       | Check Queues            |
+   | queue                       | test.ob-update.company  |
+   | timeout                     | 20                      |
+   | count:max                   | <max>                   |
+   | count:min                   | <min>                   |
+   | store                       | event-onboarding-update |
 
 * RabbitMQ consume, continue
 
@@ -155,12 +160,14 @@
   | action                | value                                                     |
   |-----------------------|-----------------------------------------------------------|
   | run:only:portal-error | <queue-list>                                              |
-  | queue                 | test.portal.masterdata.error                              |
+  | queue                 | test.portal.masterdata.portal.error                       |
   | group                 | Check Queues                                              |
-  | description           | error: md onoboarding update event                        |
+  | description           | error: md onboarding update event                         |
   |                       | All Portal death letter exchanges are bound to this queue |
   |                       | No error should occur while consuming events.             |
   |                       | Therefore the queue must be empty                         |
+  | link:jaeager          | ${generate:tpl:link.jaeger.messageId}                     |
+  | link:grafana          | ${generate:tpl:link.grafana.messageId}                    |
   | timeout               | 5                                                         |
   | count:max             | 0                                                         |
   | count:min             | 0                                                         |
@@ -172,20 +179,63 @@
   | run:only:md-error | <queue-list>                           |
   | queue             | test.portal.masterdata.error           |
   | group             | Check Queues                           |
-  | description       | Check Portal -> MasterData Error queue |
+  | description       | error: md onboarding update event      |
+  | link:jaeager      | ${generate:tpl:link.jaeger.messageId}  |
+  | link:grafana      | ${generate:tpl:link.grafana.messageId} |
   | timeout           | 5                                      |
   | count:max         | 0                                      |
   | count:min         | 0                                      |
 
 * RabbitMQ consume, continue
 
-  | action            | value                              |
-  |-------------------|------------------------------------|
-  | run:only:md-error | <queue-list>                       |
-  | queue             | test.onboarding.masterdata.error   |
-  | group             | Check Queues                       |
-  | description       | error: md onoboarding create event |
-  | timeout           | 5                                  |
-  | count:max         | 0                                  |
-  | count:min         | 0                                  |
+  | action                   | value                                                         |
+  |--------------------------|---------------------------------------------------------------|
+  | run:only:md-error        | <queue-list>                                                  |
+  | queue                    | test.onboarding.masterdata.error                              |
+  | group                    | Check Queues                                                  |
+  | description              | error: md onboarding create event (onboarding-create)         |
+  | timeout                  | 5                                                             |
+  | count:max                | 0                                                             |
+  | count:min                | 0                                                             |
+  | link:jaeager             | ${generate:tpl:link.jaeger.messageId}                         |
+  | link:grafana             | ${generate:tpl:link.grafana.messageId}                        |
+  | link:rabbit-exchange     | ${env:rabbit_url}exchanges/%2F/com.jitpay.company.onboarding  |
+  | link:rabbit-queue        | ${env:rabbit_url}queues/%2F/onboarding%2Fmasterdata           |
+  | link:rabbit-dlq-exchange | ${env:rabbit_url}exchanges/%2F/masterdata.exchange.deadletter |
+  | link:rabbit-dlq-queue    | ${env:rabbit_url}queues/%2F/onboarding.masterdata.error       |
 
+* RabbitMQ consume, continue
+
+  | action                   | value                                                         |
+  |--------------------------|---------------------------------------------------------------|
+  | run:only:md-error-create | <queue-list>                                                  |
+  | queue                    | test.onboarding-create.masterdata.error                       |
+  | group                    | Check Queues                                                  |
+  | description              | error: md onboarding create event (onboarding-create)         |
+  | timeout                  | 5                                                             |
+  | count:max                | <max>                                                         |
+  | count:min                | <min>                                                         |
+  | link:jaeager             | ${generate:tpl:link.jaeger.messageId}                         |
+  | link:grafana             | ${generate:tpl:link.grafana.messageId}                        |
+  | link:rabbit-exchange     | ${env:rabbit_url}exchanges/%2F/com.jitpay.company.onboarding  |
+  | link:rabbit-queue        | ${env:rabbit_url}queues/%2F/onboarding%2Fmasterdata           |
+  | link:rabbit-dlq-exchange | ${env:rabbit_url}exchanges/%2F/masterdata.exchange.deadletter |
+  | link:rabbit-dlq-queue    | ${env:rabbit_url}queues/%2F/onboarding.masterdata.error       |
+
+* RabbitMQ consume, continue
+
+  | action                   | value                                                         |
+  |--------------------------|---------------------------------------------------------------|
+  | run:only:md-error-update | <queue-list>                                                  |
+  | queue                    | test.onboarding-update.masterdata.error                       |
+  | group                    | Check Queues                                                  |
+  | description              | error: md onboarding update event (onboarding-update)         |
+  | timeout                  | 5                                                             |
+  | count:max                | <max>                                                         |
+  | count:min                | <min>                                                         |
+  | link:jaeager             | ${generate:tpl:link.jaeger.messageId}                         |
+  | link:grafana             | ${generate:tpl:link.grafana.messageId}                        |
+  | link:rabbit-exchange     | ${env:rabbit_url}exchanges/%2F/fleet_event_bus                |
+  | link:rabbit-queue        | ${env:rabbit_url}queues/%2F/portal%2Fmasterdata               |
+  | link:rabbit-dlq-exchange | ${env:rabbit_url}exchanges/%2F/masterdata.exchange.deadletter |
+  | link:rabbit-dlq-queue    | ${env:rabbit_url}queues/%2F/portal.masterdata.error           |

@@ -6,6 +6,7 @@
      | action                 | value                                                                  |
      |------------------------|------------------------------------------------------------------------|
      | method:post            | <ob>/new-api/legitimation/video-ident                                  |
+     | wait:before            | 5                                                                    |
      | description            | Start Video Legimitation (1)                                           |
      | group                  | Video Legimitation                                                     |
      | payload                | {                                                                      |
@@ -27,7 +28,7 @@
      | description            | Start Video Legimitation (2)                                           |
      | group                  | Video Legimitation                                                     |
      | payload                | {                                                                      |
-     |                        | "representativeId": "${store:response-register.representative[0].id}", |
+     |                        | "representativeId": "${store:response-register.representative[1].id}", |
      |                        | "language": "de",                                                      |
      |                        | "identData": {                                                         |
      |                        | "birthDate": "2000-06-20T00:00:00.000",                                |

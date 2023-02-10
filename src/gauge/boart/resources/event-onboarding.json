@@ -14,7 +14,7 @@
     "id": "${store:ob-carrierId:=${generate:uuid}}",
     "companyId": "${generate:t:tpl:company.id}",
     "street": "${generate:t:fake:address:street}",
-    "zipCode": "${generate:fake:address:zipCode}",
+    "zipCode": "${generate:t:fake:address:zipCode}",
     "city": "${generate:t:fake:address:city}",
     "countryCode": "DE",
     "timocomId": null

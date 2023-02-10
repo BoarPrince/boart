@@ -754,8 +754,7 @@ tags: md-5.17, env:development, env:staging
 
 * add user with role "Driver"
 
-* request user bearer, username: "jitpaytest+2023-01-24:6567@gmail.com", password: "${env:default_password}"
- request user bearer, username: "${store:response-user.email}", password: "${env:default_password}"
+* request user bearer, username: "${store:response-user.email}", password: "${env:default_password}"
 
 * Rest call
 

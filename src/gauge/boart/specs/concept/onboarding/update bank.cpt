@@ -17,6 +17,7 @@
       |                        | }                                                   |
       | expected:header#status | 200                                                 |
       | store                  | response-register-bank                              |
+      | --wait:after:sec         | 5                                                                                             |
 
 * Rest call
 

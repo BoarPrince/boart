@@ -26,10 +26,22 @@
   | description                 | onboarding - create                    |
   | group                       | Bind Queues                            |
   | exchange                    | com.jitpay.company.onboarding          |
-  | queue                       | test.ob.company                        |
-  | routing                     | company-onboarding-data-sync-to-portal |
+  | queue                       | test.ob-create.company                 |
   | routing                     | JitpayServicesSync.RoutingKey          |
+  | routing                     | company-onboarding-data-sync-to-portal |
   | routing                     | company-onboarding-data-sync-to-obs    |
+
+* RabbitMQ bind
+  | action                      | value                  |
+  |-----------------------------|------------------------|
+  | run:only:company-onboarding | <queue-list>           |
+  | exchange                    | fleet_event_bus        |
+  | queue                       | test.ob-update.company |
+  | routing                     | OnBoardingFleetEvent   |
+  | routing                     |                        |
+  | routing                     | *                      |
+  | description                 | onboarding - update    |
+  | group                       | Bind Queues            |
 
 * RabbitMQ bind
   | action           | value              |
@@ -127,7 +139,7 @@
   | description           | error: onnboarding update                                |
   | group                 | Bind Queues                                              |
   | exchange              | com.jitpay.PortalService.error                           |
-  | queue                 | test.portal.masterdata.error                             |
+  | queue                 | test.portal.masterdata.portal.error                      |
   | routing               | com.jitpay.company.onboarding.dataSyncToPortal.error     |
   | routing               | com.jitpay.company.onboarding.data-sync-to-portal.error  |
   | routing               | com.jitpay.company.onboarding.data-sync-to-obs.error     |
@@ -135,21 +147,57 @@
   | routing               | com.jitpay.company.onboarding.dataSyncToOnboarding.error |
 
 * RabbitMQ bind
-  | action            | value                              |
-  |-------------------|------------------------------------|
-  | run:only:md-error | <queue-list>                       |
-  | description       | error: md onoboarding update event |
-  | group             | Bind Queues                        |
-  | queue             | test.portal.masterdata.error       |
-  | exchange          | masterdata.exchange.deadletter     |
-  | routing           | masterdata/portal                  |
+  | action                   | value                                                         |
+  |--------------------------|---------------------------------------------------------------|
+  | run:only:md-error        | <queue-list>                                                  |
+  | description              | error: md onboarding update event (onboarding-update)         |
+  | group                    | Bind Queues                                                   |
+  | queue                    | test.portal.masterdata.error                                  |
+  | exchange                 | masterdata.exchange.deadletter                                |
+  | routing                  | portal/masterdata                                             |
+  | link:rabbit-exchange     | ${env:rabbit_url}exchanges/%2F/fleet_event_bus                |
+  | link:rabbit-queue        | ${env:rabbit_url}queues/%2F/portal%2Fmasterdata               |
+  | link:rabbit-dlq-exchange | ${env:rabbit_url}exchanges/%2F/masterdata.exchange.deadletter |
+  | link:rabbit-dlq-queue    | ${env:rabbit_url}queues/%2F/portal.masterdata.error           |
 
 * RabbitMQ bind
-  | action            | value                              |
-  |-------------------|------------------------------------|
-  | run:only:md-error | <queue-list>                       |
-  | description       | error: md onoboarding create event |
-  | group             | Bind Queues                        |
-  | queue             | test.onboarding.masterdata.error   |
-  | exchange          | masterdata.exchange.deadletter     |
-  | routing           | masterdata/onboarding              |
+  | action                   | value                                                         |
+  |--------------------------|---------------------------------------------------------------|
+  | run:only:md-error        | <queue-list>                                                  |
+  | description              | error: md onboarding create event (onboarding-create)         |
+  | group                    | Bind Queues                                                   |
+  | queue                    | test.onboarding.masterdata.error                              |
+  | exchange                 | masterdata.exchange.deadletter                                |
+  | routing                  | onboarding/masterdata                                         |
+  | link:rabbit-exchange     | ${env:rabbit_url}exchanges/%2F/com.jitpay.company.onboarding  |
+  | link:rabbit-queue        | ${env:rabbit_url}queues/%2F/onboarding%2Fmasterdata           |
+  | link:rabbit-dlq-exchange | ${env:rabbit_url}exchanges/%2F/masterdata.exchange.deadletter |
+  | link:rabbit-dlq-queue    | ${env:rabbit_url}queues/%2F/onboarding.masterdata.error       |
+
+* RabbitMQ bind
+  | action                   | value                                                         |
+  |--------------------------|---------------------------------------------------------------|
+  | run:only:md-error-create | <queue-list>                                                  |
+  | description              | error: md onboarding create event (onboarding-create)         |
+  | group                    | Bind Queues                                                   |
+  | queue                    | test.onboarding-create.masterdata.error                       |
+  | exchange                 | masterdata.exchange.deadletter                                |
+  | routing                  | onboarding/masterdata                                         |
+  | link:rabbit-exchange     | ${env:rabbit_url}exchanges/%2F/com.jitpay.company.onboarding  |
+  | link:rabbit-queue        | ${env:rabbit_url}queues/%2F/onboarding%2Fmasterdata           |
+  | link:rabbit-dlq-exchange | ${env:rabbit_url}exchanges/%2F/masterdata.exchange.deadletter |
+  | link:rabbit-dlq-queue    | ${env:rabbit_url}queues/%2F/onboarding.masterdata.error       |
+
+* RabbitMQ bind
+  | action                   | value                                                         |
+  |--------------------------|---------------------------------------------------------------|
+  | run:only:md-error-update | <queue-list>                                                  |
+  | description              | error: md onboarding update event (onboarding-update)         |
+  | group                    | Bind Queues                                                   |
+  | queue                    | test.onboarding-update.masterdata.error                       |
+  | exchange                 | masterdata.exchange.deadletter                                |
+  | routing                  | portal/masterdata                                             |
+  | link:rabbit-exchange     | ${env:rabbit_url}exchanges/%2F/fleet_event_bus                |
+  | link:rabbit-queue        | ${env:rabbit_url}queues/%2F/portal%2Fmasterdata               |
+  | link:rabbit-dlq-exchange | ${env:rabbit_url}exchanges/%2F/masterdata.exchange.deadletter |
+  | link:rabbit-dlq-queue    | ${env:rabbit_url}queues/%2F/portal.masterdata.error           |
