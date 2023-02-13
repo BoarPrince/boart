@@ -67,7 +67,7 @@ export class TestReport {
      */
     private getNumber(location: string, name: string): string {
         const localNumber = LocalReport.getNumber(location, name);
-        return name?.replace(/^(\d+\.)(\d+)(\W+.+)/, localNumber + '.$2') || '';
+        return (name?.replace(/^(\d+\.)([\d.]*)(\W+.+)/, localNumber + '.$2') || '').replace(/\.$/, '');
     }
 
     /**
