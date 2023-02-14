@@ -25,8 +25,8 @@
   "carriers": [
     {
       "id": "${store:ob_info.carrierId:=${generate:uuid}}",
-      "currency": "",
-      "initialPin": "",
+      "currency": "EUR",
+      "initialPin": "1234",
       "preferredCardIssuer": "NONE",
       "maximumCards": 100,
       "baseCashpoolValue": 0,

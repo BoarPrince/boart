@@ -19,8 +19,8 @@
   "customers": [],
   "carriers": [
     {
-      "currency": "",
-      "initialPin": "",
+      "currency": "EUR",
+      "initialPin": "1234",
       "preferredCardIssuer": "NONE",
       "maximumCards": 100,
       "baseCashpoolValue": 0,

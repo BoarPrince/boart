@@ -563,3 +563,59 @@ tags: ob-10.10, manual
 
 * queues check "md-error-update"
 
+## 1.11. Check Onboarding Events Validation (manualy)
+
+tags: ob-10.11, manual
+
+* Test description
+
+   |action     |value                                                            |
+   |-----------|-----------------------------------------------------------------|
+   |description|Send Onboarding Event to Masterdata without Address / CountryCode|
+   |priority   |high                                                             |
+
+* queues bind "company, carrier, user, md-error"
+
+* RabbitMQ publish
+
+   |action                        |value                                          |
+   |------------------------------|-----------------------------------------------|
+   |description                   |Send onboarding event manualy (without Address)|
+   |exchange                      |com.jitpay.company.onboarding                  |
+   |wait:after:sec                |4                                              |
+   |routing                       |JitpayServicesSync.RoutingKey                  |
+   |routing                       |company-onboarding-data-sync-to-portal         |
+   |payload                       |<file:event-onboarding.json>                   |
+   |payload#addressDto.countryCode|                                               |
+
+* RabbitMQ publish
+
+   |action                           |value                                                 |
+   |---------------------------------|------------------------------------------------------|
+   |description                      |Send portal onboarding event manualy (without Address)|
+   |exchange                         |fleet_event_bus                                       |
+   |wait:after:sec                   |4                                                     |
+   |routing                          |OnBoardingFleetEvent                                  |
+   |payload                          |<file:event-portal-onboarding.json>                   |
+   |payload#Taker.address.countryCode|                                                      |
+
+* queues check "company, carrier, user, md-error"
+
+* Data manage
+
+   |action                                   |value                                                          |
+   |-----------------------------------------|---------------------------------------------------------------|
+   |in                                       |${store:event-company}                                         |
+   |description                              |Check Masterdata Company Event (must contain Address / Country)|
+   |                                         |Carrier and Company Address must contain a Country             |
+   |expected#addresses[0].country            |DE                                                             |
+   |expected#carriers[0].addresses[0].country|DE                                                             |
+
+* Data manage
+
+   |action                       |value                                                          |
+   |-----------------------------|---------------------------------------------------------------|
+   |in                           |${store:event-carrier}                                         |
+   |description                  |Check Masterdata Carrier Event (must contain Address / Country)|
+   |                             |Carrier Address must contain a Country                         |
+   |expected#addresses[0].country|DE                                                             |

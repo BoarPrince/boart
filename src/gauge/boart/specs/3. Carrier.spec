@@ -787,3 +787,155 @@ tags: md-3.15, carrier-admin, env:development, env:staging
    |description           |Search Response must be empty if no carrier can be found|
    |expected:header#status|200                                                     |
    |expected:count#content|0                                                       |
+
+## 1.15. Create carrier without an address
+
+tags: md-3.15
+
+* Test description
+
+   |action     |value                                   |
+   |-----------|----------------------------------------|
+   |description|A carrier must have at least one address|
+   |priority   |high                                    |
+
+* request admin bearer
+
+* add company, response: "response-co"
+
+* Rest call
+
+   |action                |value                         |
+   |----------------------|------------------------------|
+   |method:post           |/api/carrier                  |
+   |description           |Create cascaded Carrier       |
+   |payload               |<file:request-carrier.json>   |
+   |payload#addresses     |undefined                     |
+   |payload#companyId     |${store:response-co.id}       |
+   |expected:header#status|400                           |
+   |expected#description  |{addresses=must not be empty},|
+
+## 1.16. Add a carrier without an address country
+
+tags: md-3.16
+
+* Test description
+
+   |action     |value                                    |
+   |-----------|-----------------------------------------|
+   |description|A carrier address must define the country|
+   |priority   |high                                     |
+   |ticket     |MD-312                                   |
+
+* request admin bearer
+
+* add company, response: "response-co"
+
+* Rest call
+
+   |action                      |value                                         |
+   |----------------------------|----------------------------------------------|
+   |method:post                 |/api/carrier                                  |
+   |description                 |Create a Carrier without an address           |
+   |payload                     |<file:request-carrier.json>                   |
+   |payload#addresses[0].country|undefined                                     |
+   |payload#companyId           |${store:response-co.id}                       |
+   |expected:header#status      |400                                           |
+   |expected#description        |{addresses[].country=country must be defined},|
+
+
+## 1.17. Add a second address
+
+tags: md-3.17
+
+* Test description
+
+   |action     |value                                                              |
+   |-----------|-------------------------------------------------------------------|
+   |description|After deleting a third address, only the two address must remaining|
+   |priority   |high                                                               |
+   |ticket     |MD-312                                                             |
+
+* request admin bearer
+
+* add company, response: "response-co"
+
+* Rest call
+
+   |action                    |value                                |
+   |--------------------------|-------------------------------------|
+   |method:post               |/api/carrier                         |
+   |description               |Create a Carrier with three addresses|
+   |payload                   |<file:request-carrier.json>          |
+   |payload#addresses[0].id   |undefined                            |
+   |payload#addresses[1]      |${context:payload#addresses[0]}      |
+   |payload#addresses[2]      |${context:payload#addresses[0]}      |
+   |payload#addresses[0].email|jitpaytest+first@gmail.com           |
+   |payload#addresses[1].email|jitpaytest+second@gmail.com          |
+   |payload#addresses[2].email|jitpaytest+third@gmail.com           |
+   |expected:header#status    |200                                  |
+   |expected:count#addresses  |3                                    |
+   |store                     |response-ca                          |
+
+* Rest call
+
+   |action                  |value                               |
+   |------------------------|------------------------------------|
+   |method:put              |/api/carrier/${store:response-ca.id}|
+   |description             |Update the carrier                  |
+   |payload                 |${store:response-ca}                |
+   |payload#addresses       |undefined                           |
+   |payload#addresses[0]    |${store:response-ca.addresses[0]}   |
+   |payload#addresses[1]    |${store:response-ca.addresses[2]}   |
+   |expected:header#status  |200                                 |
+   |expected:count#addresses|2                                   |
+
+## 1.18. Create carrier casceded with a carrier without an address
+
+tags: md-3.18
+
+* Test description
+
+   |action     |value                                   |
+   |-----------|----------------------------------------|
+   |description|A carrier must have at least one address|
+   |priority   |high                                    |
+
+* request admin bearer
+
+* Rest call
+
+   |action                       |value                                                                |
+   |-----------------------------|---------------------------------------------------------------------|
+   |method:post                  |/api/company                                                         |
+   |description                  |Create a cascaded Company/Carrier without a Carrier Address must fail|
+   |payload                      |<file:request-company.json>                                          |
+   |payload#carriers[0]          |<file:request-carrier.json>                                          |
+   |payload#carriers[0].addresses|[]                                                                   |
+   |expected:header#status       |400                                                                  |
+   |expected#description         |{carriers[0].addresses=must not be empty},                           |
+
+## 1.19. Create carrier casceded with a carrier without an address country
+
+tags: md-3.19
+
+* Test description
+
+   |action     |value                                                                       |
+   |-----------|----------------------------------------------------------------------------|
+   |description|A carrier must have at least one address and the address must have a country|
+   |priority   |high                                                                        |
+
+* request admin bearer
+
+* Rest call
+
+   |action                                  |value                                                                        |
+   |----------------------------------------|-----------------------------------------------------------------------------|
+   |method:post                             |/api/company                                                                 |
+   |description                             |Create a cascaded Company/Carrier without a Carrier Address Country must fail|
+   |payload                                 |<file:request-company.json>                                                  |
+   |payload#carriers[0]                     |<file:request-carrier.json>                                                  |
+   |payload#carriers[0].addresses[0].country|undefined                                                                    |
+   |expected:header#status                  |400                                                                          |
+   |expected#description                    |{carriers[0].addresses[].country=country must be defined},                   |

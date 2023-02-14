@@ -276,13 +276,15 @@ tags: company-create-cascading-queue-event, md-1.7
    |action                         |value                                                          |
    |-------------------------------|---------------------------------------------------------------|
    |method:post                    |/api/company                                                   |
+   |description                    |Create a cascaded Company request (including Carrier and users)|
    |payload                        |<file:request-company.json>                                    |
    |payload#carriers[0]            |<file:request-carrier.json>                                    |
    |payload#carriers[0].id         |undefined                                                      |
    |payload#carriers[0].users[0]   |<file:request-user.json>                                       |
    |payload#carriers[0].users[0].id|undefined                                                      |
-   |description                    |Create a cascaded Company request (including Carrier and users)|
    |expected:header#status         |200                                                            |
+   |link:jaeager                   |${generate:tpl:link.jaeger.header.traceId}                     |
+   |link:grafana                   |${generate:tpl:link.grafana.header.traceId}                    |
    |store                          |response-company                                               |
 
 * queues check "company, carrier, user, identity"
@@ -708,3 +710,94 @@ tags: md-1.16, MD-259
    |expected:header#status |200                                          |
    |expected:count#carriers|0                                            |
    |expected#companyName   |x-x-x                                        |
+
+## 1.17. Add a company without an address must fail
+
+tags: md-1.17
+
+* Test description
+
+   |action     |value                                     |
+   |-----------|------------------------------------------|
+   |description|Add a company without an address must fail|
+   |priority   |medium                                    |
+   |ticket     |MD-312                                    |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                                    |
+   |----------------------|-----------------------------------------|
+   |method:post           |/api/company                             |
+   |description           |Create company without an address country|
+   |payload               |<file:request-company.json>              |
+   |payload#addresses     |undefined                                |
+   |expected:header#status|400                                      |
+   |expected#description  |{addresses=must not be empty},           |
+
+## 1.18. Add a company without an address country
+
+tags: md-1.18
+
+* Test description
+
+   |action     |value                                             |
+   |-----------|--------------------------------------------------|
+   |description|Add a company without an address country must fail|
+   |priority   |medium                                            |
+   |ticket     |MD-312                                            |
+
+* request admin bearer
+
+* Rest call
+
+   |action                      |value                                          |
+   |----------------------------|-----------------------------------------------|
+   |method:post                 |/api/company                                   |
+   |description                 |Create company without pre-defined Ids         |
+   |payload                     |<file:request-company.json>                    |
+   |payload#addresses[0].country|undefined                                      |
+   |expected:header#status      |400                                            |
+   |expected#description        |{addresses[0].country=country must be defined},|
+
+## 1.19. Add a second address
+
+tags: md-1.19
+
+* Test description
+
+   |action     |value                                                      |
+   |-----------|-----------------------------------------------------------|
+   |description|Add a second address to a company and removed it afterwards|
+   |priority   |medium                                                     |
+
+* request admin bearer
+
+* Rest call
+
+   |action                    |value                            |
+   |--------------------------|---------------------------------|
+   |method:post               |/api/company                     |
+   |description               |Create company with two addresses|
+   |payload                   |<file:request-company.json>      |
+   |payload#addresses[0].id   |undefined                        |
+   |payload#addresses[1]      |${context:payload#addresses[0]}  |
+   |payload#addresses[0].email|jitpaytest+first@gmail.com       |
+   |payload#addresses[1].email|jitpaytest+second@gmail.com      |
+   |expected:header#status    |200                              |
+   |expected:count#addresses  |2                                |
+   |store                     |response-co                      |
+
+* Rest call
+
+   |action                     |value                               |
+   |---------------------------|------------------------------------|
+   |method:put                 |/api/company/${store:response-co.id}|
+   |description                |Update the company                  |
+   |payload                    |${store:response-co}                |
+   |payload#addresses          |undefined                           |
+   |payload#addresses[0]       |${store:response-co.addresses[1]}   |
+   |expected:header#status     |200                                 |
+   |expected:count#addresses   |1                                   |
+   |expected#addresses[0].email|jitpaytest+second@gmail.com         |

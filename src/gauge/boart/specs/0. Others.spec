@@ -1,6 +1,6 @@
 # 1. Others - MasterData
 
-tags: env-all, master-data, md-1, masterdata
+tags: env-all, master-data, md-0, masterdata
 
 ## 1.1. Health Check
 
@@ -29,10 +29,10 @@ tags: md-0-2
 
 * Rest call
 
-   |action                 |value                                         |
-   |-----------------------|----------------------------------------------|
-   |method:get             |/info/version                                 |
-   |description            |Reads the version of the running backend      |
-   |expected:status        |200                                           |
-   |expected:jsonLogic:true|{"==" : [{ "var" : "version" }, "v.0.0.61" ] }|
+   |action                         |value                                   |
+   |-------------------------------|----------------------------------------|
+   |method:get                     |/info/version                           |
+   |description                    |Reads the version of the running backend|
+   |expected:header#status         |200                                     |
+   |expected:header#headers.version|1.0.16                                  |
 
