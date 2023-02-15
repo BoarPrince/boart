@@ -27,6 +27,13 @@ tags: md-0.1
 
 tags: md-0-2
 
+* Test description
+
+   |action     |value                         |
+   |-----------|------------------------------|
+   |description|Version Info must be available|
+   |priority   |high                          |
+
 * Rest call
 
    |action                         |value                                   |
@@ -36,3 +43,22 @@ tags: md-0-2
    |expected:header#status         |200                                     |
    |expected:header#headers.version|1.0.16                                  |
 
+## 1.3. Read Open API
+
+tags: md-0-2
+
+* Test description
+
+   |action     |value                                    |
+   |-----------|-----------------------------------------|
+   |description|Open API specification must be accessable|
+   |priority   |high                                     |
+
+* Rest call
+
+   |action                |value                           |
+   |----------------------|--------------------------------|
+   |method:get            |/v3/api-docs                    |
+   |description           |Reads the open api specification|
+   |expected:header#status|200                             |
+   |expected#info.title   |JITPay Masterdata               |
