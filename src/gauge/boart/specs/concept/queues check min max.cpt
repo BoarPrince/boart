@@ -72,8 +72,8 @@
    | description                 | onboarding - create     |
    | group                       | Check Queues            |
    | queue                       | test.ob-create.company  |
-   | timeout                     | 20                      |
-   | count:max                   | <max>                   |
+   | timeout                     | 10                      |
+   | count:max                   | 5                       |
    | count:min                   | <min>                   |
    | store                       | event-onboarding-create |
 
@@ -85,8 +85,8 @@
    | description                 | onboarding - update     |
    | group                       | Check Queues            |
    | queue                       | test.ob-update.company  |
-   | timeout                     | 20                      |
-   | count:max                   | <max>                   |
+   | timeout                     | 10                      |
+   | count:max                   | 5                   |
    | count:min                   | <min>                   |
    | store                       | event-onboarding-update |
 

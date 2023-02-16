@@ -563,7 +563,7 @@ tags: ob-10.10, manual
 
 * queues check "md-error-update"
 
-## 1.11. Check Onboarding Events Validation (manualy)
+## 1.11. Check Onboarding Events Validation - no Address (manualy)
 
 tags: ob-10.11, manual
 
@@ -619,3 +619,103 @@ tags: ob-10.11, manual
    |description                  |Check Masterdata Carrier Event (must contain Address / Country)|
    |                             |Carrier Address must contain a Country                         |
    |expected#addresses[0].country|DE                                                             |
+
+## 1.12. Check Onboarding Events Validation - no Bank BIC (manualy)
+
+tags: ob-10.12, manual
+
+* Test description
+
+   |action     |value                                          |
+   |-----------|-----------------------------------------------|
+   |description|Send Onboarding Event to Masterdata without BIC|
+   |priority   |high                                           |
+
+* queues bind "company, carrier, user, md-error"
+
+* RabbitMQ publish
+
+   |action                    |value                                      |
+   |--------------------------|-------------------------------------------|
+   |description               |Send onboarding event manualy (without BIC)|
+   |exchange                  |com.jitpay.company.onboarding              |
+   |wait:after:sec            |4                                          |
+   |messageId                 |${generate:s:uuid}                         |
+   |routing                   |JitpayServicesSync.RoutingKey              |
+   |routing                   |company-onboarding-data-sync-to-portal     |
+   |payload                   |<file:event-onboarding-with-bank.json>     |
+   |payload#bankAccountDto.bic|null                                       |
+
+* RabbitMQ publish
+
+   |action        |value                               |
+   |--------------|------------------------------------|
+   |description   |Send portal onboarding event manualy|
+   |exchange      |fleet_event_bus                     |
+   |wait:after:sec|4                                   |
+   |messageId     |${generate:s:uuid}                  |
+   |routing       |OnBoardingFleetEvent                |
+   |payload       |<file:event-portal-onboarding.json> |
+
+* queues check "company, carrier, user, md-error"
+
+## 1.13. Check Onboarding Events Validation - no Bank BIC, no Address Country (manualy)
+
+tags: ob-10.13, env:development, env:staging, manual
+
+* Test description
+
+   |action     |value                                                                                      |
+   |-----------|-------------------------------------------------------------------------------------------|
+   |description|Send Onboarding Event to Masterdata without BIC and not Address Country must be processable|
+   |priority   |high                                                                                       |
+
+* queues bind "company, carrier, user, md-error"
+
+* RabbitMQ publish
+
+   |action                        |value                                      |
+   |------------------------------|-------------------------------------------|
+   |description                   |Send onboarding event manualy (without BIC)|
+   |exchange                      |com.jitpay.company.onboarding              |
+   |wait:after:sec                |4                                          |
+   |messageId                     |${generate:s:uuid}                         |
+   |routing                       |JitpayServicesSync.RoutingKey              |
+   |routing                       |company-onboarding-data-sync-to-portal     |
+   |payload                       |<file:event-onboarding-with-bank.json>     |
+   |payload#bankAccountDto.bic    |null                                       |
+   |payload#addressDto.countryCode|null                                       |
+   |store                         |response-register                          |
+
+* RabbitMQ publish
+
+   |action                           |value                               |
+   |---------------------------------|------------------------------------|
+   |description                      |Send portal onboarding event manualy|
+   |exchange                         |fleet_event_bus                     |
+   |wait:after:sec                   |4                                   |
+   |messageId                        |${generate:s:uuid}                  |
+   |routing                          |OnBoardingFleetEvent                |
+   |payload                          |<file:event-portal-onboarding.json> |
+   |payload#Taker.address.countryCode|null                                |
+
+* queues check "company, carrier, user, md-error"
+
+* RabbitMQ publish
+
+   |action              |value                                                |
+   |--------------------|-----------------------------------------------------|
+   |description         |Send event to identity to create the user on keycload|
+   |exchange            |Identity.Exchange.MasterData                         |
+   |routing             |Identity.UserSync                                    |
+   |payload             |<file:event-identity.json>                           |
+   |payload#CompanyId   |${store:event-company.id}                            |
+   |payload#SubsidiaryId|${store:event-company.carriers[0].id}                |
+   |payload#UserId      |${store:event-company.carriers[0].users[0].id}       |
+   |wait:after:sec      |4                                                    |
+
+* onboarding - check matching ids, email: "${store:response-register.userDetail.email}", group: "Check IDs", wait: "0", not: "portal, claims"
+
+POST
+	https://portal-services.stage.jitpay.eu/api/company
+{"name":"TestA","nameAddition":"AG_de","vatId":null,"taxNumber":"67698769876987","commercialRegisterNumber":"HEB 1","registryCourt":"Mannheim","homePage":null,"score":2,"riskQuota":2,"financialDataSource":"Bürgel","trafficLightState":"GREEN","jitpayRating":1,"companyOnboardThrough":"FACEBOOK","salesManager":null,"originPlatform":"JITPAY","addresses":[{"street":"Hauptstrasse","zipCode":"74246","city":"Weinberg","countryCode":"DE","type":"MASTER","subsidiaryIdentifier":null,"contactPersonDto":{"id":null,"firstName":null,"lastName":null,"email":"wein@web.de","telephoneNumber":null}}],"externalIds":[],"debtor":null,"creditor":{"active":true,"assignVIban":true,"insuranceRatio":40,"insuranceName":"Sonstige","zessionar":"Zess","fgFeeModel":"flat","additionalInformation":[],"platforms":["TIMOCOM","JITpay"],"statusRemark":null,"delcredere":"genuine","fgFee":3},"bankData":{"id":null,"iban":"DE02933","bic":"AAAAAA","bankName":"Voba"}}
