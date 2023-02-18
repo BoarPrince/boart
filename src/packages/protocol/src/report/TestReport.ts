@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { EnvLoader, Runtime } from '@boart/core';
+import { EnvLoader, Runtime, RuntimePriority, RuntimeStatus } from '@boart/core';
 
 import { TestReportItem } from '../report-item/TestReportItem';
 import { TicketItem } from '../report-item/TicketItem';
@@ -15,6 +15,7 @@ export class TestReport {
     private ticket: string;
     private descriptions: string;
     private failureDescription: string;
+    private static readonly numberNameRexp = /^(\d+\.)(\S*)\s+(.+)/;
 
     /**
      *
@@ -67,14 +68,14 @@ export class TestReport {
      */
     private getNumber(location: string, name: string): string {
         const localNumber = LocalReport.getNumber(location, name);
-        return (name?.replace(/^(\d+\.)([\d.]*)(\W+.+)/, localNumber + '.$2') || '').replace(/\.$/, '');
+        return (name?.replace(TestReport.numberNameRexp, localNumber + '.$2') || '').replace(/\.$/, '');
     }
 
     /**
      *
      */
     private getName(name: string): string {
-        return name?.replace(/\d[\d.]+\W*/, '') || '';
+        return name?.replace(TestReport.numberNameRexp, '$3') || '';
     }
 
     /**
@@ -95,8 +96,8 @@ export class TestReport {
             tags: currentTestRuntime.tags,
             errorMessage: currentTestRuntime.errorMessage,
             stackTrace: currentTestRuntime.stackTrace,
-            status: currentTestRuntime.status,
-            priority: currentTestRuntime.priority,
+            status: currentTestRuntime.status || RuntimeStatus.notExecuted,
+            priority: currentTestRuntime.priority || RuntimePriority.medium,
             startTime: currentTestRuntime.startTime,
             duration: currentTestRuntime.duration,
             tickets: TestReport.extractTickets(this.ticket),

@@ -81,12 +81,17 @@ beforeEach(() => {
     writeFileCall = {} as any;
 });
 
+/**
+ *
+ */
 it.each([
-    [1, '1.12. Read XXX', '/parth1/path2/boart/specs/5. Company.spec', 'Read XXX', '5.12'],
-    [2, '1.12. Read XXX', '/parth1/path2/boart/specs/15. Company.spec', 'Read XXX', '15.12'],
-    [3, '1.12 Read XXX', '/parth1/path2/boart/specs/15. Company.spec', 'Read XXX', '15.12'],
-    [4, '1.2.1. Read XXX', '/parth1/path2/boart/specs/15. Company.spec', 'Read XXX', '15.2.1'],
-    [5, '1.1 Read XXX', '/parth1/path2/boart/specs/15 Company.spec', 'Read XXX', '15.1']
+    [1, '1.12. Read XXX', '/path1/path2/boart/specs/5. Company.spec', 'Read XXX', '5.12'],
+    [2, '1.12. Read XXX', '/path1/path2/boart/specs/15. Company.spec', 'Read XXX', '15.12'],
+    [3, '1.12 Read XXX', '/path1/path2/boart/specs/15. Company.spec', 'Read XXX', '15.12'],
+    [4, '1.2.1. Read XXX', '/path1/path2/boart/specs/15. Company.spec', 'Read XXX', '15.2.1'],
+    [5, '1.1 Read XXX', '/path1/path2/boart/specs/15 Company.spec', 'Read XXX', '15.1'],
+    [6, '1.1b Read XXX', '/path1/path2/boart/specs/15 Company.spec', 'Read XXX', '15.1b'],
+    [7, '1.2.1b. Read XXX', '/path1/path2/boart/specs/15. Company.spec', 'Read XXX', '15.2.1b']
 ])(`%s, number: %s, md-name: %s, name: %s `, (_: number, md_name: string, md_location: string, name: string, number: string) => {
     Runtime.instance.testRuntime.notifyStart({
         id: '-id-',
@@ -98,4 +103,19 @@ it.each([
 
     expect(writeFileCall.data.number).toBe(number);
     expect(writeFileCall.data.name).toBe(name);
+});
+
+/**
+ *
+ */
+it('test without a test description should have default values', () => {
+    sut.report();
+    expect(writeFileCall.data).toStrictEqual({
+        id: '-id-',
+        name: '',
+        number: '',
+        priority: 1,
+        status: 2,
+        tickets: []
+    });
 });
