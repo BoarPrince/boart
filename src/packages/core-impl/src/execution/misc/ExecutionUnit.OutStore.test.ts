@@ -405,3 +405,74 @@ describe('check extended context', () => {
         expect(Store.instance.testStore.get('var').toString()).toBe('xxx');
     });
 });
+
+/**
+ *
+ */
+describe('executionContext can be null or undefined', () => {
+    /**
+     *
+     */
+    it('transformed is null', async () => {
+        initialContext.execution.transformed = null;
+        initialContext.execution.data = new ObjectContent({ a: 2 });
+        initialContext.preExecution.payload = new ObjectContent({ a: 1 });
+
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: [`store`, `var`]
+                }
+            ]
+        });
+
+        expect(Store.instance.testStore.get('var').valueOf()).toStrictEqual({ a: 2 });
+    });
+
+    /**
+     *
+     */
+    it('data is null', async () => {
+        initialContext.execution.transformed = null;
+        initialContext.execution.data = null;
+        initialContext.preExecution.payload = new ObjectContent({ a: 1 });
+
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: [`store`, `var`]
+                }
+            ]
+        });
+
+        expect(Store.instance.testStore.get('var').valueOf()).toStrictEqual({ a: 1 });
+    });
+
+    /**
+     *
+     */
+    it('payload is null', async () => {
+        initialContext.execution.transformed = null;
+        initialContext.execution.data = new ObjectContent({ a: 1 });
+        initialContext.preExecution.payload = null;
+
+        await tableHandler.process({
+            headers: {
+                cells: ['action', 'value']
+            },
+            rows: [
+                {
+                    cells: [`store`, `var`]
+                }
+            ]
+        });
+
+        expect(Store.instance.testStore.get('var').valueOf()).toStrictEqual({ a: 1 });
+    });
+});

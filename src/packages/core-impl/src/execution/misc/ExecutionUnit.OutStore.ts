@@ -1,7 +1,7 @@
 import { DataContent, DataContentHelper, ExecutionUnit, key, ParaType, ScopeType, SelectorType, StoreWrapper } from '@boart/core';
 import { Description } from 'core/src/description/Description';
 
-import { DataContext } from '../../DataExecutionContext';
+import { DataContext, DataExecutionContext, DataPreExecutionContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
 import { ParaValidator } from '../../validators/ParaValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
@@ -79,16 +79,19 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
             return context.preExecution.payload;
         }
 
+        const executionContext = context.execution || ({} as DataExecutionContext);
+        const preExecutionContext = context.preExecution || ({} as DataPreExecutionContext);
+
         if (!!this.executionType) {
             return !this.executionKey
-                ? context.execution[this.executionType] //
-                : context.execution[this.executionType][this.executionKey];
+                ? executionContext[this.executionType] //
+                : executionContext[this.executionType][this.executionKey];
         }
 
         return (
-            nonNullValue(context.execution.transformed, null) ||
-            nonNullValue(context.execution.data, null) ||
-            nonNullValue(context.preExecution?.payload)
+            nonNullValue(executionContext.transformed, null) ||
+            nonNullValue(executionContext.data, null) ||
+            nonNullValue(preExecutionContext.payload)
         );
     }
 
