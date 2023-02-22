@@ -96,7 +96,7 @@ export class TestReport {
             tags: currentTestRuntime.tags,
             errorMessage: currentTestRuntime.errorMessage,
             stackTrace: currentTestRuntime.stackTrace,
-            status: currentTestRuntime.status || RuntimeStatus.notExecuted,
+            status: currentTestRuntime.status == null ? RuntimeStatus.notExecuted : currentTestRuntime.status,
             priority: currentTestRuntime.priority || RuntimePriority.medium,
             startTime: currentTestRuntime.startTime,
             duration: currentTestRuntime.duration,

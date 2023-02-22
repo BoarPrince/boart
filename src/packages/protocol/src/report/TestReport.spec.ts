@@ -1,4 +1,4 @@
-import { LocalContext, Runtime, RuntimeContext, StepContext, TestContext } from '@boart/core';
+import { LocalContext, Runtime, RuntimeContext, RuntimeStatus, StepContext, TestContext } from '@boart/core';
 
 import { TestReportItem } from '../report-item/TestReportItem';
 
@@ -116,6 +116,29 @@ it('test without a test description should have default values', () => {
         number: '',
         priority: 1,
         status: 2,
+        tickets: []
+    });
+});
+
+/**
+ *
+ */
+it('test with failed status', () => {
+    Runtime.instance.testRuntime.notifyStart({
+        id: '-id-',
+        status: RuntimeStatus.failed
+    } as TestContext);
+
+    sut.report();
+
+    const data = writeFileCall.data;
+    delete data.startTime;
+    expect(data).toStrictEqual({
+        id: '-id-',
+        name: '',
+        number: '',
+        priority: 1,
+        status: 0,
         tickets: []
     });
 });
