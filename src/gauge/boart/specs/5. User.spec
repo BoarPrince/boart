@@ -801,4 +801,72 @@ tags: md-5.17, env:development, env:staging
    |expected:header#status|200                                                     |
 
 
-   Read XXXXX
+## 1.18. Sync specific user
+
+tags: md-5.18, sync
+
+* Test description
+
+   |action     |value                                                          |
+   |-----------|---------------------------------------------------------------|
+   |description|Sync specific user must trigger event for user and for keycloak|
+   |priority   |high                                                           |
+
+* request admin bearer
+
+* add company and carrier
+
+* add user
+
+* queues bind "user, identity-claim"
+
+* Rest call
+
+   |action                |value                                               |
+   |----------------------|----------------------------------------------------|
+   |method:get            |/api/maintenance/sync/user/${store:response-user.id}|
+   |description           |Sync specific user - force trigger keycloak event   |
+   |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}          |
+   |link:grafana          |${generate:tpl:link.grafana.header.traceId}         |
+   |expected:header#status|202                                                 |
+   |expected:contains:not |null                                                |
+
+* queues check "user, identity-claim"
+
+## 1.19. Sync specific users (list)
+
+tags: md-5.19, sync
+
+* Test description
+
+   |action     |value                                                                 |
+   |-----------|----------------------------------------------------------------------|
+   |description|Sync specific users must trigger event for every user and for keycloak|
+   |priority   |high                                                                  |
+
+* request admin bearer
+
+* add company and carrier
+
+* add user
+* Save value: "${store:response-user.id}" to store: "user-1-id"
+
+* add user
+* Save value: "${store:response-user.id}" to store: "user-2-id"
+
+* queues bind "user, identity-claim"
+
+* Rest call
+
+   |action                |value                                                    |
+   |----------------------|---------------------------------------------------------|
+   |method:post           |/api/maintenance/sync/users                              |
+   |description           |Sync specific users (list) - force trigger keycloak event|
+   |payload#0             |${store:user-1-id}                                       |
+   |payload#1             |${store:user-2-id}                                       |
+   |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}               |
+   |link:grafana          |${generate:tpl:link.grafana.header.traceId}              |
+   |expected:header#status|202                                                      |
+   |expected:contains:not |null                                                     |
+
+* queues check "user, identity-claim", min: "2", max: "2"

@@ -107,6 +107,7 @@
   | --routing               | Identity.UserSync                                 |
   | queue                   | test.md.identity-claim                            |
   | description             | Bind identity/keycloak queue (Masterdata, Claims) |
+  | link:rabbit-exchange    | ${env:rabbit_url}exchanges/%2F/Identity.claimupdate.Exchange.MasterData   |
   | group                   | Bind Queues                                       |
 
 * RabbitMQ bind

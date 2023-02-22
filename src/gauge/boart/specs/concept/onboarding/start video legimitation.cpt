@@ -13,6 +13,7 @@
      |                        | "representativeId": "${store:response-register.representative[0].id}", |
      |                        | "language": "de",                                                      |
      |                        | "identData": {                                                         |
+     |                        | "telephoneNumber":{"country":"49","number":"1743284130"},              |
      |                        | "birthDate": "2000-06-20T00:00:00.000",                                |
      |                        | "birthPlace": "Braunschweig",                                          |
      |                        | "nationality": "DE"                                                    |
@@ -31,6 +32,7 @@
      |                        | "representativeId": "${store:response-register.representative[1].id}", |
      |                        | "language": "de",                                                      |
      |                        | "identData": {                                                         |
+     |                        | "telephoneNumber":{"country":"49","number":"1743284130"},              |
      |                        | "birthDate": "2000-06-20T00:00:00.000",                                |
      |                        | "birthPlace": "Braunschweig",                                          |
      |                        | "nationality": "DE"                                                    |

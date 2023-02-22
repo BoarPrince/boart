@@ -939,3 +939,83 @@ tags: md-3.19
    |payload#carriers[0].addresses[0].country|undefined                                                                    |
    |expected:header#status                  |400                                                                          |
    |expected#description                    |{carriers[0].addresses[].country=country must be defined},                   |
+
+## 1.20. Sync specific carrier with multiple users
+
+tags: md-3.20, sync
+
+* Test description
+
+   |action     |value                                                                         |
+   |-----------|------------------------------------------------------------------------------|
+   |description|Sync specific carrier must trigger event for associated users and for keycloak|
+   |priority   |high                                                                          |
+
+* request admin bearer
+
+* add company and carrier
+
+* add user
+
+* add user
+
+* queues bind "carrier, user, identity-claim"
+
+* Rest call
+
+   |action                |value                                                |
+   |----------------------|-----------------------------------------------------|
+   |method:get            |/api/maintenance/sync/carrier/${store:response-ca.id}|
+   |description           |Sync specific carrier - force trigger keycloak event |
+   |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}           |
+   |link:grafana          |${generate:tpl:link.grafana.header.traceId}          |
+   |expected:header#status|202                                                  |
+   |expected:contains:not |null                                                 |
+
+* queues check "carrier"
+
+* queues check "identity-claim, user", min: "2", max: "2"
+
+## 1.21. Sync specific carriers
+
+tags: md-3.21, sync
+
+* Test description
+
+   |action     |value                                                                         |
+   |-----------|------------------------------------------------------------------------------|
+   |description|Sync specific carrier must trigger event for associated users and for keycloak|
+   |priority   |high                                                                          |
+
+* request admin bearer
+
+* add company and carrier
+* Save value: "${store:response-ca.id}" to store: "carrier-1-id"
+
+* add user
+
+* add carrier
+* Save value: "${store:response-ca.id}" to store: "carrier-2-id"
+
+* add user
+
+* add user
+
+* queues bind "carrier, user, identity-claim"
+
+* Rest call
+
+   |action                |value                                                       |
+   |----------------------|------------------------------------------------------------|
+   |method:post           |/api/maintenance/sync/carriers                              |
+   |description           |Sync specific carriers (list) - force trigger keycloak event|
+   |payload#0             |${store:carrier-1-id}                                       |
+   |payload#1             |${store:carrier-2-id}                                       |
+   |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}                  |
+   |link:grafana          |${generate:tpl:link.grafana.header.traceId}                 |
+   |expected:header#status|202                                                         |
+   |expected:contains:not |null                                                        |
+
+* queues check "carrier", min: "2", max: "2"
+
+* queues check "identity-claim, user", min: "3", max: "3"

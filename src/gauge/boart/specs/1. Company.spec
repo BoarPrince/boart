@@ -801,3 +801,79 @@ tags: md-1.19
    |expected:header#status     |200                                 |
    |expected:count#addresses   |1                                   |
    |expected#addresses[0].email|jitpaytest+second@gmail.com         |
+
+## 1.20. Sync specific company with multiple users
+
+tags: md-1.20, sync
+
+* Test description
+
+   |action     |value                                                                         |
+   |-----------|------------------------------------------------------------------------------|
+   |description|Sync specific company must trigger event for associated users and for keycloak|
+   |priority   |high                                                                          |
+
+* request admin bearer
+
+* add company and carrier
+
+* add user
+
+* add carrier
+
+* add user
+
+* queues bind "company, carrier, user, identity-claim"
+
+* Rest call
+
+   |action                |value                                                |
+   |----------------------|-----------------------------------------------------|
+   |method:get            |/api/maintenance/sync/company/${store:response-co.id}|
+   |description           |Sync specific company - force trigger keycloak event |
+   |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}           |
+   |link:grafana          |${generate:tpl:link.grafana.header.traceId}          |
+   |expected:header#status|202                                                  |
+   |expected:contains:not |null                                                 |
+
+* queues check "company"
+
+* queues check "carrier, identity-claim, user", min: "2", max: "2"
+
+## 1.21. Sync specific companies
+
+tags: md-1.21, sync
+
+* Test description
+
+   |action     |value                                                                                  |
+   |-----------|---------------------------------------------------------------------------------------|
+   |description|Sync specific companies (list) must trigger event for associated users and for keycloak|
+   |priority   |high                                                                                   |
+
+* request admin bearer
+
+* add company and carrier
+* Save value: "${store:response-co.id}" to store: "company-1-id"
+* add user
+
+* add company and carrier
+* Save value: "${store:response-co.id}" to store: "company-2-id"
+* add user
+
+* queues bind "company, carrier, user, identity-claim"
+
+* Rest call
+
+   |action                |value                                                        |
+   |----------------------|-------------------------------------------------------------|
+   |method:post           |/api/maintenance/sync/companies                              |
+   |description           |Sync specific companies (list) - force trigger keycloak event|
+   |payload#0             |${store:company-1-id}                                        |
+   |payload#1             |${store:company-2-id}                                        |
+   |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}                   |
+   |link:grafana          |${generate:tpl:link.grafana.header.traceId}                  |
+   |expected:header#status|202                                                          |
+   |expected:contains:not |null                                                         |
+
+* queues check "company, carrier, identity-claim, user", min: "2", max: "2"
