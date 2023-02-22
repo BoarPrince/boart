@@ -145,7 +145,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
         });
 
         const value = data.getValue();
-        const expectedValue = row.value.toString();
+        const expectedValue = row.value == null ? (row.value as string) : row.value.toString();
         const expectedResult = await operator.check(value, expectedValue);
 
         if (expectedResult.result === false) {
@@ -153,7 +153,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
             throw Error(
                 `error: ${description}` +
                     (!expectedResult.errorMessage
-                        ? `\n\t${operatorName}: ${expected.toString()}\n\tactual: ${data.getText()}`
+                        ? `\n\t${operatorName}: ${expected?.toString()}\n\tactual: ${data.getText()}`
                         : expectedResult.errorMessage)
             );
         }

@@ -94,6 +94,22 @@ describe('contains', () => {
     /**
      *
      */
+    it('check object with null values', async () => {
+        const result = await sut.check({ a: null, b: 1, c: 1 }, null);
+        expect(result.result).toBeTruthy();
+    });
+
+    /**
+     *
+     */
+    it('check object with null values - but not existing', async () => {
+        const result = await sut.check({ a: null, b: 1, c: 1 }, '0');
+        expect(result.result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
     it('check object false', async () => {
         const result = await sut.check({ a: 1, b: 1, c: 1 }, 'd');
         expect(result.result).toBeFalsy();

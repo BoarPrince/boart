@@ -232,6 +232,7 @@ describe('check expected,expected:data', () => {
             await sut.handler.process(tableDef);
         }).rejects.toThrowError(`error: expected:data\n\texpected: x-x-x\n\tactual: xxx`);
     });
+
     /**
      *
      */
@@ -257,6 +258,66 @@ describe('check expected,expected:data', () => {
             `|action         |value |
              |---------------|------|
              |expected:data#a|xyz   |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+
+    /**
+     *
+     */
+    it('expected:contains a null value', async () => {
+        intialContext.data = new ObjectContent({ a: null, b: 1 });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action            |value |
+             |------------------|------|
+             |expected:contains |null  |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+
+    /**
+     *
+     */
+    it('expected:contains a none null value', async () => {
+        intialContext.data = new ObjectContent({ a: 1, b: 2 });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action                |value |
+             |----------------------|------|
+             |expected:contains:not |null  |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+
+    /**
+     *
+     */
+    it('expected:contains a 0 value', async () => {
+        intialContext.data = new ObjectContent({ a: 0, b: 1 });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action            |value |
+             |------------------|------|
+             |expected:contains |0     |`
+        );
+
+        await sut.handler.process(tableDef);
+    });
+
+    /**
+     *
+     */
+    it('expected:contains a none 0 value', async () => {
+        intialContext.data = new ObjectContent({ a: 1, b: 2 });
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action                |value |
+             |----------------------|------|
+             |expected:contains:not |0     |`
         );
 
         await sut.handler.process(tableDef);
