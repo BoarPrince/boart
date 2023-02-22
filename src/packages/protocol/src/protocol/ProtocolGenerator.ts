@@ -200,7 +200,7 @@ export class ProtocolGenerator {
     /**
      *
      */
-    generateDataItems(data: Record<string, StepReportDataItem>): Array<DataItem> {
+    private generateDataItems(data: Record<string, StepReportDataItem>): Array<DataItem> {
         return Object.keys(data)
             .map((key) => data[key])
             .map((dataItem) => {
@@ -215,7 +215,7 @@ export class ProtocolGenerator {
     /**
      *
      */
-    generateLinks(links: Array<[string, string]>): Array<{ name: string; link: string }> {
+    private generateLinks(links: Array<[string, string]>): Array<{ name: string; link: string }> {
         return links?.map((link) => ({
             name: link[0],
             link: link[1]
@@ -376,6 +376,19 @@ export class ProtocolGenerator {
         fs.writeFileSync(filename, htmlContent, 'utf-8');
 
         console.log('Protocol generated to =>', 'file://' + path.resolve(filename));
+    }
+
+    /**
+     *
+     */
+    public static cleanReportPath(): void {
+        const dir = EnvLoader.ReportDataPath;
+        fs.readdir(dir, (err, files) => {
+            if (err) throw err;
+            for (const file of files) {
+                fs.unlinkSync(path.join(dir, file));
+            }
+        });
     }
 
     /**

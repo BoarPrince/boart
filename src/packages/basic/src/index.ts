@@ -51,6 +51,9 @@ function initialize(): void {
     Runtime.instance.stepRuntime.onEnd().subscribe(() => StepReport.instance.report());
     Runtime.instance.testRuntime.onEnd().subscribe(() => TestReport.instance.report());
     Runtime.instance.localRuntime.onEnd().subscribe(() => LocalReport.instance.report());
+    Runtime.instance.runtime.onStart().subscribe(() => {
+        ProtocolGenerator.cleanReportPath();
+    });
     Runtime.instance.runtime.onEnd().subscribe(() => {
         Runtime.instance.save();
         new ProtocolGenerator().generate();
