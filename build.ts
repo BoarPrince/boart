@@ -1,4 +1,5 @@
-import fs from 'fs';
+import * as fs from 'fs';
+
 import path from 'path';
 import yargs from 'yargs/yargs';
 
@@ -92,7 +93,7 @@ class CommandLineReader {
                 p: {
                     type: 'string',
                     array: true,
-                    choices: ['core', 'core-impl', 'basic', 'protocol', 'execution'],
+                    choices: ['core', 'core-impl', 'basic', 'protocol', 'execution', 'description'],
                     alias: 'packageName',
                     require: true,
                     desc: 'Name of the package(s)'

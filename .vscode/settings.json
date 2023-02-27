@@ -1,5 +1,5 @@
 {
-  "[.cpt]": {
+  "[*.cpt]": {
     "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
   },
   "[*.spec]": {
@@ -15,7 +15,8 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
+    "editor.defaultFormatter": "darkriszty.markdown-table-prettify",
+    "editor.unicodeHighlight.includeComments": true
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -60,5 +61,11 @@
   "testExplorer.addToEditorContextMenu": true,
   "testExplorer.useNativeTesting": false,
   "typescript.tsdk": "./node_modules/typescript/lib",
-  "window.title": "B O A R - T"
+  "window.title": "B O A R - T",
+  "sonarlint.connectedMode.project": {
+    "connectionId": "",
+    "projectKey": ""
+  },
+  "files.autoSaveDelay": 5000000000,
+  "commentTranslate.hover.enabled": false
 }

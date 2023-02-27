@@ -2,12 +2,15 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "ecmaVersion": 2020,
     "project": [
       "./tsconfig.eslint.json"
     ]
   },
   "env": {
-    "commonjs": true
+    "commonjs": true,
+    "node": true,
+    "es2020": true
   },
   "ignorePatterns": [
     "node_modules",
@@ -63,5 +66,20 @@
         "ignoreCase": true
       }
     ]
+  },
+  "settings": {
+    "project": {},
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ],
+        "moduleDirectory": [
+          "src",
+          "node_modules"
+        ]
+      }
+    }
   }
 }

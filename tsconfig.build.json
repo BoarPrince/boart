@@ -28,7 +28,8 @@
       "src/packages/core-impl/src/",
       "src/packages/execution/src/",
       "src/packages/protocol/src/",
-      "src/packages/basic/src/"
+      "src/packages/basic/src/",
+      "src/packages/description/src/"
     ],
     "baseUrl": "src/packages/",
     "paths": {
@@ -49,6 +50,9 @@
       ],
       "@boart/basic": [
         "basic/src/index.ts"
+      ],
+      "@boart/description": [
+        "description/src/index.ts"
       ]
     }
   }
