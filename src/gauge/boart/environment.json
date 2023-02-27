@@ -65,8 +65,8 @@
       "name": "${generate:fake:company:name}-${generate:random:4}"
     },
     "link": {
-      "jaeger.messageId": "${env:jaeger_url}/search?service=masterdata&tags=%7B%22messaging.message_id%22%3A%22${context:header.properties.messageId}%22%7D",
-      "grafana.messageId": "https://grafana.mgmt.jitpay.eu/explore?orgId=1&left=%7B%22datasource%22:%22PC9A941E8F2E49454%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22queryType%22:%22search%22,%22service%22:%22masterdata%22,%22tags%22:%22messaging.message_id%3D${context:header.properties.messageId}%22%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D%7D",
+      "jaeger.messageId": "${env:jaeger_url}/search?service=masterdata&tags=%7B%22messaging.message.id%22%3A%22${context:header.properties.messageId}%22%7D",
+      "grafana.messageId": "https://grafana.mgmt.jitpay.eu/explore?orgId=1&left=%7B%22datasource%22:%22PC9A941E8F2E49454%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22queryType%22:%22search%22,%22service%22:%22masterdata%22,%22tags%22:%22messaging.message.id%3D${context:header.properties.messageId}%22%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D%7D",
       "jaeger.header.traceId": "${env:jaeger_url}/trace/${context:header.headers.trace-id}",
       "grafana.header.traceId": "https://grafana.mgmt.jitpay.eu/explore?orgId=1&left=%7B%22datasource%22:%22PC9A941E8F2E49454%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22queryType%22:%22search%22,%22service%22:%22masterdata%22,%22tags%22:%22%22%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D%7D&right=%7B%22datasource%22:%22PC9A941E8F2E49454%22,%22queries%22:%5B%7B%22query%22:%22${context:header.headers.trace-id}%22,%22refId%22:%22A%22%7D%5D,%22range%22:%7B%22from%22:%221676386350721%22,%22to%22:%221676389950721%22%7D%7D"
     }

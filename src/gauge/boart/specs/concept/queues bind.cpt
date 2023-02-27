@@ -20,6 +20,16 @@
   | group                     | Bind Queues              |
 
 * RabbitMQ bind
+  | action                    | value                    |
+  |---------------------------|--------------------------|
+  | run:only:user-consumer | <queue-list>             |
+  | exchange                  | user                  |
+  | queue                     | test.md.user-consumer |
+  | routing                   | updatemasterdata         |
+  | description               | user md crud event    |
+  | group                     | Bind Queues              |
+
+* RabbitMQ bind
   | action                      | value                                  |
   |-----------------------------|----------------------------------------|
   | run:only:company-onboarding | <queue-list>                           |
@@ -202,3 +212,22 @@
   | link:rabbit-queue        | ${env:rabbit_url}queues/%2F/portal%2Fmasterdata               |
   | link:rabbit-dlq-exchange | ${env:rabbit_url}exchanges/%2F/masterdata.exchange.deadletter |
   | link:rabbit-dlq-queue    | ${env:rabbit_url}queues/%2F/portal.masterdata.error           |
+
+* RabbitMQ bind
+  | action                   | value                                                         |
+  |--------------------------|---------------------------------------------------------------|
+  | run:only:md-user-error   | <queue-list>                                                  |
+  | description              | error: md onboarding user update event         |
+  | group                    | Bind Queues                                                   |
+  | queue                    | test.user.masterdata.error                                  |
+  | exchange                 | masterdata.exchange.deadletter                                |
+  | routing                  | masterdata/user                                             |
+
+* RabbitMQ bind
+  | action                   | value                                                         |
+  |--------------------------|---------------------------------------------------------------|
+  | run:only:md-all-error   | <queue-list>                                                  |
+  | description              | error: md all errors         |
+  | group                    | Bind Queues                                                   |
+  | queue                    | test.masterdata.error                                  |
+  | exchange                 | masterdata.error                                |

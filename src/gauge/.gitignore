@@ -4,6 +4,7 @@
 # Gauge - log files dir
 logs
 boart/.logs
+boart/documentation
 
 
 # Gauge - reports dir

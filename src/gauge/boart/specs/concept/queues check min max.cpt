@@ -66,6 +66,19 @@
 
 * RabbitMQ consume, continue
 
+   | action                    | value                                                       |
+   |---------------------------|-------------------------------------------------------------|
+   | run:only:user-consumer | <queue-list>                                                |
+   | queue                     | test.md.user-consumer                                    |
+   | group                     | Check Queues                                                |
+   | description               | user md crud event, min: ${store?:min}, max: ${store?:max} |
+   | timeout                   | 5                                                           |
+   | count:max                 | <max>                                                       |
+   | count:min                 | <min>                                                       |
+   | store                     | event-user-consumer                                      |
+
+* RabbitMQ consume, continue
+
    | action                      | value                   |
    |-----------------------------|-------------------------|
    | run:only:company-onboarding | <queue-list>            |
@@ -239,3 +252,27 @@
   | link:rabbit-queue        | ${env:rabbit_url}queues/%2F/portal%2Fmasterdata               |
   | link:rabbit-dlq-exchange | ${env:rabbit_url}exchanges/%2F/masterdata.exchange.deadletter |
   | link:rabbit-dlq-queue    | ${env:rabbit_url}queues/%2F/portal.masterdata.error           |
+
+* RabbitMQ consume, continue
+
+   | action                   | value                   |
+   |--------------------------|-------------------------|
+   | run:only:md-user-error | <queue-list>            |
+   | queue                    | test.user.masterdata.error |
+   | group                    | Check Queues            |
+   | description              | error: md onboarding user update event     |
+   | count:max                | <max>                   |
+   | count:min                | <min>                   |
+   | store                    | event-md-user-error   |
+
+* RabbitMQ consume, continue
+
+   | action                   | value                   |
+   |--------------------------|-------------------------|
+   | run:only:md-all-error | <queue-list>            |
+   | queue                    | test.masterdata.error |
+   | group                    | Check Queues            |
+   | description              | error: md all errors     |
+   | count:max                | <max>                   |
+   | count:min                | <min>                   |
+   | store                    | event-md-error   |

@@ -870,3 +870,29 @@ tags: md-5.19, sync
    |expected:contains:not |null                                                     |
 
 * queues check "user, identity-claim", min: "2", max: "2"
+
+## 1.20. Wrong user event update must force an error
+
+tags: md-5.20, sync
+
+* Test description
+
+   |action     |value                                                             |
+   |-----------|------------------------------------------------------------------|
+   |description|try update a user with a wrong event payload must lead to an error|
+   |priority   |medium                                                            |
+
+* queues bind "md-user-error, md-all-error, user-consumer"
+
+* RabbitMQ publish
+
+   |action        |value                                             |
+   |--------------|--------------------------------------------------|
+   |description   |Send a wrong event to the masterdata user exchange|
+   |exchange      |user                                              |
+   |header#email  |jitpay@irgendwo.de                                |
+   |routing       |updatemasterdata                                  |
+   |payload       |{"any wrong payload"}                             |
+   |wait:after:sec|4                                                 |
+
+* queues check "md-user-error, md-all-error, user-consumer"

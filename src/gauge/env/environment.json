@@ -1,5 +1,6 @@
 {
   "environment": {},
   "path_mapping": {},
-  "environment_reports_data_dir": "./reports"
+  "environment_reports_data_dir": "./reports",
+  "environment_description_data_dir": "./description"
 }

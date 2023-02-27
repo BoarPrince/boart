@@ -12,8 +12,7 @@ const {
     SQLQueryTableHandler
 } = require('@boart/basic');
 const { DescriptionHandler, Store, ValueReplacerHandler, Runtime, RuntimeStatus } = require('@boart/core');
-const stream = require('stream');
-const { exit } = require('process');
+const { DescriptionConverter } = require('@boart/description');
 
 /**
  *
@@ -250,4 +249,12 @@ step('Print store', () => {
  */
 step('Console.log <message>', (message) => {
     console.log('#### log ####', message);
+});
+
+/**
+ *
+ */
+step('Generate Documentation', () => {
+    DescriptionHandler.instance.save();
+    DescriptionConverter.instance.convert();
 });
