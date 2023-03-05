@@ -58,7 +58,7 @@
    | run:only:company-consumer | <queue-list>                                                |
    | queue                     | test.md.company-consumer                                    |
    | group                     | Check Queues                                                |
-   | description               | company md crud event, min: ${store:min}, max: ${store:max} |
+   | description               | company md crud event, min: ${store:min}, max: ${store?:max} |
    | timeout                   | 5                                                           |
    | count:max                 | <max>                                                       |
    | count:min                 | <min>                                                       |
@@ -66,42 +66,46 @@
 
 * RabbitMQ consume, continue
 
-   | action                    | value                                                       |
-   |---------------------------|-------------------------------------------------------------|
-   | run:only:user-consumer | <queue-list>                                                |
-   | queue                     | test.md.user-consumer                                    |
-   | group                     | Check Queues                                                |
-   | description               | user md crud event, min: ${store?:min}, max: ${store?:max} |
-   | timeout                   | 5                                                           |
-   | count:max                 | <max>                                                       |
-   | count:min                 | <min>                                                       |
-   | store                     | event-user-consumer                                      |
+   | action                 | value                                                      |
+   |------------------------|------------------------------------------------------------|
+   | run:only:user-consumer | <queue-list>                                               |
+   | queue                  | test.md.user-consumer                                      |
+   | group                  | Check Queues                                               |
+   | description            | user md crud event, min: ${store?:min}, max: ${store?:max} |
+   | timeout                | 5                                                          |
+   | count:max              | <max>                                                      |
+   | count:min              | <min>                                                      |
+   | store                  | event-user-consumer                                        |
 
 * RabbitMQ consume, continue
 
-   | action                      | value                   |
-   |-----------------------------|-------------------------|
-   | run:only:company-onboarding | <queue-list>            |
-   | description                 | onboarding - create     |
-   | group                       | Check Queues            |
-   | queue                       | test.ob-create.company  |
-   | timeout                     | 10                      |
-   | count:max                   | 5                       |
-   | count:min                   | <min>                   |
-   | store                       | event-onboarding-create |
+   | action                      | value                                  |
+   |-----------------------------|----------------------------------------|
+   | run:only:company-onboarding | <queue-list>                           |
+   | description                 | onboarding - create                    |
+   | group                       | Check Queues                           |
+   | queue                       | test.ob-create.company                 |
+   | timeout                     | 10                                     |
+   | count:max                   | 5                                      |
+   | count:min                   | <min>                                  |
+   | link:jaeager                | ${generate:tpl:link.jaeger.messageId}  |
+   | link:grafana                | ${generate:tpl:link.grafana.messageId} |
+   | store                       | event-onboarding-create                |
 
 * RabbitMQ consume, continue
 
-   | action                      | value                   |
-   |-----------------------------|-------------------------|
-   | run:only:company-onboarding | <queue-list>            |
-   | description                 | onboarding - update     |
-   | group                       | Check Queues            |
-   | queue                       | test.ob-update.company  |
-   | timeout                     | 10                      |
-   | count:max                   | 5                   |
-   | count:min                   | <min>                   |
-   | store                       | event-onboarding-update |
+   | action                      | value                                  |
+   |-----------------------------|----------------------------------------|
+   | run:only:company-onboarding | <queue-list>                           |
+   | description                 | onboarding - update                    |
+   | group                       | Check Queues                           |
+   | queue                       | test.ob-update.company                 |
+   | timeout                     | 10                                     |
+   | count:max                   | 1                                      |
+   | count:min                   | <min>                                  |
+   | link:jaeager                | ${generate:tpl:link.jaeger.messageId}  |
+   | link:grafana                | ${generate:tpl:link.grafana.messageId} |
+   | store                       | event-onboarding-update                |
 
 * RabbitMQ consume, continue
 
@@ -175,7 +179,7 @@
   | run:only:portal-error | <queue-list>                                              |
   | queue                 | test.portal.masterdata.portal.error                       |
   | group                 | Check Queues                                              |
-  | description           | error: md onboarding update event                         |
+  | description           | error: onboarding -> portal                               |
   |                       | All Portal death letter exchanges are bound to this queue |
   |                       | No error should occur while consuming events.             |
   |                       | Therefore the queue must be empty                         |
@@ -255,24 +259,24 @@
 
 * RabbitMQ consume, continue
 
-   | action                   | value                   |
-   |--------------------------|-------------------------|
-   | run:only:md-user-error | <queue-list>            |
-   | queue                    | test.user.masterdata.error |
-   | group                    | Check Queues            |
-   | description              | error: md onboarding user update event     |
-   | count:max                | <max>                   |
-   | count:min                | <min>                   |
-   | store                    | event-md-user-error   |
+   | action                 | value                                  |
+   |------------------------|----------------------------------------|
+   | run:only:md-user-error | <queue-list>                           |
+   | queue                  | test.user.masterdata.error             |
+   | group                  | Check Queues                           |
+   | description            | error: md onboarding user update event |
+   | count:max              | <max>                                  |
+   | count:min              | <min>                                  |
+   | store                  | event-md-user-error                    |
 
 * RabbitMQ consume, continue
 
-   | action                   | value                   |
-   |--------------------------|-------------------------|
-   | run:only:md-all-error | <queue-list>            |
-   | queue                    | test.masterdata.error |
-   | group                    | Check Queues            |
-   | description              | error: md all errors     |
-   | count:max                | <max>                   |
-   | count:min                | <min>                   |
-   | store                    | event-md-error   |
+   | action                | value                 |
+   |-----------------------|-----------------------|
+   | run:only:md-all-error | <queue-list>          |
+   | queue                 | test.masterdata.error |
+   | group                 | Check Queues          |
+   | description           | error: md all errors  |
+   | count:max             | <max>                 |
+   | count:min             | <min>                 |
+   | store                 | event-md-error        |

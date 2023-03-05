@@ -13,7 +13,6 @@ tags: md-0.1
    |description|Health Check must be usable without authentication|
    |priority   |high                                              |
 
-
 * Rest call
 
    |action                |value            |

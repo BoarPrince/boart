@@ -297,15 +297,17 @@ tags: ob-10.6, register, env:development, env:staging
    |store#taxNumber       |debtor.taxId                     |
    |store#id              |debtor.id                        |
 
-* queues bind "company-consumer, company-onboarding, fleet-error, md-error, portal-error"
+* queues bind "company, carrier, user, company-consumer, company-onboarding, fleet-error, md-error, portal-error"
 
 * onboarding - complete
 
-* queues check "company-consumer, company-onboarding, fleet-error, md-error, portal-error"
+* queues check "company, carrier, user, company-consumer, company-onboarding, fleet-error, md-error, portal-error"
+
+* onboarding - check matching ids, email: "${store:response-register.email}", group: "Check IDs", wait: "0", not: ""
 
 ## 1.7. Id's must match after onboarding event when debtor already exists (tax - match, manualy)
 
-tags: ob-10.7, manual, env:staging, env:development
+tags: ob-10.7, manual, env:local
 
 * Test description
 
@@ -314,7 +316,15 @@ tags: ob-10.7, manual, env:staging, env:development
    |description|XXXX |
    |priority   |high |
 
-* queues bind "fleet-event-bus, portal-error"
+* Rest call
+
+   |action                |value                                   |
+   |----------------------|----------------------------------------|
+   |method:get            |/info/version                           |
+   |description           |Reads the version of the running backend|
+   |expected:header#status|200                                     |
+
+* queues bind "company, carrier, user, company-onboarding, md-error"
 
 * RabbitMQ publish
 
@@ -324,21 +334,44 @@ tags: ob-10.7, manual, env:staging, env:development
    |exchange                |com.jitpay.company.onboarding|
    |wait:after:sec          |3                            |
    |routing                 |JitpayServicesSync.RoutingKey|
+   |messageId               |${generate:s:uuid}           |
    |payload                 |<file:event-onboarding.json> |
    |payload#companyDto.state|CREATED                      |
 
 * RabbitMQ publish
 
-   |action                  |value                        |
-   |------------------------|-----------------------------|
-   |description             |Send onboarding event manualy|
-   |exchange                |com.jitpay.company.onboarding|
-   |wait:after:sec          |3                            |
-   |routing                 |JitpayServicesSync.RoutingKey|
-   |payload                 |<file:event-onboarding.json> |
-   |payload#companyDto.state|REGISTERED                   |
+   |action                 |value                                  |
+   |-----------------------|---------------------------------------|
+   |description            |Send onboarding event manualy          |
+   |exchange               |fleet_event_bus                        |
+   |routing                |OnBoardingFleetEvent                   |
+   |messageId              |${generate:s:uuid}                     |
+   |wait:after:sec         |2                                      |
+   |payload                |<file:event-portal-onboarding.json>    |
+   |payload#Taker#companyId|${store:newCompanyId:=${generate:uuid}}|
+   |payload#Taker#xxxxx    |###############                        |
+   |payload#xxxxx          |###############                        |
 
-* queues check "fleet-event-bus, portal-error"
+* queues check "company, carrier, user, company-onboarding, md-error"
+
+* Data manage
+
+   |action     |value                                              |
+   |-----------|---------------------------------------------------|
+   |in         |${store:event-company}                             |
+   |group      |Check Ids                                          |
+   |description|Check Company CRUD event contains the new companyId|
+   |expected#id|${store:newCompanyId}                              |
+
+* Data manage
+
+   |action            |value                                                |
+   |------------------|-----------------------------------------------------|
+   |in                |${store:event-carrier}                               |
+   |group             |Check Ids                                            |
+   |description       |Check Carrier CRUD event is assigned to new CompanyId|
+   |expected#companyId|${store:newCompanyId}                                |
+
 
 ## 1.8. If portal is sending the event (fleet event bus) more than one time, the carrier must always be the same (manualy)
 

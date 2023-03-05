@@ -4,7 +4,7 @@
     "admin_login_password": "demoJITpay#123",
     "default_password": "Germany2023!",
     "rabbitmq_hostname": [
-      "192.168.50.250",
+      "rabbitmq.dev.jitpay.eu",
       "192.168.50.249",
       "localhost"
     ],
@@ -42,7 +42,7 @@
       "https://cloud.stage.jitpay.eu/smart-onboarding"
     ],
     "rabbit_url": [
-      "http://192.168.50.250:15672/#/",
+      "https://rabbitmq.dev.jitpay.eu/#/",
       "http://srv-rabbitmq-02.jitpay.local:15672/#/",
       "http://localhost:15672/#/"
     ],
@@ -62,7 +62,8 @@
     },
     "company": {
       "id": "${generate:uuid}",
-      "name": "${generate:fake:company:name}-${generate:random:4}"
+      "name": "${generate:fake:company:name}-${generate:random:4}",
+      "ob-name": "${generate:fake:company:name}-${generate:random:4}"
     },
     "link": {
       "jaeger.messageId": "${env:jaeger_url}/search?service=masterdata&tags=%7B%22messaging.message.id%22%3A%22${context:header.properties.messageId}%22%7D",

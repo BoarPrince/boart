@@ -23,22 +23,24 @@ step(
             });
 
         await openBrowser({
-            headless: true
+            headless: false
         });
 
-        await goto(`${url}/${company_id}?lang=en`, { navigationTimeout: 1200000 });
-        await waitFor(textBox({ id: 'username' }));
-        await write(username, into(textBox({ id: 'username' })));
-        await waitFor(textBox({ id: 'password' }));
-        await write(password, into(textBox({ id: 'password' })));
-        await press('Enter');
+        try {
+            await goto(`${url}/${company_id}?lang=en`, { navigationTimeout: 1200000 });
+            await waitFor(textBox({ id: 'username' }));
+            await write(username, into(textBox({ id: 'username' })));
+            await waitFor(textBox({ id: 'password' }));
+            await write(password, into(textBox({ id: 'password' })));
+            await press('Enter');
 
-        await waitFor(textBox({ id: 'password-new' }));
-        await write(new_password, into(textBox({ id: 'password-new' })));
-        await waitFor(textBox({ id: 'password-confirm' }));
-        await write(new_password, into(textBox({ id: 'password-confirm' })));
-        await press('Enter');
-
-        await closeBrowser();
+            await waitFor(textBox({ id: 'password-new' }));
+            await write(new_password, into(textBox({ id: 'password-new' })));
+            await waitFor(textBox({ id: 'password-confirm' }));
+            await write(new_password, into(textBox({ id: 'password-confirm' })));
+            await press('Enter');
+        } finally {
+            await closeBrowser();
+        }
     }
 );

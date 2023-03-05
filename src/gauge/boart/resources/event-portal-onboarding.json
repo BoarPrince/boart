@@ -1,8 +1,9 @@
 {
+  "activationCode": "${generate:t:tpl:company.id}",
   "Taker": {
     "companyId": "${generate:t:tpl:company.id}",
     "subsidiaryId": "${store:ob-carrierId:=${generate:uuid}}",
-    "name": "${generate:s:fake:company:name}-${generate:s:random:4}",
+    "name": "${generate:t:tpl:company.ob-name}",
     "taxNumber": "${generate:random:8}",
     "address": {
       "id": "${generate:uuid}",
@@ -13,7 +14,6 @@
     },
     "customerId": "${generate:uuid}",
     "JitpayCustomerId": "K${generate:s:random:4}",
-    "activationCode": "${generate:t:tpl:company.id}",
     "NameZusatz": "GmbH_de",
     "Telephone": "+49 1743284130",
     "UserDetail": {

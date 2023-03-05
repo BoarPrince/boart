@@ -1,7 +1,7 @@
 {
   "companyDto": {
     "id": "${generate:t:tpl:company.id}",
-    "name": "${store:ob-companyName:=${generate:s:fake:company:name}-${generate:s:random:4}}",
+    "name": "${store:ob-companyName:=${generate:t:tpl:company.ob-name}}",
     "state": "CREATED",
     "referer": "LANDING_PAGE",
     "target": "JITPAY",

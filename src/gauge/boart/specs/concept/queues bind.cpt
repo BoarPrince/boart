@@ -147,7 +147,7 @@
   | action                | value                                                    |
   |-----------------------|----------------------------------------------------------|
   | run:only:portal-error | <queue-list>                                             |
-  | description           | error: onnboarding update                                |
+  | description           | error: onboarding -> portal   |
   | group                 | Bind Queues                                              |
   | exchange              | com.jitpay.PortalService.error                           |
   | queue                 | test.portal.masterdata.portal.error                      |
