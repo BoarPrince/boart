@@ -16,7 +16,10 @@ import { NativeType } from './data/NativeType';
 import { NullContent } from './data/NullContent';
 import { ObjectContent } from './data/ObjectContent';
 import { TextContent } from './data/TextContent';
+import { Description } from './description/Description';
 import { DescriptionHandler } from './description/DescriptionHandler';
+import { ExpectedDescription } from './description/ExpectedDescription';
+import { FullDescription } from './description/FullDescription';
 import { ExecutionContext } from './execution/ExecutionContext';
 import { ExecutionEngine } from './execution/ExecutionEngine';
 import { ExecutionUnit } from './execution/ExecutionUnit';
@@ -73,6 +76,7 @@ export {
     DataType,
     DefaultOperator,
     DefaultOperatorParser,
+    Description,
     DescriptionHandler,
     EnvLoader,
     ExecutionContext,
@@ -82,6 +86,8 @@ export {
     ExpectedOperator,
     ExpectedOperatorInitializer,
     ExpectedOperatorResult,
+    ExpectedDescription,
+    FullDescription,
     Generator,
     GeneratorHandler,
     GroupRowDefinition,

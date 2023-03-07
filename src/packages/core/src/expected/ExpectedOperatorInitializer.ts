@@ -1,10 +1,11 @@
 import { Observable } from 'rxjs';
 
 import { ArraySubject } from '../common/ArraySubject';
+import { NativeType } from '../data/NativeType';
 import { Description } from '../description/Description';
 import { Descriptionable } from '../description/Descriptionable';
 
-import { ExpectedOperator } from './ExpectedOperator';
+import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
 
 /**
  *
@@ -36,7 +37,7 @@ export class ExpectedOperatorInitializer implements Descriptionable {
     public description: Description = {
         id: '07c83a77-e3b1-400f-9966-2b7460f4c86a',
         title: 'expected:operation:initializer',
-        description: 'xxx',
+        description: 'this is the description of Expected Operator Initializer',
         examples: null
     };
 
@@ -67,6 +68,30 @@ export class ExpectedOperatorInitializer implements Descriptionable {
         if (!!existingOperator && ignoreEqual === false) {
             throw new Error(`expected operator '${operator.name}' already exists`);
         }
+
+        this.addNotAndCiOperator(operator);
+
+        // add default implementation
+        if (!!operator.default) {
+            const description = !operator.description
+                ? null
+                : {
+                      id: `${operator.description.id}:default`,
+                      title: 'expected',
+                      description: `The '<ref:${operator.description.id}>' operator it's the default
+                            operator and it's used when no operator is defined`,
+                      examples: null
+                  };
+
+            const defaultOperator: ExpectedOperator = {
+                name: '',
+                description,
+                caseInsesitive: operator.caseInsesitive,
+                check: (value, expectedValue) => operator.check(value, expectedValue)
+            };
+            this._operators.next(defaultOperator);
+            this.addNotAndCiOperator(defaultOperator);
+        }
     }
 
     /**
@@ -81,5 +106,74 @@ export class ExpectedOperatorInitializer implements Descriptionable {
      */
     get operators(): ReadonlyArray<ExpectedOperator> {
         return this._operators.toArray();
+    }
+
+    /**
+     *
+     */
+    private addNotAndCiOperator(operator: ExpectedOperator) {
+        // add not: operator
+        this._operators.next(this.generateNotOperator(operator));
+
+        // add :ci operator
+        if (operator.caseInsesitive) {
+            const ciOperator = this.generateCIOperator(operator);
+
+            this._operators.next(ciOperator);
+            this._operators.next(this.generateNotOperator(ciOperator));
+        }
+    }
+
+    /**
+     *
+     */
+    private generateNotOperator(operator: ExpectedOperator): ExpectedOperator {
+        const description = !operator.description
+            ? null
+            : {
+                  id: `${operator.description.id}:not`,
+                  title: `${operator.description.title}:not`,
+                  description: `It's the not extension of the '<ref:${operator.description.id}>' operator`,
+                  examples: null
+              };
+
+        return {
+            name: operator.name + (!!operator.name ? ':' : '') + 'not',
+            description,
+            caseInsesitive: operator.caseInsesitive,
+            check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
+                const result = await operator.check(value, expectedValue);
+                return {
+                    result: !result.result
+                };
+            }
+        };
+    }
+
+    /**
+     *
+     */
+    private generateCIOperator(operator: ExpectedOperator): ExpectedOperator {
+        const lowercase = (value: NativeType): string => value?.toString()?.toLowerCase() || '';
+        const description = !operator.description
+            ? null
+            : {
+                  id: `${operator.description.id}:ci`,
+                  title: `${operator.description.title}:ci`,
+                  description: `It's the ci (case insensitive) extension of the '<ref:${operator.description.id}>' operator`,
+                  examples: null
+              };
+
+        return {
+            name: operator.name + (!!operator.name ? ':' : '') + 'ci',
+            caseInsesitive: true,
+            description,
+            check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
+                const result = await operator.check(lowercase(value), lowercase(expectedValue));
+                return {
+                    result: result.result
+                };
+            }
+        };
     }
 }

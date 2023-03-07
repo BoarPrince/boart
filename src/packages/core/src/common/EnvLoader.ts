@@ -128,6 +128,13 @@ export class EnvLoader {
     /**
      *
      */
+    public static get ReportDataPath(): string {
+        return process.env.environment_reports_data_dir;
+    }
+
+    /**
+     *
+     */
     private static readSettings(filename: string): object {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
         const fileData: string = fs.readFileSync(filename, { encoding: 'utf-8' });
@@ -234,6 +241,13 @@ export class EnvLoader {
      */
     public mapReportData(filename: string): string {
         return this.mapPath(filename, 'environment_reports_data_dir');
+    }
+
+    /**
+     *
+     */
+    public mapDescriptionData(filename: string): string {
+        return this.mapPath(filename, 'environment_description_data_dir');
     }
 
     /**

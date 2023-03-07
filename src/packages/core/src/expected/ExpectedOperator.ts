@@ -16,6 +16,7 @@ export interface ExpectedOperatorResult {
 export interface ExpectedOperator extends Descriptionable {
     readonly name: string;
     readonly validators?: Array<RowValidator>;
-    readonly canCaseInsesitive: boolean;
+    readonly caseInsesitive: boolean;
+    readonly default?: boolean;
     check(value: NativeType, expectedValue?: string): ExpectedOperatorResult | Promise<ExpectedOperatorResult>;
 }

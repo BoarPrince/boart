@@ -34,63 +34,8 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     /**
      *
      */
-    private generateNotOperator(operator: ExpectedOperator): ExpectedOperator {
-        return {
-            name: operator.name + (!!operator.name ? ':' : '') + 'not',
-            canCaseInsesitive: operator.canCaseInsesitive,
-            check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
-                const result = await operator.check(value, expectedValue);
-                return {
-                    result: !result.result
-                };
-            }
-        };
-    }
-
-    /**
-     *
-     */
-    private generateCIOperator(operator: ExpectedOperator): ExpectedOperator {
-        const lowercase = (value: NativeType): string => value?.toString()?.toLowerCase() || '';
-
-        return {
-            name: operator.name + (!!operator.name ? ':' : '') + 'ci',
-            canCaseInsesitive: true,
-            check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
-                const result = await operator.check(lowercase(value), lowercase(expectedValue));
-                return {
-                    result: result.result
-                };
-            }
-        };
-    }
-
-    /**
-     *
-     */
     constructor(private firstLevelType?: keyof DataContext['execution'], private secondLevelType?: string) {
-        ExpectedOperatorInitializer.instance.operators$.subscribe((operator) => {
-            this.operators.push(operator);
-
-            // add not: operator
-            this.operators.push(this.generateNotOperator(operator));
-
-            // add :ci operator
-            if (operator.canCaseInsesitive) {
-                const ciOperator = this.generateCIOperator(operator);
-                this.operators.push(ciOperator);
-                this.operators.push(this.generateNotOperator(ciOperator));
-            }
-        });
-
-        // add default implementation
-        if (!ExpectedOperatorInitializer.instance.exists('')) {
-            ExpectedOperatorInitializer.instance.addOperator({
-                name: '',
-                canCaseInsesitive: true,
-                check: (value, expectedValue) => ExpectedOperatorImplementation.equals.check(value, expectedValue)
-            });
-        }
+        ExpectedOperatorInitializer.instance.operators$.subscribe((operator) => this.operators.push(operator));
     }
 
     /**

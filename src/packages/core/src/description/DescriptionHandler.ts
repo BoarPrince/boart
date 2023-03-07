@@ -37,7 +37,7 @@ export class DescriptionHandler {
         const tableHandlerList = Array.from(TableHandlerInstances.instance.values);
         return tableHandlerList.map((tableHandler) => {
             const desc: TableHandlerDescription = {
-                desc: DescriptionHandler.solve(tableHandler.executionEngine.mainExecutionUnit().description),
+                desc: DescriptionHandler.solve(tableHandler.executionEngine?.mainExecutionUnit().description),
                 dataTables: tableHandler
                     .getRowDefinitions()
                     .filter((def) => !!def.description)
@@ -56,7 +56,11 @@ export class DescriptionHandler {
             desc: DescriptionHandler.solve(ExpectedOperatorInitializer.instance.description),
             operators: ExpectedOperatorInitializer.instance.operators
                 .filter((op) => !!op.description)
-                .map((op) => DescriptionHandler.solve(op.description))
+                .map((op) => {
+                    const desc = DescriptionHandler.solve(op.description);
+                    desc.title = desc.title || op.name;
+                    return desc;
+                })
         };
     }
 
@@ -70,7 +74,7 @@ export class DescriptionHandler {
             replacer: null
         };
 
-        const fileName = EnvLoader.instance.mapDataFileName('description.json');
+        const fileName = EnvLoader.instance.mapDescriptionData('description.json');
         fs.writeFileSync(fileName, JSON.stringify(descriptions));
     }
 
@@ -110,7 +114,10 @@ export class DescriptionHandler {
                   id: description?.id || '',
                   title: description?.title || '',
                   description: this.adjustIndent(description?.description || ''),
-                  examples: description?.examples
+                  examples: description?.examples?.map((example) => {
+                      example.example = this.adjustIndent(example.example);
+                      return example;
+                  })
               };
     }
 }

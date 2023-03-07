@@ -436,7 +436,7 @@ describe('check expected:data execution units with operators', () => {
          */
         constructor(public name: string) {}
         validators?: RowValidator[];
-        canCaseInsesitive: true;
+        caseInsesitive: true;
     }
 
     /**
@@ -706,7 +706,7 @@ describe('check expected:data execution units with operators', () => {
             name: 'opv',
             validators: [validator],
             check: jest.fn(),
-            canCaseInsesitive: false
+            caseInsesitive: false
         };
 
         ExpectedOperatorInitializer.instance.addOperator(operator);
@@ -763,9 +763,26 @@ describe('check expected:data ci operator', () => {
         /**
          *
          */
-        constructor(public name: string) {}
+        constructor(public name: string, def = false) {
+            this.default = def;
+        }
+        default = false;
         validators?: RowValidator[];
-        canCaseInsesitive = true;
+        caseInsesitive = true;
+    }
+
+    class TestDefaultOperator implements ExpectedOperator {
+        check = jest.fn().mockImplementation((value, expectedValue) => ({
+            result: value == expectedValue
+        }));
+
+        /**
+         *
+         */
+        constructor(public name: string) {}
+        default = true;
+        validators?: RowValidator[];
+        caseInsesitive = true;
     }
 
     /**
@@ -807,6 +824,9 @@ describe('check expected:data ci operator', () => {
      *
      */
     it('default operator has ci too', async () => {
+        const operator = new TestDefaultOperator('op1');
+        ExpectedOperatorInitializer.instance.addOperator(operator);
+
         const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         const dataToCheck = new TextContent('upper-case');
@@ -835,6 +855,9 @@ describe('check expected:data ci operator', () => {
      *
      */
     it('default operator has ci:not too - fails', async () => {
+        const operator = new TestDefaultOperator('op1');
+        ExpectedOperatorInitializer.instance.addOperator(operator);
+
         const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         const dataToCheck = new TextContent('upper-case');
@@ -865,6 +888,9 @@ describe('check expected:data ci operator', () => {
      *
      */
     it('default operator has ci:not too - succeed', async () => {
+        const operator = new TestDefaultOperator('op1');
+        ExpectedOperatorInitializer.instance.addOperator(operator);
+
         const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
 
         const dataToCheck = new TextContent('upper-cas');

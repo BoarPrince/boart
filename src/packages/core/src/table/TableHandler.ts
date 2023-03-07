@@ -41,7 +41,7 @@ export class TableHandler<
     /**
      *
      */
-    public get description(): Description | (() => Description) {
+    public get description(): Description {
         const executionEngine = this.executionEngineCreator();
         return executionEngine.mainExecutionUnit().description;
     }

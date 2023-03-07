@@ -50,35 +50,34 @@ export class ExpectedOperatorImplementation {
             name: 'equals',
             description: {
                 id: 'expected:equals',
-                title: null,
+                title: 'expected:equals',
                 description: `* Checks a value for equality
                               * It's default operator, in case of no defined operator`,
                 examples: [
                     {
                         title: 'Checks the response status of an rest call',
-                        example: `
-                        * Rest call
+                        example: `* Rest call
 
-                          | action                        |value               |
-                          |-------------------------------|--------------------|
-                          | method:post                   |/rest-url           |
-                          | payload                       |<file:payload.json> |
-                          | *expected:header:equals#status* |200                 |`
+                            | action                        |value               |
+                            |-------------------------------|--------------------|
+                            | method:post                   |/rest-url           |
+                            | payload                       |<file:payload.json> |
+                            | **expected:header:equals#status** |200             |`
                     },
                     {
                         title: 'Usage as default operator',
-                        example: `
-                        * Rest call
+                        example: `* Rest call
 
                           | action                 |value               |
                           |------------------------|--------------------|
                           | method:post            |/rest-url           |
                           | payload                |<file:payload.json> |
-                          | *expected:header#status* |200                 |`
+                          | **expected:header#status** |200                 |`
                     }
                 ]
             },
-            canCaseInsesitive: true,
+            default: true,
+            caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => ({
                 result: expectedValue.toString() == ExpectedOperatorImplementation.valueToString(value),
                 errorMessage: `\n\texpected: ${expectedValue.toString()}\n\tactual: ${ExpectedOperatorImplementation.valueToString(value)}`
@@ -92,7 +91,7 @@ export class ExpectedOperatorImplementation {
     static get regexp(): ExpectedOperator {
         return {
             name: 'regexp',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const valueAsString = ExpectedOperatorImplementation.valueToString(value);
                 const match = valueAsString?.match(expectedValue);
@@ -110,7 +109,7 @@ export class ExpectedOperatorImplementation {
     static get startsWith(): ExpectedOperator {
         return {
             name: 'startsWith',
-            canCaseInsesitive: true,
+            caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 return {
                     result: value == null ? false : value.toString().startsWith(expectedValue)
@@ -125,7 +124,7 @@ export class ExpectedOperatorImplementation {
     static get contains(): ExpectedOperator {
         return {
             name: 'contains',
-            canCaseInsesitive: true,
+            caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const negativeResult = {
                     result: false
@@ -158,7 +157,7 @@ export class ExpectedOperatorImplementation {
     static get containsKey(): ExpectedOperator {
         return {
             name: 'containsKey',
-            canCaseInsesitive: true,
+            caseInsesitive: true,
 
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const negativeResult = {
@@ -244,7 +243,7 @@ export class ExpectedOperatorImplementation {
     static get smaller(): ExpectedOperator {
         return {
             name: 'smaller',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value);
                 const expected = ExpectedOperatorImplementation.parseInt(expectedValue);
@@ -261,7 +260,7 @@ export class ExpectedOperatorImplementation {
     static get greater(): ExpectedOperator {
         return {
             name: 'greater',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value);
                 const expected = ExpectedOperatorImplementation.parseInt(expectedValue);
@@ -279,7 +278,7 @@ export class ExpectedOperatorImplementation {
         return {
             name: 'count',
             validators: [new IntValidator('value')],
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value, false);
                 const expected = ExpectedOperatorImplementation.parseInt(expectedValue);
@@ -297,7 +296,7 @@ export class ExpectedOperatorImplementation {
     static get countEqualOrGreater(): ExpectedOperator {
         return {
             name: 'count:equal-greater',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value, false);
                 const expected = ExpectedOperatorImplementation.parseInt(expectedValue);
@@ -314,7 +313,7 @@ export class ExpectedOperatorImplementation {
     static get countEqualOrSmaller(): ExpectedOperator {
         return {
             name: 'count:equal-smaller',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value, false);
                 const expected = ExpectedOperatorImplementation.parseInt(expectedValue);
@@ -331,7 +330,7 @@ export class ExpectedOperatorImplementation {
     static get empty(): ExpectedOperator {
         return {
             name: 'empty',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType): ExpectedOperatorResult => {
                 const count = ExpectedOperatorImplementation.getCount(value, false);
                 return {
@@ -347,7 +346,7 @@ export class ExpectedOperatorImplementation {
     static get isArray(): ExpectedOperator {
         return {
             name: 'array',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType): ExpectedOperatorResult => {
                 return {
                     result: Array.isArray(value)
@@ -362,7 +361,7 @@ export class ExpectedOperatorImplementation {
     static get isObject(): ExpectedOperator {
         return {
             name: 'object',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType): ExpectedOperatorResult => {
                 return {
                     result: !!value && !Array.isArray(value) && typeof value === 'object'
@@ -377,7 +376,7 @@ export class ExpectedOperatorImplementation {
     static get isNumber(): ExpectedOperator {
         return {
             name: 'number',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType): ExpectedOperatorResult => {
                 return {
                     result: /^\d+(\.\d+)?$/.test(ExpectedOperatorImplementation.valueToString(value))
@@ -392,7 +391,7 @@ export class ExpectedOperatorImplementation {
     static get isInt(): ExpectedOperator {
         return {
             name: 'int',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType): ExpectedOperatorResult => {
                 return {
                     result: /^\d+$/.test(ExpectedOperatorImplementation.valueToString(value))
@@ -407,7 +406,7 @@ export class ExpectedOperatorImplementation {
     static get isString(): ExpectedOperator {
         return {
             name: 'string',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType): ExpectedOperatorResult => {
                 return {
                     result: typeof value === 'string',
@@ -423,7 +422,7 @@ export class ExpectedOperatorImplementation {
     static get isNull(): ExpectedOperator {
         return {
             name: 'null',
-            canCaseInsesitive: false,
+            caseInsesitive: false,
             check: (value: NativeType): ExpectedOperatorResult => {
                 return {
                     result: value?.valueOf() == null,

@@ -1,11 +1,11 @@
 export interface Description {
     readonly id: string;
-    readonly title: string;
+    title: string;
     readonly description: string;
-    readonly examples: Array<DescriptionExample>;
+    readonly examples: ReadonlyArray<DescriptionExample>;
 }
 
 export interface DescriptionExample {
     readonly title: string;
-    readonly example: string;
+    example: string;
 }

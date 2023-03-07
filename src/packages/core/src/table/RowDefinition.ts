@@ -49,7 +49,7 @@ export class RowDefinition<
     public key: symbol;
     public defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
     public defaultValueColumn?: symbol;
-    public description?: Description | (() => Description);
+    public description?: Description;
     public readonly priority: number = 0;
     public readonly type: TableRowType;
     public readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
