@@ -158,7 +158,7 @@ tags: ob-10.3, manual, env:staging, env:development
    |           |* Portal Event (update) is send to exchange 'fleet_event_bus'               |
    |priority   |high                                                                        |
 
-* queues bind "user, company, carrier, company-onboarding, fleet-event-bus, identity, fleet-error, md-error"
+* queues bind "user, company, carrier, company-onboarding, identity, md-error"
 
 * RabbitMQ publish
 
@@ -182,19 +182,19 @@ tags: ob-10.3, manual, env:staging, env:development
    |routing       |JitpayServicesSync.RoutingKey|
    |payload       |<file:event-onboarding.json> |
 
-* queues check "fleet-error, md-error"
+* queues check "md-error"
 
-* RabbitMQ publish
+comment * RabbitMQ publish
+comment
+comment    |action        |value                               |
+comment    |--------------|------------------------------------|
+comment    |description   |Send portal onboarding event manualy|
+comment    |exchange      |fleet_event_bus                     |
+comment    |wait:after:sec|4                                   |
+comment    |routing       |OnBoardingFleetEvent                |
+comment    |payload       |<file:event-portal-onboarding.json> |
 
-   |action        |value                               |
-   |--------------|------------------------------------|
-   |description   |Send portal onboarding event manualy|
-   |exchange      |fleet_event_bus                     |
-   |wait:after:sec|4                                   |
-   |routing       |OnBoardingFleetEvent                |
-   |payload       |<file:event-portal-onboarding.json> |
-
-* queues check "user, company, carrier, company-onboarding, fleet-event-bus, identity, fleet-error, md-error"
+* queues check "user, company, carrier, company-onboarding, identity, md-error"
 
 * onboarding - check matching ids, email: "${store:ob-email}", group: "Check IDs", wait: "0", not: "portal"
 
@@ -297,11 +297,11 @@ tags: ob-10.6, register, env:development, env:staging
    |store#taxNumber       |debtor.taxId                     |
    |store#id              |debtor.id                        |
 
-* queues bind "company, carrier, user, company-consumer, company-onboarding, fleet-error, md-error, portal-error"
+* queues bind "company, carrier, user, company-onboarding, fleet-error, md-error, portal-error"
 
 * onboarding - complete
 
-* queues check "company, carrier, user, company-consumer, company-onboarding, fleet-error, md-error, portal-error"
+* queues check "company, carrier, user, company-onboarding, fleet-error, md-error, portal-error"
 
 * onboarding - check matching ids, email: "${store:response-register.email}", group: "Check IDs", wait: "0", not: ""
 
