@@ -42,7 +42,7 @@
           "country": "DE",
           "firstname": "${store:ob_info.firstName:=${generate:s:fake:name:firstName}}",
           "lastname": "${store:ob_info.lastName:=${generate:s:fake:name:lastName}}",
-          "email": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
+          "email": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:8}@gmail.com}",
           "countryPrefix": 49,
           "phoneNumber": 1743284130,
           "type": "BILLING"
@@ -62,7 +62,7 @@
       "users": [
         {
           "id": "${store:ob_info.userId:=${generate:uuid}}",
-          "email": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
+          "email": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:8}@gmail.com}",
           "phoneNumbers": [
             {
               "id": "${store:ob_info.userPhoneNumberId:=${generate:uuid}}",
@@ -74,7 +74,7 @@
               "favorite": false
             }
           ],
-          "username": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
+          "username": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:8}@gmail.com}",
           "lastname": "${store:ob_info.lastName:=${generate:s:fake:name:lastName}}",
           "firstname": "${store:ob_info.firstName:=${generate:s:fake:name:firstName}}",
           "activationCode": "${store:ob_info.activationCode:=${generate:s:uuid}}",
@@ -103,7 +103,7 @@
       "country": "DE",
       "firstname": "${store:ob_info.firstName:=${generate:s:fake:name:firstName}}",
       "lastname": "${store:ob_info.lastName:=${generate:s:fake:name:lastName}}",
-      "email": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
+      "email": "${store:ob_info.email:=jitpaytest+ob${generate:s:random:8}@gmail.com}",
       "countryPrefix": 49,
       "phoneNumber": 1743284130,
       "type": "BILLING"

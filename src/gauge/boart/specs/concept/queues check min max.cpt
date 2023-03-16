@@ -20,6 +20,7 @@
    | action        | value           |
    |---------------|-----------------|
    | run:only:user | <queue-list>    |
+   | wait:before   | 2               |
    | queue         | test.md.user    |
    | group         | Check Queues    |
    | description   | user crud event |

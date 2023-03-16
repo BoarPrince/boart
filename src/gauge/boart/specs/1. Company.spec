@@ -877,3 +877,59 @@ tags: md-1.21, sync
    |expected:contains:not |null                                                         |
 
 * queues check "company, carrier, identity-claim, user", min: "2", max: "2"
+
+## 1.22. Add a company and check queue syncronisation
+
+tags: md-1.22
+
+* Test description
+
+   |action     |value                                                                    |
+   |-----------|-------------------------------------------------------------------------|
+   |description|Check that the synchronisation is working correctly when adding a company|
+   |priority   |high                                                                     |
+
+* request admin bearer
+
+* queues bind "company, carrier, user, identity"
+
+* Rest call
+
+   |action                      |value                                               |
+   |----------------------------|----------------------------------------------------|
+   |method:post                 |/api/company                                        |
+   |description                 |Create a Company (send post request)                |
+   |payload                     |<file:company-with-carrier-without-ids-request.json>|
+   |payload#carriers[0].users[0]|<file:request-user.json>                            |
+   |expected:header#status      |200                                                 |
+   |store                       |resonse                                             |
+
+* queues check "company, carrier, user, identity"
+
+* Data manage
+
+   |action         |value                 |
+   |---------------|----------------------|
+   |in             |${store:event-company}|
+   |store#eventDate|companyDate           |
+
+* Data manage
+
+   |action                    |value                                                 |
+   |--------------------------|------------------------------------------------------|
+   |in                        |${store:event-carrier}                                |
+   |group                     |Check Receive Order                                   |
+   |description               |Carrier event must be received after the carrier event|
+   |store#eventDate           |carrierDate                                           |
+   |expected:greater#eventDate|${store:companyDate}                                  |
+
+* Data manage
+
+   |action                    |value                                              |
+   |--------------------------|---------------------------------------------------|
+   |in                        |${store:event-user}                                |
+   |group                     |Check Receive Order                                |
+   |description               |User event must be received after the carrier event|
+   |expected:greater#eventDate|${store:carrierDate}                               |
+
+* check db backend sync, company: "${store:resonse}", carrier: "${store:resonse.carriers[0]}", user: "${store:resonse.carriers[0].users[0]}", driver: "", vehicle: ""

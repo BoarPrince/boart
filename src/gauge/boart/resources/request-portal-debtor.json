@@ -3,7 +3,7 @@
     {
       "city": "${generate:fake:address:city}",
       "contactPersonDto": {
-        "email": "jitpaytest+debtor${generate:t:random:4}@gmail.com",
+        "email": "jitpaytest+debtor${generate:t:random:8}@gmail.com",
         "firstName": "${generate:t:fake:name:firstName}",
         "id": null,
         "lastName": "${generate:t:fake:name:lastName}",

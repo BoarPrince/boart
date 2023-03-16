@@ -23,7 +23,7 @@
     "id": "${generate:uuid}",
     "firstName": "${generate:t:fake:name:firstName}",
     "lastName": "${generate:t:fake:name:lastName}",
-    "email": "${store:ob-email:=jitpaytest+ob${generate:t:random:4}@gmail.com}",
+    "email": "${store:ob-email:=jitpaytest+ob${generate:t:random:8}@gmail.com}",
     "telephoneNumber": {
       "country": "49",
       "number": "1743284130"

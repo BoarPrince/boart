@@ -159,6 +159,6 @@
 |                      | AND a.type = 'MASTER'                                                                                                          |
 |                      | WHERE u.email = '${store:idPara.email}'                                                                                        |
 | expected:header#rows | 1                                                                                                                              |
-| --expected#carrierId | ${store:idPara.carrierId}                                                                                                      |
+| expected#carrierId | ${store:idPara.carrierId}                                                                                                      |
 | expected#companyId   | ${store:idPara.companyId}                                                                                                      |
-| --expected#userId    | ${store:idPara.userId}                                                                                                         |
+| expected#userId    | ${store:idPara.userId}                                                                                                         |

@@ -66,6 +66,7 @@
   | action        | value           |
   |---------------|-----------------|
   | run:only:user | <queue-list>    |
+  | --wait:before   | 2               |
   | exchange      | user            |
   | queue         | test.md.user    |
   | description   | user crud event |

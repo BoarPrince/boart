@@ -35,7 +35,7 @@
           "country": "DE",
           "firstname": "${generate:s:fake:name:firstName}",
           "lastname": "${generate:s:fake:name:lastName}",
-          "email": "${store:payload.email:=jitpaytest+ob${generate:s:random:5}@gmail.com}",
+          "email": "${store:payload.email:=jitpaytest+ob${generate:s:random:8}@gmail.com}",
           "countryPrefix": 49,
           "phoneNumber": 1743284130,
           "type": "BILLING"
@@ -62,7 +62,7 @@
       "country": "DE",
       "firstname": "${generate:s:fake:name:firstName}",
       "lastname": "${generate:s:fake:name:lastName}",
-      "email": "jitpaytest+ob${generate:s:random:5}@gmail.com",
+      "email": "jitpaytest+ob${generate:s:random:8}@gmail.com",
       "countryPrefix": 49,
       "phoneNumber": 1743284130,
       "type": "BILLING"

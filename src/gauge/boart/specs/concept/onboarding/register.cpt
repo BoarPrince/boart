@@ -12,7 +12,7 @@
       |                        | "languageCode": "en",                                    |
       |                        | "referer": "LANDING_PAGE",                               |
       |                        | "platform": "JITPAY",                                    |
-      |                        | "email": "jitpaytest+onb${generate:random:5}@gmail.com", |
+      |                        | "email": "jitpaytest+onb${generate:random:8}@gmail.com", |
       |                        | "telephoneNumber": {                                     |
       |                        | "country": "49",                                         |
       |                        | "number":"0172${generate:random:8}"                      |

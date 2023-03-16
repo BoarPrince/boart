@@ -40,7 +40,7 @@ tags: md-0-2
    |method:get                     |/info/version                           |
    |description                    |Reads the version of the running backend|
    |expected:header#status         |200                                     |
-   |expected:header#headers.version|1.0.16                                  |
+   |expected:header#headers.version|1.1.0                                   |
 
 ## 1.3. Read Open API
 

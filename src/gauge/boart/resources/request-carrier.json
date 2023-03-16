@@ -19,7 +19,7 @@
       "country": "DE",
       "firstname": "${generate:t:fake:name:firstName}",
       "lastname": "${generate:t:fake:name:lastName}",
-      "email": "jitpaytest+ob${generate:random:5}@gmail.com",
+      "email": "jitpaytest+ob${generate:random:8}@gmail.com",
       "countryPrefix": 49,
       "phoneNumber": 1743284130,
       "type": "BILLING"

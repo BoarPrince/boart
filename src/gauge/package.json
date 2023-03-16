@@ -23,7 +23,7 @@
     "test:dev:register": "export runtime_environent=development && gauge run --tags=\"ob-10.test\"",
     "test:dev:dlx": "export runtime_environent=development && gauge run --tags=\"md-5.20\"",
     "test:doc": "export runtime_environent=local && gauge run",
-    "test:local": "export runtime_environent=local && gauge run --tags=\"(!env:development & !env:staging | env:local) & masterdata\"",
+    "test:local": "export runtime_environent=local && gauge run --tags=\"(!env:development & !env:staging | env:local) & masterdata & (md-5.5 | md-5.18 | md-5.19)\"",
     "test:local:0": "export runtime_environent=local && gauge run --tags=\"(!env:development & !env:staging | env:local) & md-0\"",
     "test:local:onboarding": "export runtime_environent=local && gauge run --tags=\"(!env:development & !env:staging | env:local) & onboarding & ob-10.7\"",
     "test:local:company": "export runtime_environent=local && gauge run --tags=\"(!env:development & !env:staging | env:local) & md-1\"",
