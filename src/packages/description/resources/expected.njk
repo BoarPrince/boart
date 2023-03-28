@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css" />
+        <script src="table-examples.js" defer></script>
+        <title>Expected Documentation</title>
+    </head>
+    <body>
+      {% for operator in operators | sort(attribute='title')%}
+        {############################ Operator ############################}
+        <dt id="{{ operator.title }}">
+          <h3>{{operator.title}}</h3>
+        </dt>
+        <dd>{{operator.description | markdown}}</dd>
+        {########################## End Operator ##########################}
+
+        {############################ Examples ############################}
+        {% for example in operator.examples %}
+        <dd>
+          <h4>{{example.title}}</h4>
+          <div class="example">
+            {{example.example | markdown}}
+          </div>
+        </dd>
+        {########################## End Examples ##########################}
+        {% endfor %}
+      {% endfor %}
+  </body>
+</html>

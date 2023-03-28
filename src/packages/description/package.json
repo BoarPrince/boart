@@ -1,0 +1,38 @@
+{
+  "name": "@boart/description",
+  "author": "kem@boarprince.net",
+  "version": "1.0.1-6",
+  "bugs": {
+    "url": "https://github.com/Kemark/boart/issues"
+  },
+  "description": "",
+  "homepage": "https://github.com/Kemark/boart#readme",
+  "keywords": [],
+  "license": "ISC",
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/**/*.js.map"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kemark/boart.git"
+  },
+  "scripts": {
+    "compile": "tsc -p tsconfig.pkg.json",
+    "_postcompile": "ts-node ../../../build.ts -p core",
+    "build": "echo \"Error: no build specified\" && exit 0",
+    "desc": "ts-node ./desc.ts"
+  },
+  "dependencies": {
+    "@boart/core": "*",
+    "marked": "^4.2.12",
+    "nunjucks": "^3.2.3"
+  },
+  "devDependencies": {
+    "@types/nunjucks": "^3.2.2",
+    "@types/marked": "^4.0.8"
+  }
+}
