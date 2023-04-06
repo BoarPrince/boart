@@ -25,6 +25,7 @@ import BasicGroupDefinition from './basicGroup/BasicGroupDefinition';
 import DataTableHandler from './data/DataTableHandler';
 import RabbitBindTableHandler from './rabbitBind/RabbitBindTableHandler';
 import RabbitConsumeTableHandler from './rabbitConsume/RabbitConsumeTableHandler';
+import RabbitListenerTableHandler from './rabbitListener/RabbitListenerTableHandler';
 import RabbitPublishTableHandler from './rabbitPublish/RabbitPublishTableHandler';
 import RestAuthorizeTableHandler from './restAuthorize/RestAuthorizeTableHandler';
 import RestCallTableHandler from './restCall/RestCallTableHandler';
@@ -37,6 +38,7 @@ export {
     RabbitConsumeTableHandler,
     RabbitBindTableHandler,
     RabbitPublishTableHandler,
+    RabbitListenerTableHandler,
     RestAuthorizeTableHandler,
     RestCallTableHandler,
     TestDescriptionTableHandler,

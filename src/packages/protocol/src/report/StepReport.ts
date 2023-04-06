@@ -2,6 +2,7 @@ import fs from 'fs';
 
 import { ContentType, EnvLoader, Runtime } from '@boart/core';
 
+import { StepReportData } from '../report-item/StepReportData';
 import { StepReportDataItem } from '../report-item/StepReportDataItem';
 import { StepReportItem } from '../report-item/StepReportitem';
 
@@ -144,7 +145,7 @@ export class StepReport {
     /**
      *
      */
-    public addResultItem(description: string, type: string, data: object | string): void {
+    public addResultItem(description: string, type: string, data: object | number | boolean | string): void {
         if (!data) {
             return;
         }
@@ -158,6 +159,26 @@ export class StepReport {
             type,
             data: StepReport.tryConvertToObject(data?.valueOf())
         });
+    }
+
+    /**
+     *
+     */
+    public getResultData(description: string, type: string): StepReportData {
+        if (!this.resultItem.has(description)) {
+            this.resultItem.set(description, {
+                description,
+                type,
+                data: []
+            });
+        }
+
+        const dataItems = this.resultItem.get(description).data as Array<string | object>;
+        return {
+            add: (data: string | object) => {
+                dataItems.push(data);
+            }
+        };
     }
 
     /**

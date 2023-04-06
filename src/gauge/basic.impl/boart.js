@@ -9,6 +9,7 @@ const {
     RabbitPublishTableHandler,
     RabbitConsumeTableHandler,
     DataTableHandler,
+    RabbitListenerTableHandler,
     SQLQueryTableHandler
 } = require('@boart/basic');
 const { DescriptionHandler, Store, ValueReplacerHandler, Runtime, RuntimeStatus } = require('@boart/core');
@@ -181,6 +182,18 @@ step('RabbitMQ consume, continue <table>', { continueOnFailure: true }, async (t
 /**
  *
  */
+const rabbitListenerTableHandler = new RabbitListenerTableHandler();
+step('RabbitMQ listening <table>', async (table) => {
+    await rabbitListenerTableHandler.handler.process(table);
+});
+
+step('RabbitMQ listening, continue <table>', { continueOnFailure: true }, async (table) => {
+    await rabbitListenerTableHandler.handler.process(table);
+});
+
+/**
+ *
+ */
 const sqlQueryTableHandler = new SQLQueryTableHandler();
 step('SQL query <table>', async (table) => {
     await sqlQueryTableHandler.handler.process(table);
@@ -249,6 +262,17 @@ step('Print store', () => {
  */
 step('Console.log <message>', (message) => {
     console.log('#### log ####', message);
+});
+
+/**
+ *
+ */
+step('Wait <seconds>', async (seconds) => {
+    const duration = parseInt(seconds);
+
+    return new Promise((resolve) => {
+        setTimeout(() => resolve(), duration * 1000);
+    });
 });
 
 /**

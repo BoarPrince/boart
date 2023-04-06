@@ -11,7 +11,7 @@ import { PublishType } from './RabbitPublishType';
  */
 export class RabbitPublishExecutionUnit implements ExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>> {
     public description = {
-        id: '022fd568-60d5-4ad1-aa40-4e052046022b',
+        id: 'rabbit:publish:unit',
         title: 'rabbit sent message - main',
         description: '',
         examples: null

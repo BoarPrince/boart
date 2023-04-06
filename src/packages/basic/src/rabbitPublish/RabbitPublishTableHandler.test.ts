@@ -658,7 +658,7 @@ describe('error handling', () => {
     /**
      *
      */
-    it('queue and exchange cannot used together', () => {
+    it('queue and exchange cannot used together', async () => {
         const tableRows = MarkdownTableReader.convert(
             `| action    | value    |
              |-----------|----------|
@@ -667,7 +667,7 @@ describe('error handling', () => {
              | payload   | {"a": 1} |`
         );
 
-        expect(() => sut.handler.process(tableRows)).toThrowError(
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
             "Only one of the keys 'queue, exchange' must exists, but 'queue, exchange' exists"
         );
     });
@@ -692,14 +692,14 @@ describe('error handling', () => {
     /**
      *
      */
-    it('payload must be defined', () => {
+    it('payload must be defined', async () => {
         const tableRows = MarkdownTableReader.convert(
             `| action    | value    |
              |-----------|----------|
              | queue     | queue    |`
         );
 
-        expect(() => sut.handler.process(tableRows)).toThrowError("Key 'payload' is required, but it's missing");
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError("Key 'payload' is required, but it's missing");
     });
 
     /**
@@ -731,6 +731,6 @@ describe('error handling', () => {
              | payload  | {"a": 1} |`
         );
 
-        await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError("header must key valued, but it's not");
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError("header must key valued, but it's not");
     });
 });
