@@ -1,4 +1,4 @@
-import { throwError } from 'rxjs';
+import { LogProvider } from '../logging/LogProvider';
 import { Runtime } from '../runtime/Runtime';
 import { RuntimeStatus } from '../runtime/RuntimeStatus';
 import { Context } from '../store/Context';
@@ -16,6 +16,7 @@ export class ExecutionEngine<
     TExecutionContext extends ExecutionContext<object, object, object>,
     TRowType extends BaseRowType<TExecutionContext>
 > {
+    private readonly logger = LogProvider.create('core').logger('executionEngine');
     public context: TExecutionContext;
 
     /**
@@ -38,17 +39,17 @@ export class ExecutionEngine<
     /**
      *
      */
-    async preExecute(rows: ReadonlyArray<TRowType>): Promise<boolean> {
+    public async preExecute(rows: ReadonlyArray<TRowType>): Promise<boolean> {
+        this.logger.info(() => 'preExecute');
         await this.executeByType(rows, TableRowType.PreConfiguration);
-        return Runtime.instance.stepRuntime.current?.status === RuntimeStatus.stopped //
-            ? false
-            : true;
+        return Runtime.instance.stepRuntime.current?.status !== RuntimeStatus.stopped;
     }
 
     /**
      *
      */
-    async execute(rows: ReadonlyArray<TRowType>): Promise<TExecutionContext> {
+    public async execute(rows: ReadonlyArray<TRowType>): Promise<TExecutionContext> {
+        this.logger.info(() => 'execute');
         Context.instance.setContext(this.context.config);
         await this.executeByType(rows, TableRowType.Configuration);
 
@@ -71,6 +72,7 @@ export class ExecutionEngine<
      *
      */
     private async executeMainUnit(rows: ReadonlyArray<TRowType>): Promise<void> {
+        this.logger.info(() => 'executeMainUnit');
         const mainExecutionUnit = this.mainExecutionUnit();
 
         const mainExecutionUnitWithValidator = mainExecutionUnit as ExecutionUnitValidation<TExecutionContext> &
@@ -92,9 +94,16 @@ export class ExecutionEngine<
             .sort((row1, row2) => row2.data._metaDefinition.priority - row1.data._metaDefinition.priority);
 
         const executer = throwErrors
-            ? (row: TRowType) => row.data._metaDefinition.executionUnit.execute(this.context, row)
+            ? (row: TRowType) => {
+                  this.logger.debug(
+                      () => `execute 'type: ${TableRowType[type]}', key: ${row.data.key}`,
+                      () => row.data.values_replaced
+                  );
+                  return row.data._metaDefinition.executionUnit.execute(this.context, row);
+              }
             : (row: TRowType) => {
                   try {
+                      this.logger.debug(() => `execute, ignore exception 'type: ${TableRowType[type]}', key: ${row.data.key}`);
                       return row.data._metaDefinition.executionUnit.execute(this.context, row);
                   } catch (error) {
                       /* do not throw any errors */

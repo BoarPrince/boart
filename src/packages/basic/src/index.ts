@@ -51,6 +51,7 @@ export {
  */
 function initialize(): void {
     Runtime.instance.stepRuntime.onEnd().subscribe(() => StepReport.instance.report());
+    Runtime.instance.stepRuntime.onClear().subscribe(() => StepReport.instance.clear());
     Runtime.instance.testRuntime.onEnd().subscribe(() => TestReport.instance.report());
     Runtime.instance.localRuntime.onEnd().subscribe(() => LocalReport.instance.report());
     Runtime.instance.runtime.onStart().subscribe(() => {

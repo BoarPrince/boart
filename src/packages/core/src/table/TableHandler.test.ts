@@ -1,4 +1,4 @@
-import { ExecutionEngine } from '../execution/ExecutionEngine';
+import { ExecutionEngine, RepeatableExecutionContext, Runtime, StepContext } from '..';
 
 import { AnyBaseRowType } from './BaseRowType';
 import { GroupRowDefinition } from './GroupRowDefinition';
@@ -41,10 +41,11 @@ class RowWithOneValue extends AnyBaseRowType {
 /**
  *
  */
-describe('check TableHandler', () => {
+describe('default', () => {
     /**
      *
      */
+    // eslint-disable-next-line jest/expect-expect
     it('add row definitions (value)', () => {
         const sut = new TableHandler(null, null);
 
@@ -65,7 +66,7 @@ describe('check TableHandler', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const executionEngineMock: any = {
             execute: jest.fn(),
-            preExecute: jest.fn().mockReturnValue(Promise.resolve(true))
+            preExecute: jest.fn().mockResolvedValue(true)
         };
 
         const sut = new TableHandler(RowWithOneValue, () => executionEngineMock);
@@ -109,7 +110,7 @@ describe('check TableHandler', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const executionEngineMock: any = {
             execute: jest.fn(),
-            preExecute: jest.fn().mockReturnValue(Promise.resolve(false))
+            preExecute: jest.fn().mockResolvedValue(false)
         };
 
         const sut = new TableHandler(RowWithOneValue, () => executionEngineMock);
@@ -134,7 +135,7 @@ describe('check TableHandler', () => {
             ]
         });
 
-        expect(executionEngineMock.preExecute).toHaveBeenCalled();
+        expect(executionEngineMock.preExecute).toHaveBeenCalledOnce();
         expect(executionEngineMock.execute).not.toHaveBeenCalled();
     });
 
@@ -153,10 +154,10 @@ describe('check TableHandler', () => {
         });
 
         const sut = new TableHandler(RowWithOneValue, null);
-        sut.addGroupValidator = jest.fn();
+        jest.spyOn(sut, 'addGroupValidator').mockImplementation();
         sut.addGroupRowDefinition(groupRowDefinition);
 
-        expect(sut.addGroupValidator).toBeCalledTimes(2);
+        expect(sut.addGroupValidator).toHaveBeenCalledTimes(2);
     });
 
     /**
@@ -174,9 +175,259 @@ describe('check TableHandler', () => {
         );
 
         const sut = new TableHandler(RowWithOneValue, null);
-        sut.addRowDefinition = jest.fn();
+        jest.spyOn(sut, 'addRowDefinition').mockImplementation();
         sut.addGroupRowDefinition(groupRowDefinition);
 
-        expect(sut.addRowDefinition).toBeCalledTimes(1);
+        expect(sut.addRowDefinition).toHaveBeenCalledTimes(1);
+    });
+});
+
+/**
+ *
+ */
+describe('with repetition', () => {
+    const errorMessage = 'an error occured';
+
+    type initial = {
+        sut: TableHandler<null, RowWithOneValue>;
+        executionEngineMock: ExecutionEngine<RepeatableExecutionContext<null, null, null>, null>;
+    };
+
+    /**
+     *
+     */
+    const init = (count: number, pause: number, noErrorFrom = 100): initial => {
+        Runtime.instance.stepRuntime.current = new StepContext();
+
+        let callCount = 0;
+        const executionEngineMock = {
+            execute: jest.fn().mockImplementation(() => {
+                if (callCount++ < noErrorFrom) {
+                    throw new Error(errorMessage);
+                }
+            }),
+            preExecute: jest.fn().mockResolvedValue(true),
+            context: <RepeatableExecutionContext<null, null, null>>{
+                repetition: {
+                    count,
+                    pause
+                }
+            }
+        } as never;
+
+        const sut: TableHandler<null, RowWithOneValue> = new TableHandler(RowWithOneValue, () => executionEngineMock);
+
+        sut.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('action1'),
+                type: TableRowType.PreProcessing,
+                executionUnit: {
+                    execute: null
+                },
+                validators: null
+            })
+        );
+
+        return {
+            executionEngineMock,
+            sut
+        };
+    };
+
+    /**
+     *
+     */
+    it('zero repetations with error', async () => {
+        const initial = init(0, 0);
+
+        await expect(() =>
+            initial.sut.process({
+                headers: {
+                    cells: ['my-action', 'my-value']
+                },
+                rows: [
+                    {
+                        cells: ['action1', '0']
+                    }
+                ]
+            })
+        ).rejects.toThrow(errorMessage);
+
+        expect(initial.executionEngineMock.preExecute).toHaveBeenCalledOnce();
+        expect(initial.executionEngineMock.execute).toHaveBeenCalledOnce();
+    });
+
+    /**
+     *
+     */
+    it('one repitation with error', async () => {
+        const initial = init(1, 10);
+
+        await expect(() =>
+            initial.sut.process({
+                headers: {
+                    cells: ['my-action', 'my-value']
+                },
+                rows: [
+                    {
+                        cells: ['action1', '0']
+                    }
+                ]
+            })
+        ).rejects.toThrow(errorMessage);
+
+        expect(initial.executionEngineMock.preExecute).toHaveBeenCalledTimes(2);
+        expect(initial.executionEngineMock.execute).toHaveBeenCalledTimes(2);
+    });
+
+    /**
+     *
+     */
+    it('two repitations with error', async () => {
+        const initial = init(2, 10);
+
+        await expect(() =>
+            initial.sut.process({
+                headers: {
+                    cells: ['my-action', 'my-value']
+                },
+                rows: [
+                    {
+                        cells: ['action1', '0']
+                    }
+                ]
+            })
+        ).rejects.toThrow(errorMessage);
+
+        expect(initial.executionEngineMock.preExecute).toHaveBeenCalledTimes(3);
+        expect(initial.executionEngineMock.execute).toHaveBeenCalledTimes(3);
+    });
+
+    /**
+     *
+     */
+    it('five repitations with error', async () => {
+        const initial = init(5, 10);
+
+        await expect(() =>
+            initial.sut.process({
+                headers: {
+                    cells: ['my-action', 'my-value']
+                },
+                rows: [
+                    {
+                        cells: ['action1', '0']
+                    }
+                ]
+            })
+        ).rejects.toThrow(errorMessage);
+
+        expect(initial.executionEngineMock.preExecute).toHaveBeenCalledTimes(6);
+        expect(initial.executionEngineMock.execute).toHaveBeenCalledTimes(6);
+    });
+
+    /**
+     *
+     */
+    it('zero repitations with no error', async () => {
+        const initial = init(0, 10, 0);
+
+        await initial.sut.process({
+            headers: {
+                cells: ['my-action', 'my-value']
+            },
+            rows: [
+                {
+                    cells: ['action1', '0']
+                }
+            ]
+        });
+
+        expect(initial.executionEngineMock.preExecute).toHaveBeenCalledTimes(1);
+        expect(initial.executionEngineMock.execute).toHaveBeenCalledTimes(1);
+    });
+
+    /**
+     *
+     */
+    it('one repitations with no error at the first reputation', async () => {
+        const initial = init(1, 10, 1);
+
+        await initial.sut.process({
+            headers: {
+                cells: ['my-action', 'my-value']
+            },
+            rows: [
+                {
+                    cells: ['action1', '0']
+                }
+            ]
+        });
+
+        expect(initial.executionEngineMock.preExecute).toHaveBeenCalledTimes(2);
+        expect(initial.executionEngineMock.execute).toHaveBeenCalledTimes(2);
+    });
+
+    /**
+     *
+     */
+    it('two repitations with no error at the two reputation', async () => {
+        const initial = init(2, 10, 2);
+
+        await initial.sut.process({
+            headers: {
+                cells: ['my-action', 'my-value']
+            },
+            rows: [
+                {
+                    cells: ['action1', '0']
+                }
+            ]
+        });
+
+        expect(initial.executionEngineMock.preExecute).toHaveBeenCalledTimes(3);
+        expect(initial.executionEngineMock.execute).toHaveBeenCalledTimes(3);
+    });
+
+    /**
+     *
+     */
+    it('five repitations with no error at the fifths reputation', async () => {
+        const initial = init(5, 10, 5);
+
+        await initial.sut.process({
+            headers: {
+                cells: ['my-action', 'my-value']
+            },
+            rows: [
+                {
+                    cells: ['action1', '0']
+                }
+            ]
+        });
+
+        expect(initial.executionEngineMock.preExecute).toHaveBeenCalledTimes(6);
+        expect(initial.executionEngineMock.execute).toHaveBeenCalledTimes(6);
+    });
+
+    /**
+     *
+     */
+    it('five repitations with no error at the second reputation', async () => {
+        const initial = init(5, 10, 2);
+
+        await initial.sut.process({
+            headers: {
+                cells: ['my-action', 'my-value']
+            },
+            rows: [
+                {
+                    cells: ['action1', '0']
+                }
+            ]
+        });
+
+        expect(initial.executionEngineMock.preExecute).toHaveBeenCalledTimes(3);
+        expect(initial.executionEngineMock.execute).toHaveBeenCalledTimes(3);
     });
 });

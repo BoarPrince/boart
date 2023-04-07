@@ -1,4 +1,5 @@
 import { ExecutionUnit, ParaType, Runtime } from '@boart/core';
+import { first } from 'rxjs/operators';
 
 import { AnyContext } from '../../AnyContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -11,7 +12,7 @@ import { UniqueValidator } from '../../validators/UniqueValidator';
  */
 export class DescriptionExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
     readonly description = {
-        id: 'b89ed4c8-56b6-4b05-98b5-e637a3129d22',
+        id: 'description:unit',
         title: 'description',
         description: null,
         examples: null
@@ -24,6 +25,13 @@ export class DescriptionExecutionUnit implements ExecutionUnit<AnyContext, RowTy
      *
      */
     execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
+        Runtime.instance.stepRuntime
+            .onClear()
+            .pipe(first())
+            .subscribe(() => {
+                Runtime.instance.stepRuntime.current.descriptions = [];
+            });
+
         Runtime.instance.stepRuntime.current.descriptions.push(row.value.toString());
     }
 }

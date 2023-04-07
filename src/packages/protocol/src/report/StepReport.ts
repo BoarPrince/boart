@@ -67,9 +67,16 @@ export class StepReport {
     /**
      *
      */
+    public clear(): void {
+        globalThis._stepReportInstance = undefined;
+    }
+
+    /**
+     *
+     */
     public report(): void {
         // after reporting the step, reset singleton instance
-        globalThis._stepReportInstance = null;
+        globalThis._stepReportInstance = undefined;
         const currentStepRuntime = Runtime.instance.stepRuntime.current;
 
         if (currentStepRuntime.descriptions?.length === 0) {

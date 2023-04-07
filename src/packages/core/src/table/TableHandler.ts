@@ -2,6 +2,9 @@ import { Description } from '../description/Description';
 import { Descriptionable } from '../description/Descriptionable';
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionEngine } from '../execution/ExecutionEngine';
+import { RepeatableExecutionContext } from '../execution/RepeatableExecutionContext';
+import { LogProvider } from '../logging/LogProvider';
+import { Runtime } from '../runtime/Runtime';
 import { TypedGroupValidator } from '../validators/GroupValidator';
 import { ValidationHandler } from '../validators/ValidationHandler';
 
@@ -24,6 +27,7 @@ export class TableHandler<
     private readonly columnMetaInfo: MetaInfo;
     private readonly rowDefinitions = new Map<string, RowDefinition<TExecutionContext, TRowType>>();
     private readonly groupValidations = new Array<TypedGroupValidator<TExecutionContext, TRowType>>();
+    private readonly logger = LogProvider.create('core').logger('tableHandler');
 
     // only public, because of use in tests
     public executionEngine: ExecutionEngine<TExecutionContext, TRowType>;
@@ -111,9 +115,65 @@ export class TableHandler<
     /**
      *
      */
-    process(tableDefinition: TableRows): Promise<TExecutionContext>;
-    process(tableDefinition: string): Promise<TExecutionContext>;
-    process(tableDefinition: TableRows | string): Promise<TExecutionContext> {
+    async process(tableDefinition: TableRows): Promise<TExecutionContext>;
+    async process(tableDefinition: string): Promise<TExecutionContext>;
+    async process(tableDefinition: TableRows | string): Promise<TExecutionContext> {
+        this.logger.info(() => 'process');
+
+        const executionEngine = this.executionEngineCreator();
+        try {
+            return await this.processInternal(executionEngine, tableDefinition);
+        } catch (error) {
+            const context = executionEngine.context;
+            const repetition = (context as unknown as RepeatableExecutionContext<object, object, object>).repetition;
+            if (!repetition || repetition?.count == 0) {
+                throw error;
+            } else {
+                return this.processRepeatable(executionEngine, tableDefinition, repetition.count, repetition.pause);
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    private async processRepeatable(
+        executionEngine: ExecutionEngine<TExecutionContext, TRowType>,
+        tableDefinition: TableRows | string,
+        count: number,
+        pause: number
+    ): Promise<TExecutionContext> {
+        let context: TExecutionContext;
+        let error: Error;
+
+        for (let index = 0; index < count; index++) {
+            error = null;
+            await new Promise((resolve) => setTimeout(() => resolve(null), pause));
+            Runtime.instance.stepRuntime.notifyClear();
+            Runtime.instance.stepRuntime.current.reputations++;
+
+            try {
+                context = await this.processInternal(executionEngine, tableDefinition);
+                return context;
+            } catch (err) {
+                error = err;
+            }
+        }
+
+        if (!!error) {
+            throw error;
+        } else {
+            return context;
+        }
+    }
+
+    /**
+     *
+     */
+    private processInternal(
+        executionEngine: ExecutionEngine<TExecutionContext, TRowType>,
+        tableDefinition: TableRows | string
+    ): Promise<TExecutionContext> {
         const dataBinder = new RowDataBinder(this.columnMetaInfo.tableName, this.columnMetaInfo, tableDefinition);
         dataBinder.check();
         const valueRows = dataBinder.bind();
@@ -126,19 +186,20 @@ export class TableHandler<
         );
         const rows = definitionBinder.bind(this.rowType);
 
-        this.executionEngine = this.executionEngineCreator();
+        this.executionEngine = executionEngine;
+        this.logger.info(() => `process internal ### ${executionEngine.mainExecutionUnit().description.id} ###`, null, true);
 
         const validator = new ValidationHandler<TExecutionContext, TRowType>(this.groupValidations);
         validator.preValidate(rows);
 
-        return this.executionEngine
+        return executionEngine
             .preExecute(rows)
             .then((canProceed) => {
                 if (canProceed) {
                     validator.validate(rows);
-                    return this.executionEngine.execute(rows);
+                    return executionEngine.execute(rows);
                 } else {
-                    return this.executionEngine.context;
+                    return executionEngine.context;
                 }
             })
             .catch((errorReason) => {

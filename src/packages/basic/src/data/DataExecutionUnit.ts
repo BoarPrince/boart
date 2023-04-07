@@ -10,7 +10,7 @@ export class DataExecutionUnit implements ExecutionUnit<DataContext, RowTypeValu
      *
      */
     public description = {
-        id: '2c9ccedd-b46e-4f61-b1ff-380f57bbeb8f',
+        id: 'data:unit',
         title: 'data',
         description: '',
         examples: [

@@ -1,12 +1,16 @@
-import { GroupRowDefinition, TableHandler, TableHandlerBaseImpl } from '@boart/core';
-import { DataContext, RowTypeValue } from '@boart/core-impl';
+import { GroupRowDefinition, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
+import { IntValidator, RowTypeValue } from '@boart/core-impl';
 
 import { DataExecutionUnit } from './DataExecutionUnit';
+import { RepeatableDataExecutionContext } from './DataTableContext';
 
 /**
  *
  */
-export default class DataTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<DataContext>> {
+export default class DataTableHandler extends TableHandlerBaseImpl<
+    RepeatableDataExecutionContext,
+    RowTypeValue<RepeatableDataExecutionContext>
+> {
     /**
      *
      */
@@ -20,7 +24,8 @@ export default class DataTableHandler extends TableHandlerBaseImpl<DataContext, 
     /**
      *
      */
-    newContext = (): DataContext => ({
+    newContext = (): RepeatableDataExecutionContext => ({
+        repetition: { pause: 0, count: 0 },
         config: null,
         preExecution: {
             payload: null
@@ -35,7 +40,7 @@ export default class DataTableHandler extends TableHandlerBaseImpl<DataContext, 
     /**
      *
      */
-    addGroupRowDefinition(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>): void {
+    addGroupRowDefinition(tableHandler: TableHandler<RepeatableDataExecutionContext, RowTypeValue<RepeatableDataExecutionContext>>): void {
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
@@ -43,15 +48,54 @@ export default class DataTableHandler extends TableHandlerBaseImpl<DataContext, 
     /**
      *
      */
-    addRowDefinition(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>): void {
+    addRowDefinition(tableHandler: TableHandler<RepeatableDataExecutionContext, RowTypeValue<RepeatableDataExecutionContext>>): void {
         tableHandler.getRowDefinition('payload').key = Symbol('in');
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('repeat:wait'),
+                type: TableRowType.Configuration,
+                executionUnit: {
+                    execute: (context: RepeatableDataExecutionContext, row: RowTypeValue<RepeatableDataExecutionContext>): void => {
+                        context.repetition.pause = row.value as number;
+                    }
+                },
+                validators: [new IntValidator('value')]
+            })
+        );
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('repeat:wait:sec'),
+                type: TableRowType.Configuration,
+                executionUnit: {
+                    execute: (context: RepeatableDataExecutionContext, row: RowTypeValue<RepeatableDataExecutionContext>): void => {
+                        context.repetition.pause = (row.value as number) * 1000;
+                    }
+                },
+                validators: [new IntValidator('value')]
+            })
+        );
+
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('repeat:count'),
+                type: TableRowType.Configuration,
+                executionUnit: {
+                    execute: (context: RepeatableDataExecutionContext, row: RowTypeValue<RepeatableDataExecutionContext>): void => {
+                        context.repetition.count = row.value as number;
+                    }
+                },
+                validators: [new IntValidator('value')]
+            })
+        );
     }
 
     /**
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    addGroupValidation(_: TableHandler<DataContext, RowTypeValue<DataContext>>) {
+    addGroupValidation(_: TableHandler<RepeatableDataExecutionContext, RowTypeValue<RepeatableDataExecutionContext>>) {
         // no group validation needed
     }
 }
