@@ -5,6 +5,7 @@ import fsPath from 'path';
 
 import { compare } from 'compare-versions';
 
+import { LogLevel } from '../types/LogLevel';
 import { RuntimeEnvironment } from '../types/RuntimeEnvironment';
 
 /**
@@ -176,6 +177,13 @@ export class EnvLoader {
             throw new Error(`environment 'env:${key}' does not exists`);
         }
         return envValue || defaultValue;
+    }
+
+    /**
+     *
+     */
+    public getLogLevel(): LogLevel {
+        return LogLevel.None;
     }
 
     /**

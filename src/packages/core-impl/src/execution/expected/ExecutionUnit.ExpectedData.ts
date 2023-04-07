@@ -5,8 +5,6 @@ import {
     ExecutionUnit,
     ExpectedOperator,
     ExpectedOperatorInitializer,
-    ExpectedOperatorResult,
-    NativeType,
     ParaType,
     RowValidator,
     SelectorType
@@ -15,8 +13,6 @@ import { Description } from 'core/src/description/Description';
 
 import { RowTypeValue } from '../../RowTypeValue';
 import { ParaValidator } from '../../validators/ParaValidator';
-
-import { ExpectedOperatorImplementation } from './ExpectedOperator.Implementation';
 
 /**
  * | action            | value |
@@ -54,7 +50,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
      */
     get description(): Description {
         return {
-            id: '31f46a7e-8cc0-4ebf-ae63-a9d30a2cafb4',
+            id: 'expected-unit',
             title: !this.firstLevelType ? 'expected' : `expected:${this.firstLevelType.toString()}`,
             description: null,
             examples: null

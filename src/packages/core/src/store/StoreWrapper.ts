@@ -2,6 +2,7 @@ import { ContentType } from '../data/ContentType';
 import { DataContent } from '../data/DataContent';
 import { DataContentHelper } from '../data/DataContentHelper';
 import { ObjectContent } from '../data/ObjectContent';
+import { LogProvider } from '../logging/LogProvider';
 import { ScopeType } from '../types/ScopeType';
 import { PropertyParser } from '../value/PropertyParser';
 
@@ -44,6 +45,7 @@ class ObjectWrapper implements StoreMap {
 export class StoreWrapper implements StoreMap {
     public readonly store: StoreMap;
     public readonly storeName: string;
+    private readonly logger = LogProvider.create('core').logger('storeWrapper');
 
     /**
      *
@@ -70,6 +72,10 @@ export class StoreWrapper implements StoreMap {
      *
      */
     put(key: string, value: ContentType) {
+        this.logger.trace(
+            () => `put ${key}`,
+            () => value
+        );
         const properties = PropertyParser.parseProperty(key);
 
         if (properties.length === 0) {
@@ -104,7 +110,12 @@ export class StoreWrapper implements StoreMap {
         }
 
         const dataContentValue = DataContentHelper.create(contentValue);
-        return DataContentHelper.getByPath(properties.nofirst(), dataContentValue, optional);
+        const value = DataContentHelper.getByPath(properties.nofirst(), dataContentValue, optional);
+        this.logger.trace(
+            () => `get ${key}`,
+            () => value
+        );
+        return value;
     }
 
     /**

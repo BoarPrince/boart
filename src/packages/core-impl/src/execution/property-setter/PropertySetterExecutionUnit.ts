@@ -42,7 +42,7 @@ export class PropertySetterExecutionUnit<
      *
      */
     readonly description = {
-        id: '82256569-5168-49bc-8350-3ff8db5b55e1',
+        id: 'propertySetter:unit',
         title: 'Generic Property Setter',
         description: '',
         examples: null
