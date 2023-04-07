@@ -24,14 +24,19 @@ import { ExecutionContext } from './execution/ExecutionContext';
 import { ExecutionEngine } from './execution/ExecutionEngine';
 import { ExecutionUnit } from './execution/ExecutionUnit';
 import { ExecutionUnitValidation } from './execution/ExecutionUnitValidation';
+import { RepeatableExecutionContext } from './execution/RepeatableExecutionContext';
 import { ExpectedOperator, ExpectedOperatorResult } from './expected/ExpectedOperator';
 import { ExpectedOperatorInitializer } from './expected/ExpectedOperatorInitializer';
 import { Generator } from './generator/Generator';
 import { GeneratorHandler } from './generator/GeneratorHandler';
+import { LocalContext } from './runtime/LocalContext';
 import { Runtime } from './runtime/Runtime';
-import { LocalContext, RuntimeContext, RuntimeResultContext, StepContext, TestContext } from './runtime/RuntimeContext';
+import { RuntimeResultContext } from './runtime/RuntimeContext';
+import { RuntimeContext } from './runtime/RuntimeContext.1';
 import { RuntimePriority } from './runtime/RuntimePriority';
 import { RuntimeStatus } from './runtime/RuntimeStatus';
+import { StepContext } from './runtime/StepContext';
+import { TestContext } from './runtime/TestContext';
 import { Context } from './store/Context';
 import { Store } from './store/Store';
 import { StoreMap } from './store/StoreMap';
@@ -102,6 +107,7 @@ export {
     ObjectContent,
     OperatorType,
     ParaType,
+    RepeatableExecutionContext,
     RowDefinition,
     RowValidator,
     Runtime,
