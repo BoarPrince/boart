@@ -6,7 +6,11 @@ import { Observable, Subject } from 'rxjs';
 import { EnvLoader } from '../common/EnvLoader';
 import { Timer } from '../common/Timer';
 
-import { LocalContext, RuntimeContext, RuntimeResultContext, StepContext, TestContext } from './RuntimeContext';
+import { LocalContext } from './LocalContext';
+import { RuntimeResultContext } from './RuntimeContext';
+import { RuntimeContext } from './RuntimeContext.1';
+import { StepContext } from './StepContext';
+import { TestContext } from './TestContext';
 
 /**
  *
@@ -15,8 +19,10 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
     private timer: Timer;
     private start = new Subject<TContext>();
     private end = new Subject<RuntimeResultContext>();
+    private clear = new Subject<void>();
     public onStart = (): Observable<TContext> => this.start;
     public onEnd = (): Observable<RuntimeResultContext> => this.end;
+    public onClear = (): Observable<void> => this.clear;
     public current: TContext;
 
     /**
@@ -51,6 +57,13 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
         if (!this.preserveCurrent) {
             this.current = null;
         }
+    }
+
+    /**
+     *
+     */
+    public notifyClear() {
+        this.clear.next();
     }
 }
 
