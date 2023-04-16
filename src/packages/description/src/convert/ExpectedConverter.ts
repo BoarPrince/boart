@@ -1,6 +1,8 @@
 import { ExpectedDescription, FullDescription } from '@boart/core';
 import { Environment } from 'nunjucks';
 
+import { ChildMap } from '../util/ChildMap';
+
 import { DescriptionCreator } from './DescriptionCreator';
 import { DescriptionCreatorFactory } from './DescriptionCreatorFactory';
 import { DescriptionLinkReference } from './DescriptionLinkReference';
@@ -49,46 +51,19 @@ export class ExpectedConverter implements DescriptionCreator {
     /**
      *
      */
+    populateChildMap(childMap: ChildMap): void {
+        this.description.operators.forEach((desc) => {
+            if (!desc.parentId) {
+                return;
+            }
+            childMap.get(desc.parentId).push(desc);
+        });
+    }
+
+    /**
+     *
+     */
     create(templateName: string): string {
         return this.env.render(templateName, this.description);
     }
-
-    // /**
-    //  *
-    //  */
-    // public convert(): { fileName: string; content: string } {
-    //     const desc = DescriptionHandler.convertMarkdownToHTML(this.description.desc.description);
-
-    //     const operatorsDesc = this.description.operators
-    //         .map((operator) => {
-    //             operator.title = (!!operator.title ? '' : ':') + operator.title;
-    //             return operator;
-    //         })
-    //         .sort((op1, op2) => op1.title.localeCompare(op2.title))
-    //         .map((operator) => {
-    //             const opDesc = DescriptionHandler.convertMarkdownToHTML(operator.description);
-    //             const op = `<dt id="${operator.id}">
-    //                           <h3>${operator.title}</h3>
-    //                         </dt>
-    //                         <dd>${opDesc}</dd>`;
-
-    //             const examples = (operator.examples || []).map((example) => {
-    //                 const exampleDesc = DescriptionHandler.convertMarkdownToHTML(example.example);
-    //                 return `<dd>
-    //                           <h4>${example.title}</h4>
-    //                           <div class="example">${exampleDesc}</div>
-    //                         </dd>`;
-    //             });
-
-    //             return `${op}${examples.join('\n')}`;
-    //         });
-
-    //     const content = `<h1>Expected</h1>${desc}
-    //                   <dl>${operatorsDesc.join('\n')}</dl>`;
-
-    //     return {
-    //         content,
-    //         fileName: null //EnvLoader.instance.mapDescriptionData(ExpectedConverter.FILENAME)
-    //     };
-    // }
 }

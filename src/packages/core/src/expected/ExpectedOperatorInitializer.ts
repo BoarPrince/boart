@@ -77,6 +77,7 @@ export class ExpectedOperatorInitializer implements Descriptionable {
                 ? null
                 : {
                       id: `${operator.description.id}:default`,
+                      parentId: operator.description.id,
                       title: 'expected',
                       description: `The '<ref:${operator.description.id}>' operator it's the default
                             operator and it's used when no operator is defined`,
@@ -132,7 +133,8 @@ export class ExpectedOperatorInitializer implements Descriptionable {
             ? null
             : {
                   id: `${operator.description.id}:not`,
-                  title: `${operator.description.title}:not`,
+                  parentId: operator.description.id,
+                  title: `${operator.description.title}:nots`,
                   description: `It's the not extension of the '<ref:${operator.description.id}>' operator`,
                   examples: null
               };
@@ -159,6 +161,7 @@ export class ExpectedOperatorInitializer implements Descriptionable {
             ? null
             : {
                   id: `${operator.description.id}:ci`,
+                  parentId: operator.description.id,
                   title: `${operator.description.title}:ci`,
                   description: `It's the ci (case insensitive) extension of the '<ref:${operator.description.id}>' operator`,
                   examples: null

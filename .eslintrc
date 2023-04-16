@@ -20,7 +20,8 @@
   "plugins": [
     "import",
     "eslint-comments",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "jest"
   ],
   "extends": [
     "eslint:recommended",
@@ -28,6 +29,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:import/typescript",
+    "plugin:jest/all",
     "prettier"
   ],
   "globals": {
@@ -35,6 +37,20 @@
     "gauge": "readonly",
     "__filename": "readonly"
   },
+  "overrides": [
+    {
+      "files": [
+        "*.test.ts"
+      ],
+      "plugins": [
+        "jest"
+      ],
+      "rules": {
+        "@typescript-eslint/unbound-method": "off",
+        "jest/unbound-method": "error"
+      }
+    }
+  ],
   "rules": {
     // old
     "no-extra-boolean-cast": "off",
@@ -65,7 +81,19 @@
         "ignoreDeclarationSort": true,
         "ignoreCase": true
       }
-    ]
+    ],
+    "jest/no-hooks": [
+      "error",
+      {
+        "allow": [
+          "beforeEach",
+          "afterEach",
+          "beforeAll"
+        ]
+      }
+    ],
+    "jest/prefer-expect-assertions": "off",
+    "jest/unbound-method": "off"
   },
   "settings": {
     "project": {},

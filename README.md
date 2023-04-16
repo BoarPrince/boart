@@ -8,3 +8,5 @@ npm config set registry https://registry.npmjs.org/
 
 
 npm install @types/uuid  -w @boart/core
+npm install nunjucks  -w @boart/description
+npm install --save @types/nunjucks -w @boart/description

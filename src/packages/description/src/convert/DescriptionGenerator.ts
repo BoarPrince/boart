@@ -1,9 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { EnvLoader, FullDescription } from '@boart/core';
+import { Description, EnvLoader, FullDescription } from '@boart/core';
 import { marked } from 'marked';
 import * as nunjucks from 'nunjucks';
+
+import { ChildMap } from '../util/ChildMap';
 
 import { DescriptionCreatorFactory } from './DescriptionCreatorFactory';
 import { DescriptionLinkReference } from './DescriptionLinkReference';
@@ -42,11 +44,38 @@ export class DescriptionGenerator {
     private init(): void {
         const searchPath = path.resolve(__dirname, '..', '..', 'resources');
         this.env = new nunjucks.Environment(new nunjucks.FileSystemLoader(searchPath), { autoescape: false });
-        this.env.addFilter('markdown', (str: string) => DescriptionGenerator.convertMarkdownToHTML(str));
+        this.addMarkdownFilter();
+        this.addParentFilter();
         this.description = this.read();
 
         // init converter factories
         this.converters.push(ExpectedConverter.factory);
+    }
+
+    /**
+     *
+     */
+    private addMarkdownFilter(): void {
+        this.env.addFilter('markdown', (str: string) => DescriptionGenerator.convertMarkdownToHTML(str));
+    }
+
+    /**
+     *
+     */
+    private addParentFilter(): void {
+        this.env.addFilter('onlyParents', (documents: Description[]) => {
+            const parents = documents.filter((d) => !d.parentId);
+            return parents;
+        });
+    }
+
+    /**
+     *
+     */
+    private addChildsFilter(childMap: ChildMap): void {
+        this.env.addFilter('childs', (document: Description) => {
+            return childMap.get(document.id);
+        });
     }
 
     /**
@@ -116,10 +145,16 @@ export class DescriptionGenerator {
             templateName: factory.resourceName + '.njk',
             fileName: EnvLoader.instance.mapDescriptionData(factory.resourceName + '.html')
         }));
+
         const linkReferenceMap = new Map<string, DescriptionLinkReference>();
+        const childMap = new ChildMap();
 
         // create link reference list for all descriptions
-        converters.forEach((converter) => converter.converter.addLinkReference(converter.fileName, linkReferenceMap));
+        converters.forEach((converter) => {
+            converter.converter.addLinkReference(converter.fileName, linkReferenceMap);
+            converter.converter.populateChildMap(childMap);
+        });
+        this.addChildsFilter(childMap);
 
         // use template engine to create documentations
         converters.forEach((converter) => {

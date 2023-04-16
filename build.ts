@@ -208,7 +208,10 @@ class BuildHelper {
         this.commandLine.packageNames.forEach((packageName) => {
             fs.cpSync(
                 path.join(this.getPackageSourceDir(packageName), ressourceFile),
-                path.join(this.getNodeModulesPackgeDir(packageName), ressourceFile)
+                path.join(this.getNodeModulesPackgeDir(packageName), ressourceFile),
+                {
+                    recursive: true
+                }
             );
         });
     }

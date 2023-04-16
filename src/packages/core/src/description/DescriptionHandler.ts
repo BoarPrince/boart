@@ -113,6 +113,7 @@ export class DescriptionHandler {
             : {
                   id: description?.id || '',
                   title: description?.title || '',
+                  parentId: description?.parentId,
                   description: this.adjustIndent(description?.description || ''),
                   examples: description?.examples?.map((example) => {
                       example.example = this.adjustIndent(example.example);

@@ -8,6 +8,14 @@
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[*.html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "html.suggest.html5": true,
+  "emmet.includeLanguages": {
+    "njk": "nunjucks",
+    "nunjucks": "html"
+  },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -21,6 +29,11 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "custom-language-properties": {
+    "Markdown.comments.lineComment": "comment *",
+    "markdown.comments.lineComment": "comment *",
+    "gauge.comments.lineComment": "comment *"
+  },
   "coverage-gutters.showGutterCoverage": true,
   "coverage-gutters.showLineCoverage": true,
   "coverage-gutters.showRulerCoverage": false,
@@ -30,7 +43,8 @@
   "files.associations": {
     "*.cpt": "gauge",
     "*.json": "jsonc",
-    "*.spec": "gauge"
+    "*.spec": "gauge",
+    "*.html": "html"
   },
   "files.autoSave": "off",
   "jest.autoRun": {
