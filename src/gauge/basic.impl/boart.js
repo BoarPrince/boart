@@ -13,7 +13,7 @@ const {
     SQLQueryTableHandler
 } = require('@boart/basic');
 const { DescriptionHandler, Store, ValueReplacerHandler, Runtime, RuntimeStatus } = require('@boart/core');
-const { DescriptionConverter } = require('@boart/description');
+const { DescriptionGenerator } = require('@boart/description');
 
 /**
  *
@@ -280,5 +280,5 @@ step('Wait <seconds>', async (seconds) => {
  */
 step('Generate Documentation', () => {
     DescriptionHandler.instance.save();
-    DescriptionConverter.instance.convert();
+    DescriptionGenerator.instance.create();
 });
