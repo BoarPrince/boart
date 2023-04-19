@@ -127,8 +127,8 @@ tags: md-5.3
    |description           |Add an User without local must result in an error|
    |payload               |<file:request-user.json>                         |
    |payload#locale        |null                                             |
-   |expected:header#status|400                                              |
-   |expected#description  |{locale=must not be null},                       |
+   |expected:header#status|406                                              |
+   |expected#detail       |{locale=must not be null},                       |
 
 * Rest call, continue
 
@@ -138,8 +138,8 @@ tags: md-5.3
    |description           |Add an User with wrong local must result in an error|
    |payload               |<file:request-user.json>                            |
    |payload#locale        |due                                                 |
-   |expected:header#status|400                                                 |
-   |expected#description  |{locale=size must be between 2 and 2},              |
+   |expected:header#status|406                                                 |
+   |expected#detail       |{locale=size must be between 2 and 2},              |
 
 * Rest call, continue
 
@@ -149,7 +149,7 @@ tags: md-5.3
    |description           |Add an User without username must result in an error|
    |payload               |<file:request-user.json>                            |
    |payload#username      |null                                                |
-   |expected:header#status|400                                                 |
+   |expected:header#status|406                                                 |
 
 ## 1.4. Add and Update an User
 
@@ -824,7 +824,7 @@ tags: md-5.18, sync
 
    |action                |value                                               |
    |----------------------|----------------------------------------------------|
-   |method:get            |/api/maintenance/sync/user/${store:response-user.id}|
+   |method:patch          |/api/maintenance/sync/user/${store:response-user.id}|
    |description           |Sync specific user - force trigger keycloak event   |
    |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}          |
    |link:grafana          |${generate:tpl:link.grafana.header.traceId}         |
@@ -896,3 +896,132 @@ tags: md-5.20, sync
    |wait:after:sec|4                                                 |
 
 * queues check "md-user-error, md-all-error, user-consumer"
+
+## 1.21. Search User by company name (legacy=true)
+
+tags: md-5.21
+
+* Test description
+
+   |action     |value                                      |
+   |-----------|-------------------------------------------|
+   |description|user must be searchable by the company name|
+   |           |legacy = true                              |
+   |priority   |medium                                     |
+
+* request admin bearer
+
+* add company, carrier and user
+
+* Rest call
+
+   |action                |value                   |
+   |----------------------|------------------------|
+   |method:post           |/api/user               |
+   |description           |Create a user           |
+   |payload               |<file:request-user.json>|
+   |payload#id            |undefined               |
+   |payload#carrierIds[0] |${store:response-ca.id} |
+   |expected:header#status|200                     |
+
+* Rest call
+
+   |action                |value                            |
+   |----------------------|---------------------------------|
+   |description           |Search users by the company name |
+   |                      |The result must contain all users|
+   |method:get            |/api/users                       |
+   |query#searchString    |${store:response-co.companyName} |
+   |query#legacy          |true                             |
+   |expected:header#status|200                              |
+   |expected:count#content|2                                |
+
+## 1.22. Search User by company name (legacy=false)
+
+tags: md-5.22
+
+* Test description
+
+   |action     |value                                      |
+   |-----------|-------------------------------------------|
+   |description|user must be searchable by the company name|
+   |           |legacy = false                             |
+   |priority   |medium                                     |
+
+* request admin bearer
+
+* add company, carrier and user
+
+* Rest call
+
+   |action                |value                   |
+   |----------------------|------------------------|
+   |method:post           |/api/user               |
+   |description           |Create a user           |
+   |payload               |<file:request-user.json>|
+   |payload#id            |undefined               |
+   |payload#carrierIds[0] |${store:response-ca.id} |
+   |expected:header#status|200                     |
+
+* Rest call
+
+   |action                |value                            |
+   |----------------------|---------------------------------|
+   |description           |Search users by the company name |
+   |                      |The result must contain all users|
+   |method:get            |/api/users                       |
+   |query#searchString    |${store:response-co.companyName} |
+   |query#legacy          |false                            |
+   |expected:header#status|200                              |
+   |expected:count#content|2                                |
+
+## 1.23. Search User by jitpayId (legacy=false and true)
+
+tags: md-5.23
+
+* Test description
+
+   |action     |value                                  |
+   |-----------|---------------------------------------|
+   |description|user must be searchable by the jitPayId|
+   |           |legacy = false and true                |
+   |priority   |medium                                 |
+
+* request admin bearer
+
+* add company, carrier and user
+
+* Rest call
+
+   |action                |value                   |
+   |----------------------|------------------------|
+   |method:post           |/api/user               |
+   |description           |Create a user           |
+   |payload               |<file:request-user.json>|
+   |payload#id            |undefined               |
+   |payload#carrierIds[0] |${store:response-ca.id} |
+   |expected:header#status|200                     |
+
+* Rest call
+
+   |action                |value                                        |
+   |----------------------|---------------------------------------------|
+   |description           |Search users by the jitpayId (legacy = false)|
+   |                      |The result must contain all users            |
+   |method:get            |/api/users                                   |
+   |query#searchString    |${store:response-co.jitPayId}                |
+   |query#legacy          |false                                        |
+   |expected:header#status|200                                          |
+   |expected:count#content|2                                            |
+
+* Rest call
+
+   |action                |value                                       |
+   |----------------------|--------------------------------------------|
+   |description           |Search users by the jitpayId (legacy = true)|
+   |                      |The result must contain all users           |
+   |method:get            |/api/users                                  |
+   |query#searchString    |${store:response-co.jitPayId}               |
+   |query#legacy          |true                                        |
+   |expected:header#status|200                                         |
+   |expected:count#content|2                                           |

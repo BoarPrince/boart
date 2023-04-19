@@ -5,7 +5,7 @@
     "default_password": "Germany2023!",
     "rabbitmq_hostname": [
       "rabbitmq.dev.jitpay.eu",
-      "192.168.50.249",
+      "rabbitmq.stage.jitpay.eu",
       "localhost"
     ],
     "rabbitmq_password": [
@@ -24,13 +24,13 @@
       "localhost"
     ],
     "mssql_username": [
-      "Jitpay",
-      "Jitpay",
+      "JITpay",
+      "JITpay",
       "guest"
     ],
     "mssql_password": [
-      "21Tauri#A",
-      "21Tauri#A",
+      "zmVQj7WUaMHukHzL",
+      "zmVQj7WUaMHukHzL",
       "guest"
     ],
     "onboarding_url": [

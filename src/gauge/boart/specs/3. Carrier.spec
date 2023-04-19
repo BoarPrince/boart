@@ -322,7 +322,7 @@ comment * add carrier, companyId: "${store:response-co.id}", response: "response
 
    |action                |value                                                |
    |----------------------|-----------------------------------------------------|
-   |method:get            |/api/maintenance/sync/carrier/${store:response-ca.id}|
+   |method:patch          |/api/maintenance/sync/carrier/${store:response-ca.id}|
    |description           |Trigger carrier event                                |
    |expected:header#status|202                                                  |
    |group                 |Trigger Event                                        |
@@ -331,7 +331,7 @@ comment * add carrier, companyId: "${store:response-co.id}", response: "response
 
    |action                |value                                                |
    |----------------------|-----------------------------------------------------|
-   |method:get            |/api/maintenance/sync/company/${store:response-co.id}|
+   |method:patch          |/api/maintenance/sync/company/${store:response-co.id}|
    |description           |Trigger company event                                |
    |expected:header#status|202                                                  |
    |group                 |Trigger Event                                        |
@@ -812,8 +812,8 @@ tags: md-3.15
    |payload               |<file:request-carrier.json>   |
    |payload#addresses     |undefined                     |
    |payload#companyId     |${store:response-co.id}       |
-   |expected:header#status|400                           |
-   |expected#description  |{addresses=must not be empty},|
+   |expected:header#status|406                           |
+   |expected#detail       |{addresses=must not be empty},|
 
 ## 1.16. Add a carrier without an address country
 
@@ -840,8 +840,8 @@ tags: md-3.16
    |payload                     |<file:request-carrier.json>                   |
    |payload#addresses[0].country|undefined                                     |
    |payload#companyId           |${store:response-co.id}                       |
-   |expected:header#status      |400                                           |
-   |expected#description        |{addresses[].country=country must be defined},|
+   |expected:header#status      |406                                           |
+   |expected#detail             |{addresses[].country=country must be defined},|
 
 
 ## 1.17. Add a second address
@@ -912,8 +912,8 @@ tags: md-3.18
    |payload                      |<file:request-company.json>                                          |
    |payload#carriers[0]          |<file:request-carrier.json>                                          |
    |payload#carriers[0].addresses|[]                                                                   |
-   |expected:header#status       |400                                                                  |
-   |expected#description         |{carriers[0].addresses=must not be empty},                           |
+   |expected:header#status       |406                                                                  |
+   |expected#detail              |{carriers[0].addresses=must not be empty},                           |
 
 ## 1.19. Create carrier casceded with a carrier without an address country
 
@@ -937,8 +937,8 @@ tags: md-3.19
    |payload                                 |<file:request-company.json>                                                  |
    |payload#carriers[0]                     |<file:request-carrier.json>                                                  |
    |payload#carriers[0].addresses[0].country|undefined                                                                    |
-   |expected:header#status                  |400                                                                          |
-   |expected#description                    |{carriers[0].addresses[].country=country must be defined},                   |
+   |expected:header#status                  |406                                                                          |
+   |expected#detail                         |{carriers[0].addresses[].country=country must be defined},                   |
 
 ## 1.20. Sync specific carrier with multiple users
 
@@ -965,7 +965,7 @@ tags: md-3.20, sync
 
    |action                |value                                                |
    |----------------------|-----------------------------------------------------|
-   |method:get            |/api/maintenance/sync/carrier/${store:response-ca.id}|
+   |method:patch          |/api/maintenance/sync/carrier/${store:response-ca.id}|
    |description           |Sync specific carrier - force trigger keycloak event |
    |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}           |
    |link:grafana          |${generate:tpl:link.grafana.header.traceId}          |
@@ -1013,9 +1013,102 @@ tags: md-3.21, sync
    |payload#1             |${store:carrier-2-id}                                       |
    |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}                  |
    |link:grafana          |${generate:tpl:link.grafana.header.traceId}                 |
+   |wait:after            |5                                                           |
    |expected:header#status|202                                                         |
    |expected:contains:not |null                                                        |
 
 * queues check "carrier", min: "2", max: "2"
 
 * queues check "identity-claim, user", min: "3", max: "3"
+
+## 1.22. Check if address is correct when creating a new carrier
+
+tags: md-3.22, version2
+
+* Test description
+
+   |action     |value                                                     |
+   |-----------|----------------------------------------------------------|
+   |description|Create a new carrier and check that the address is correct|
+   |priority   |high                                                      |
+
+* request admin bearer
+
+* Rest call
+
+   |action                                        |value                                                    |
+   |----------------------------------------------|---------------------------------------------------------|
+   |method:post                                   |/api/company                                             |
+   |description                                   |Create a Company, including a Carrier (send post request)|
+   |payload                                       |<file:company-with-carrier-without-ids-request.json>     |
+   |payload#carriers[0].addresses[0].street       |street a                                                 |
+   |payload#carriers[0].addresses[0].zipCode      |1234                                                     |
+   |payload#carriers[0].addresses[0].city         |city a                                                   |
+   |payload#carriers[0].addresses[0].country      |deutschland                                              |
+   |payload#carriers[0].addresses[0].firstname    |first a                                                  |
+   |payload#carriers[0].addresses[0].lastname     |last a                                                   |
+   |payload#carriers[0].addresses[0].email        |email a                                                  |
+   |payload#carriers[0].addresses[0].countryPrefix|49                                                       |
+   |payload#carriers[0].addresses[0].phoneNumber  |00 a                                                     |
+   |payload#carriers[0].addresses[0].type         |BILLING                                                  |
+   |store#id                                      |companyId                                                |
+
+* Rest call
+
+   |action                                         |value                                        |
+   |-----------------------------------------------|---------------------------------------------|
+   |method:get                                     |/api/company/${store:companyId}              |
+   |description                                    |Check if newly added company can be requested|
+   |expected:header#status                         |200                                          |
+   |expected#carriers[0].addresses[0].street       |street a                                     |
+   |expected#carriers[0].addresses[0].zipCode      |1234                                         |
+   |expected#carriers[0].addresses[0].city         |city a                                       |
+   |expected#carriers[0].addresses[0].country      |DE                                           |
+   |expected#carriers[0].addresses[0].firstname    |first a                                      |
+   |expected#carriers[0].addresses[0].lastname     |last a                                       |
+   |expected#carriers[0].addresses[0].email        |email a                                      |
+   |expected#carriers[0].addresses[0].countryPrefix|49                                           |
+   |--expected#addresses[0].phoneNumber            |00 a                                         |
+   |expected#carriers[0].addresses[0].type         |BILLING                                      |
+
+## 1.23. Check if phonenumbers is correct when creating a new carrier
+
+tags: md-3.23, version2
+
+* Test description
+
+   |action     |value                                                                              |
+   |-----------|-----------------------------------------------------------------------------------|
+   |description|Create a new company, including a carrier and check that the phonenumber is correct|
+   |priority   |high                                                                               |
+
+* request admin bearer
+
+* Rest call
+
+   |action                                           |value                                               |
+   |-------------------------------------------------|----------------------------------------------------|
+   |method:post                                      |/api/company                                        |
+   |description                                      |Create a Company (send post request)                |
+   |payload                                          |<file:company-with-carrier-without-ids-request.json>|
+   |payload#carriers[0].phoneNumbers[0].description  |desc a                                              |
+   |payload#carriers[0].phoneNumbers[0].number       |1 a                                                 |
+   |payload#carriers[0].phoneNumbers[0].countryPrefix|41                                                  |
+   |payload#carriers[0].phoneNumbers[0].category     |OFFICE                                              |
+   |payload#carriers[0].phoneNumbers[0].phoneType    |PHONE                                               |
+   |payload#carriers[0].phoneNumbers[0].favorite     |true                                                |
+   |store#id                                         |companyId                                           |
+
+* Rest call
+
+   |action                                            |value                                        |
+   |--------------------------------------------------|---------------------------------------------|
+   |method:get                                        |/api/company/${store:companyId}              |
+   |description                                       |Check if newly added company can be requested|
+   |expected:header#status                            |200                                          |
+   |expected#carriers[0].phoneNumbers[0].description  |null                                         |
+   |expected#carriers[0].phoneNumbers[0].number       |1 a                                          |
+   |expected#carriers[0].phoneNumbers[0].countryPrefix|41                                           |
+   |expected#carriers[0].phoneNumbers[0].category     |null                                         |
+   |expected#carriers[0].phoneNumbers[0].phoneType    |null                                         |
+   |expected#carriers[0].phoneNumbers[0].favorite     |false                                        |

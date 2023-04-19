@@ -27,7 +27,7 @@
       "id": "${store:ob_info.carrierId:=${generate:uuid}}",
       "currency": "EUR",
       "initialPin": "1234",
-      "preferredCardIssuer": "NONE",
+      "preferredCardIssuer": "SHELL",
       "maximumCards": 100,
       "baseCashpoolValue": 0,
       "baseCashpoolPercentage": 50,

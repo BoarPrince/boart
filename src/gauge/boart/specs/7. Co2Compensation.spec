@@ -112,7 +112,8 @@ tags: md-7.3
    |description           |Update the co2 compensation                  |
    |payload#companyId     |${store:response-co.id}                      |
    |payload#value         |3.55                                         |
-   |expected:header#status|400                                          |
+   |expected#detail       |{comment=must not be null},                  |
+   |expected:header#status|406                                          |
 
 ## 1.4. Update a compensation (try changing the company)
 

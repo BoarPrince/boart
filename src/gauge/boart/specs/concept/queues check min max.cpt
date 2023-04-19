@@ -17,10 +17,21 @@
 
 * RabbitMQ consume, continue
 
+   | action           | value              |
+   |------------------|--------------------|
+   | run:only:carrier | <queue-list>       |
+   | queue            | test.md.carrier    |
+   | group            | Check Queues       |
+   | description      | carrier crud event |
+   | count:max        | <max>              |
+   | count:min        | <min>              |
+   | store            | event-carrier      |
+
+* RabbitMQ consume, continue
+
    | action        | value           |
    |---------------|-----------------|
    | run:only:user | <queue-list>    |
-   | wait:before   | 2               |
    | queue         | test.md.user    |
    | group         | Check Queues    |
    | description   | user crud event |
@@ -119,18 +130,6 @@
    | count:max                | <max>                   |
    | count:min                | <min>                   |
    | store                    | event-fleet-event-bus   |
-
-* RabbitMQ consume, continue
-
-   | action           | value              |
-   |------------------|--------------------|
-   | run:only:carrier | <queue-list>       |
-   | queue            | test.md.carrier    |
-   | group            | Check Queues       |
-   | description      | carrier crud event |
-   | count:max        | <max>              |
-   | count:min        | <min>              |
-   | store            | event-carrier      |
 
 * RabbitMQ consume, continue
 

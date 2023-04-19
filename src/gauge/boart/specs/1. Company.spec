@@ -171,7 +171,8 @@ tags: md-1.3
    |payload               |${store:response1}                                    |
    |payload#id            |${store:response2.id}                                 |
    |expected:header#status|409                                                   |
-   |expected#message      |id in payload does not match path id                  |
+   |expected#status       |409                                                   |
+   |expected#detail       |id in payload does not match id in request path       |
 
 ## 1.4. Text search company name (/api/companysearchString=abc)
 
@@ -733,8 +734,8 @@ tags: md-1.17
    |description           |Create company without an address country|
    |payload               |<file:request-company.json>              |
    |payload#addresses     |undefined                                |
-   |expected:header#status|400                                      |
-   |expected#description  |{addresses=must not be empty},           |
+   |expected:header#status|406                                      |
+   |expected#detail       |{addresses=must not be empty},           |
 
 ## 1.18. Add a company without an address country
 
@@ -758,8 +759,8 @@ tags: md-1.18
    |description                 |Create company without pre-defined Ids         |
    |payload                     |<file:request-company.json>                    |
    |payload#addresses[0].country|undefined                                      |
-   |expected:header#status      |400                                            |
-   |expected#description        |{addresses[0].country=country must be defined},|
+   |expected:header#status      |406                                            |
+   |expected#detail             |{addresses[0].country=country must be defined},|
 
 ## 1.19. Add a second address
 
@@ -829,10 +830,11 @@ tags: md-1.20, sync
 
    |action                |value                                                |
    |----------------------|-----------------------------------------------------|
-   |method:get            |/api/maintenance/sync/company/${store:response-co.id}|
+   |method:patch          |/api/maintenance/sync/company/${store:response-co.id}|
    |description           |Sync specific company - force trigger keycloak event |
    |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}           |
    |link:grafana          |${generate:tpl:link.grafana.header.traceId}          |
+   |wait:after            |10                                                   |
    |expected:header#status|202                                                  |
    |expected:contains:not |null                                                 |
 
@@ -873,6 +875,7 @@ tags: md-1.21, sync
    |payload#1             |${store:company-2-id}                                        |
    |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}                   |
    |link:grafana          |${generate:tpl:link.grafana.header.traceId}                  |
+   |wait:after            |5                                                            |
    |expected:header#status|202                                                          |
    |expected:contains:not |null                                                         |
 
@@ -933,3 +936,265 @@ tags: md-1.22
    |expected:greater#eventDate|${store:carrierDate}                               |
 
 * check db backend sync, company: "${store:resonse}", carrier: "${store:resonse.carriers[0]}", user: "${store:resonse.carriers[0].users[0]}", driver: "", vehicle: ""
+
+## 1.23 Create / Update companies by maintanance
+
+tags: md-1.23
+
+* Test description
+
+   |action     |value                                         |
+   |-----------|----------------------------------------------|
+   |description|a list of companies must be createable at once|
+   |priority   |medium                                        |
+
+* request admin bearer
+
+* Rest call
+
+   |action                                   |value                                     |
+   |-----------------------------------------|------------------------------------------|
+   |method:patch                             |/api/maintenance/companies                |
+   |payload#[0]                              |<file:request-company.json>               |
+   |payload#[0].id                           |${store:companyId1:=${generate:uuid}}     |
+   |payload#[0].carriers[0]                  |<file:request-carrier.json>               |
+   |payload#[0].carriers[0].users[0]         |<file:request-user.json>                  |
+   |payload#[0].carriers[0].vehicles[0]      |<file:request-vehicle.json>               |
+   |payload#[1]                              |<file:request-company.json>               |
+   |payload#[1].id                           |${store:companyId2:=${generate:uuid}}     |
+   |payload#[1].carriers[0]                  |<file:request-carrier.json>               |
+   |payload#[1].carriers[0].users[0]         |<file:request-user.json>                  |
+   |payload#[1].carriers[0].users[0].email   |second_${generate:tpl:user.email}         |
+   |payload#[1].carriers[0].users[0].username|second_${generate:tpl:user.email}         |
+   |payload#[1].carriers[0].vehicles[0]      |<file:request-vehicle.json>               |
+   |description                              |Create Companies by a maintanance request)|
+   |expected:header#status                   |202                                       |
+
+* Rest call
+
+   |action                |value                                              |
+   |----------------------|---------------------------------------------------|
+   |method:get            |/api/company/${store:companyId1}                   |
+   |description           |Check if first newly added company can be requested|
+   |wait:before           |3                                                  |
+   |expected:header#status|200                                                |
+
+* Rest call
+
+   |action                |value                                               |
+   |----------------------|----------------------------------------------------|
+   |method:get            |/api/company/${store:companyId2}                    |
+   |description           |Check if second newly added company can be requested|
+   |wait:before           |3                                                   |
+   |expected:header#status|200                                                 |
+
+## 1.24. Change company id and carrier id in identity by company syncing
+
+tags: md-1.24
+
+* Test description
+
+   |action     |value                                                     |
+   |-----------|----------------------------------------------------------|
+   |description|Send Onboarding Event to Masterdata manualy and check id's|
+   |           |and afterwards change the companyId, carrierId and userId |
+   |priority   |high                                                      |
+
+* RabbitMQ publish
+
+   |action        |value                                                |
+   |--------------|-----------------------------------------------------|
+   |description   |Send event to identity to create the user on keycload|
+   |exchange      |Identity.Exchange                                    |
+   |routing       |Identity.UserSync                                    |
+   |payload       |<file:event-identity.json>                           |
+   |wait:after:sec|4                                                    |
+
+* get user claims, username: "${store:ob-email}", password: "${env:default_password}"
+
+* Data manage
+
+   |action               |value                               |
+   |---------------------|------------------------------------|
+   |in                   |${store:response_claims}            |
+   |run:env              |development, staging                |
+   |description          |Claims must contain the correct Id's|
+   |                     |CompanyId, SubsidiaryId, UserId     |
+   |expected#companyName |${store:ob-companyName}             |
+   |expected#companyId   |${store:ob-companyId}               |
+   |expected#userId      |${store:ob-userId}                  |
+   |expected#subsidiaryId|${store:ob-carrierId}               |
+
+* add company and carrier
+
+* Rest call, continue
+
+   |action                |value                    |
+   |----------------------|-------------------------|
+   |method:post           |/api/user                |
+   |description           |Add an User to masterdata|
+   |payload               |<file:request-user.json> |
+   |payload#username      |${store:ob-email}        |
+   |payload#email         |${store:ob-email}        |
+   |expected:header#status|200                      |
+   |store                 |response-user            |
+
+* queues bind "identity-claim"
+
+* Rest call
+
+   |action                |value                                               |
+   |----------------------|----------------------------------------------------|
+   |method:patch          |/api/maintenance/sync/user/${store:response-user.id}|
+   |description           |Sync specific user - update existing keycloak id's  |
+   |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}          |
+   |link:grafana          |${generate:tpl:link.grafana.header.traceId}         |
+   |expected:header#status|202                                                 |
+
+* queues check "identity-claim"
+
+* get user claims, username: "${store:ob-email}", password: "${env:default_password}"
+
+* Data manage
+
+   |action               |value                               |
+   |---------------------|------------------------------------|
+   |in                   |${store:response_claims}            |
+   |run:env              |development, staging                |
+   |description          |Claims must contain the updated Id's|
+   |                     |CompanyId, SubsidiaryId, UserId     |
+   |expected#companyName |${store:response-co.companyName}    |
+   |expected#companyId   |${store:response-co.id}             |
+   |expected#subsidiaryId|${store:response-ca.id}             |
+   |expected#userId      |${store:response-user.id}           |
+
+## 1.25. Sync specific company with user, driver, vehicle and driverAssignment
+
+tags: md-1.25, sync
+
+* Test description
+
+   |action     |value                                             |
+   |-----------|--------------------------------------------------|
+   |description|Sync specific company including all child entities|
+   |priority   |high                                              |
+
+* request admin bearer
+
+* add company and carrier
+
+* add user
+
+* add driver only, email: "${store:response-user.email}"
+
+* add vehicle
+
+* assign driver and vehicle
+
+* queues bind "company, carrier, user, driver, vehicle, identity-claim"
+
+* Rest call
+
+   |action                |value                                                |
+   |----------------------|-----------------------------------------------------|
+   |method:patch          |/api/maintenance/sync/company/${store:response-co.id}|
+   |description           |Sync specific companies                              |
+   |link:jaeager          |${generate:tpl:link.jaeger.header.traceId}           |
+   |link:grafana          |${generate:tpl:link.grafana.header.traceId}          |
+   |wait:after            |5                                                    |
+   |expected:header#status|202                                                  |
+   |expected:contains:not |null                                                 |
+
+* queues check "company, carrier, identity-claim, user, driver, vehicle", min: "1", max: "1"
+
+## 1.26. Check if address is correct when creating a new company
+
+tags: md-1.26, version2
+
+* Test description
+
+   |action     |value                                                     |
+   |-----------|----------------------------------------------------------|
+   |description|Create a new company and check that the address is correct|
+   |priority   |high                                                      |
+
+* request admin bearer
+
+* Rest call
+
+   |action                            |value                                               |
+   |----------------------------------|----------------------------------------------------|
+   |method:post                       |/api/company                                        |
+   |description                       |Create a Company (send post request)                |
+   |payload                           |<file:company-with-carrier-without-ids-request.json>|
+   |payload#addresses[0].street       |street a                                            |
+   |payload#addresses[0].zipCode      |1234                                                |
+   |payload#addresses[0].city         |city a                                              |
+   |payload#addresses[0].country      |deutschland                                         |
+   |payload#addresses[0].firstname    |first a                                             |
+   |payload#addresses[0].lastname     |last a                                              |
+   |payload#addresses[0].email        |email a                                             |
+   |payload#addresses[0].countryPrefix|49                                                  |
+   |payload#addresses[0].phoneNumber  |00 a                                                |
+   |payload#addresses[0].type         |BILLING                                             |
+   |store#id                          |companyId                                           |
+
+* Rest call
+
+   |action                             |value                                        |
+   |-----------------------------------|---------------------------------------------|
+   |method:get                         |/api/company/${store:companyId}              |
+   |description                        |Check if newly added company can be requested|
+   |expected:header#status             |200                                          |
+   |expected#addresses[0].street       |street a                                     |
+   |expected#addresses[0].zipCode      |1234                                         |
+   |expected#addresses[0].city         |city a                                       |
+   |expected#addresses[0].country      |DE                                           |
+   |expected#addresses[0].firstname    |first a                                      |
+   |expected#addresses[0].lastname     |last a                                       |
+   |expected#addresses[0].email        |email a                                      |
+   |expected#addresses[0].countryPrefix|49                                           |
+   |--expected#addresses[0].phoneNumber|00 a                                         |
+   |expected#addresses[0].type         |BILLING                                      |
+
+## 1.27. Check if phonenumbers is correct when creating a new company
+
+tags: md-1.27, version2
+
+* Test description
+
+   |action     |value                                                         |
+   |-----------|--------------------------------------------------------------|
+   |description|Create a new company and check that the phonenumber is correct|
+   |priority   |high                                                          |
+
+* request admin bearer
+
+* Rest call
+
+   |action                               |value                                               |
+   |-------------------------------------|----------------------------------------------------|
+   |method:post                          |/api/company                                        |
+   |description                          |Create a Company (send post request)                |
+   |payload                              |<file:company-with-carrier-without-ids-request.json>|
+   |payload#phoneNumbers[0].description  |desc a                                              |
+   |payload#phoneNumbers[0].number       |1 a                                                 |
+   |payload#phoneNumbers[0].countryPrefix|41                                                  |
+   |payload#phoneNumbers[0].category     |OFFICE                                              |
+   |payload#phoneNumbers[0].phoneType    |PHONE                                               |
+   |payload#phoneNumbers[0].favorite     |true                                                |
+   |store#id                             |companyId                                           |
+
+* Rest call
+
+   |action                                |value                                        |
+   |--------------------------------------|---------------------------------------------|
+   |method:get                            |/api/company/${store:companyId}              |
+   |description                           |Check if newly added company can be requested|
+   |expected:header#status                |200                                          |
+   |expected#phoneNumbers[0].description  |null                                         |
+   |expected#phoneNumbers[0].number       |1 a                                          |
+   |expected#phoneNumbers[0].countryPrefix|41                                           |
+   |expected#phoneNumbers[0].category     |null                                         |
+   |expected#phoneNumbers[0].phoneType    |null                                         |
+   |expected#phoneNumbers[0].favorite     |false                                        |

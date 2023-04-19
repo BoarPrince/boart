@@ -24,7 +24,7 @@ tags: md-0.1
 
 ## 1.2. Read Version
 
-tags: md-0-2
+tags: md-0.2
 
 * Test description
 
@@ -40,11 +40,11 @@ tags: md-0-2
    |method:get                     |/info/version                           |
    |description                    |Reads the version of the running backend|
    |expected:header#status         |200                                     |
-   |expected:header#headers.version|1.1.0                                   |
+   |expected:header#headers.version|1.1.1                                   |
 
 ## 1.3. Read Open API
 
-tags: md-0-2
+tags: md-0.3
 
 * Test description
 
@@ -61,3 +61,43 @@ tags: md-0-2
    |description           |Reads the open api specification|
    |expected:header#status|200                             |
    |expected#info.title   |JITPay Masterdata               |
+
+## 1.4. Test Listener
+
+tags: md-0.4
+
+* Test description
+
+   |action     |value |
+   |-----------|------|
+   |description|xxxxxx|
+   |priority   |high  |
+
+* RabbitMQ listening, continue
+
+   |action     |value       |
+   |-----------|------------|
+   |description|xxx         |
+   |exchange   |user.delayed|
+   |routing    |rrr         |
+   |store:name |aaa         |
+
+* RabbitMQ publish
+
+   |action        |value       |
+   |--------------|------------|
+   |description   |yyyy        |
+   |exchange      |user.delayed|
+   |header#x-delay|2000        |
+   |routing       |rrr         |
+   |payload       |{"a": 1}    |
+   |--wait:after  |3           |
+
+* Data manage
+
+   |action           |value       |
+   |-----------------|------------|
+   |in               |${store:aaa}|
+   |description      |xxx         |
+   |expected#[0].data|{"a":1}     |
+

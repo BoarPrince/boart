@@ -270,7 +270,7 @@ tags: md-4.5
    |payload#firstname     |undefined                                                                       |
    |payload#lastname      |undefined                                                                       |
    |expected:header#status|406                                                                             |
-   |--expected#description|{firstname=must not be null, email=must not be null, lastname=must not be null},|
+   |expected#detail       |{firstname=must not be null, email=must not be null, lastname=must not be null},|
 
 
 ## 1.7. E-Mail must be defined when creating a driver
