@@ -6,28 +6,49 @@
 {# right / sub navigatio #}
 {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
 {% block subnav %}
-  {{ createSubnav(operators | onlyParents) }}
+  {{ createSubnav(operators | brtOnlyParents) }}
 {% endblock %}
+
+{# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+{# main macro #}
+{# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+{% macro createMain(parentDocs, child = false) %}
+  {% for doc in parentDocs | sort(attribute='title')%}
+
+    <div id="{{doc.id}}" class="card mb-4">
+      <h5 class="card-header bg-primary">{{doc.title}}</h5>
+      <div class="card-body">
+        <p class="card-text">{{doc.description | brtMarkdown}}</p>
+      </div>
+
+      {############################ Examples ############################}
+      {% if doc.examples %}
+        <h5 class="ps-3">Examples</h5>
+      {% endif %}
+
+      {% for example in doc.examples %}
+        <div class="card border border-0 text-bg-secondary m-3">
+          <div class="card-body">
+            <h6 class="card-title">{{example.title}}</h6>
+            <p class="card-text">
+              <div class="example">
+                {{example.example | brtMarkdown}}
+              </div>
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {########################## End Examples ##########################}
+
+    {{ createMain(doc | brtChilds, true) }}
+  {% endfor %}
+{% endmacro %}
 
 {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
 {# main are #}
 {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
 {% block main %}
   <h1> Expected Operator </h1>
-
-  {% for operator in operators | onlyParents | sort(attribute='title')%}
-    {############################ Operator ############################}
-    <h2 id="{{ operator.id }}">{{operator.title}}</h2>
-    {{operator.description | markdown}}
-    {########################## End Operator ##########################}
-
-    {############################ Examples ############################}
-    {% for example in operator.examples %}
-      <h4>{{example.title}}</h4>
-      <div class="example">
-        {{example.example | markdown}}
-      </div>
-      {########################## End Examples ##########################}
-    {% endfor %}
-  {% endfor %}
+  {{ createMain(operators | brtOnlyParents, true) }}
 {% endblock %}

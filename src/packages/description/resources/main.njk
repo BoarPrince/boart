@@ -14,19 +14,79 @@
     <!-- <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet" /> -->
     <link rel="stylesheet" href="styles.css"/>
 
+    <style>
+      :root {
+        --bs-primary-rgb: 249, 200, 0;
+        --bs-link-color: rgb(189, 28, 31);
+        --bs-link-hover-color: rgb(232, 37, 29);
+      }
+    </style>
+
     <title>
       {% block title %}{% endblock %}
     </title>
   </head>
   <body>
-    <header class="fixed-top container-fluid">
+    {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+    {# right / sub nav macro #}
+    {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+    {% macro createSubnav(parentDocs, child = false) %}
+      {% for operator in parentDocs | sort(attribute='title')%}
+        {% if child %}
+          {% set navClass = "ms-3" %}
+          {% set childIcon = '<i class="bi bi-chevron-right"></i>' %}
+        {% else %}
+          {% set navClass = "" %}
+          {% set childIcon = "" %}
+        {% endif %}
+
+        <div class="{{navClass}} text-nowrap">
+          <a class="nav-link" href="{{operator | brtRef}}">
+            {{childIcon}}
+            {{operator.title}}
+          </a>
+          {% if operator | brtChilds %}
+            {{ createSubnav(operator | brtChilds, true) }}
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% endmacro %}
+
+    <header class="container-fluid">
+      {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+      {# left and right navigation #}
+      {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+      <div class="row">
+        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+        {#  L E F T  #}
+        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+        <nav class="fixed-top col-2 pe-5 vh-100 mt-5 bg-primary">
+          <div class="nav flex-column mt-2">
+            <a class="nav-link active" aria-current="page" href="#">Expected</a>
+            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link disabled">Disabled</a>
+          </div>
+        </nav>
+
+        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+        {#  R I G H T  #}
+        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+        <nav class="fixed-top offset-10 col-2 vh-100 mt-5 bg-primary" style="font-size: smaller !important">
+          <div class="nav flex-column mt-2">
+            {% block subnav %}{% endblock %}
+          </div>
+        </nav>
+      </div>
+
       {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
       {# top navigation #}
       {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-      <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar</a>
-          <button
+      <nav class="fixed-top">
+        <div class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button
                         class="navbar-toggler"
                         type="button"
                         data-bs-toggle="collapse"
@@ -35,79 +95,31 @@
                         aria-expanded="false"
                         aria-label="Toggle navigation"
                     >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-            </ul>
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Link</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </nav>
-
-      {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-      {# left and right navigation #}
-      {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-      <div class="row">
-        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        {# left navigation #}
-        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        <div class="col-2 pe-5">
-          <nav class="nav flex-column bg-light vh-100">
-            <a class="nav-link active" aria-current="page" href="#">Expected</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link disabled">Disabled</a>
-          </nav>
-        </div>
-
-        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        {# right / sub nav macro #}
-        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        {% macro createSubnav(parentDocs, child = false) %}
-          {% for operator in parentDocs | sort(attribute='title')%}
-            {% if child %}
-              {% set navClass = "ms-3" %}
-              {% set childIcon = '<i class="bi bi-chevron-right"></i>' %}
-            {% else %}
-              {% set navClass = "bg-info bg-opacity-10" %}
-              {% set childIcon = "" %}
-            {% endif %}
-
-            <div class="{{navClass}}">
-              <a class="nav-link" href="#">
-                {{childIcon}}
-                {{operator.title}}
-              </a>
-              {% if operator | childs %}
-                {{ createSubnav(operator | childs, true) }}
-              {% endif %}
-            </div>
-          {% endfor %}
-        {% endmacro %}
-
-        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        {# right / sub navigation #}
-        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        <div class="offset-7 col-3 bg-light vh-100 lh-1 fs-6" style="font-size: smaller !important">
-          <nav class="nav flex-column">
-            {% block subnav %}{% endblock %}
-          </nav>
-        </div>
-      </div>
     </header>
 
     {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
     {# main are #}
     {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
     <main class="container-fluid mt-5 pt-4">
-      <div class="offset-2 col-7">
-        {% block main %}{% endblock %}
+      <div class="row">
+        <div class="offset-2 col-8">
+          {% block main %}{% endblock %}
+        </div>
       </div>
     </main>
 

@@ -23,18 +23,16 @@ ul {
 
 @keyframes fadeIt {
     0% {
-        /* background-color: #ffcb0d;
-    color: white; */
-        color: #ffcb0d;
+        background-color: rgb(var(--bs-primary-rgb), .5);
     }
     100% {
-        /* background-color: #ffffff; */
-        color: initial;
+        background-color: inherit;
     }
 }
 
 :target {
-    animation: fadeIt 4s ease-out;
+    animation: fadeIt 3s ease-out;
+    scroll-margin-top: 10rem;
 }
 
 .example {
