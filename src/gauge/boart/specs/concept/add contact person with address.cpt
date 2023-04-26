@@ -1,0 +1,35 @@
+# add contact person with address
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                                             |
+   |----------------------|--------------------------------------------------|
+   |method:post           |/api/v2/address                                   |
+   |description           |Creates an Address with random values             |
+   |payload#type          |${generate:char:30}                               |
+   |payload#street        |${generate:fake:address:street}                   |
+   |payload#city          |${generate:fake:address:city}-${generate:random:8}|
+   |payload#zipCode       |${generate:random:10}                             |
+   |payload#countryCode   |${generate:fake:address:countryCode}              |
+   |payload#addition      |${generate:char:100}                              |
+   |expected:header#status|200                                               |
+   |store:payload         |payload-ad                                        |
+   |store                 |response-ad                                       |
+
+* Rest call
+
+   |action                |value                                     |
+   |----------------------|------------------------------------------|
+   |method:post           |/api/v2/contactPerson                     |
+   |description           |Creates a ContactPerson with random values|
+   |payload#type          |${generate:char:20}                       |
+   |payload#email         |${generate:fake:internet:email}           |
+   |payload#lastName      |${generate:fake:name:lastName}            |
+   |payload#firstName     |${generate:fake:name:firstName}           |
+   |payload#languageCode  |${generate:char:2}                        |
+   |payload#addresses[0]  |${store:response-ad#id}                   |
+   |expected:header#status|200                                       |
+   |store:payload         |payload-cp                                |
+   |store                 |response-cp                               |
