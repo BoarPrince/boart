@@ -683,8 +683,7 @@ tags: md-21.11
 
 ## 1.12. Check notification
 
-tags: md-21.12
-
+tags: md-21.12, event
 
 * Test description
 
@@ -706,51 +705,329 @@ tags: md-21.12
    |queue      |test.md                                 |
    |description|bind masterdata/contactPerson crud event|
 
+ @@@@  @@@@@  @@@@@@   @@   @@@@@ @@@@@@
+@    @ @    @ @       @  @    @   @
+@      @    @ @@@@@  @    @   @   @@@@@
+@      @@@@@  @      @@@@@@   @   @
+@    @ @   @  @      @    @   @   @
+ @@@@  @    @ @@@@@@ @    @   @   @@@@@@
+
 * add contact person with address
 
 * RabbitMQ consume, continue
 
-   |action                            |value                             |
-   |----------------------------------|----------------------------------|
-   |queue                             |test.md                           |
-   |description                       |Contact Person Event must be fired|
-   |expected:header#headers.eventClass|ContactPerson                     |
-   |expected:header#headers.eventType |CREATE                            |
-   |expected#id                       |${store:response-cp#id}           |
+   |action                            |value                                     |
+   |----------------------------------|------------------------------------------|
+   |queue                             |test.md                                   |
+   |description                       |CREATE: Contact Person Event must be fired|
+   |expected:header#headers.eventClass|ContactPerson                             |
+   |expected:header#headers.eventType |CREATE                                    |
+   |expected#id                       |${store:response-cp#id}                   |
+
+@    @ @@@@@  @@@@@    @@   @@@@@ @@@@@@
+@    @ @    @ @    @  @  @    @   @
+@    @ @    @ @    @ @    @   @   @@@@@
+@    @ @@@@@  @    @ @@@@@@   @   @
+@    @ @      @    @ @    @   @   @
+ @@@@  @      @@@@@  @    @   @   @@@@@@
 
 * Rest call
 
    |action                |value                                        |
    |----------------------|---------------------------------------------|
    |method:put            |/api/v2/contactPerson/${store:response-cp#id}|
-   |description           |Update the Contact Person                    |
+   |description           |UPDATE: Change Contact Person                |
    |payload               |${store:response-cp}                         |
    |expected:header#status|200                                          |
 
 * RabbitMQ consume, continue
 
-   |action                            |value                                       |
-   |----------------------------------|--------------------------------------------|
-   |queue                             |test.md                                     |
-   |description                       |Update of Contact Person Event must be fired|
-   |expected:header#headers.eventClass|ContactPerson                               |
-   |expected:header#headers.eventType |UPDATE                                      |
-   |expected#id                       |${store:response-cp#id}                     |
+   |action                            |value                                     |
+   |----------------------------------|------------------------------------------|
+   |queue                             |test.md                                   |
+   |description                       |UPDATE: Contact Person Event must be fired|
+   |expected:header#headers.eventClass|ContactPerson                             |
+   |expected:header#headers.eventType |UPDATE                                    |
+   |expected#id                       |${store:response-cp#id}                   |
+
+@@@@@  @@@@@@ @      @@@@@@ @@@@@ @@@@@@
+@    @ @      @      @        @   @
+@    @ @@@@@  @      @@@@@    @   @@@@@
+@    @ @      @      @        @   @
+@    @ @      @      @        @   @
+@@@@@  @@@@@@ @@@@@@ @@@@@@   @   @@@@@@
 
 * Rest call
 
    |action                |value                                        |
    |----------------------|---------------------------------------------|
    |method:delete         |/api/v2/contactPerson/${store:response-cp#id}|
-   |description           |Delete the Contact Person again              |
+   |description           |DELETE: delete Contact Person again          |
    |expected:header#status|204                                          |
 
 * RabbitMQ consume, continue
 
-   |action                            |value                                         |
-   |----------------------------------|----------------------------------------------|
-   |queue                             |test.md                                       |
-   |description                       |Deletion of Contact Person Event must be fired|
-   |expected:header#headers.eventClass|ContactPerson                                 |
-   |expected:header#headers.eventType |DELETE                                        |
-   |expected#id                       |${store:response-cp#id}                       |
+   |action                            |value                                     |
+   |----------------------------------|------------------------------------------|
+   |queue                             |test.md                                   |
+   |description                       |DELETE: Contact Person Event must be fired|
+   |expected:header#headers.eventClass|ContactPerson                             |
+   |expected:header#headers.eventType |DELETE                                    |
+   |expected#id                       |${store:response-cp#id}                   |
+
+
+## 1.13. Id must not be defined
+
+tags: md-21.13
+
+* Test description
+
+   |action     |value                                                    |
+   |-----------|---------------------------------------------------------|
+   |description|When creating a Contact Person the id must not be defined|
+   |priority   |high                                                     |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                                          |
+   |----------------------|-----------------------------------------------|
+   |method:post           |/api/v2/contactPerson                          |
+   |description           |Creates a ContactPerson without a predefined id|
+   |payload#type          |${generate:char:20}                            |
+   |payload#email         |${generate:fake:internet:email}                |
+   |payload#lastName      |${generate:fake:name:lastName}                 |
+   |payload#firstName     |${generate:fake:name:firstName}                |
+   |payload#languageCode  |${generate:char:2}                             |
+   |expected:header#status|200                                            |
+   |store#id              |contactPersonId                                |
+
+* Rest call
+
+   |action                |value                                         |
+   |----------------------|----------------------------------------------|
+   |method:get            |/api/v2/contactPerson/${store:contactPersonId}|
+   |description           |Read contact person with the predefined id    |
+   |expected:header#status|200                                           |
+
+## 1.14. Id must able to predefined
+
+tags: md-21.14
+
+* Test description
+
+   |action     |value                                                          |
+   |-----------|---------------------------------------------------------------|
+   |description|When creating a Contact Person the id must be able to predefine|
+   |priority   |high                                                           |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                                       |
+   |----------------------|--------------------------------------------|
+   |method:post           |/api/v2/contactPerson                       |
+   |description           |Creates a ContactPerson with a predefined id|
+   |payload#id            |${generate:uuid}                            |
+   |payload#type          |${generate:char:20}                         |
+   |payload#email         |${generate:fake:internet:email}             |
+   |payload#lastName      |${generate:fake:name:lastName}              |
+   |payload#firstName     |${generate:fake:name:firstName}             |
+   |payload#languageCode  |${generate:char:2}                          |
+   |expected:header#status|200                                         |
+   |store:payload         |contactPersonPayload                        |
+
+* Rest call
+
+   |action                |value                                                 |
+   |----------------------|------------------------------------------------------|
+   |method:get            |/api/v2/contactPerson/${store:contactPersonPayload#id}|
+   |description           |Read contact person with the predefined id            |
+   |expected:header#status|200                                                   |
+
+## 1.15. Check Events
+
+tags: md-21.15, event
+
+* Test description
+
+   |action     |value                            |
+   |-----------|---------------------------------|
+   |description|Check events for a contact person|
+   |           |* create                         |
+   |           |* update                         |
+   |           |* delete                         |
+   |priority   |high                             |
+
+* RabbitMQ bind
+
+   |action     |value                                   |
+   |-----------|----------------------------------------|
+   |exchange   |masterdata                              |
+   |queue      |test.md                                 |
+   |description|Bind masterdata/contactPerson crud event|
+
+* Data manage
+
+   |action         |value                          |
+   |---------------|-------------------------------|
+   |in#id          |${generate:uuid}               |
+   |in#type        |${generate:char:20}            |
+   |in#email       |${generate:fake:internet:email}|
+   |in#lastName    |${generate:fake:name:lastName} |
+   |in#firstName   |${generate:fake:name:firstName}|
+   |in#languageCode|${generate:char:2}             |
+   |store          |payload-cp                     |
+
+* request admin bearer
+
+ @@@@  @@@@@  @@@@@@   @@   @@@@@ @@@@@@
+@    @ @    @ @       @  @    @   @
+@      @    @ @@@@@  @    @   @   @@@@@
+@      @@@@@  @      @@@@@@   @   @
+@    @ @   @  @      @    @   @   @
+ @@@@  @    @ @@@@@@ @    @   @   @@@@@@
+
+* RabbitMQ publish
+
+   |action           |value                                   |
+   |-----------------|----------------------------------------|
+   |description      |CREATE: Publish onboarding event manualy|
+   |exchange         |masterdata.update                       |
+   |routing          |contactPerson                           |
+   |payload          |${store:payload-cp}                     |
+   |header#eventClass|ContactPerson                           |
+   |header#eventType |Create                                  |
+
+* RabbitMQ consume, continue
+
+   |action                            |value                                     |
+   |----------------------------------|------------------------------------------|
+   |queue                             |test.md                                   |
+   |description                       |CREATE: Contact Person Event must be fired|
+   |expected:header#headers.eventClass|ContactPerson                             |
+   |expected:header#headers.eventType |CREATE                                    |
+
+* Rest call
+
+   |action                |value                                       |
+   |----------------------|--------------------------------------------|
+   |method:get            |/api/v2/contactPerson/${store:payload-cp#id}|
+   |description           |CREATE: Read the Contact Person             |
+   |expected:header#status|200                                         |
+
+@    @ @@@@@  @@@@@    @@   @@@@@ @@@@@@
+@    @ @    @ @    @  @  @    @   @
+@    @ @    @ @    @ @    @   @   @@@@@
+@    @ @@@@@  @    @ @@@@@@   @   @
+@    @ @      @    @ @    @   @   @
+ @@@@  @      @@@@@  @    @   @   @@@@@@
+
+* RabbitMQ publish
+
+   |action           |value                                            |
+   |-----------------|-------------------------------------------------|
+   |description      |UPDATE: Publish onboarding updated event manualy |
+   |exchange         |masterdata.update                                |
+   |routing          |contactPerson                                    |
+   |payload          |${store:payload-cp}                              |
+   |payload#lastName |${store:lastName:=${generate:fake:name:lastName}}|
+   |header#eventClass|ContactPerson                                    |
+   |header#eventType |Update                                           |
+
+* RabbitMQ consume, continue
+
+   |action                            |value                                     |
+   |----------------------------------|------------------------------------------|
+   |queue                             |test.md                                   |
+   |description                       |UPDATE: Contact Person Event must be fired|
+   |expected:header#headers.eventClass|ContactPerson                             |
+   |expected:header#headers.eventType |UPDATE                                    |
+   |expected#lastName                 |${store:lastName}                         |
+
+* Rest call
+
+   |action                |value                                       |
+   |----------------------|--------------------------------------------|
+   |method:get            |/api/v2/contactPerson/${store:payload-cp#id}|
+   |description           |UPDATE: Read the Contact Person             |
+   |expected:header#status|200                                         |
+   |expected#lastName     |${store:lastName}                           |
+
+@@@@@  @@@@@@ @      @@@@@@ @@@@@ @@@@@@
+@    @ @      @      @        @   @
+@    @ @@@@@  @      @@@@@    @   @@@@@
+@    @ @      @      @        @   @
+@    @ @      @      @        @   @
+@@@@@  @@@@@@ @@@@@@ @@@@@@   @   @@@@@@
+
+* RabbitMQ publish
+
+   |action           |value                                           |
+   |-----------------|------------------------------------------------|
+   |description      |DELETE: Publish onboarding updated event manualy|
+   |exchange         |masterdata.update                               |
+   |routing          |contactPerson                                   |
+   |payload#id       |${store:payload-cp#id}                          |
+   |header#eventClass|ContactPerson                                   |
+   |header#eventType |Delete                                          |
+
+* RabbitMQ consume, continue
+
+   |action                            |value                                     |
+   |----------------------------------|------------------------------------------|
+   |queue                             |test.md                                   |
+   |description                       |DELETE: Contact Person Event must be fired|
+   |expected:header#headers.eventClass|ContactPerson                             |
+   |expected:header#headers.eventType |DELETE                                    |
+   |expected#id                       |${store:payload-cp#id}                    |
+
+* Rest call
+
+   |action                |value                                                      |
+   |----------------------|-----------------------------------------------------------|
+   |method:get            |/api/v2/contactPerson/${store:payload-cp#id}               |
+   |description           |DELETE: Read the Contact Person, but it must be deleted now|
+   |expected:header#status|404                                                        |
+
+## 1.16. Check Event Consuming Error
+
+tags: md-21.16, event
+
+* Test description
+
+   |action     |value                                             |
+   |-----------|--------------------------------------------------|
+   |description|Errors must be processed by the death letter queue|
+   |priority   |high                                              |
+
+* RabbitMQ bind
+
+   |action     |value                             |
+   |-----------|----------------------------------|
+   |exchange   |masterdata.error                  |
+   |queue      |test.md.error                     |
+   |description|Bind masterdata death letter queue|
+
+* RabbitMQ publish
+
+   |action           |value                                                      |
+   |-----------------|-----------------------------------------------------------|
+   |description      |Publish deletion without idonboarding updated event manualy|
+   |exchange         |masterdata.update                                          |
+   |routing          |contactPerson                                              |
+   |payload#-id-     |xxxxx                                                      |
+   |header#eventClass|ContactPerson                                              |
+   |header#eventType |Delete                                                     |
+
+* RabbitMQ consume, continue
+
+   |action       |value                           |
+   |-------------|--------------------------------|
+   |queue        |test.md.error                   |
+   |description  |Death letter Event must be fired|
+   |expected#-id-|xxxxx                           |
+
+
