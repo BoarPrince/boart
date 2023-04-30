@@ -370,7 +370,7 @@ export class ProtocolGenerator {
     private generateHtml(protocolData: string): void {
         const template: string = fs.readFileSync(path.resolve(__dirname, 'protocol-template.html'), 'utf-8');
 
-        const htmlContent = template.replace('${protocol_data}', protocolData);
+        const htmlContent = template.replace('${protocol_data}', protocolData.split('$').join('$$'));
         const filename = EnvLoader.instance.mapReportData(path.join('..', 'test-protocol.html'));
 
         fs.writeFileSync(filename, htmlContent, 'utf-8');
