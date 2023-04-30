@@ -49,7 +49,7 @@ export class FakeGenerator implements Generator {
             }
         } catch (error) {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            throw Error(`error calling faker namespace '${level1}.${level2}', ${error}`);
+            throw Error(`error calling faker namespace '${level1}.${level2}', see: https://fakerjs.dev/, \n\n${error}`);
         }
     }
 }

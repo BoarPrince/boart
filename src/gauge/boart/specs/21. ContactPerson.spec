@@ -895,6 +895,7 @@ tags: md-21.15, event
    |action           |value                                   |
    |-----------------|----------------------------------------|
    |description      |CREATE: Publish onboarding event manualy|
+   |group            |Check Queues (CREATE)                   |
    |exchange         |masterdata.update                       |
    |routing          |contactPerson                           |
    |payload          |${store:payload-cp}                     |
@@ -907,6 +908,7 @@ tags: md-21.15, event
    |----------------------------------|------------------------------------------|
    |queue                             |test.md                                   |
    |description                       |CREATE: Contact Person Event must be fired|
+   |group                             |Check Queues (CREATE)                     |
    |expected:header#headers.eventClass|ContactPerson                             |
    |expected:header#headers.eventType |CREATE                                    |
 
@@ -916,6 +918,7 @@ tags: md-21.15, event
    |----------------------|--------------------------------------------|
    |method:get            |/api/v2/contactPerson/${store:payload-cp#id}|
    |description           |CREATE: Read the Contact Person             |
+   |group                 |Check Queues (CREATE)                       |
    |expected:header#status|200                                         |
 
 @    @ @@@@@  @@@@@    @@   @@@@@ @@@@@@
@@ -930,6 +933,7 @@ tags: md-21.15, event
    |action           |value                                            |
    |-----------------|-------------------------------------------------|
    |description      |UPDATE: Publish onboarding updated event manualy |
+   |group            |Check Queues (UPDATE)                            |
    |exchange         |masterdata.update                                |
    |routing          |contactPerson                                    |
    |payload          |${store:payload-cp}                              |
@@ -943,6 +947,7 @@ tags: md-21.15, event
    |----------------------------------|------------------------------------------|
    |queue                             |test.md                                   |
    |description                       |UPDATE: Contact Person Event must be fired|
+   |group                             |Check Queues (UPDATE)                     |
    |expected:header#headers.eventClass|ContactPerson                             |
    |expected:header#headers.eventType |UPDATE                                    |
    |expected#lastName                 |${store:lastName}                         |
@@ -953,6 +958,7 @@ tags: md-21.15, event
    |----------------------|--------------------------------------------|
    |method:get            |/api/v2/contactPerson/${store:payload-cp#id}|
    |description           |UPDATE: Read the Contact Person             |
+   |group                 |Check Queues (UPDATE)                       |
    |expected:header#status|200                                         |
    |expected#lastName     |${store:lastName}                           |
 
@@ -968,6 +974,7 @@ tags: md-21.15, event
    |action           |value                                           |
    |-----------------|------------------------------------------------|
    |description      |DELETE: Publish onboarding updated event manualy|
+   |group            |Check Queues (DELETE)                           |
    |exchange         |masterdata.update                               |
    |routing          |contactPerson                                   |
    |payload#id       |${store:payload-cp#id}                          |
@@ -980,6 +987,7 @@ tags: md-21.15, event
    |----------------------------------|------------------------------------------|
    |queue                             |test.md                                   |
    |description                       |DELETE: Contact Person Event must be fired|
+   |group                             |Check Queues (DELETE)                     |
    |expected:header#headers.eventClass|ContactPerson                             |
    |expected:header#headers.eventType |DELETE                                    |
    |expected#id                       |${store:payload-cp#id}                    |
@@ -990,6 +998,7 @@ tags: md-21.15, event
    |----------------------|-----------------------------------------------------------|
    |method:get            |/api/v2/contactPerson/${store:payload-cp#id}               |
    |description           |DELETE: Read the Contact Person, but it must be deleted now|
+   |group                 |Check Queues (DELETE)                                      |
    |expected:header#status|404                                                        |
 
 ## 1.16. Check Event Consuming Error
