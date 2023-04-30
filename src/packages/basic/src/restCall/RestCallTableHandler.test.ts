@@ -974,7 +974,7 @@ it('default store', async () => {
     await sut.handler.process(tableRows);
 
     const result = Store.instance.testStore.get('resonse') as DataContent;
-    expect(result.getValue()).toBe('{"b":2}');
+    expect(result.getValue()).toStrictEqual({ b: 2 });
 });
 
 /**

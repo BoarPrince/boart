@@ -19,6 +19,18 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
     /**
      *
      */
+    private static isJSON(data: string): boolean {
+        try {
+            JSON.parse(data);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    /**
+     *
+     */
     private parseJSON(data: object | string, type: string): Record<string, string> {
         if (!data || DataContentHelper.isNullOrUndefined(data)) {
             return {};
@@ -102,16 +114,15 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
         context.execution.header.asDataContentObject().set('headers', Object.fromEntries(response.headers));
 
         const contentType = response.headers.get('content-type');
-        switch (contentType) {
-            case 'application/pdf':
-                context.execution.data = await new PDFContent().setBufferAsync(await response.arrayBuffer());
-                break;
-            case 'application/json': {
-                context.execution.data = new ObjectContent(await response.text());
-                break;
+        if (contentType.includes('pdf')) {
+            context.execution.data = await new PDFContent().setBufferAsync(await response.arrayBuffer());
+        } else {
+            const responseText = await response.text();
+            if (RestCallExecutionUnit.isJSON(responseText)) {
+                context.execution.data = new ObjectContent(responseText);
+            } else {
+                context.execution.data = new TextContent(responseText);
             }
-            default:
-                context.execution.data = new TextContent(await response.text());
         }
         //#endregion
 
