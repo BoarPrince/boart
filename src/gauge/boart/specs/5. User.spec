@@ -308,7 +308,7 @@ tags: md-5.7
    |description               |Tray add an User (LegiStatus = NONE)|
    |payload                   |<file:request-user.json>            |
    |payload#legitimationStatus|NONE                                |
-   |expected:header#status    |400                                 |
+   |expected:header#status    |406                                 |
 
 ## 1.8. Add User with legitimationStatus = None
 
@@ -1025,3 +1025,39 @@ tags: md-5.23
    |query#legacy          |true                                        |
    |expected:header#status|200                                         |
    |expected:count#content|2                                           |
+
+
+## 1.24. Search over all users
+
+tags: md-5.24
+
+* Test description
+
+   |action     |value              |
+   |-----------|-------------------|
+   |description|searching all users|
+   |priority   |medium             |
+
+* request admin bearer
+
+* Rest call, continue
+
+   |action                |value                        |
+   |----------------------|-----------------------------|
+   |method:get            |/api/users                   |
+   |description           |get all users (legacy: false)|
+   |query#legacy          |false                        |
+   |query#page            |0                            |
+   |query#size            |5                            |
+   |expected:header#status|200                          |
+
+* Rest call, continue
+
+   |action                |value                       |
+   |----------------------|----------------------------|
+   |method:get            |/api/users                  |
+   |description           |get all users (legacy: true)|
+   |query#legacy          |true                        |
+   |query#page            |0                           |
+   |query#size            |5                           |
+   |expected:header#status|200                         |

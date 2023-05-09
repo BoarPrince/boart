@@ -8,4 +8,4 @@
       | group                  | Initial Create              |
       | payload                | <file:request-carrier.json> |
       | expected:header#status | 200                         |
-      | store                  | response-ca                  |
+      | store                  | response-ca                 |

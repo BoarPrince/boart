@@ -1130,7 +1130,7 @@ tags: md-1.26, version2
    |payload#addresses[0].street       |street a                                            |
    |payload#addresses[0].zipCode      |1234                                                |
    |payload#addresses[0].city         |city a                                              |
-   |payload#addresses[0].country      |deutschland                                         |
+   |payload#addresses[0].country      |DE                                                  |
    |payload#addresses[0].firstname    |first a                                             |
    |payload#addresses[0].lastname     |last a                                              |
    |payload#addresses[0].email        |email a                                             |
@@ -1192,9 +1192,9 @@ tags: md-1.27, version2
    |method:get                            |/api/company/${store:companyId}              |
    |description                           |Check if newly added company can be requested|
    |expected:header#status                |200                                          |
-   |expected#phoneNumbers[0].description  |null                                         |
+   |expected#phoneNumbers[0].description  |desc a                                       |
    |expected#phoneNumbers[0].number       |1 a                                          |
    |expected#phoneNumbers[0].countryPrefix|41                                           |
-   |expected#phoneNumbers[0].category     |null                                         |
-   |expected#phoneNumbers[0].phoneType    |null                                         |
-   |expected#phoneNumbers[0].favorite     |false                                        |
+   |expected#phoneNumbers[0].category     |OFFICE                                       |
+   |expected#phoneNumbers[0].phoneType    |PHONE                                        |
+   |expected#phoneNumbers[0].favorite     |true                                         |

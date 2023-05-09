@@ -1044,7 +1044,7 @@ tags: md-3.22, version2
    |payload#carriers[0].addresses[0].street       |street a                                                 |
    |payload#carriers[0].addresses[0].zipCode      |1234                                                     |
    |payload#carriers[0].addresses[0].city         |city a                                                   |
-   |payload#carriers[0].addresses[0].country      |deutschland                                              |
+   |payload#carriers[0].addresses[0].country      |DE                                                       |
    |payload#carriers[0].addresses[0].firstname    |first a                                                  |
    |payload#carriers[0].addresses[0].lastname     |last a                                                   |
    |payload#carriers[0].addresses[0].email        |email a                                                  |
@@ -1106,9 +1106,9 @@ tags: md-3.23, version2
    |method:get                                        |/api/company/${store:companyId}              |
    |description                                       |Check if newly added company can be requested|
    |expected:header#status                            |200                                          |
-   |expected#carriers[0].phoneNumbers[0].description  |null                                         |
+   |expected#carriers[0].phoneNumbers[0].description  |desc a                                       |
    |expected#carriers[0].phoneNumbers[0].number       |1 a                                          |
    |expected#carriers[0].phoneNumbers[0].countryPrefix|41                                           |
-   |expected#carriers[0].phoneNumbers[0].category     |null                                         |
-   |expected#carriers[0].phoneNumbers[0].phoneType    |null                                         |
-   |expected#carriers[0].phoneNumbers[0].favorite     |false                                        |
+   |expected#carriers[0].phoneNumbers[0].category     |OFFICE                                       |
+   |expected#carriers[0].phoneNumbers[0].phoneType    |PHONE                                        |
+   |expected#carriers[0].phoneNumbers[0].favorite     |true                                         |

@@ -75,23 +75,23 @@ tags: md-0.4
 
 * RabbitMQ listening, continue
 
-   |action     |value       |
-   |-----------|------------|
-   |description|xxx         |
-   |exchange   |user.delayed|
-   |routing    |rrr         |
-   |store:name |aaa         |
+   |action     |value|
+   |-----------|-----|
+   |description|xxx  |
+   |exchange   |user |
+   |routing    |rrr  |
+   |store:name |aaa  |
 
 * RabbitMQ publish
 
-   |action        |value       |
-   |--------------|------------|
-   |description   |yyyy        |
-   |exchange      |user.delayed|
-   |header#x-delay|2000        |
-   |routing       |rrr         |
-   |payload       |{"a": 1}    |
-   |--wait:after  |3           |
+   |action        |value   |
+   |--------------|--------|
+   |description   |yyyy    |
+   |exchange      |user    |
+   |header#x-delay|2000    |
+   |routing       |rrr     |
+   |payload       |{"a": 1}|
+   |--wait:after  |3       |
 
 * Data manage
 

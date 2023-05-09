@@ -46,7 +46,7 @@ tags: md-21.1
 
 ## 1.2. Add a Contact Person (with Address and without PhoneNumbers)
 
-tags: md-21.2
+tags: md-21.2, v2
 
 * Test description
 
