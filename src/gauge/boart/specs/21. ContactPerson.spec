@@ -46,7 +46,7 @@ tags: md-21.1
 
 ## 1.2. Add a Contact Person (with Address and without PhoneNumbers)
 
-tags: md-21.2, v2
+tags: md-21.2
 
 * Test description
 
@@ -57,12 +57,15 @@ tags: md-21.2, v2
 
 * request admin bearer
 
+* add company
+
 * Rest call
 
    |action                |value                                |
    |----------------------|-------------------------------------|
    |method:post           |/api/v2/address                      |
    |description           |Creates an Address with random values|
+   |payload#companyId     |${store:response-co.id}              |
    |payload#type          |${generate:char:30}                  |
    |payload#street        |${generate:fake:address:street}      |
    |payload#city          |${generate:fake:address:city}        |
@@ -288,12 +291,15 @@ tags: md-21.6
 
 * request admin bearer
 
+* add company
+
 * Rest call
 
    |action                |value                                             |
    |----------------------|--------------------------------------------------|
    |method:post           |/api/v2/address                                   |
    |description           |Creates an Address with random values             |
+   |payload#companyId     |${store:response-co.id}                           |
    |payload#type          |${generate:char:30}                               |
    |payload#street        |${generate:fake:address:street}                   |
    |payload#city          |${generate:fake:address:city}-${generate:random:8}|
@@ -358,12 +364,15 @@ tags: md-21.7
 
 * request admin bearer
 
+* add company
+
 * Rest call
 
    |action                |value                                             |
    |----------------------|--------------------------------------------------|
    |method:post           |/api/v2/address                                   |
    |description           |Creates an Address with random values             |
+   |payload#companyId     |${store:response-co.id}                           |
    |payload#type          |${generate:char:30}                               |
    |payload#street        |${generate:fake:address:street}                   |
    |payload#city          |${generate:fake:address:city}-${generate:random:8}|
@@ -437,12 +446,15 @@ tags: md-21.8
 
 * request admin bearer
 
+* add company
+
 * Rest call
 
    |action                |value                                             |
    |----------------------|--------------------------------------------------|
    |method:post           |/api/v2/address                                   |
    |description           |Creates an Address with random values             |
+   |payload#companyId     |${store:response-co.id}                           |
    |payload#type          |${generate:char:30}                               |
    |payload#street        |${generate:fake:address:street}                   |
    |payload#city          |${generate:fake:address:city}-${generate:random:8}|
@@ -504,7 +516,6 @@ tags: md-21.8
 
 tags: md-21.9
 
-
 * Test description
 
    |action     |value                                                                                          |
@@ -515,12 +526,15 @@ tags: md-21.9
 
 * request admin bearer
 
+* add company
+
 * Rest call
 
    |action                |value                                             |
    |----------------------|--------------------------------------------------|
    |method:post           |/api/v2/address                                   |
    |description           |Creates an Address with random values             |
+   |payload#companyId     |${store:response-co.id}                           |
    |payload#type          |${generate:char:30}                               |
    |payload#street        |${generate:fake:address:street}                   |
    |payload#city          |${generate:fake:address:city}-${generate:random:8}|
@@ -565,18 +579,19 @@ tags: md-21.9
 
 * Rest call
 
-   |action                     |value                                         |
-   |---------------------------|----------------------------------------------|
-   |method:get                 |/api/v2/contactPerson/${store:contactPersonId}|
-   |description                |Read the previosly created contact person     |
-   |expected:header#status     |200                                           |
-   |expected#type              |typeA                                         |
-   |expected#email             |emailA                                        |
-   |expected#lastName          |lastNameA                                     |
-   |expected#firstName         |firstNameA                                    |
-   |expected:count#addresses   |0                                             |
-   |expected:count#phoneNumbers|0                                             |
-   |expected#languageCode      |AA                                            |
+   |action                     |value                                                        |
+   |---------------------------|-------------------------------------------------------------|
+   |method:get                 |/api/v2/contactPerson/${store:contactPersonId}               |
+   |description                |Read the previosly created contact person                    |
+   |                           |Addresses must be removed after update, because addresses: []|
+   |expected:header#status     |200                                                          |
+   |expected#type              |typeA                                                        |
+   |expected#email             |emailA                                                       |
+   |expected#lastName          |lastNameA                                                    |
+   |expected#firstName         |firstNameA                                                   |
+   |expected:count#addresses   |0                                                            |
+   |expected:count#phoneNumbers|0                                                            |
+   |expected#languageCode      |AA                                                           |
 
 ## 1.10. Delete Contact Person
 
@@ -592,7 +607,9 @@ tags: md-21.10
 
 * request admin bearer
 
-* add contact person with address
+* add company
+
+* add contact person with address, companyId: "${store:response-co.id}"
 
 * Rest call
 
@@ -633,12 +650,15 @@ tags: md-21.11
 
 * request admin bearer
 
+* add company
+
 * Rest call
 
    |action                |value                                             |
    |----------------------|--------------------------------------------------|
    |method:post           |/api/v2/address                                   |
    |description           |Creates an Address with random values             |
+   |payload#companyId     |${store:response-co.id}                           |
    |payload#type          |${generate:char:30}                               |
    |payload#street        |${generate:fake:address:street}                   |
    |payload#city          |${generate:fake:address:city}-${generate:random:8}|
@@ -697,6 +717,8 @@ tags: md-21.12, event
 
 * request admin bearer
 
+* add company
+
 * RabbitMQ bind
 
    |action     |value                                   |
@@ -712,7 +734,7 @@ tags: md-21.12, event
 @    @ @   @  @      @    @   @   @
  @@@@  @    @ @@@@@@ @    @   @   @@@@@@
 
-* add contact person with address
+* add contact person with address, companyId: "${store:response-co.id}"
 
 * RabbitMQ consume, continue
 

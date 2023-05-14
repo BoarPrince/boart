@@ -1,0 +1,14 @@
+# add v2.vehicle
+
+* Rest call
+
+   | action                 | value                   |
+   |------------------------|-------------------------|
+   | method:post            | /api/v2/vehicle         |
+   | description            | Add a Vehicle           |
+   | payload#plate          | ${generate:char:10}     |
+   | payload#cardLimit      | ${generate:random:4}    |
+   | payload#companyId      | ${store:response-co.id} |
+   | expected:header#status | 200                     |
+   | store                  | response-vehicle        |
+

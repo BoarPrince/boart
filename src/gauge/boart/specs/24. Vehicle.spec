@@ -136,3 +136,110 @@ tags: md-24.1, event
    |expected:header#headers.eventClass|Vehicle                               |
    |expected:header#headers.eventType |DELETE                                |
    |expected#id                       |${store:response-vehicle.id}          |
+
+## 1.2. Add Vehicle
+
+tags: md-24.2, event
+
+* Test description
+
+   |action     |value                      |
+   |-----------|---------------------------|
+   |description|Creates a Version 2 Vehicle|
+   |priority   |high                       |
+
+* request admin bearer
+
+* add company and carrier
+
+* Rest call
+
+   |action                |value                  |
+   |----------------------|-----------------------|
+   |method:post           |/api/v2/vehicle        |
+   |description           |Add a Vehicle          |
+   |payload#plate         |${generate:char:10}    |
+   |payload#cardLimit     |${generate:random:4}   |
+   |payload#companyId     |${store:response-co.id}|
+   |expected:header#status|200                    |
+
+## 1.3. Retrieve Vehicle
+
+tags: md-24.3, event
+
+* Test description
+
+   |action     |value            |
+   |-----------|-----------------|
+   |description|Getting a vehicle|
+   |priority   |high             |
+
+* request admin bearer
+
+* add company and carrier
+
+* add v2.vehicle
+
+* Rest call
+
+   |action                |value                                       |
+   |----------------------|--------------------------------------------|
+   |method:get            |/api/v2/vehicle/${store:response-vehicle.id}|
+   |description           |Get a Vehicle                               |
+   |expected:header#status|200                                         |
+   |expected#companyId    |${store:response-co.id}                     |
+
+## 1.4. Delete Vehicle
+
+tags: md-24.4, event
+
+* Test description
+
+   |action     |value           |
+   |-----------|----------------|
+   |description|Delete a vehicle|
+   |priority   |high            |
+
+* request admin bearer
+
+* add company and carrier
+
+* add v2.vehicle
+
+* Rest call
+
+   |action                |value                                       |
+   |----------------------|--------------------------------------------|
+   |method:delete         |/api/v2/vehicle/${store:response-vehicle.id}|
+   |description           |Delete Vehicle                              |
+   |expected:header#status|204                                         |
+
+* Rest call
+
+   |action                |value                                       |
+   |----------------------|--------------------------------------------|
+   |method:get            |/api/v2/vehicle/${store:response-vehicle.id}|
+   |description           |Get a Vehicle                               |
+   |expected:header#status|404                                         |
+
+## 1.5. Retrieve all Vehicles
+
+tags: md-24.5, event
+
+* Test description
+
+   |action     |value              |
+   |-----------|-------------------|
+   |description|Getting all vehicle|
+   |priority   |high               |
+
+* request admin bearer
+
+* Rest call
+
+   |action                        |value          |
+   |------------------------------|---------------|
+   |method:get                    |/api/v2/vehicle|
+   |description                   |Get a Vehicle  |
+   |expected:header#status        |200            |
+   |expected:greater#totalElements|100            |

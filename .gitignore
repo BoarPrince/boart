@@ -5,3 +5,6 @@ dist
 coverage
 
 .DS_Store
+
+*/documentation/description.json
+*/reports/test-protocol.html

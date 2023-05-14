@@ -1,5 +1,7 @@
 # queues bind <queue-list>
 
+* Wait "5"
+
 * RabbitMQ bind
   | action           | value              |
   |------------------|--------------------|

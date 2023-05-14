@@ -1,4 +1,4 @@
-# add contact person with address
+# add contact person with address, companyId: <company-id>
 
 * request admin bearer
 
@@ -8,6 +8,7 @@
    |----------------------|--------------------------------------------------|
    |method:post           |/api/v2/address                                   |
    |description           |Creates an Address with random values             |
+   |payload#companyId     |<company-id>              |
    |payload#type          |${generate:char:30}                               |
    |payload#street        |${generate:fake:address:street}                   |
    |payload#city          |${generate:fake:address:city}-${generate:random:8}|
