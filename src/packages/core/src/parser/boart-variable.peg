@@ -1,0 +1,24 @@
+start := '\$\{\s*' name=NameToken qualifiers={'\s*:\s*' value=IdentifierToken}* selector=Selector? '\s*\}'
+
+//# -------------------------------------------------------
+//# Selector
+//# -------------------------------------------------------
+Selector := '\s*#\s*' rootSelector=SelectorDef subSelectors={ '\s*\.\s*' selector=SelectorDef }*
+
+SelectorDef := SelectorWithSimpleIndex | SelectorWithFirstIndex | SelectorWithEndIndex | SelectorWithStartEndIndex | SelectorWithWithRandomIndex | SelectorWithWildcard | SelectorWithIndexList | SelectorSimple
+SelectorSimple := value=SelectorToken
+SelectorWithSimpleIndex := value=SelectorToken '\s*\[\s*' index=IndexToken '\s*\]\s*'
+SelectorWithFirstIndex := value=SelectorToken '\s*\[\s*:\s*' index=IndexToken '\s*\]\s*'
+SelectorWithEndIndex := value=SelectorToken '\s*\[\s*-\s*' index=IndexToken '\s*:\s*\]\s*'
+SelectorWithStartEndIndex := value=SelectorToken '\s*\[\s*' startIndex=IndexToken '\s*:\s*' endIndex=IndexToken? '\s*:\s*\]\s*'
+SelectorWithIndexList := value=SelectorToken '\s*\[\s*' index=IndexToken list={'\s*,\s*' index=IndexToken }* '\s*\]\s*'
+SelectorWithWildcard := value=SelectorToken '\s*\[\s*\*\s*\]\s*'
+SelectorWithWithRandomIndex := value=SelectorToken '\s*\[\s*' count='[0-9]+'? '\s*\?\s*\]'
+
+//# -------------------------------------------------------
+//# Token
+//# -------------------------------------------------------
+NameToken := '[^#$\{\}:.+\[\] \t\n]+'
+IdentifierToken := '[^#:$\{\}\[\] \t\n]+'
+SelectorToken := '[^#$\{\}:.+\[\] \t\n]+'
+IndexToken := '[0-9]+'
