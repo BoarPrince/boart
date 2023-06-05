@@ -7,3 +7,4 @@
    |method:put            |/api/assignment/vehicle/${store:response-vehicle.id}/driver/${store:response-driver.id}|
    |description           |Assign vehicle to the driver                                                           |
    |expected:header#status|202                                                                                    |
+   |store#id              |assignment-id                                                                          |

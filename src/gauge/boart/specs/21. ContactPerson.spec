@@ -1044,14 +1044,14 @@ tags: md-21.16, event
 
 * RabbitMQ publish
 
-   |action           |value                                                      |
-   |-----------------|-----------------------------------------------------------|
-   |description      |Publish deletion without idonboarding updated event manualy|
-   |exchange         |masterdata.update                                          |
-   |routing          |contactPerson                                              |
-   |payload#-id-     |xxxxx                                                      |
-   |header#eventClass|ContactPerson                                              |
-   |header#eventType |Delete                                                     |
+   |action           |value                                            |
+   |-----------------|-------------------------------------------------|
+   |description      |Publish deletion without id updated event manualy|
+   |exchange         |masterdata.update                                |
+   |routing          |contactPerson                                    |
+   |payload#-id-     |xxxxx                                            |
+   |header#eventClass|ContactPerson                                    |
+   |header#eventType |Delete                                           |
 
 * RabbitMQ consume, continue
 

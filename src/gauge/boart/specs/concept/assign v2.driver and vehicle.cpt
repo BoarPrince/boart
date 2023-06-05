@@ -1,0 +1,12 @@
+# assign v2.driver and vehicle
+
+* Rest call
+
+   |action                |value                         |
+   |----------------------|------------------------------|
+   |method:post           |/api/v2/driverAssignment      |
+   |description           |Assign vehicle to the driver  |
+   |payload#vehicleId     |${store:response-vehicle.id}  |
+   |payload#driverId      |${store:response-driver.id}   |
+   |expected:header#status|200                           |
+   |store                 |response-assignment           |
