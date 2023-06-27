@@ -1,0 +1,16 @@
+# add v2.company
+
+* request admin bearer
+
+* payload company
+
+* Rest call
+
+   |action                  |value               |
+   |------------------------|--------------------|
+   |method:post             |/api/v2/company     |
+   |description             |Creating a company  |
+   |group                   |Initial Create     |
+   |payload                 |${store:payload-co} |
+   |expected:header#status  |200                 |
+   |store                   |response_co         |

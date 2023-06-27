@@ -542,8 +542,6 @@ tags: md-4.13
    |action                |value                                      |
    |----------------------|-------------------------------------------|
    |method:get            |/api/driver/carrier/${store:response-ca.id}|
-   |query#searchString    |${store:response-vehicle.plate}            |
    |description           |Search assigned Vehicle (carrier vehicles) |
    |expected:header#status|200                                        |
    |expected#totalElements|1                                          |
-

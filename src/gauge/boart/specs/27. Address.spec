@@ -1,248 +1,98 @@
-# 1. Vehicle - MasterData
+# 1. Address - MasterData
 
-tags: env-all, master-data, masterdata, md-24, vehicle, v2
+tags: env-all, master-data, masterdata, md-24, address, v2
 
-## 1.1. Check Version 1 triggered notification
+## 1.1. Add an Address
 
-tags: md-24.1, event
-
-* Test description
-
-   |action     |value                                                          |
-   |-----------|---------------------------------------------------------------|
-   |description|Trigger changes on Version 1 User and check event notificatioin|
-   |priority   |high                                                           |
-
-* request admin bearer
-
-* add company and carrier
-
-* RabbitMQ bind
-
-   |action     |value                       |
-   |-----------|----------------------------|
-   |exchange   |vehicle                     |
-   |queue      |test.md.v1.vehicle          |
-   |description|Bind vehicle version 1 queue|
-   |group      |Bind Queues                 |
-
-* RabbitMQ bind
-
-   |action     |value                       |
-   |-----------|----------------------------|
-   |exchange   |masterdata                  |
-   |queue      |test.md.v2.vehicle          |
-   |description|Bind vehicle version 2 queue|
-   |group      |Bind Queues                 |
-
- @@@@  @@@@@  @@@@@@   @@   @@@@@ @@@@@@
-@    @ @    @ @       @  @    @   @
-@      @    @ @@@@@  @    @   @   @@@@@
-@      @@@@@  @      @@@@@@   @   @
-@    @ @   @  @      @    @   @   @
- @@@@  @    @ @@@@@@ @    @   @   @@@@@@
-
-* add vehicle
-
-* RabbitMQ consume, continue
-
-   |action     |value                                 |
-   |-----------|--------------------------------------|
-   |queue      |test.md.v1.vehicle                    |
-   |group      |Check Queues (CREATE)                 |
-   |description|CREATE V1: Vehicle Event must be fired|
-
-* RabbitMQ consume, continue
-
-   |action                            |value                                 |
-   |----------------------------------|--------------------------------------|
-   |queue                             |test.md.v2.vehicle                    |
-   |group                             |Check Queues (CREATE)                 |
-   |description                       |CREATE V2: Vehcile Event must be fired|
-   |expected:header#headers.eventClass|Vehicle                               |
-   |expected:header#headers.eventType |CREATE                                |
-   |expected#id                       |${store:response-vehicle.id}          |
-   |expected#companyId                |${store:response-co.id}               |
-
-@    @ @@@@@  @@@@@    @@   @@@@@ @@@@@@
-@    @ @    @ @    @  @  @    @   @
-@    @ @    @ @    @ @    @   @   @@@@@
-@    @ @@@@@  @    @ @@@@@@   @   @
-@    @ @      @    @ @    @   @   @
- @@@@  @      @@@@@  @    @   @   @@@@@@
-
-* Rest call
-
-   |action                |value                                    |
-   |----------------------|-----------------------------------------|
-   |method:put            |/api/vehicle/${store:response-vehicle.id}|
-   |description           |Update the Vehicle                       |
-   |group                 |Check Queues (UPDATE)                    |
-   |payload               |${store:response-vehicle}                |
-   |expected:header#status|200                                      |
-
-* RabbitMQ consume, continue
-
-   |action     |value                                 |
-   |-----------|--------------------------------------|
-   |queue      |test.md.v1.vehicle                    |
-   |group      |Check Queues (UPDATE)                 |
-   |description|UPDATE V1: Vehicle Event must be fired|
-
-* RabbitMQ consume, continue
-
-   |action                            |value                                 |
-   |----------------------------------|--------------------------------------|
-   |queue                             |test.md.v2.vehicle                    |
-   |group                             |Check Queues (UPDATE)                 |
-   |description                       |UPDATE V2: Vehicle Event must be fired|
-   |expected:header#headers.eventClass|Vehicle                               |
-   |expected:header#headers.eventType |UPDATE                                |
-   |expected#id                       |${store:response-vehicle.id}          |
-   |expected#plate                    |${store:response-vehicle.plate}       |
-   |expected#companyId                |${store:response-co.id}               |
-
-@@@@@  @@@@@@ @      @@@@@@ @@@@@ @@@@@@
-@    @ @      @      @        @   @
-@    @ @@@@@  @      @@@@@    @   @@@@@
-@    @ @      @      @        @   @
-@    @ @      @      @        @   @
-@@@@@  @@@@@@ @@@@@@ @@@@@@   @   @@@@@@
-
-* Rest call
-
-   |action                |value                                    |
-   |----------------------|-----------------------------------------|
-   |method:delete         |/api/vehicle/${store:response-vehicle.id}|
-   |description           |Delete the Vehicle                       |
-   |group                 |Check Queues (DELETE)                    |
-   |expected:header#status|204                                      |
-
-* RabbitMQ consume, continue
-
-   |action     |value                                 |
-   |-----------|--------------------------------------|
-   |queue      |test.md.v1.vehicle                    |
-   |group      |Check Queues (DELETE)                 |
-   |description|DELETE V1: Vehicle Event must be fired|
-
-* RabbitMQ consume, continue
-
-   |action                            |value                                 |
-   |----------------------------------|--------------------------------------|
-   |queue                             |test.md.v2.vehicle                    |
-   |group                             |Check Queues (DELETE)                 |
-   |description                       |DELETE V2: Vehicle Event must be fired|
-   |expected:header#headers.eventClass|Vehicle                               |
-   |expected:header#headers.eventType |DELETE                                |
-   |expected#id                       |${store:response-vehicle.id}          |
-
-## 1.2. Add Vehicle
-
-tags: md-24.2, event
+tags: md-27.1
 
 * Test description
 
    |action     |value                      |
    |-----------|---------------------------|
-   |description|Creates a Version 2 Vehicle|
+   |description|Creates a Version 2 Address|
    |priority   |high                       |
 
-* request admin bearer
-
-* add company and carrier
+* add company
 
 * Rest call
 
-   |action                |value                  |
-   |----------------------|-----------------------|
-   |method:post           |/api/v2/vehicle        |
-   |description           |Add a Vehicle          |
-   |payload#plate         |${generate:char:10}    |
-   |payload#cardLimit     |${generate:random:4}   |
-   |payload#companyId     |${store:response-co.id}|
-   |expected:header#status|200                    |
+   |action                |value                                |
+   |----------------------|-------------------------------------|
+   |method:post           |/api/v2/address                      |
+   |description           |Creates an Address with random values|
+   |payload#companyId     |${store:response-co.id}              |
+   |payload#type          |${generate:char:10}                  |
+   |payload#street        |${generate:fake:address:street}      |
+   |payload#city          |${generate:fake:address:city}        |
+   |payload#zipCode       |${generate:random:10}                |
+   |payload#countryCode   |${generate:fake:address:countryCode} |
+   |payload#addition      |${generate:char:100}                 |
+   |expected:header#status|200                                  |
 
-## 1.3. Retrieve Vehicle
+## 1.2. Retrieve an Address
 
-tags: md-24.3, event
-
-* Test description
-
-   |action     |value            |
-   |-----------|-----------------|
-   |description|Getting a vehicle|
-   |priority   |high             |
-
-* request admin bearer
-
-* add company and carrier
-
-* add v2.vehicle
-
-* Rest call
-
-   |action                |value                                       |
-   |----------------------|--------------------------------------------|
-   |method:get            |/api/v2/vehicle/${store:response-vehicle.id}|
-   |description           |Get a Vehicle                               |
-   |expected:header#status|200                                         |
-   |expected#companyId    |${store:response-co.id}                     |
-
-## 1.4. Delete Vehicle
-
-tags: md-24.4, event
+tags: md-27.2
 
 * Test description
 
-   |action     |value           |
-   |-----------|----------------|
-   |description|Delete a vehicle|
-   |priority   |high            |
+   |action     |value             |
+   |-----------|------------------|
+   |description|Getting an address|
+   |priority   |high              |
 
 * request admin bearer
 
 * add company and carrier
 
-* add v2.vehicle
+* add v2.address
 
 * Rest call
 
-   |action                |value                                       |
-   |----------------------|--------------------------------------------|
-   |method:delete         |/api/v2/vehicle/${store:response-vehicle.id}|
-   |description           |Delete Vehicle                              |
-   |expected:header#status|204                                         |
+   |action                |value                                  |
+   |----------------------|---------------------------------------|
+   |method:get            |/api/v2/address/${store:response-ad.id}|
+   |description           |Get an Address                         |
+   |expected:header#status|200                                    |
+   |expected#id           |${store:response-ad.id}                |
+   |expected#type         |${store:response-ad.type}              |
+   |expected#street       |${store:response-ad.street}            |
+   |expected#city         |${store:response-ad.city}              |
+   |expected#countryCode  |${store:response-ad.countryCode}       |
+   |expected#companyId    |${store:response-co.id}                |
 
-* Rest call
+## 1.3. Delete Address
 
-   |action                |value                                       |
-   |----------------------|--------------------------------------------|
-   |method:get            |/api/v2/vehicle/${store:response-vehicle.id}|
-   |description           |Get a Vehicle                               |
-   |expected:header#status|404                                         |
-
-## 1.5. Retrieve all Vehicles
-
-tags: md-24.5, event
+tags: md-27.3
 
 * Test description
 
-   |action     |value              |
-   |-----------|-------------------|
-   |description|Getting all vehicle|
-   |priority   |high               |
+   |action     |value         |
+   |-----------|--------------|
+   |description|Add an address|
+   |priority   |high          |
 
 * request admin bearer
 
+* add company and carrier
+
+* add v2.address
+
 * Rest call
 
-   |action                        |value          |
-   |------------------------------|---------------|
-   |method:get                    |/api/v2/vehicle|
-   |description                   |Get a Vehicle  |
-   |expected:header#status        |200            |
-   |expected:greater#totalElements|100            |
+   |action                |value                                  |
+   |----------------------|---------------------------------------|
+   |method:delete         |/api/v2/address/${store:response-ad.id}|
+   |description           |Delete Address                         |
+   |expected:header#status|204                                    |
+
+* Rest call
+
+   |action                |value                                  |
+   |----------------------|---------------------------------------|
+   |method:get            |/api/v2/address/${store:response-ad.id}|
+   |description           |Try to get the deleted Address         |
+   |expected:header#status|404                                    |
 
 ## 1.6. Check Events
 

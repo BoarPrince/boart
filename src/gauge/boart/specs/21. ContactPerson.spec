@@ -66,7 +66,7 @@ tags: md-21.2
    |method:post           |/api/v2/address                      |
    |description           |Creates an Address with random values|
    |payload#companyId     |${store:response-co.id}              |
-   |payload#type          |${generate:char:30}                  |
+   |payload#type          |${generate:char:10}                  |
    |payload#street        |${generate:fake:address:street}      |
    |payload#city          |${generate:fake:address:city}        |
    |payload#zipCode       |${generate:random:10}                |

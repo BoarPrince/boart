@@ -1,6 +1,6 @@
 {
   "CorrelationId": null,
-  "CompanyId": "${generate:t:tpl:company.id}",
+  "CompanyId": "${store:ob-companyId:=${generate:t:tpl:company.id}}",
   "username": "${store:ob-email:=jitpaytest+ob${generate:t:random:8}@gmail.com}",
   "email": "${store:ob-email:=jitpaytest+ob${generate:t:random:8}@gmail.com}",
   "password": "${env:default_password}",

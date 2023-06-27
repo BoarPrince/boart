@@ -101,3 +101,27 @@ tags: md-0.4
    |description      |xxx         |
    |expected#[0].data|{"a":1}     |
 
+## 1.5. Request Admin Token
+
+tags: md-0.4
+
+* Test description
+
+   |action     |value                                  |
+   |-----------|---------------------------------------|
+   |description|request admin token from local keycloak|
+   |priority   |high                                   |
+
+* Rest authorize
+
+   |action     |value                                                                                                                                   |
+   |-----------|----------------------------------------------------------------------------------------------------------------------------------------|
+   |url        |/token                                                                                                                                  |
+   |grantType  |password                                                                                                                                |
+   |--scope    |openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api|
+   |scope      |openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api|
+   |clientId   |jitfleet_portal                                                                                                                         |
+   |--clientId |jitpay_portal_angular_application_client                                                                                                |
+   |username   |${env:admin_login_user}                                                                                                                 |
+   |password   |${env:admin_login_password}                                                                                                             |
+   |retry:count|2                                                                                                                                       |

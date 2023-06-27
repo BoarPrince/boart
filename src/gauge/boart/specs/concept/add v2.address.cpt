@@ -1,0 +1,18 @@
+# add v2.address
+
+* Rest call
+
+   |action                 | value                                 |
+   |-----------------------|---------------------------------------|
+   | method:post           | /api/v2/address                       |
+   | description           | Creates an Address with random values |
+   | payload#companyId     | ${store:response-co.id}               |
+   | group                 | Initial Create                        |
+   | payload#type          | ${generate:char:10}                   |
+   | payload#street        | ${generate:fake:address:street}       |
+   | payload#city          | ${generate:fake:address:city}         |
+   | payload#zipCode       | ${generate:random:10}                 |
+   | payload#countryCode   | ${generate:fake:address:countryCode}  |
+   | payload#addition      | ${generate:char:100}                  |
+   | expected:header#status| 200                                   |
+   | store                 | response-ad                           |

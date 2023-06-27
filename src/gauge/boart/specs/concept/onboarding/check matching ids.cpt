@@ -76,32 +76,32 @@
 @       @      @      @        @
 @       @@@@@@ @@@@@@ @@@@@@   @
 
-* SQL query, continue
-
-   | action               | value                                            |
-   |----------------------|--------------------------------------------------|
-   | description          | Check Fleet Database                             |
-   | group                | <group>                                          |
-   | database             | Jitfleet                                         |
-   | query                | SELECT                                           |
-   |                      | TRIM(u.EMAIL) AS email                           |
-   |                      | , co.JITPAY_ID AS jitpayId                       |
-   |                      | , co.Name AS companyName                         |
-   |                      | , LOWER(CAST(ca.id AS VARCHAR(38))) AS carrierId |
-   |                      | , LOWER(CAST(co.id AS VARCHAR(38))) AS companyId |
-   |                      | , LOWER(CAST(u.id AS VARCHAR(38))) AS userId     |
-   |                      | FROM Fleet_User u                                |
-   |                      | LEFT OUTER JOIN Company co                       |
-   |                      | ON u.Company_id = co.id                          |
-   |                      | LEFT OUTER JOIN Driver d                         |
-   |                      | ON u.id = d.user_id                              |
-   |                      | LEFT OUTER JOIN Subsidiary ca                    |
-   |                      | ON co.id = ca.company_id                         |
-   |                      | Where u.EMAIL = '${store:idPara.email}'          |
-   | expected:header#rows | 1                                                |
-   | expected#carrierId   | ${store:idPara.carrierId}                        |
-   | expected#companyId   | ${store:idPara.companyId}                        |
-   | expected#userId      | ${store:idPara.userId}                           |
+comment * SQL query, continue
+comment 
+comment    | action               | value                                            |
+comment    |----------------------|--------------------------------------------------|
+comment    | description          | Check Fleet Database                             |
+comment    | group                | <group>                                          |
+comment    | database             | Jitfleet                                         |
+comment    | query                | SELECT                                           |
+comment    |                      | TRIM(u.EMAIL) AS email                           |
+comment    |                      | , co.JITPAY_ID AS jitpayId                       |
+comment    |                      | , co.Name AS companyName                         |
+comment    |                      | , LOWER(CAST(ca.id AS VARCHAR(38))) AS carrierId |
+comment    |                      | , LOWER(CAST(co.id AS VARCHAR(38))) AS companyId |
+comment    |                      | , LOWER(CAST(u.id AS VARCHAR(38))) AS userId     |
+comment    |                      | FROM Fleet_User u                                |
+comment    |                      | LEFT OUTER JOIN Company co                       |
+comment    |                      | ON u.Company_id = co.id                          |
+comment    |                      | LEFT OUTER JOIN Driver d                         |
+comment    |                      | ON u.id = d.user_id                              |
+comment    |                      | LEFT OUTER JOIN Subsidiary ca                    |
+comment    |                      | ON co.id = ca.company_id                         |
+comment    |                      | Where u.EMAIL = '${store:idPara.email}'          |
+comment    | expected:header#rows | 1                                                |
+comment    | expected#carrierId   | ${store:idPara.carrierId}                        |
+comment    | expected#companyId   | ${store:idPara.companyId}                        |
+comment    | expected#userId      | ${store:idPara.userId}                           |
 
 @@@@@@@
 @       @    @ @@@@@@ @

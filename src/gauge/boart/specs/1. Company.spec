@@ -1057,16 +1057,16 @@ tags: md-1.24
 
 * Data manage
 
-   |action               |value                               |
-   |---------------------|------------------------------------|
-   |in                   |${store:response_claims}            |
-   |run:env              |development, staging                |
-   |description          |Claims must contain the updated Id's|
-   |                     |CompanyId, SubsidiaryId, UserId     |
-   |expected#companyName |${store:response-co.companyName}    |
-   |expected#companyId   |${store:response-co.id}             |
-   |expected#subsidiaryId|${store:response-ca.id}             |
-   |expected#userId      |${store:response-user.id}           |
+   |action                |value                               |
+   |----------------------|------------------------------------|
+   |in                    |${store:response_claims}            |
+   |run:env               |development, staging                |
+   |description           |Claims must contain the updated Id's|
+   |                      |CompanyId, SubsidiaryId, UserId     |
+   |--expected#companyName|${store:response-co.companyName}    |
+   |expected#companyId    |${store:response-co.id}             |
+   |expected#subsidiaryId |${store:response-ca.id}             |
+   |expected#userId       |${store:response-user.id}           |
 
 ## 1.25. Sync specific company with user, driver, vehicle and driverAssignment
 

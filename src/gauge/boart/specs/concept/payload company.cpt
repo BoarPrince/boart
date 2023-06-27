@@ -1,0 +1,48 @@
+# payload company
+
+* Data manage
+
+   |action                         |value                             |
+   |-------------------------------|----------------------------------|
+   |in#referenceId                 |K${generate:char:8}               |
+   |in#henriContactId              |${generate:char:8}                |
+   |in#vatId                       |null                              |
+   |in#taxNumber                   |${generate:char:8}                |
+   |in#name                        |${generate:fake:company:name}     |
+   |in#legalForm                   |GmbH_de                           |
+   |in#status                      |${generate:char:8}                |
+   |in#originPlatform              |${generate:char:8}                |
+   |in#originSource                |${generate:char:8}                |
+   |in#registryCourt               |${generate:char:8}                |
+   |in#commercialRegisterNr        |${generate:char:8}                |
+   |in#homePage                    |${generate:char:8}                |
+   |in#salesManager                |${generate:char:8}                |
+   |in#currency                    |${generate:char:3}                |
+   |in#initialPin                  |${generate:random:4}              |
+   |in#preferedCardIssuer          |SHELL                             |
+   |in#maxCards                    |${generate:random:3}              |
+   |in#baseCashpoolValue           |${generate:random:4}              |
+   |in#baseCashpoolPercentage      |${generate:random:2}              |
+   |in#defaultDriverLimit          |${generate:random:4}              |
+   |in#defaultVehicleLimit         |${generate:random:4}              |
+   |in#bankAccount#viban           |${generate:iban}                  |
+   |in#bankAccount#iban            |${generate:iban}                  |
+   |in#bankAccount#bic             |SOGEDEFFXXX                       |
+   |in#bankAccount#bankName        |Societe Generalex                 |
+   |in#bankAccount#holder          |${generate:char:8}                |
+   |in#solvency.financialDataSource|${generate:char:50}               |
+   |in#solvency.jitpayRating       |${generate:random:4}              |
+   |in#solvency.score              |${generate:random:4}              |
+   |in#solvency.requestedAt        |${generate:datetime.iso}.000+00:00|
+   |in#solvency.externalId         |${generate:char:50}               |
+   |in#solvency.riskQuota          |0.${generate:random:2}            |
+   |in#validatedEmail.email        |jitpaytest+ob71532721@gmail.com   |
+   |in#validatedEmail.type         |BILLING                           |
+   |in#addresses[0].type           |BILLING                           |
+   |in#addresses[0].street         |${generate:fake:address:street}   |
+   |in#addresses[0].city           |${generate:fake:address:city}     |
+   |in#addresses[0].zipCode        |${generate:fake:address:zipCode}  |
+   |in#addresses[0].countryCode    |DE                                |
+   |in#addresses[0].addition       |-                                 |
+   |store                          |payload-co                        |
+   |in#id                          |${generate:uuid}                        |

@@ -307,7 +307,7 @@ tags: ob-10.6, register, env:development, env:staging
 
 ## 1.7. Id's must match after onboarding event when debtor already exists (tax - match, manualy)
 
-tags: ob-10.7, manual, env:local
+tags: ob-10.7, manual
 
 * Test description
 
@@ -343,6 +343,7 @@ tags: ob-10.7, manual, env:local
    |action                 |value                                  |
    |-----------------------|---------------------------------------|
    |description            |Send onboarding event manualy          |
+   |                       |Event is consumed by Portal Backend    |
    |exchange               |fleet_event_bus                        |
    |routing                |OnBoardingFleetEvent                   |
    |messageId              |${generate:s:uuid}                     |
@@ -749,6 +750,136 @@ tags: ob-10.13, env:development, env:staging, manual
 
 * onboarding - check matching ids, email: "${store:response-register.userDetail.email}", group: "Check IDs", wait: "0", not: "portal, claims"
 
-POST
-	https://portal-services.stage.jitpay.eu/api/company
-{"name":"TestA","nameAddition":"AG_de","vatId":null,"taxNumber":"67698769876987","commercialRegisterNumber":"HEB 1","registryCourt":"Mannheim","homePage":null,"score":2,"riskQuota":2,"financialDataSource":"Bürgel","trafficLightState":"GREEN","jitpayRating":1,"companyOnboardThrough":"FACEBOOK","salesManager":null,"originPlatform":"JITPAY","addresses":[{"street":"Hauptstrasse","zipCode":"74246","city":"Weinberg","countryCode":"DE","type":"MASTER","subsidiaryIdentifier":null,"contactPersonDto":{"id":null,"firstName":null,"lastName":null,"email":"wein@web.de","telephoneNumber":null}}],"externalIds":[],"debtor":null,"creditor":{"active":true,"assignVIban":true,"insuranceRatio":40,"insuranceName":"Sonstige","zessionar":"Zess","fgFeeModel":"flat","additionalInformation":[],"platforms":["TIMOCOM","JITpay"],"statusRemark":null,"delcredere":"genuine","fgFee":3},"bankData":{"id":null,"iban":"DE02933","bic":"AAAAAA","bankName":"Voba"}}
+## 1.14. Send Onboarding Event twice Times
+
+tags: ob-10.14, manual
+
+* Test description
+
+   |action     |value                                              |
+   |-----------|---------------------------------------------------|
+   |description|Send Onboarding Event twice times                  |
+   |           |It shall check, that no Entity Merge Problem exists|
+   |ticket     |MD-404                                             |
+   |priority   |high                                               |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                                         |
+   |----------------------|----------------------------------------------|
+   |method:post           |/api/onboarding                               |
+   |description           |onboard a new user (send event the first time)|
+   |payload               |<file:event-onboarding.json>                  |
+   |expected:header#status|200                                           |
+
+* Rest call
+
+   |action                |value                       |
+   |----------------------|----------------------------|
+   |method:post           |/api/onboarding             |
+   |description           |send event a second time    |
+   |payload               |<file:event-onboarding.json>|
+   |expected:header#status|200                         |
+
+* Rest call
+
+   |action                                      |value                                             |
+   |--------------------------------------------|--------------------------------------------------|
+   |method:get                                  |/api/company/${generate:t:tpl:company.id}         |
+   |query#deep                                  |true                                              |
+   |description                                 |Request onboarded company                         |
+   |                                            |And check that the user contains the correct roles|
+   |expected:header#status                      |200                                               |
+   |-- expected:count#carriers[0].users[0].roles|2                                                 |
+   |-- expected#carriers[0].users[0].roles      |["CarrierAdmin","CustomerAdmin"]                  |
+
+## 1.15 Use Default Values
+
+tags: ob-10.15, manual, env:development, env:staging, env:local
+
+* Test description
+
+   |action     |value                                                          |
+   |-----------|---------------------------------------------------------------|
+   |description|Default Values must be used, if not value is explicitly defined|
+   |priority   |high                                                           |
+
+* request admin bearer
+
+* Rest call
+
+   |action                |value                       |
+   |----------------------|----------------------------|
+   |method:post           |/api/onboarding             |
+   |description           |onboard a new user          |
+   |payload               |<file:event-onboarding.json>|
+   |expected:header#status|200                         |
+
+* Rest call
+
+   |action                |value                                     |
+   |----------------------|------------------------------------------|
+   |method:put            |/api/onboarding                           |
+   |description           |update onboarded company with portal event|
+   |payload               |<file:event-portal-onboarding.json>       |
+   |expected:header#status|200                                       |
+
+* Rest call
+
+   |action                                |value                                             |
+   |--------------------------------------|--------------------------------------------------|
+   |method:get                            |/api/company/${generate:t:tpl:company.id}         |
+   |description                           |Request onboarded company                         |
+   |                                      |And check that the user contains the correct roles|
+   |expected:header#status                |200                                               |
+   |expected#carriers[0].currency         |EUR                                               |
+   |expected#carriers[0].maximumCards     |0                                                 |
+   |expected#carriers[0].baseCashpoolValue|0                                                 |
+
+## 1.16 Use Defined Values
+
+tags: ob-10.16, manual, env:development, env:staging, env:local
+
+* Test description
+
+   |action     |value                                   |
+   |-----------|----------------------------------------|
+   |description|If Values are defined, they must be used|
+   |priority   |high                                    |
+
+* request admin bearer
+
+* Rest call
+
+   |action                          |value                       |
+   |--------------------------------|----------------------------|
+   |method:post                     |/api/onboarding             |
+   |description                     |onboard a new user          |
+   |payload                         |<file:event-onboarding.json>|
+   |payload#companyDto.currency     |USD                         |
+   |payload#companyDto.cardAmount   |111                         |
+   |payload#companyDto.cashpoolValue|222                         |
+   |expected:header#status          |200                         |
+
+* Rest call
+
+   |action                |value                                     |
+   |----------------------|------------------------------------------|
+   |method:put            |/api/onboarding                           |
+   |description           |update onboarded company with portal event|
+   |payload               |<file:event-portal-onboarding.json>       |
+   |expected:header#status|200                                       |
+
+* Rest call
+
+   |action                                |value                                             |
+   |--------------------------------------|--------------------------------------------------|
+   |method:get                            |/api/company/${generate:t:tpl:company.id}         |
+   |description                           |Request onboarded company                         |
+   |                                      |And check that the user contains the correct roles|
+   |expected:header#status                |200                                               |
+   |expected#carriers[0].currency         |USD                                               |
+   |expected#carriers[0].maximumCards     |111                                               |
+   |expected#carriers[0].baseCashpoolValue|222                                               |
