@@ -114,7 +114,7 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
         context.execution.header.asDataContentObject().set('headers', Object.fromEntries(response.headers));
 
         const contentType = response.headers.get('content-type');
-        if (contentType.includes('pdf')) {
+        if (contentType?.includes('pdf')) {
             context.execution.data = await new PDFContent().setBufferAsync(await response.arrayBuffer());
         } else {
             const responseText = await response.text();
