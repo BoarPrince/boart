@@ -69,9 +69,15 @@ export class ExpectedOperatorInitializer implements Descriptionable {
             throw new Error(`expected operator '${operator.name}' already exists`);
         }
 
+        // define title if description is not defined, but the title is missing
+        if (!!operator.description && !operator.description.title) {
+            operator.description.title = `expected:${operator.name}`;
+        }
+
+        // 1. add ci and not operators
         this.addNotAndCiOperator(operator);
 
-        // add default implementation
+        // 2. add default implementation
         if (!!operator.default) {
             const description = !operator.description
                 ? null
@@ -134,7 +140,7 @@ export class ExpectedOperatorInitializer implements Descriptionable {
             : {
                   id: `${operator.description.id}:not`,
                   parentId: operator.description.id,
-                  title: `${operator.description.title}:nots`,
+                  title: `${operator.description.title}:not`,
                   description: `It's the not extension of the '<ref:${operator.description.id}>' operator`,
                   examples: null
               };
