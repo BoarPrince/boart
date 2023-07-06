@@ -1,6 +1,6 @@
 {% extends "main.njk" %}
 
-{% block title %}Expected Documentation{% endblock %}
+{% block title %}BoarT - Expected Documentation{% endblock %}
 
 {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
 {# right / sub navigatio #}
@@ -16,7 +16,7 @@
   {% for doc in parentDocs | sort(attribute='title')%}
 
     <div id="{{doc.id}}" class="card mb-4">
-      <h5 class="card-header bg-primary">{{doc.title}}</h5>
+      <h5 class="card-header bg-primary text-secondary">{{doc.title}}</h5>
       <div class="card-body">
         <p class="card-text">{{doc.description | brtMarkdown}}</p>
       </div>

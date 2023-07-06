@@ -18,6 +18,7 @@
       :root {
         --bs-primary-rgb: 249, 200, 0;
         --bs-link-color: rgb(189, 28, 31);
+        --bs-secondary-rgb: rgb(189, 28, 31);
         --bs-link-hover-color: rgb(232, 37, 29);
       }
     </style>
@@ -31,6 +32,31 @@
     {# right / sub nav macro #}
     {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
     {% macro createSubnav(parentDocs, child = false) %}
+      {% if not child %}
+        {% set parentClass = "tree" %}
+      {% else %}
+        {% set parentClass = "" %}
+      {% endif %}
+
+      <ul class="{{parentClass}}">
+        {% for operator in parentDocs | sort(attribute='title')%}
+          <li>
+            {# <details open>
+              <summary> #}
+            <a href="{{operator | brtRef}}">
+              {{operator.title}}
+            </a>
+            {# </summary> #}
+            {% if operator | brtChilds %}
+              {{ createSubnav(operator | brtChilds, true) }}
+            {% endif %}
+            {# </details> #}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endmacro %}
+
+    {% macro createSubnav2(parentDocs, child = false) %}
       {% for operator in parentDocs | sort(attribute='title')%}
         {% if child %}
           {% set navClass = "ms-3" %}
@@ -50,6 +76,27 @@
           {% endif %}
         </div>
       {% endfor %}
+    {% endmacro %}
+
+    {% macro createSubnav1(parentDocs, child = false) %}
+      {% if not child %}
+        <div class="sub-menu">
+        {% endif %}
+        <ul>
+          {% for operator in parentDocs | sort(attribute='title')%}
+            <li>
+              <a class="nav-link" href="{{operator | brtRef}}">
+                {{operator.title}}
+              </a>
+              {% if operator | brtChilds %}
+                {{ createSubnav(operator | brtChilds, true) }}
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+        {% if not child %}
+        </div>
+      {% endif %}
     {% endmacro %}
 
     <header class="container-fluid">
@@ -72,7 +119,7 @@
         {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
         {#  R I G H T  #}
         {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        <nav class="fixed-top offset-10 col-2 vh-100 mt-5 bg-primary" style="font-size: smaller !important">
+        <nav id="nav-sub-menu" class="fixed-top offset-10 col-2 vh-100 mt-5 bg-primary" style="font-size: smaller !important">
           <div class="nav flex-column mt-2">
             {% block subnav %}{% endblock %}
           </div>
@@ -83,7 +130,7 @@
       {# top navigation #}
       {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
       <nav class="fixed-top">
-        <div class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div id="nav-top" class="navbar navbar-expand-lg navbar-dark bg-dark">
           <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
             <button
@@ -115,7 +162,7 @@
     {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
     {# main are #}
     {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-    <main class="container-fluid mt-5 pt-4">
+    <main class="container-fluid mt-5 pt-4" data-bs-spy="scroll" data-bs-target="#nav-sub-menu">
       <div class="row">
         <div class="offset-2 col-8">
           {% block main %}{% endblock %}

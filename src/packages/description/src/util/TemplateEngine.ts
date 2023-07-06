@@ -8,7 +8,7 @@ import { ChildMap } from './ChildMap'
 /**
  *
  */
-export class Nunjucks {
+export class TemplateEngine {
     private _env: nunjucks.Environment
 
     /**
@@ -62,7 +62,7 @@ export class Nunjucks {
      *
      */
     private addMarkdownFilter (): void {
-        this._env.addFilter('brtMarkdown', (str: string) => Nunjucks.convertMarkdownToHTML(str))
+        this._env.addFilter('brtMarkdown', (str: string) => TemplateEngine.convertMarkdownToHTML(str))
     }
 
     /**

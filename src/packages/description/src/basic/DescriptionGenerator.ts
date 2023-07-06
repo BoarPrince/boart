@@ -8,7 +8,7 @@ import { ChildMap } from '../util/ChildMap'
 import { DescriptionCreatorFactory } from './DescriptionCreatorFactory'
 import { DescriptionLinkReference } from './DescriptionLinkReference'
 import { ExpectedConverter } from '../converter/ExpectedConverter'
-import { Nunjucks } from '../util/Nunjacks'
+import { TemplateEngine } from '../util/TemplateEngine'
 
 /**
  *
@@ -16,7 +16,7 @@ import { Nunjucks } from '../util/Nunjacks'
 export class DescriptionGenerator {
     private description: FullDescription
     private converters = new Array<DescriptionCreatorFactory>()
-    private templateGenerator: Nunjucks
+    private templateGenerator: TemplateEngine
 
     /**
      *
@@ -42,7 +42,7 @@ export class DescriptionGenerator {
      */
     private init (): void {
         const searchPath = path.resolve(__dirname, '..', '..', 'resources')
-        this.templateGenerator = new Nunjucks(searchPath)
+        this.templateGenerator = new TemplateEngine(searchPath)
         this.description = this.read()
 
         // init converter factories
