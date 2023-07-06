@@ -1,11 +1,17 @@
-start := '\$\{\s*' name=NameToken qualifiers={'\s*:\s*' value=IdentifierToken}* selector=Selector? '\s*\}'
+startx := '\$\{\s*' name=NameToken scope={'\s*\+\s*' value=NameToken}? qualifiers={'\s*:\s*' value=IdentifierToken}* '\s*#\s*' selectors={def=Selector '\s*.\s*'?}*
+        | '\$\{\s*' name=NameToken scope={'\s*\+\s*' value=NameToken}? qualifiers={'\s*:\s*' value=IdentifierToken}*
 
 //# -------------------------------------------------------
 //# Selector
 //# -------------------------------------------------------
-Selector := '\s*#\s*' rootSelector=SelectorDef subSelectors={ '\s*\.\s*' selector=SelectorDef }*
-
-SelectorDef := SelectorWithSimpleIndex | SelectorWithFirstIndex | SelectorWithEndIndex | SelectorWithStartEndIndex | SelectorWithWithRandomIndex | SelectorWithWildcard | SelectorWithIndexList | SelectorSimple
+Selector := SelectorWithSimpleIndex 
+        | SelectorWithFirstIndex 
+        | SelectorWithEndIndex 
+        | SelectorWithStartEndIndex 
+        | SelectorWithWithRandomIndex 
+        | SelectorWithWildcard 
+        | SelectorWithIndexList 
+        | SelectorSimple
 SelectorSimple := value=SelectorToken
 SelectorWithSimpleIndex := value=SelectorToken '\s*\[\s*' index=IndexToken '\s*\]\s*'
 SelectorWithFirstIndex := value=SelectorToken '\s*\[\s*:\s*' index=IndexToken '\s*\]\s*'
@@ -18,7 +24,7 @@ SelectorWithWithRandomIndex := value=SelectorToken '\s*\[\s*' count='[0-9]+'? '\
 //# -------------------------------------------------------
 //# Token
 //# -------------------------------------------------------
-NameToken := '[^#$\{\}:.+\[\] \t\n]+'
+NameToken := '[^#&@$\{\}:.+\[\] \t\n]+'
 IdentifierToken := '[^#:$\{\}\[\] \t\n]+'
 SelectorToken := '[^#$\{\}:.+\[\] \t\n]+'
 IndexToken := '[0-9]+'

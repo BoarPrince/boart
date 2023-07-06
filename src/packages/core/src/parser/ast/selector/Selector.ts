@@ -5,7 +5,7 @@ import { ASTKinds } from '../ASTKinds';
  *
  */
 export interface Selector {
-    kind: ASTKinds.Selector;
+    kind: 'Selector';
     rootSelector: SelectorDef;
     subSelectors: Array<{
         selector: SelectorDef;
