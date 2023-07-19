@@ -1,21 +1,12 @@
-import { parse } from './parser-table';
-import { ASTTable } from './ast/ASTTable';
+import { VariableParser } from './VariableParser';
 
-console.log(JSON.stringify(parse('aaaaa'), null, ' '));
-// console.log(JSON.stringify(parse('${aaaaa}'), null, ' '));
-// console.log(JSON.stringify(parse('${store:aaaaa#b.c}'), null, ' '));
-// console.log(JSON.stringify(parse('bbbbbb:dddd'), null, ' '));
-// console.log(JSON.stringify(parse('ccccccc:dddd#sel'), null, ' '));
-console.log(JSON.stringify(parse('ccccccc:dddd:eeeee#sel'), null, ' '));
-console.log(JSON.stringify(parse('ccccccc:dddd:eeeee#sel1.sel2.sel3'), null, ' '));
-console.log(JSON.stringify(parse('ccccccc:dddd:eeeee#sel1.sel2.sel3@header'), null, ' '));
-console.log(JSON.stringify(parse('ccccccc:dddd:eeeee@header#sel1.sel2.sel3'), null, ' '));
-// console.log(
-//     JSON.stringify(
-//         parse('ccccccc:dddd:eeeee@asdfasf#sel1[3].sel2[ 4 ].sel3[*] . sel4 [- 3 : ].sel5[?].sel6[4?].sel7[4, 3,2,6].sel8'),
-//         null,
-//         ' '
-//     )
+const parser = new VariableParser();
 
-const result = parse('') as ASTTable;
-// );
+console.log(
+    // JSON.stringify(parser.parse('${adsf@t:aaaa:"bb1\n":bb2#aa[3].bb.cc.dd[1].ee[*].ff[3:]?.gg[0:-4].hh[1,2,32] | pipe:4:3}'), null, '  ')
+    // JSON.stringify(parser.parse('${aaa:bbbb:"d\\"d3"}'), null, '  ')
+    // JSON.stringify(parser.parse('${aaa:bbbb#a.b.c}'), null, '  ')
+    JSON.stringify(parser.parse('${aaa:bbbb}'), null, '  ')
+);
+
+// const result = parse('') as ASTVariable;
