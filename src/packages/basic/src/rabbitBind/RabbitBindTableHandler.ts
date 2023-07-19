@@ -38,7 +38,7 @@ export default class RabbitBindTableHandler extends TableHandlerBaseImpl<RabbitB
             username: '',
             password: '',
             hostname: '',
-            port: 5672,
+            port: 0,
             vhost: '/'
         },
         preExecution: null,
@@ -107,6 +107,8 @@ export default class RabbitBindTableHandler extends TableHandlerBaseImpl<RabbitB
                 key: Symbol('port'),
                 type: TableRowType.PreProcessing,
                 executionUnit: new PropertySetterExecutionUnit<RabbitBindContext, RowTypeValue<RabbitBindContext>>('config', 'port'),
+                defaultValue: '${env?:rabbitmq_port}',
+                defaultValueColumn: Symbol('value'),
                 validators: [new IntValidator('value')]
             })
         );

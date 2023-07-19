@@ -7,9 +7,12 @@ import {
     Runtime,
     RuntimeContext,
     RuntimeResultContext,
+    ScopedType,
     StepContext,
     Store,
-    TestContext
+    TestContext,
+    ValueReplacer,
+    ValueReplacerHandler
 } from '@boart/core';
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
 import { StepReport } from '@boart/protocol';
@@ -82,6 +85,21 @@ describe('default', () => {
     /**
      *
      */
+    beforeEach(() => {
+        ValueReplacerHandler.instance.clear();
+        ValueReplacerHandler.instance.add('env', {
+            name: '',
+            priority: 0,
+            scoped: ScopedType.false,
+            replace: (property: string): string => {
+                return property === 'rabbitmq_port' ? '0' : property;
+            }
+        } as ValueReplacer);
+    });
+
+    /**
+     *
+     */
     afterEach(() => {
         StepReport.instance.report();
     });
@@ -113,7 +131,7 @@ describe('default', () => {
             exchange: '',
             hostname: 'rabbitmq_hostname',
             password: 'rabbitmq_password',
-            port: 5672,
+            port: 0,
             queue: 'myQueue',
             routing: [],
             storeName: 'myStore',
@@ -165,7 +183,7 @@ describe('default', () => {
             exchange: 'myExchange',
             hostname: 'rabbitmq_hostname',
             password: 'rabbitmq_password',
-            port: 5672,
+            port: 0,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             queue: expect.anything(),
             routing: ['myRouting'],

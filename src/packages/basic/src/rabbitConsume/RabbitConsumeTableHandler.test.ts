@@ -8,10 +8,13 @@ import {
     Runtime,
     RuntimeContext,
     RuntimeStatus,
+    ScopedType,
     StepContext,
     Store,
     TestContext,
-    TextContent
+    TextContent,
+    ValueReplacer,
+    ValueReplacerHandler
 } from '@boart/core';
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
 import { StepReport } from '@boart/protocol';
@@ -73,6 +76,21 @@ beforeEach(() => {
     Runtime.instance.localRuntime.notifyStart({} as LocalContext);
     Runtime.instance.testRuntime.notifyStart({} as TestContext);
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
+});
+
+/**
+ *
+ */
+beforeEach(() => {
+    ValueReplacerHandler.instance.clear();
+    ValueReplacerHandler.instance.add('env', {
+        name: '',
+        priority: 0,
+        scoped: ScopedType.false,
+        replace: (property: string): string => {
+            return property === 'rabbitmq_port' ? '0' : property;
+        }
+    } as ValueReplacer);
 });
 
 /**
@@ -170,7 +188,7 @@ describe('default', () => {
             count_min: 1,
             hostname: 'p',
             password: 'p',
-            port: 5672,
+            port: 0,
             queue: 'queue',
             timeout: 10,
             username: 'u',
@@ -183,7 +201,7 @@ describe('default', () => {
         expect(mock.connect).toHaveBeenNthCalledWith(1, {
             hostname: 'p',
             password: 'p',
-            port: 5672,
+            port: 0,
             username: 'u',
             vhost: '/'
         });
@@ -905,7 +923,7 @@ describe('reports', () => {
                         queue: 'queue',
                         timeout: 10,
                         hostname: 'rabbitmq_hostname',
-                        port: 5672,
+                        port: 0,
                         username: 'rabbitmq_username',
                         vhost: '/'
                     }
@@ -1041,7 +1059,7 @@ describe('reports', () => {
                         count_max: null,
                         count_min: 2,
                         hostname: 'rabbitmq_hostname',
-                        port: 5672,
+                        port: 0,
                         queue: 'queue',
                         timeout: 10,
                         username: 'rabbitmq_username',
