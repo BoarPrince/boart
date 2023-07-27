@@ -17,5 +17,4 @@ export interface ASTVariable {
     default?: DefaultOperator;
     pipes?: Pipe[];
     match: string;
-    errs?: Error;
 }

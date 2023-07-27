@@ -18,11 +18,11 @@ NAME
 /************* SCOPE **************/
 SCOPE
         = _ "@" _ scope:$SCOPETOKEN
-        { return {'value': scope} }
+        { return {'value': scope, 'location': location()} }
 
 /************* PIPE **************/
 DEFAULT
-        = _ operator:DEFAULT_OPERATOR _ value:$DEFAULTVALUE
+        = _ operator:DEFAULT_OPERATOR _ value:(STRING / $DEFAULTVALUE)
 	{ return {'value': value, 'operator': operator} }
 
 DEFAULT_OPERATOR
@@ -47,11 +47,11 @@ PIPE_PARAMETER
 
 /************* SELECTOR **************/
 SELECTOR 
-        = _ start:("##" / "#") _  
+        = _ start:("?#" / "#") _  
                 selectors:(_ delim:DELIMITER _ sel:SELECTORS _ 
                 { sel.optional = delim.isOptional; return sel;}
                         / _ @SELECTORS _)+ 
-                { selectors[0].optional = start === '##'; return { selectors }; }
+                { selectors[0].optional = start === '?#'; return { selectors }; }
 
 SELECTORS 
         = SELECTOR_SIMPLE_INDEX
@@ -114,13 +114,12 @@ _
 /********** DELIMITER ***********/
 DELIMITER 
         = delim:("." / "?.") 
-        { return {'isOptional' : delim === '.' ? false : true} }
+        { return { 'isOptional' : delim === '?.' } }
 
 /************* Parameter **************/
 PARAMETER 
-        = para:(
-          STRING 	// with single quotes
-          / $TOKEN)      // no quotes
+        = para:(STRING      // with single quotes
+               / $TOKEN)    // no quotes
 
 /************* String **************/
 STRING 
@@ -139,12 +138,14 @@ EscapeSequence
         = "'"
         / '"'
         / "\\"
-        / "b"  { return "\b";   }
-        / "f"  { return "\f";   }
-        / "n"  { return "\n";   }
-        / "r"  { return "\r";   }
-        / "t"  { return "\t";   }
-        / "v"  { return "\x0B"; }
+        / "\x01"  { return "\\";   }
+        / "\x02"  { return "$";    }
+        / "b"     { return "\b";   }
+        / "f"     { return "\f";   }
+        / "n"     { return "\n";   }
+        / "r"     { return "\r";   }
+        / "t"     { return "\t";   }
+        / "v"     { return "\x0B"; }
   
 /************* TOKEN **************/
  TOKEN 

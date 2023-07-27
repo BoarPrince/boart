@@ -1,6 +1,6 @@
-import { ErrorLocation } from './ErrorLocation';
+import { Location } from './Location';
 
 export interface Error {
     message: string;
-    location: ErrorLocation;
+    location: Location;
 }

@@ -14,7 +14,6 @@ const sut = new VariableParser();
 it('simple name', () => {
     const result = sut.parse('${var}');
 
-    expect(result.errs).toBeNull();
     expect(result.pipes).toBeArrayOfSize(0);
     expect(result.qualifier).toBeNull();
     expect(result.scope).toBeNull();
@@ -30,7 +29,6 @@ it('simple name', () => {
 it('with selector', () => {
     const result = sut.parse('${var#a}');
 
-    expect(result.errs).toBeNull();
     expect(result.pipes).toBeArrayOfSize(0);
     expect(result.qualifier).toBeNull();
     expect(result.scope).toBeNull();
@@ -51,7 +49,6 @@ it('with selector', () => {
 it('with qualifier and selector', () => {
     const result = sut.parse('${var:name#a}');
 
-    expect(result.errs).toBeNull();
     expect(result.pipes).toBeArrayOfSize(0);
     expect(result.scope).toBeNull();
 
@@ -69,10 +66,12 @@ it('with qualifier and selector', () => {
     expect(result.qualifier.value).toBe('name');
 });
 
+/**
+ * 
+ */
 it('with two selectors', () => {
     const result = sut.parse('${var#a.b}');
 
-    expect(result.errs).toBeNull();
     expect(result.pipes).toBeArrayOfSize(0);
     expect(result.qualifier).toBeNull();
     expect(result.scope).toBeNull();
@@ -86,9 +85,41 @@ it('with two selectors', () => {
 
     expect(result.selectors[0].type).toBe(SelectorType.SIMPLE);
     expect(result.selectors[0].value).toBe('a');
+    expect(result.selectors[0].optional).toBeFalsy();
 
     expect(result.selectors[1].type).toBe(SelectorType.SIMPLE);
     expect(result.selectors[1].value).toBe('b');
+    expect(result.selectors[0].optional).toBeFalsy();
+});
+
+/**
+ * 
+ */
+it('optional selectors', () => {
+    const result = sut.parse('${var?#a.b.c}');
+
+    expect(result.pipes).toBeArrayOfSize(0);
+    expect(result.qualifier).toBeNull();
+    expect(result.scope).toBeNull();
+
+    expect(result.name).toBeDefined();
+    expect(result.name.value).toEqual('var');
+
+    expect(result.selectors).toBeDefined();
+    expect(result.selectors).toBeDefined();
+    expect(result.selectors).toBeArrayOfSize(3);
+
+    expect(result.selectors[0].type).toBe(SelectorType.SIMPLE);
+    expect(result.selectors[0].value).toBe('a');
+    expect(result.selectors[0].optional).toBeTruthy();
+
+    expect(result.selectors[1].type).toBe(SelectorType.SIMPLE);
+    expect(result.selectors[1].value).toBe('b');
+    expect(result.selectors[0].optional).toBeTruthy();
+
+    expect(result.selectors[2].type).toBe(SelectorType.SIMPLE);
+    expect(result.selectors[2].value).toBe('c');
+    expect(result.selectors[0].optional).toBeTruthy();
 });
 
 /**
@@ -97,7 +128,6 @@ it('with two selectors', () => {
 it('simple qualifier', () => {
     const result = sut.parse('${generate:fake}');
 
-    expect(result.errs).toBeNull();
     expect(result.pipes).toBeArrayOfSize(0);
     expect(result.scope).toBeNull();
     expect(result.selectors).toBeArrayOfSize(0);
@@ -116,7 +146,6 @@ it('simple qualifier', () => {
 it('extended qualifier', () => {
     const result = sut.parse('${generate:fake:name:lastName}');
 
-    expect(result.errs).toBeNull();
     expect(result.pipes).toBeArrayOfSize(0);
     expect(result.scope).toBeNull();
     expect(result.selectors).toBeArrayOfSize(0);
@@ -138,7 +167,6 @@ it('extended qualifier', () => {
 it('scope with extended qualifier', () => {
     const result = sut.parse('${generate@g:name:lastName}');
 
-    expect(result.errs).toBeNull();
     expect(result.pipes).toBeArrayOfSize(0);
     expect(result.selectors).toBeArrayOfSize(0);
 
@@ -161,7 +189,6 @@ it('scope with extended qualifier', () => {
 it('with scope and selector', () => {
     const result = sut.parse('${var@t#a.b.c}');
 
-    expect(result.errs).toBeNull();
     expect(result.pipes).toBeArrayOfSize(0);
     expect(result.qualifier).toBeNull();
 
@@ -196,7 +223,6 @@ it('with scope and selector', () => {
 it('nested', () => {
     const result = sut.parse('${var+name${var2@l}}');
 
-    expect(result.errs).toBeNull();
     expect(result.pipes).toBeArrayOfSize(0);
     expect(result.qualifier).toBeNull();
     expect(result.selectors).toBeArrayOfSize(0);
@@ -214,7 +240,6 @@ it('nested', () => {
 it('with string para', () => {
     const result = sut.parse('${generate:fake:"pa\'ra"}');
 
-    expect(result.errs).toBeNull();
     expect(result.pipes).toBeArrayOfSize(0);
     expect(result.scope).toBeNull();
     expect(result.selectors).toBeArrayOfSize(0);
@@ -235,7 +260,6 @@ it('with string para', () => {
 it('complex', () => {
     const result = sut.parse('${var3@s:aaaa:"bb1\\n":bb2#aa[3].bb.cc.dd[1].ee[*].ff[3:]?.gg[0:-4].hh[1,2,32] | pipe:4:"\'3\'"}');
 
-    expect(result.errs).toBeNull();
 
     expect(result.qualifier.value).toBe('aaaa');
     expect(result.qualifier.paras[0]).toBe('bb1\n');
@@ -307,7 +331,6 @@ it('check match', () => {
 it('default - assignment', () => {
     const result = sut.parse('${var:aa := aabbbcc}');
 
-    expect(result.errs).toBeNull();
 
     expect(result.default).toBeDefined();
     expect(result.default.value).toBe('aabbbcc');
@@ -320,7 +343,6 @@ it('default - assignment', () => {
 it('default - value', () => {
     const result = sut.parse('${var:aa :- aabbbcc}');
 
-    expect(result.errs).toBeNull();
 
     expect(result.default).toBeDefined();
     expect(result.default.value).toBe('aabbbcc');
@@ -330,7 +352,58 @@ it('default - value', () => {
 /**
  *
  */
+it('default - complex 1', () => {
+    const result = sut.parse('${var:aa :- ":-"}');
+
+
+    expect(result.default).toBeDefined();
+    expect(result.default.value).toBe(':-');
+    expect(result.default.operator).toBe(OperatorType.Default);
+});
+
+/**
+ *
+ */
+it('default - complex 2', () => {
+    const result = sut.parse('${var:aa :- "\\${aaa}"}');
+
+
+    expect(result.default).toBeDefined();
+    expect(result.default.value).toBe('${aaa}');
+    expect(result.default.operator).toBe(OperatorType.Default);
+});
+
+/**
+ *
+ */
+it('default - complex 3', () => {
+    const result = sut.parse('${var:aa :- "{aaa}"}');
+
+    expect(result.default).toBeDefined();
+    expect(result.default.value).toBe('{aaa}');
+    expect(result.default.operator).toBe(OperatorType.Default);
+});
+
+/**
+ *
+ */
 it('no match', () => {
     const result = sut.parse('#{var:aa}');
     expect(result).toBeNull();
+});
+
+/**
+ *
+ */
+it('error can occur', () => {
+    expect(() => sut.parse('${var,var}')) //
+        .toThrow('Expected \"#\", \":\", \":-\", \":=\", \"?#\", \"@\", \"|\", [ \\t], [a-zA-Z0-9\\-_], or end of input but \",\" found.\n${var -> , <- var}');
+});
+
+/**
+ *
+ */
+it('error can occur in strings', () => {
+    expect(() => sut.parse('${var:aa:"\\n\\n""}')) //
+        .toThrow('Expected \"#\", \":\", \":-\", \":=\", \"?#\", \"|\", [ \\t], or end of input but \"\\\"\" found.\n${var:aa:\"\\n\\n\" -> \" <- }');
 });
