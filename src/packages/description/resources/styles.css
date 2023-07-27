@@ -1,25 +1,20 @@
-dt {
-    float: left;
-    clear: left;
-    width: 12em;
+main {
+    height: calc(100vh - 3.5rem);
+    overflow-y: scroll;
 }
 
-dd {
-    clear: left;
-    float: left;
-    margin-left: 12em;
+#nav-top {
+    height: 3.5rem;
 }
 
-dt + dd {
-    clear: none;
-    margin-left: 0;
-}
-
-ul {
-    padding-left: 1em;
-    list-style-position: inside;
-    text-indent: -1em;
-}
+/* 
+    @``````@`@````@`@````@````@@@@@```@@```@@@@@```@@@@``@@@@@@`@@@@@`
+    @``````@`@@```@`@```@```````@````@``@``@````@`@````@`@````````@```
+    @``````@`@`@``@`@@@@````````@```@````@`@````@`@``````@@@@@````@```
+    @``````@`@``@`@`@``@````````@```@@@@@@`@@@@@``@``@@@`@````````@```
+    @``````@`@```@@`@```@```````@```@````@`@```@``@````@`@````````@```
+    @@@@@@`@`@````@`@````@``````@```@````@`@````@``@@@@``@@@@@@```@```
+*/
 
 @keyframes fadeIt {
     0% {
@@ -34,6 +29,15 @@ ul {
     animation: fadeIt 3s ease-out;
     scroll-margin-top: 10rem;
 }
+
+/* 
+    @@@@@@`@````@```@@```@````@`@@@@@``@``````@@@@@@`
+    @```````@``@```@``@``@@``@@`@````@`@``````@``````
+    @@@@@````@@```@````@`@`@@`@`@````@`@``````@@@@@``
+    @````````@@```@@@@@@`@````@`@@@@@``@``````@``````
+    @```````@``@``@````@`@````@`@``````@``````@``````
+    @@@@@@`@````@`@````@`@````@`@``````@@@@@@`@@@@@@` 
+*/
 
 .example {
     font-family: monospace;
@@ -72,3 +76,65 @@ ul {
     margin-left: 2em;
     margin-top: 1em;
 }
+
+/*
+    `@@@@``@````@`@@@@@`````@````@`@@@@@@`@````@`@````@`
+    @``````@````@`@````@````@@``@@`@``````@@```@`@````@`
+    `@@@@``@````@`@@@@@`````@`@@`@`@@@@@``@`@``@`@````@`
+    `````@`@````@`@````@````@````@`@``````@``@`@`@````@`
+    @````@`@````@`@````@````@````@`@``````@```@@`@````@`
+    `@@@@```@@@@``@@@@@`````@````@`@@@@@@`@````@``@@@@``
+*/
+
+.tree{
+    --spacing : 1.5rem;
+    --radius  : 8px;
+  }
+
+  .tree li{
+    display      : block;
+    position     : relative;
+    padding-left : calc(2 * var(--spacing) - var(--radius));
+    padding-top: calc(var(--spacing) / 2);
+  }
+  
+  .tree ul{
+    margin-left  : calc(var(--radius) - var(--spacing));
+    padding-left : 0;
+  }
+  
+
+.tree li::after {
+  content       : '';
+  display       : block;
+  position      : absolute;
+  top           : calc(var(--spacing) - var(--radius));
+  left          : calc(var(--spacing) - var(--radius));
+  width         : calc(2 * var(--radius));
+  height        : calc(2 * var(--radius));
+  border-radius : 50%;
+  background    : var(--bs-link-color);
+}
+
+/* lines  */
+/* vertical */
+.tree ul li{
+    border-left : 2px solid black;
+  }
+  
+  .tree ul li:last-child{
+    border-color : transparent;
+  }
+
+  /* horizontal */
+  .tree ul li::before{
+    content      : '';
+    display      : block;
+    position     : absolute;
+    top          : calc(var(--spacing) / -2);
+    left         : -2px;
+    width        : calc(var(--spacing) + 2px);
+    height       : calc(var(--spacing) * 1.5);
+    border       : solid black;
+    border-width : 0 0 2px 2px;
+  }

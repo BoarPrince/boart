@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, RuntimeStatus, StepContext, Store, TestContext } from '@boart/core';
+import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, RuntimeStatus, ScopeType, ScopedType, StepContext, Store, StoreWrapper, TestContext, ValueReplacer, ValueReplacerHandler } from '@boart/core';
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
 import { StepReport } from '@boart/protocol';
 
@@ -26,7 +26,10 @@ jest.mock('@boart/core', () => {
         EnvLoader: class {
             static instance = {
                 mapReportData: (filename: string) => filename,
-                get: (env_var: string) => env_var
+                get: (env_var: string) => {
+                    console.log('env:', env_var);
+                    return env_var;
+                }
             };
         }
     };
@@ -58,6 +61,21 @@ beforeEach(() => {
     Runtime.instance.localRuntime.notifyStart({} as LocalContext);
     Runtime.instance.testRuntime.notifyStart({} as TestContext);
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
+});
+
+/**
+ *
+ */
+beforeEach(() => {
+    ValueReplacerHandler.instance.clear();
+    ValueReplacerHandler.instance.add('env', {
+        name: '',
+        priority: 0,
+        scoped: ScopedType.false,
+        replace: (property: string): string => {
+            return property === 'rabbitmq_port' ? '0' : property;
+        }
+    } as ValueReplacer);
 });
 
 /**
@@ -131,10 +149,10 @@ describe('default', () => {
 
         // eslint-disable-next-line @typescript-eslint/unbound-method
         expect(mock.connect).toHaveBeenNthCalledWith(1, {
-            hostname: '${env?:rabbitmq_hostname}',
-            password: '${env?:rabbitmq_password}',
-            username: '${env?:rabbitmq_username}',
-            port: 5672,
+            hostname: 'rabbitmq_hostname',
+            password: 'rabbitmq_password',
+            username: 'rabbitmq_username',
+            port: 0,
             vhost: '/'
         });
     });
@@ -161,7 +179,7 @@ describe('default', () => {
             hostname: 'h',
             password: 'p',
             username: 'u',
-            port: 5672,
+            port: 0,
             vhost: '/'
         });
     });

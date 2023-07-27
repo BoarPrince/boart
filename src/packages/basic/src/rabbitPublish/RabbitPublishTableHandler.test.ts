@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { RabbitPublishTableHandler } from '@boart/basic';
-import { LocalContext, MarkdownTableReader, ObjectContent, Runtime, RuntimeContext, StepContext, Store, TestContext } from '@boart/core';
+import { LocalContext, MarkdownTableReader, ObjectContent, Runtime, RuntimeContext, ScopedType, StepContext, Store, TestContext, ValueReplacer, ValueReplacerHandler } from '@boart/core';
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
 import { StepReport } from '@boart/protocol';
 
@@ -80,6 +80,21 @@ beforeEach(() => {
     Runtime.instance.localRuntime.notifyStart({} as LocalContext);
     Runtime.instance.testRuntime.notifyStart({} as TestContext);
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
+});
+
+/**
+ *
+ */
+beforeEach(() => {
+    ValueReplacerHandler.instance.clear();
+    ValueReplacerHandler.instance.add('env', {
+        name: '',
+        priority: 0,
+        scoped: ScopedType.false,
+        replace: (property: string): string => {
+            return property === 'rabbitmq_port' ? '0' : property;
+        }
+    } as ValueReplacer);
 });
 
 /**
@@ -468,7 +483,7 @@ describe('reporting', () => {
                 'Rabbit publish (configuration)': {
                     data: {
                         hostname: 'rabbitmq_hostname',
-                        port: 5672,
+                        port: 0,
                         queue_or_exhange: 'queue',
                         type: 'queue',
                         username: 'rabbitmq_username',
@@ -530,7 +545,7 @@ describe('reporting', () => {
                 'Rabbit publish (configuration)': {
                     data: {
                         hostname: 'rabbitmq_hostname',
-                        port: 5672,
+                        port: 0,
                         queue_or_exhange: 'exchange',
                         type: 'exchange',
                         username: 'rabbitmq_username',
@@ -592,7 +607,7 @@ describe('reporting', () => {
                 'Rabbit publish (configuration)': {
                     data: {
                         hostname: 'rabbitmq_hostname',
-                        port: 5672,
+                        port: 0,
                         queue_or_exhange: 'exchange',
                         type: 'exchange',
                         username: 'rabbitmq_username',

@@ -12,7 +12,7 @@
   },
   "addressDto": {
     "id": "${store:ob-carrierId:=${generate:uuid}}",
-    "companyId": "${generate:t:tpl:company.id}",
+    "companyId": null,
     "street": "${generate:t:fake:address:street}",
     "zipCode": "${generate:t:fake:address:zipCode}",
     "city": "${generate:t:fake:address:city}",
@@ -20,7 +20,7 @@
     "timocomId": null
   },
   "contactDto": {
-    "id": "${generate:uuid}",
+    "id": "${store:ob-contactId:=${generate:uuid}}",
     "firstName": "${generate:t:fake:name:firstName}",
     "lastName": "${generate:t:fake:name:lastName}",
     "email": "${store:ob-email:=jitpaytest+ob${generate:t:random:8}@gmail.com}",
@@ -28,11 +28,11 @@
       "country": "49",
       "number": "1743284130"
     },
-    "companyId": "${generate:t:tpl:company.id}"
+    "companyId": null
   },
   "userDetail": {
     "id": "${store:ob-userId:=${generate:t:tpl:user.id}}",
-    "companyId": "${generate:t:tpl:company.id}",
+    "companyId": null,
     "email": "${store:ob-email}",
     "languageCode": "en"
   }

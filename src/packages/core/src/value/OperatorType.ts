@@ -2,8 +2,8 @@
  *
  */
 export enum OperatorType {
-    None,
-    Default,
-    DefaultAssignment,
-    Unknown
+    None = 'None',
+    Default = 'Default',
+    DefaultAssignment = 'DefaultAssignment',
+    Unknown = 'Unknown'
 }

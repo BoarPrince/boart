@@ -61,12 +61,20 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     }
 
     /**
+     * 
+     */
+    public get(name: string): ValueReplacer {
+        return this.valueReplacers.find((r) => r.identifier !== name)?.replacer;
+    }
+
+    /**
      *
      */
     public add(name: string, item: ValueReplacer): Initializer<ValueReplacer> {
         if (!!this.valueReplacers.find((r) => r.identifier === name)) {
             throw Error(`valueReplacer '${name}' already exists!`);
         }
+        
         // eslint-disable-next-line @typescript-eslint/unbound-method
         item.defaultScopeType = item.defaultScopeType || (() => null);
 
@@ -79,7 +87,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     /**
      *
      */
-    addItems(replacer: readonly ValueReplacer[]): Initializer<ValueReplacer> {
+    public addItems(replacer: readonly ValueReplacer[]): Initializer<ValueReplacer> {
         replacer?.forEach((r) => this.add(r.name, r));
         return this;
     }

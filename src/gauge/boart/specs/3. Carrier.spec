@@ -1023,7 +1023,7 @@ tags: md-3.21, sync
 
 ## 1.22. Check if address is correct when creating a new carrier
 
-tags: md-3.22, version2
+tags: md-3.22
 
 * Test description
 
@@ -1073,7 +1073,7 @@ tags: md-3.22, version2
 
 ## 1.23. Check if phonenumbers is correct when creating a new carrier
 
-tags: md-3.23, version2
+tags: md-3.23
 
 * Test description
 

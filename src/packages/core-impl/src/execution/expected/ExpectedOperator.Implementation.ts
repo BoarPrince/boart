@@ -50,7 +50,6 @@ export class ExpectedOperatorImplementation {
             name: 'equals',
             description: {
                 id: 'expected:equals',
-                title: 'expected:equals',
                 description: `* Checks a value for equality
                               * It's default operator, in case of no defined operator`,
                 examples: [
@@ -79,8 +78,10 @@ export class ExpectedOperatorImplementation {
             default: true,
             caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => ({
-                result: expectedValue.toString() == ExpectedOperatorImplementation.valueToString(value),
-                errorMessage: `\n\texpected: ${expectedValue.toString()}\n\tactual: ${ExpectedOperatorImplementation.valueToString(value)}`
+                result: ExpectedOperatorImplementation.valueToString(expectedValue) == ExpectedOperatorImplementation.valueToString(value),
+                errorMessage: `\n\texpected: ${ExpectedOperatorImplementation.valueToString(
+                    expectedValue
+                )}\n\tactual: ${ExpectedOperatorImplementation.valueToString(value)}`
             })
         };
     }
@@ -109,6 +110,31 @@ export class ExpectedOperatorImplementation {
     static get startsWith(): ExpectedOperator {
         return {
             name: 'startsWith',
+
+
+
+
+            description: {
+                id: 'expected:startsWith',
+                title: null,
+                description: `* Checks a value for equality
+                              * It's default operator, in case of no defined operator`,
+                examples: [
+                    {
+                        title: 'Usage as default operator',
+                        example: `* Rest call
+
+                          | action                 |value               |
+                          |------------------------|--------------------|
+                          | method:get            |/rest-url           |
+                          | **expected:startsWith#detail** |abc                 |`
+                    }
+                ]
+            },
+
+
+
+
             caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 return {

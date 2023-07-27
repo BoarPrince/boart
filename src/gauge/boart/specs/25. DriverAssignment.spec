@@ -448,3 +448,23 @@ tags: md-25.9, event
    | description   | Death letter Event must be fired |
    | expected#-id- | xxxxx                            |
 
+## 1.10 Check error handling when retrieving wrong DriverAssignment
+
+tags: md-25.10, event
+
+* Test description
+
+   | action      | value                                        |
+   |-------------|----------------------------------------------|
+   | description | Try retrieving not existing DriverAssignment |
+   | priority    | high                                         |
+
+* request admin bearer
+
+* Rest call
+
+   | action                 | value                                     |
+   |------------------------|-------------------------------------------|
+   | method:get             | /api/v2/driverAssignment/${generate:uuid} |
+   | description            | Try getting DriverAssignment              |
+   | expected:header#status | 404                                       |

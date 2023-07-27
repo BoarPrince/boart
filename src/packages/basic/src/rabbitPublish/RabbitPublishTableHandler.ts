@@ -126,6 +126,8 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
                 key: Symbol('port'),
                 type: TableRowType.PreProcessing,
                 executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>('config', 'port'),
+                defaultValue: '${env?:rabbitmq_port}',
+                defaultValueColumn: Symbol('value'),
                 validators: [new IntValidator('value')]
             })
         );

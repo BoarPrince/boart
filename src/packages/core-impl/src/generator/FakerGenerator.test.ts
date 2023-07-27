@@ -62,7 +62,7 @@ describe('faker generator', () => {
             sut.generate('fake', 'fake');
         } catch (error) {
             expect(error.message).toBe(
-                `error calling faker namespace 'fake.fake', Error: Invalid module method or definition: fake.fake\n- faker.fake.fake is not a function\n- faker.definitions.fake.fake is not an array`
+                `error calling faker namespace 'fake.fake', see: https://fakerjs.dev/, \n\nError: Invalid module method or definition: fake.fake\n- faker.fake.fake is not a function\n- faker.definitions.fake.fake is not an array`
             );
             return;
         }
