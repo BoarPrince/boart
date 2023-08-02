@@ -1,9 +1,10 @@
-import { ScopedType, StoreWrapper, ValueReplacer } from '@boart/core';
+import { ScopedType, StoreWrapper, ValueReplacer, ReplaceArg, ScopeType } from '@boart/core';
 
 import { ReferenceHandler } from './ReferenceHandler';
 
 export class ReferenceReplacer implements ValueReplacer {
     readonly name = 'ref';
+    readonly defaultScopeType2 = ScopeType.Test;
 
     /**
      *
@@ -41,6 +42,27 @@ export class ReferenceReplacer implements ValueReplacer {
         let content: string = baseStore.get(storeIdentifier)?.toString();
         if (!content) {
             content = this.getPropertyValue(property);
+            baseStore.put(storeIdentifier, content);
+        }
+
+        return content;
+    }
+
+    /**
+     * 
+     * @param arg parser arguments
+     * @param store store to be used
+     */
+    replace2(arg: ReplaceArg, store: StoreWrapper): string {
+
+        const fileName = [arg.qualifier.value].concat(arg.qualifier.paras || []).join('/');
+        const selector = arg.selectors[0].value;
+        const storeIdentifier = `#${this.name}#:#${fileName}#${selector}#`;
+        const baseStore = store.store;
+
+        let content: string = baseStore.get(storeIdentifier)?.toString();
+        if (!content) {
+            content = ReferenceHandler.getProperty(fileName, selector);
             baseStore.put(storeIdentifier, content);
         }
 

@@ -56,13 +56,14 @@ import { ParaType } from './types/ParaType';
 import { ScopeType } from './types/ScopeType';
 import { ScopedType } from './types/ScopedType';
 import { SelectorType } from './types/SelectorType';
+import { SelectorType as ASTSelectorType} from './parser/ast/SelectorType';
 import { GroupValidator } from './validators/GroupValidator';
 import { RowValidator } from './validators/RowValidator';
 import { ValidationHandler } from './validators/ValidationHandler';
 import { DefaultOperator } from './value/DefaultOperator';
 import { DefaultOperatorParser } from './value/DefaultOperatorParser';
 import { OperatorType } from './value/OperatorType';
-import { ValueReplacer } from './value/ValueReplacer';
+import { ReplaceArg, ValueReplacer } from './value/ValueReplacer';
 import { ValueReplacerHandler } from './value/ValueReplacerHandler';
 
 /**
@@ -70,6 +71,7 @@ import { ValueReplacerHandler } from './value/ValueReplacerHandler';
  */
 export {
     ArraySubject,
+    ASTSelectorType,
     BaseRowMetaDefinition,
     BaseRowType,
     ContentInstance,
@@ -88,10 +90,10 @@ export {
     ExecutionEngine,
     ExecutionUnit,
     ExecutionUnitValidation,
+    ExpectedDescription,
     ExpectedOperator,
     ExpectedOperatorInitializer,
     ExpectedOperatorResult,
-    ExpectedDescription,
     FullDescription,
     Generator,
     GeneratorHandler,
@@ -108,6 +110,7 @@ export {
     OperatorType,
     ParaType,
     RepeatableExecutionContext,
+    ReplaceArg,
     RowDefinition,
     RowValidator,
     Runtime,
@@ -124,8 +127,8 @@ export {
     StoreMap,
     StoreWrapper,
     TableHandler,
-    TableHandlerInstances,
     TableHandlerBaseImpl,
+    TableHandlerInstances,
     TableRows,
     TableRowType,
     TestContext,
