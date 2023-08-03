@@ -59,7 +59,7 @@ tags: md-1.1b
 
 * request admin bearer
 
-* Rest call
+---* Rest call
 
    |action                |value                                        |
    |----------------------|---------------------------------------------|
@@ -116,10 +116,10 @@ tags: md-1.3
 
 * Test description
 
-   |action     |value                                |
-   |-----------|-------------------------------------|
-   |description|Check updating a company with another|
-   |priority   |high                                 |
+   |action     |value                                   |
+   |-----------|----------------------------------------|
+   |description|Check updating a company with another id|
+   |priority   |high                                    |
 
 * request admin bearer
 
@@ -164,15 +164,15 @@ tags: md-1.3
 
 * Rest call
 
-   |action                |value                                                 |
-   |----------------------|------------------------------------------------------|
-   |method:put            |/api/company/${store:response1.id}                    |
-   |description           |Update first Company with payload id of second Company|
-   |payload               |${store:response1}                                    |
-   |payload#id            |${store:response2.id}                                 |
-   |expected:header#status|409                                                   |
-   |expected#status       |409                                                   |
-   |expected#detail       |id in payload does not match id in request path       |
+   |action                |value                                                                                          |
+   |----------------------|-----------------------------------------------------------------------------------------------|
+   |method:put            |/api/company/${store:response1.id}                                                             |
+   |description           |Update first Company with payload id of second Company                                         |
+   |payload               |${store:response1}                                                                             |
+   |payload#id            |${store:response2.id}                                                                          |
+   |expected:header#status|409                                                                                            |
+   |expected#status       |409                                                                                            |
+   |expected#detail       |id in payload (${store:response2.id}) does not match id in request path (${store:response1.id})|
 
 ## 1.4. Text search company name (/api/companysearchString=abc)
 

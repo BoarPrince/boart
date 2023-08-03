@@ -13,4 +13,4 @@
    |group                   |Initial Create     |
    |payload                 |${store:payload-co} |
    |expected:header#status  |200                 |
-   |store                   |response_co         |
+   |store                   |response-co         |

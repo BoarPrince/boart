@@ -8,13 +8,18 @@
       "rabbitmq.stage.jitpay.eu",
       "localhost"
     ],
+    "rabbitmq_port": [
+      "5672",
+      "5672",
+      "5672"
+    ],
     "rabbitmq_password": [
-      "JITpaySYS#19",
+      "m0dwju2vIcn&wqvzmeczqbnHsycowtxl",
       "JITpaySYS#19",
       "guest"
     ],
     "rabbitmq_username": [
-      "jitpay",
+      "admin",
       "jitpay",
       "guest"
     ],
@@ -75,7 +80,8 @@
   "path_mapping": {
     "/token": [
       "https://keycloak.dev.jitpay.eu/auth/realms/jitpay/protocol/openid-connect",
-      "https://keycloak.stage.jitpay.eu/auth/realms/jitpay/protocol/openid-connect"
+      "https://keycloak.stage.jitpay.eu/auth/realms/jitpay/protocol/openid-connect",
+      "http://localhost:8080/realms/jitpay/protocol/openid-connect"
     ],
     "/api/masterdata": [
       "https://jitfleet-master.dev.jitpay.eu",

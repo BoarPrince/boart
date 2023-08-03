@@ -1,6 +1,6 @@
 # 1. Address - MasterData
 
-tags: env-all, master-data, masterdata, md-24, address, v2
+tags: env-all, master-data, masterdata, md-27, address, v2
 
 ## 1.1. Add an Address
 
@@ -285,3 +285,29 @@ tags: md-24.7, event
    |queue        |test.md.error                   |
    |description  |Death letter Event must be fired|
    |expected#-id-|xxxxx                           |
+
+## 1.8. Retrieve Company with associated Address
+
+tags: md-27.8
+
+* Test description
+
+   |action     |value                                  |
+   |-----------|---------------------------------------|
+   |description|Getting Company with associated address|
+   |priority   |high                                   |
+
+* request admin bearer
+
+* add company and carrier
+
+* add v2.address
+* add v2.address
+
+* Rest call
+
+   |action                |value                                     |
+   |----------------------|------------------------------------------|
+   |method:get            |/api/v2/company/${store:response-co.id}   |
+   |description           |Retrieve Company with associated Addresses|
+   |expected:header#status|200                                       |

@@ -538,11 +538,11 @@ tags: md-22.11
 
 * Rest call
 
-   |action                |value                                 |
-   |----------------------|--------------------------------------|
-   |method:get            |/api/v2/driver                        |
-   |query#page            |0                                     |
-   |query#size            |20                                    |
-   |description           |Search assigned Vehicle (all vehicles)|
-   |expected:header#status|200                                   |
-   |expected#totalElements|1                                     |
+   |action                        |value                                 |
+   |------------------------------|--------------------------------------|
+   |method:get                    |/api/v2/driver                        |
+   |query#page                    |0                                     |
+   |query#size                    |20                                    |
+   |description                   |Search assigned Vehicle (all vehicles)|
+   |expected:header#status        |200                                   |
+   |expected:greater#totalElements|1                                     |

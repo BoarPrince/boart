@@ -285,11 +285,11 @@ tags: md-26.5
    |payload                              |${store:payload-co}                             |
    |expected:header#status               |200                                             |
    |expected#referenceId                 |${store:payload-co.referenceId}                 |
-   |expected#henriContactId              |${store:payload-co.henriContactId}              |
    |expected#vatId                       |${store?:payload-co.vatId}                      |
    |expected#taxNumber                   |${store:payload-co.taxNumber}                   |
    |expected#name                        |${store:payload-co.name}                        |
    |expected#legalForm                   |${store:payload-co.legalForm}                   |
+   |expected#henriContactId              |${store:payload-co.henriContactId}              |
    |expected#status                      |${store:payload-co.status}                      |
    |expected#originPlatform              |${store:payload-co.originPlatform}              |
    |expected#originSource                |${store:payload-co.originSource}                |
@@ -305,25 +305,29 @@ tags: md-26.5
    |expected#baseCashpoolPercentage      |${store:payload-co.baseCashpoolPercentage}      |
    |expected#defaultDriverLimit          |${store:payload-co.defaultDriverLimit}          |
    |expected#defaultVehicleLimit         |${store:payload-co.defaultVehicleLimit}         |
+   |---------------------------          |---------------------------                     |
    |expected#bankAccount#iban            |${store:payload-co.bankAccount#iban}            |
    |expected#bankAccount#viban           |${store:payload-co.bankAccount#viban}           |
    |expected#bankAccount#bic             |${store:payload-co.bankAccount#bic}             |
    |expected#bankAccount#bankName        |${store:payload-co.bankAccount#bankName}        |
    |expected#bankAccount#holder          |${store:payload-co.bankAccount#holder}          |
+   |---------------------------          |---------------------------                     |
    |expected#solvency.financialDataSource|${store:payload-co.solvency.financialDataSource}|
    |expected#solvency.jitpayRating       |${store:payload-co.solvency.jitpayRating}       |
    |expected#solvency.score              |${store:payload-co.solvency.score}              |
    |expected#solvency.requestedAt        |${store:payload-co.solvency.requestedAt}        |
    |expected#solvency.externalId         |${store:payload-co.solvency.externalId}         |
    |expected#solvency.riskQuota          |${store:payload-co.solvency.riskQuota}          |
+   |---------------------------          |---------------------------                     |
    |expected#validatedEmail.email        |${store:payload-co.validatedEmail.email}        |
    |expected#validatedEmail.type         |${store:payload-co.validatedEmail.type}         |
+   |---------------------------          |---------------------------                     |
    |expected#addresses[0].type           |${store:payload-co.addresses[0].type}           |
    |expected#addresses[0].street         |${store:payload-co.addresses[0].street}         |
    |expected#addresses[0].city           |${store:payload-co.addresses[0].city}           |
    |expected#addresses[0].zipCode        |${store:payload-co.addresses[0].zipCode}        |
    |expected#addresses[0].countryCode    |${store:payload-co.addresses[0].countryCode}    |
-   |expected#addresses[0].addition       |${store:payload-co.addresses[0].addition}       |
+   |--expected#addresses[0].addition     |${store:payload-co.addresses[0].addition}       |
 
 ## 1.6. Update a company
 
@@ -339,8 +343,6 @@ tags: md-26.6
 * request admin bearer
 
 * add v2.company
-
-* payload company
 
 * Rest call
 
@@ -358,6 +360,7 @@ tags: md-26.6
    |payload#validatedEmail.id|${store:response-co#validatedEmail.id} |
    |---------------          |---------------                        |
    |expected:header#status   |200                                    |
+   |store                    |response-co                            |
 
 * Rest call
 
@@ -375,7 +378,7 @@ tags: md-26.6
    |description                          |Read the company (V2)                           |
    |expected:header#status               |200                                             |
    |---------------                      |---------------                                 |
-   |--expected#referenceId               |${store:payload-co.referenceId}                 |
+   |expected#referenceId                 |${store:payload-co.referenceId}                 |
    |expected#henriContactId              |${store:payload-co.henriContactId}              |
    |expected#vatId                       |${store?:payload-co.vatId}                      |
    |expected#taxNumber                   |${store:payload-co.taxNumber}                   |
@@ -414,7 +417,7 @@ tags: md-26.6
    |expected#addresses[0].city           |${store:payload-co.addresses[0].city}           |
    |expected#addresses[0].zipCode        |${store:payload-co.addresses[0].zipCode}        |
    |expected#addresses[0].countryCode    |${store:payload-co.addresses[0].countryCode}    |
-   |expected#addresses[0].addition       |${store:payload-co.addresses[0].addition}       |
+   |--expected#addresses[0].addition     |${store:payload-co.addresses[0].addition}       |
 
 ## 1.7. Delete a company
 
@@ -487,13 +490,15 @@ tags: md-26.8, event
 
 * RabbitMQ consume, continue
 
-   |action                            |value                              |
-   |----------------------------------|-----------------------------------|
-   |queue                             |test.md                            |
-   |description                       |CREATE: Company Event must be fired|
-   |group                             |Check Queues (CREATE)              |
-   |expected:header#headers.eventClass|Company                            |
-   |expected:header#headers.eventType |CREATE                             |
+   |action                                |value                              |
+   |--------------------------------------|-----------------------------------|
+   |queue                                 |test.md                            |
+   |description                           |CREATE: Company Event must be fired|
+   |group                                 |Check Queues (CREATE)              |
+   |count:max                             |2                                  |
+   |count:min                             |2                                  |
+   |expected:header#[0].headers.eventClass|Company                            |
+   |expected:header#[0].headers.eventType |CREATE                             |
 
 * Rest call
 
@@ -533,14 +538,17 @@ tags: md-26.8, event
 
 * RabbitMQ consume, continue
 
-   |action                            |value                              |
-   |----------------------------------|-----------------------------------|
-   |queue                             |test.md                            |
-   |description                       |UPDATE: Company Event must be fired|
-   |group                             |Check Queues (UPDATE)              |
-   |expected:header#headers.eventClass|Company                            |
-   |expected:header#headers.eventType |UPDATE                             |
-   |expected#bankAccount.bic          |BIC                                |
+   |action                                |value                              |
+   |--------------------------------------|-----------------------------------|
+   |queue                                 |test.md                            |
+   |description                           |UPDATE: Company Event must be fired|
+   |group                                 |Check Queues (UPDATE)              |
+   |count:max                             |2                                  |
+   |count:min                             |2                                  |
+   |expected:header#[0].headers.eventClass|Company                            |
+   |expected:header#[0].headers.eventType |UPDATE                             |
+   |expected#[0].bankAccount.bic          |BIC                                |
+   |expected#[1].bankAccount.bic          |BIC                                |
 
 * Rest call
 
@@ -573,14 +581,16 @@ tags: md-26.8, event
 
 * RabbitMQ consume, continue
 
-   |action                            |value                              |
-   |----------------------------------|-----------------------------------|
-   |queue                             |test.md                            |
-   |description                       |DELETE: Company Event must be fired|
-   |group                             |Check Queues (DELETE)              |
-   |expected:header#headers.eventClass|Company                            |
-   |expected:header#headers.eventType |DELETE                             |
-   |expected#id                       |${store:payload-co#id}             |
+   |action                                |value                              |
+   |--------------------------------------|-----------------------------------|
+   |queue                                 |test.md                            |
+   |description                           |DELETE: Company Event must be fired|
+   |group                                 |Check Queues (DELETE)              |
+   |count:max                             |2                                  |
+   |count:min                             |2                                  |
+   |expected:header#[0].headers.eventClass|Company                            |
+   |expected:header#[0].headers.eventType |DELETE                             |
+   |expected#[0].id                       |${store:payload-co#id}             |
 
 * Rest call
 

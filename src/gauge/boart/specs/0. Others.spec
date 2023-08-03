@@ -116,12 +116,35 @@ tags: md-0.4
 
    |action     |value                                                                                                                                   |
    |-----------|----------------------------------------------------------------------------------------------------------------------------------------|
-   |url        |/token                                                                                                                                  |
+   |url        |http://localhost:8080/realms/jitpay/protocol/openid-connect/token                                                                       |
+   |description        |aaaaa                                                                                                                           |
    |grantType  |password                                                                                                                                |
-   |--scope    |openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api|
-   |scope      |openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api|
+   |--scope      |openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api|
+   |scope      |openid masterdata_api profile roles|
    |clientId   |jitfleet_portal                                                                                                                         |
-   |--clientId |jitpay_portal_angular_application_client                                                                                                |
    |username   |${env:admin_login_user}                                                                                                                 |
    |password   |${env:admin_login_password}                                                                                                             |
    |retry:count|2                                                                                                                                       |
+
+curl -X POST \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    -d 'grant_type=password&client_id=jitfleet_portal&username=admin.masterdata&password=admin' \
+    "http://localhost:8080/realms/jitpay/protocol/openid-connect/token"
+
+
+curl --location --request POST 'http://localhost:8080/realms/jitpay/protocol/openid-connect/token' \
+    --header 'Content-Type: application/x-www-form-urlencoded' \
+    --data-urlencode 'password=demoJITpay#123' \
+    --data-urlencode 'username=demo@jitpay.eu' \
+    --data-urlencode 'client_id=jitfleet_portal' \
+    --data-urlencode 'grant_type=password'
+
+    --data-urlencode 'client_secret=shjD8u7rlZRcjmen2uehiyxFLXKlftVV' \
+
+
+curl --location --request POST 'http://localhost:8080/realms/jitpay/protocol/openid-connect/token' \
+    --header 'Content-Type: application/x-www-form-urlencoded' \
+    --data-urlencode 'password=demoJITpay#123' \
+    --data-urlencode 'username=demo@jitpay.eu' \
+    --data-urlencode 'client_id=jitfleet_portal' \
+    --data-urlencode 'grant_type=password' | jq .access_token | jwt

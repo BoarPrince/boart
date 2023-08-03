@@ -4,10 +4,11 @@
 
     | action      | value                                                                                                                                    |
     |-------------|------------------------------------------------------------------------------------------------------------------------------------------|
+    | description | aaaaaa                                                                                                                                   |
     | url         | /token                                                                                                                                   |
     | grantType   | password                                                                                                                                 |
     | --scope     | openid locations_api fleet_profile fleet_role fleet_apiscope app_api jitpay.role fleet_apiscope email idgen_api ds_api mobilefileagg_api |
-    | scope       | openid masterdata_api profile roles  |
+    | scope       | openid masterdata_api profile roles                                                                                                      |
     | clientId    | jitfleet_portal                                                                                                                          |
     | username    | ${env:admin_login_user}                                                                                                                  |
     | password    | ${env:admin_login_password}                                                                                                              |
