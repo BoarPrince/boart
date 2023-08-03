@@ -67,7 +67,7 @@ export class PipeResolver {
         for (const pipeDef of pipeDefinition.pipes || []) {
             const pipe = this.handler.get(pipeDef.name);
             if (!pipe) {
-                throw Error(`pipe '${pipeDef.name}' does not exist`);
+                throw Error(`pipe '${pipeDef.name}' does not exist\n--> '${pipeDefinition.match}'`);
             }
 
             try {

@@ -251,4 +251,11 @@ describe('using pipe', () => {
         const replacedValue = sut.replace('--${replacer:a | pippe | pippe}--');
         expect(replacedValue).toBe('--a--:withPippe:withPippe');
     });
+
+    /**
+     *
+     */
+    it('wrong pipes', () => {
+        expect(() => sut.replace('--${replacer:a | pippes}--')).toThrowError(`pipe 'pippes' does not exist\n--> '\${replacer:a | pippes}'`);
+    });
 });

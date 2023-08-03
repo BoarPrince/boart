@@ -11,12 +11,11 @@ import { ValueReplacerHandler } from './ValueReplacerHandler';
  *
  */
 export class ValueResolver {
-
     private readonly parser: VariableParser;
     private readonly pipeResolver: PipeResolver;
 
     /**
-     * 
+     *
      */
     constructor(private handler: ValueReplacerHandler) {
         this.parser = new VariableParser();
@@ -92,7 +91,7 @@ export class ValueResolver {
             case 'undefined':
                 return undefined;
             default:
-                return  this.pipeResolver.resolve(replacedValue, ast);
+                return this.pipeResolver.resolve(replacedValue, ast);
         }
     }
 }
