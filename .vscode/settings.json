@@ -27,7 +27,7 @@
     "editor.unicodeHighlight.includeComments": true
   },
   "[typescript]": {
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "custom-language-properties": {
     "Markdown.comments.lineComment": "comment *",
@@ -50,7 +50,7 @@
   },
   "jest.debugMode": false,
   // "jest.jestCommandLine": "./node_modules/.bin/jest --coverage --runInBand",
-  "jest.jestCommandLine": "./node_modules/.bin/jest --runInBand",
+  "jest.jestCommandLine": "./node_modules/.bin/jest --coverage --runInBand",
   "jest.showCoverageOnLoad": true,
   "jest.testExplorer": {
     "enabled": true
