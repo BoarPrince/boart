@@ -1,4 +1,5 @@
 import { VariableParser } from '../parser/VariableParser';
+import { PipeResolver } from '../pipe/PipeResolver';
 import { Store } from '../store/Store';
 import { StoreWrapper } from '../store/StoreWrapper';
 import { ScopeType } from '../types/ScopeType';
@@ -12,12 +13,14 @@ import { ValueReplacerHandler } from './ValueReplacerHandler';
 export class ValueResolver {
 
     private readonly parser: VariableParser;
+    private readonly pipeResolver: PipeResolver;
 
     /**
      * 
      */
     constructor(private handler: ValueReplacerHandler) {
         this.parser = new VariableParser();
+        this.pipeResolver = new PipeResolver();
     }
 
     /**
@@ -89,7 +92,7 @@ export class ValueResolver {
             case 'undefined':
                 return undefined;
             default:
-                return replacedValue;
+                return  this.pipeResolver.resolve(replacedValue, ast);
         }
     }
 }

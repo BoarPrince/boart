@@ -1,4 +1,3 @@
-import { Error } from './Error';
 import { Pipe } from './Pipe';
 import { Qualifier } from './Qualifier';
 import { Scope } from './Scope';
