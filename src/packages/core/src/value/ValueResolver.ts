@@ -52,9 +52,9 @@ export class ValueResolver {
             }
             case ScopeType.Test: {
                 return Store.instance.testStore;
-            }
+            }            
             default: {
-                return Store.instance.nullStore;
+                return null;
             }
         }
     }
@@ -79,8 +79,7 @@ export class ValueResolver {
             throw new Error(`value replacer "${ast.name.value}" can't have a scope!\n${matchWithMarker}`);
         }
 
-        const defaultScopeType = replacer.defaultScopeType2 || ScopeType.Step;
-        const store = ValueResolver.getStore(ast.scope?.value || defaultScopeType);
+        const store = ValueResolver.getStore(ast.scope?.value || replacer.defaultScopeType2);
 
         const replacement = replacer.replace2(ast, store);
         const replacedValue = value.replace(ast.match, replacement);

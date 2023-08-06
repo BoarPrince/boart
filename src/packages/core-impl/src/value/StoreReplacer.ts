@@ -1,4 +1,5 @@
 import { DefaultOperatorParser, OperatorType, ScopedType, ScopeType, Store, StoreWrapper, ValueReplacer } from '@boart/core';
+import { ReplaceArg } from './ValueReplacer';
 
 /**
  *
@@ -91,6 +92,60 @@ export class StoreReplacer implements ValueReplacer {
                 default:
                     return content;
             }
+        }
+    }
+
+    /**
+     *
+     */
+    private getValueFromStore(arg: ReplaceArg, store: StoreWrapper): string {
+        const isOptional = !!arg.default;
+
+        const selectors = arg.selectors.reduce((prev, current) => {
+            const delim = (current.optional ? '?' : '') + '.';
+            return prev + (prev ? delim : '') + current.value;
+        }, arg.qualifier.value || '');
+
+        if (!store) {
+            // if no scope is defined, iterate over the scopes
+            for (const store of this.stores) {
+                const storeContent = store.get(selectors, isOptional);
+                if (storeContent != null) {
+                    return storeContent.toString();
+                }
+            }
+        } else {
+            return store.get(selectors, isOptional)?.toString();
+        }
+    }
+
+    /**
+     *
+     * @param arg parser arguments
+     * @param store store to be used
+     */
+    replace2(arg: ReplaceArg, store: StoreWrapper): string {
+        const value = this.getValueFromStore(arg, store);
+
+        if (value == null && !!arg.default) {
+            switch (arg.default.operator) {
+                case OperatorType.Default:
+                    return arg.default.value;
+
+                case OperatorType.DefaultAssignment:
+                    const selectors = arg.selectors.map((s) => s.value).join('.');
+                    store.put(selectors, arg.default.value);
+                    return arg.default.value;
+
+                case OperatorType.None:
+                    return null;
+
+                case OperatorType.Unknown:
+                default:
+                    throw Error(`store default operator '${arg.default.operator}' not valid (${arg.match})`);
+            }
+        } else {
+            return value;
         }
     }
 }

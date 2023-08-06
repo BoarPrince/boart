@@ -6,7 +6,9 @@ import { ScopedType } from '../types/ScopedType';
 /**
  * 
  */
-export type ReplaceArg = Omit<ASTVariable, 'match' | 'name'>;
+export interface ReplaceArg extends Omit<ASTVariable, 'scope' | 'match' | 'name'> {
+    match?: string;
+}
 
 /**
  *
@@ -19,6 +21,6 @@ export interface ValueReplacer {
     defaultScopeType?(property?: string): ScopeType;
     replace(property: string, store?: StoreWrapper, scope?: ScopeType): string;
     
-    replace2?(arg: ReplaceArg, store?: StoreWrapper): string;
     readonly defaultScopeType2?: ScopeType;
+    replace2?(arg: ReplaceArg, store?: StoreWrapper): string;
 }

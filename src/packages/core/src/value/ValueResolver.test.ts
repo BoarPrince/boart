@@ -107,6 +107,13 @@ it('default', () => {
     const replacedValue = sut.replace('--${replacer:a}--');
     expect(replacedValue).toBe('--a--');
 });
+/**
+ *
+ */
+it('default', () => {
+    const replacedValue = sut.replace('--${replacer:a}--');
+    expect(replacedValue).toBe('--a--');
+});
 
 /**
  *
@@ -165,8 +172,19 @@ it('replace empty string', () => {
 /**
  *
  */
-it('step store is default scope', () => {
+it('step store is not defined', () => {
     const mock = valueReplacerHandlerMock('');
+    sut = new ValueResolver(mock.handler);
+
+    sut.replace('${replacer:a}');
+    expect(mock.replacer.replace2).toBeCalledWith(expect.anything(), null);
+});
+
+/**
+ *
+ */
+it('step store is default scope', () => {
+    const mock = valueReplacerHandlerMock('', ScopeType.Step);
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
@@ -176,12 +194,23 @@ it('step store is default scope', () => {
 /**
  *
  */
-it('when no scope is defined, take default scope', () => {
+it('when no scope is defined, take default scope - local', () => {
     const mock = valueReplacerHandlerMock('', ScopeType.Test);
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
     expect(mock.replacer.replace2).toBeCalledWith(expect.anything(), Store.instance.testStore);
+});
+
+/**
+ *
+ */
+it('when no scope is defined, take default scope - global', () => {
+    const mock = valueReplacerHandlerMock('', ScopeType.Global);
+    sut = new ValueResolver(mock.handler);
+
+    sut.replace('${replacer:a}');
+    expect(mock.replacer.replace2).toBeCalledWith(expect.anything(), Store.instance.globalStore);
 });
 
 /**

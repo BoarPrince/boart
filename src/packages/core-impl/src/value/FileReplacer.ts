@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { EnvLoader, ScopedType, ValueReplacer } from '@boart/core';
+import { EnvLoader, ReplaceArg, ScopedType, ValueReplacer } from '@boart/core';
 
 export class FileReplacer implements ValueReplacer {
     readonly name = 'file';
@@ -9,7 +9,7 @@ export class FileReplacer implements ValueReplacer {
      *
      */
     get scoped(): ScopedType {
-        return ScopedType.true;
+        return ScopedType.false;
     }
 
     /**
@@ -24,8 +24,15 @@ export class FileReplacer implements ValueReplacer {
      */
     replace(property: string): string {
         const fileName = EnvLoader.instance.mapDataFileName(property);
+        return fs.readFileSync(fileName).toString();
+    }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    /**
+     *
+     * @param arg parser arguments
+     */
+    replace2(arg: ReplaceArg): string {
+        const fileName = [arg.qualifier.value].concat(arg.qualifier.paras || []).join('/');
         return fs.readFileSync(fileName).toString();
     }
 }
