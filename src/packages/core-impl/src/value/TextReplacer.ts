@@ -1,8 +1,15 @@
 import { ScopedType, TextLanguageHandler, ValueReplacer } from '@boart/core';
-import { ReplaceArg } from './ValueReplacer';
+import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
 
 export class TextReplacer implements ValueReplacer {
     readonly name = 'text';
+
+    /**
+     *
+     */
+    readonly config: ValueReplacerConfig = {
+        hasQualifier: true
+    };
 
     /**
      *
@@ -26,7 +33,7 @@ export class TextReplacer implements ValueReplacer {
     }
 
     /**
-     * 
+     *
      * @param arg parser arguments
      */
     replace2?(arg: ReplaceArg): string {

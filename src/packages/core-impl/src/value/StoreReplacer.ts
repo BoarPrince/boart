@@ -1,5 +1,5 @@
 import { DefaultOperatorParser, OperatorType, ScopedType, ScopeType, Store, StoreWrapper, ValueReplacer } from '@boart/core';
-import { ReplaceArg } from './ValueReplacer';
+import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
 
 /**
  *
@@ -8,6 +8,18 @@ export class StoreReplacer implements ValueReplacer {
     readonly name = 'store';
     readonly nullable = true;
     private _stores: Array<StoreWrapper>;
+
+    /**
+     *
+     */
+    readonly config: ValueReplacerConfig = {
+        scopeAllowed: true,
+        hasQualifier: true,
+        qualifierParaCountMax: 0,
+        selectorsCountMin: 1,
+        selectorsCountMax: Number.MAX_VALUE,
+        defaultScopeType: ScopeType.Test
+    };
 
     /**
      *
@@ -97,8 +109,10 @@ export class StoreReplacer implements ValueReplacer {
 
     /**
      *
+     * @param arg parser arguments
+     * @param store store to be used
      */
-    private getValueFromStore(arg: ReplaceArg, store: StoreWrapper): string {
+    replace2(arg: ReplaceArg, store: StoreWrapper): string {
         const isOptional = !!arg.default;
 
         const selectors = arg.selectors.reduce((prev, current) => {
@@ -116,36 +130,6 @@ export class StoreReplacer implements ValueReplacer {
             }
         } else {
             return store.get(selectors, isOptional)?.toString();
-        }
-    }
-
-    /**
-     *
-     * @param arg parser arguments
-     * @param store store to be used
-     */
-    replace2(arg: ReplaceArg, store: StoreWrapper): string {
-        const value = this.getValueFromStore(arg, store);
-
-        if (value == null && !!arg.default) {
-            switch (arg.default.operator) {
-                case OperatorType.Default:
-                    return arg.default.value;
-
-                case OperatorType.DefaultAssignment:
-                    const selectors = arg.selectors.map((s) => s.value).join('.');
-                    store.put(selectors, arg.default.value);
-                    return arg.default.value;
-
-                case OperatorType.None:
-                    return null;
-
-                case OperatorType.Unknown:
-                default:
-                    throw Error(`store default operator '${arg.default.operator}' not valid (${arg.match})`);
-            }
-        } else {
-            return value;
         }
     }
 }

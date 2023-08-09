@@ -1,9 +1,12 @@
 import { ScopedType, StoreWrapper, ValueReplacer, ReplaceArg, ScopeType } from '@boart/core';
-
 import { ReferenceHandler } from './ReferenceHandler';
 
+/**
+ *
+ */
 export class ReferenceReplacer implements ValueReplacer {
     readonly name = 'ref';
+    readonly config = {};
     readonly defaultScopeType2 = ScopeType.Test;
 
     /**
@@ -49,12 +52,11 @@ export class ReferenceReplacer implements ValueReplacer {
     }
 
     /**
-     * 
+     *
      * @param arg parser arguments
      * @param store store to be used
      */
     replace2(arg: ReplaceArg, store: StoreWrapper): string {
-
         const fileName = [arg.qualifier.value].concat(arg.qualifier.paras || []).join('/');
         const selector = arg.selectors[0].value;
         const storeIdentifier = `#${this.name}#:#${fileName}#${selector}#`;

@@ -1,9 +1,15 @@
-import { EnvLoader, ScopedType, StoreWrapper, ValueReplacer } from '@boart/core';
-import { ReplaceArg } from './ValueReplacer';
+import { EnvLoader, ScopedType, ValueReplacer } from '@boart/core';
+import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
 
 export class EnvironmentReplacer implements ValueReplacer {
     readonly name = 'env';
-    
+
+    /**
+     *
+     */
+    readonly config: ValueReplacerConfig = {
+        hasQualifier: true
+    };
 
     /**
      *
@@ -27,7 +33,7 @@ export class EnvironmentReplacer implements ValueReplacer {
     }
 
     /**
-     * 
+     *
      * @param arg parser arguments
      */
     replace2?(arg: ReplaceArg): string {

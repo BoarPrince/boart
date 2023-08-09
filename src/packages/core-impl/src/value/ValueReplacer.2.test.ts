@@ -3,7 +3,6 @@ import {
     ASTSelectorType,
     EnvLoader,
     GeneratorHandler,
-    OperatorType,
     ScopedType,
     Store,
     StoreWrapper,
@@ -303,68 +302,6 @@ describe('store', () => {
     /**
      *
      */
-    it('with default, no scope', () => {
-        const sut: ValueReplacer = new StoreReplacer();
-        const store = Store.instance.testStore;
-
-        const replacedValue = sut.replace2(
-            {
-                qualifier: {
-                    value: 'xxxxx',
-                    paras: null
-                },
-                selectors: [
-                    {
-                        type: ASTSelectorType.SIMPLE,
-                        value: 'yyyy',
-                        optional: false
-                    }
-                ],
-                default: {
-                    value: 'default',
-                    operator: OperatorType.Default
-                }
-            },
-            store
-        );
-
-        expect(replacedValue).toBe('default');
-    });
-
-    /**
-     *
-     */
-    it('with default -> undefined', () => {
-        const sut: ValueReplacer = new StoreReplacer();
-        const store = Store.instance.testStore;
-
-        const replacedValue = sut.replace2(
-            {
-                qualifier: {
-                    value: 'xxxxx',
-                    paras: null
-                },
-                selectors: [
-                    {
-                        type: ASTSelectorType.SIMPLE,
-                        value: 'yyyy',
-                        optional: false
-                    }
-                ],
-                default: {
-                    value: 'undefined',
-                    operator: OperatorType.Default
-                }
-            },
-            store
-        );
-
-        expect(replacedValue).toBe('undefined');
-    });
-
-    /**
-     *
-     */
     it('no scope - value defined', () => {
         Store.instance.testStore.put('x', 1);
         const sut = new StoreReplacer();
@@ -388,78 +325,6 @@ describe('store', () => {
         );
 
         expect(replacedValue).toBe('1');
-    });
-
-    /**
-     *
-     */
-    it('no scope - use assign operator', () => {
-        const sut = new StoreReplacer();
-        const store = Store.instance.testStore;
-
-        const replacedValue = sut.replace2(
-            {
-                qualifier: {
-                    value: '',
-                    paras: null
-                },
-                selectors: [
-                    {
-                        type: ASTSelectorType.SIMPLE,
-                        value: 'x',
-                        optional: false
-                    }
-                ],
-                default: {
-                    value: '2',
-                    operator: OperatorType.DefaultAssignment
-                }
-            },
-            store
-        );
-
-        expect(replacedValue).toBe('2');
-        expect(store.get('x')).toBeDefined();
-        expect(store.get('x').valueOf()).toBe(2);
-    });
-
-    /**
-     *
-     */
-    it('no scope - use assign operator with store attribute', () => {
-        const sut: ValueReplacer = new StoreReplacer();
-        const store = Store.instance.testStore;
-
-        // const replacedValue = sut.replace('x#y:=2', store);
-        const replacedValue = sut.replace2(
-            {
-                qualifier: {
-                    value: '',
-                    paras: null
-                },
-                selectors: [
-                    {
-                        type: ASTSelectorType.SIMPLE,
-                        value: 'x',
-                        optional: false
-                    },
-                    {
-                        type: ASTSelectorType.SIMPLE,
-                        value: 'y',
-                        optional: false
-                    }
-                ],
-                default: {
-                    value: '2',
-                    operator: OperatorType.DefaultAssignment
-                }
-            },
-            store
-        );
-
-        expect(replacedValue).toBe('2');
-        expect(store.put).toHaveBeenCalled();
-        expect(store.put).toHaveBeenCalledWith('x.y', '2');
     });
 
     /**

@@ -1,5 +1,5 @@
 import { GeneratorHandler, ScopedType, ScopeType, StoreWrapper, ValueReplacer } from '@boart/core';
-import { ReplaceArg } from './ValueReplacer';
+import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
 
 /**
  *
@@ -7,7 +7,16 @@ import { ReplaceArg } from './ValueReplacer';
 export class GenerateReplacer implements ValueReplacer {
     private static readonly re = /^(@(?<scopename>[^@:]+):)?(?<property>.+)$/;
     readonly name = 'generate';
-    readonly defaultScopeType2 = ScopeType.Test;
+
+    /**
+     *
+     */
+    readonly config: ValueReplacerConfig = {
+        scopeAllowed: true,
+        hasQualifier: true,
+        qualifierParaCountMin: 1,
+        defaultScopeType: ScopeType.None
+    };
 
     /**
      *
@@ -54,7 +63,7 @@ export class GenerateReplacer implements ValueReplacer {
     }
 
     /**
-     * 
+     *
      * @param arg parser arguments
      * @param store store to be used
      */
@@ -63,9 +72,7 @@ export class GenerateReplacer implements ValueReplacer {
 
         const qualifier = [arg.qualifier.value].concat(arg.qualifier.paras || []).join(':');
 
-        const storeIdentifier = store
-            ? `#${this.name}#:#${store.storeName}#:#${qualifier}#`
-            : `#${this.name}#:#${qualifier}#`;
+        const storeIdentifier = store ? `#${this.name}#:#${store.storeName}#:#${qualifier}#` : `#${this.name}#:#${qualifier}#`;
 
         let content: string = baseStore.get(storeIdentifier)?.toString();
         if (!content) {

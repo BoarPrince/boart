@@ -1,4 +1,5 @@
 import { Context, DataContentHelper, DefaultOperatorParser, OperatorType, ScopedType, ValueReplacer } from '@boart/core';
+import { ValueReplacerConfig } from './ValueReplacer';
 
 /**
  *
@@ -8,6 +9,13 @@ export class ContextReplacer implements ValueReplacer {
 
     readonly scoped = ScopedType.false;
     readonly nullable = true;
+
+    /**
+     *
+     */
+    readonly config: ValueReplacerConfig = {
+        hasQualifier: true
+    };
 
     /**
      *

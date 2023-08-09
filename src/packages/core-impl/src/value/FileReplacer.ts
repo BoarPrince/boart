@@ -1,9 +1,18 @@
 import fs from 'fs';
 
 import { EnvLoader, ReplaceArg, ScopedType, ValueReplacer } from '@boart/core';
+import { ValueReplacerConfig } from './ValueReplacer';
 
 export class FileReplacer implements ValueReplacer {
     readonly name = 'file';
+
+    /**
+     *
+     */
+    readonly config: ValueReplacerConfig = {
+        hasQualifier: true,
+        qualifierParaCountMin: 1
+    };
 
     /**
      *
