@@ -1,8 +1,9 @@
 import { Store } from '../store/Store';
+import { StoreWrapper } from '../store/StoreWrapper';
 import { ScopeType } from '../types/ScopeType';
 import { ScopedType } from '../types/ScopedType';
 
-import { ValueReplacer } from './ValueReplacer';
+import { ReplaceArg, ValueReplacer, ValueReplacerConfig } from './ValueReplacer';
 import { ValueReplacerHandler } from './ValueReplacerHandler';
 
 /**
@@ -48,6 +49,7 @@ class NamedValueReplacerMock implements ValueReplacer {
     get name() {
         return this._name;
     }
+    config = {};
     priority = 100;
     scoped = ScopedType.true;
     replace = jest.fn((property: string) => `#${property}#`);
@@ -60,6 +62,7 @@ class ValueReplacerMock implements ValueReplacer {
     get name() {
         return 'ValueReplacerMock';
     }
+    config = {};
     priority = 100;
     scoped = ScopedType.true;
     replace = jest.fn((property: string): string | null | undefined => `#${property}#`);
@@ -79,7 +82,10 @@ class StoreReplacerMock extends ValueReplacerMock {
  */
 class NullableReplacerMock extends ValueReplacerMock {
     nullable = true;
-    constructor(private value: string | null | undefined, private printProperty: boolean) {
+    constructor(
+        private value: string | null | undefined,
+        private printProperty: boolean
+    ) {
         super();
     }
     get name() {
@@ -96,6 +102,7 @@ class NullableReplacerMock extends ValueReplacerMock {
 
 class StoreReplacerNoMatchMock implements ValueReplacer {
     readonly name = 'StoreReplacerNoMatchMock';
+    config = {};
     priority = 100;
     scoped = ScopedType.true;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

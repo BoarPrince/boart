@@ -7,7 +7,7 @@ import { StoreWrapper } from '../store/StoreWrapper';
 import { ScopeType } from '../types/ScopeType';
 import { ScopedType } from '../types/ScopedType';
 
-import { ReplaceArg, ValueReplacer } from './ValueReplacer';
+import { ReplaceArg, ValueReplacer, ValueReplacerConfig } from './ValueReplacer';
 import { ValueReplacerHandler } from './ValueReplacerHandler';
 import { ValueResolver } from './ValueResolver';
 
@@ -21,7 +21,7 @@ type ReplaceResult = string | null | undefined;
  */
 const valueReplacerHandlerMock = (
     returnValue: string = '#',
-    store = null,
+    config: ValueReplacerConfig = {},
     scoped = ScopedType.true,
     priority = 100,
     name = 'ValueReplacerMock'
@@ -36,7 +36,7 @@ const valueReplacerHandlerMock = (
             if (returnValue === '#') {
                 replacer.replacer = new ValueReplacerMock();
             } else {
-                replacer.replacer = new ValueReplacerCustimizeMock(returnValue, store, scoped, priority, name);
+                replacer.replacer = new ValueReplacerCustimizeMock(returnValue, scoped, config, priority, name);
             }
             return replacer.replacer;
         }
@@ -48,6 +48,7 @@ const valueReplacerHandlerMock = (
  *
  */
 class ValueReplacerMock implements ValueReplacer {
+    config = {};
     get name() {
         return 'ValueReplacerMock';
     }
@@ -75,8 +76,8 @@ class ValueReplacerMock implements ValueReplacer {
 class ValueReplacerCustimizeMock implements ValueReplacer {
     constructor(
         public returnValue: string,
-        public defaultScopeType2: ScopeType,
         public scoped,
+        public config,
         public priority,
         public name
     ) {}
@@ -100,13 +101,6 @@ beforeEach(() => {
     Store.instance.stepStore.clear();
 });
 
-/**
- *
- */
-it('default', () => {
-    const replacedValue = sut.replace('--${replacer:a}--');
-    expect(replacedValue).toBe('--a--');
-});
 /**
  *
  */
@@ -184,7 +178,7 @@ it('step store is not defined', () => {
  *
  */
 it('step store is default scope', () => {
-    const mock = valueReplacerHandlerMock('', ScopeType.Step);
+    const mock = valueReplacerHandlerMock('', { defaultScopeType: ScopeType.Step });
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
@@ -195,7 +189,7 @@ it('step store is default scope', () => {
  *
  */
 it('when no scope is defined, take default scope - local', () => {
-    const mock = valueReplacerHandlerMock('', ScopeType.Test);
+    const mock = valueReplacerHandlerMock('', { defaultScopeType: ScopeType.Test });
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
@@ -206,7 +200,7 @@ it('when no scope is defined, take default scope - local', () => {
  *
  */
 it('when no scope is defined, take default scope - global', () => {
-    const mock = valueReplacerHandlerMock('', ScopeType.Global);
+    const mock = valueReplacerHandlerMock('', { defaultScopeType: ScopeType.Global });
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
@@ -217,7 +211,7 @@ it('when no scope is defined, take default scope - global', () => {
  *
  */
 it('defined scope must be used', () => {
-    const mock = valueReplacerHandlerMock('', ScopeType.Test);
+    const mock = valueReplacerHandlerMock('', { defaultScopeType: ScopeType.Test });
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer@g:a}');
@@ -228,7 +222,7 @@ it('defined scope must be used', () => {
  *
  */
 it('wrong scope is used', () => {
-    const mock = valueReplacerHandlerMock('', ScopeType.Test);
+    const mock = valueReplacerHandlerMock('', { defaultScopeType: ScopeType.Test });
     sut = new ValueResolver(mock.handler);
 
     expect(() => sut.replace('${replacer@z:a}')).toThrowError('Expected [ \\t] or [glts] but "z" found.\n${replacer@ -> z <- :a}');
@@ -238,10 +232,82 @@ it('wrong scope is used', () => {
  *
  */
 it('replacer does not expect a scope', () => {
-    const mock = valueReplacerHandlerMock('', ScopeType.Test, ScopedType.false);
+    const mock = valueReplacerHandlerMock('', { defaultScopeType: ScopeType.Test, scopeAllowed: false });
     sut = new ValueResolver(mock.handler);
 
-    expect(() => sut.replace('${replacer@t:a}')).toThrowError('value replacer "replacer" can\'t have a scope!\n${replacer -> @t <- :a}');
+    expect(() => sut.replace('${replacer@t:a}')).toThrowError('scope not allowed: ${replacer -> @t <- :a}\n${replacer@t:a}');
+});
+
+/**
+ *
+ */
+it('replacer needs at least one selector', () => {
+    const mock = valueReplacerHandlerMock('xxx', { defaultScopeType: ScopeType.Test, scopeAllowed: false, selectorsCountMin: 1 });
+    sut = new ValueResolver(mock.handler);
+
+    expect(() => sut.replace('${replacer:a}')).toThrowError('at least 1 selector(s) are required, but only 0 exists: ${replacer:a}');
+});
+
+/**
+ *
+ */
+it('replacer cannot have too much selectors', () => {
+    const mock = valueReplacerHandlerMock('xxx', { defaultScopeType: ScopeType.Test, scopeAllowed: false, selectorsCountMax: 2 });
+    sut = new ValueResolver(mock.handler);
+
+    expect(() => sut.replace('${replacer:a#a.b.c.d.e.f}')).toThrowError(
+        'max 2 selector(s) allowed, but 6 found: ${replacer:a#a.b.c.d.e.f}'
+    );
+});
+
+/**
+ *
+ */
+describe('default', () => {
+    /**
+     *
+     */
+    beforeEach(() => {
+        Store.instance.globalStore.clear();
+        Store.instance.localStore.clear();
+        Store.instance.testStore.clear();
+        Store.instance.stepStore.clear();
+    });
+
+    /**
+     *
+     */
+    it('default defined, but not needed', () => {
+        const mock = valueReplacerHandlerMock('xxx', { defaultScopeType: ScopeType.Test });
+        sut = new ValueResolver(mock.handler);
+
+        const replacedValue = sut.replace('${replacer:a :- "bbb"}');
+        expect(replacedValue).toBe('xxx');
+    });
+
+    /**
+     *
+     */
+    it('default assignment needs at least one selector', () => {
+        const mock = valueReplacerHandlerMock(null, { defaultScopeType: ScopeType.Test });
+        sut = new ValueResolver(mock.handler);
+
+        expect(() => sut.replace('${replacer:a := "aaa"}')).toThrowError(
+            `selector is required in case of default assignment: \${replacer:a  -> := "aaa"\n\${replacer:a := "aaa"}`
+        );
+    });
+
+    /**
+     *
+     */
+    it('default assignment must additionally put the value to the store', () => {
+        const mock = valueReplacerHandlerMock(null, { defaultScopeType: ScopeType.Test });
+        sut = new ValueResolver(mock.handler);
+
+        const replacedValue = sut.replace('${replacer#a:=bbb}');
+        expect(replacedValue).toBe('bbb');
+        expect(Store.instance.testStore.get('a').valueOf()).toBe('bbb');
+    });
 });
 
 /**
