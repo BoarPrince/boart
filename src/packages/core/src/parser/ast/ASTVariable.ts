@@ -2,7 +2,7 @@ import { Pipe } from './Pipe';
 import { Qualifier } from './Qualifier';
 import { Scope } from './Scope';
 import { Selector } from './Selector';
-import { Name as Name } from './Name';
+import { Name } from './Name';
 import { DefaultOperator } from './DefaultOperator';
 
 /**

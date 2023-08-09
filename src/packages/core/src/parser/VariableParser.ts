@@ -15,18 +15,31 @@ export class VariableParser {
 
         const r = /\s*\$\s*\{(.+)}\s*/;
         const match = r.exec(value);
-        return match ? this.getInnerMatch(match[1]) || { 
-            match: match[1], 
-            input: match[0] 
-        } : null;
+        return match
+            ? this.getInnerMatch(match[1]) || {
+                  match: match[1],
+                  input: match[0]
+              }
+            : null;
     }
 
     /**
-     * 
+     *
+     */
+    public getValueWithStartMarker(location: Location, match: string): string {
+        const start = location.start.column + 1;
+        const end = location.end.column + 1;
+        const first = match.slice(0, start);
+        const second = match.slice(start, end);
+        return `${first} -> ${second}`;
+    }
+
+    /**
+     *
      */
     public getValueWithMarker(location: Location, match: string): string {
         const start = location.start.column + 1;
-        const end = location.end.column +1 ;
+        const end = location.end.column + 1;
         const first = match.slice(0, start);
         const second = match.slice(start, end);
         const third = match.slice(end);
