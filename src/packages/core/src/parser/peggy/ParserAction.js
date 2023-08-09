@@ -246,7 +246,7 @@ function peg$parse(input, options) {
   var peg$f1 = function(name, scope, qualifier, selector) { return { name: name, scope: scope, qualifier: qualifier, selectors: selector && selector.selectors || [] } };
   var peg$f2 = function(name) { return {'value': name} };
   var peg$f3 = function(scope) { return {'value': scope, 'location': location()} };
-  var peg$f4 = function(operator, value) { return {'value': value, 'operator': operator} };
+  var peg$f4 = function(operator, value) { return {'value': value, 'operator': operator, 'location': location()} };
   var peg$f5 = function() { return 'Default'; };
   var peg$f6 = function() { return 'DefaultAssignment'; };
   var peg$f7 = function(name, parameter) { return {'value': name, 'paras': parameter} };

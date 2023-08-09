@@ -23,7 +23,7 @@ SCOPE
 /************* PIPE **************/
 DEFAULT
         = _ operator:DEFAULT_OPERATOR _ value:(STRING / $DEFAULTVALUE)
-	{ return {'value': value, 'operator': operator} }
+	{ return {'value': value, 'operator': operator, 'location': location()} }
 
 DEFAULT_OPERATOR
         = ":-" { return 'Default'; }
