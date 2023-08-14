@@ -1,4 +1,6 @@
 import { ExecutionContext } from '../execution/ExecutionContext';
+import { VariableParser } from '../parser/VariableParser';
+import { ASTAction } from '../parser/ast/ASTAction';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
 import { ValueReplacerHandler } from '../value/ValueReplacerHandler';
@@ -14,6 +16,7 @@ import { MetaInfo } from './TableMetaInfo';
  */
 interface RowDef<TExecutionContext extends ExecutionContext<object, object, object>, TRowType extends BaseRowType<TExecutionContext>> {
     key: string;
+    ast: ASTAction;
     para: string;
     selector: string;
     definition: RowDefinition<TExecutionContext, TRowType>;
@@ -26,6 +29,8 @@ export class RowDefinitionBinder<
     TExecutionContext extends ExecutionContext<object, object, object>,
     TRowType extends BaseRowType<TExecutionContext>
 > {
+    private parser: VariableParser;
+
     /**
      *
      */
@@ -34,7 +39,9 @@ export class RowDefinitionBinder<
         private readonly columnMetaInfo: MetaInfo,
         private readonly rowDefinitions: ReadonlyArray<RowDefinition<TExecutionContext, TRowType>>,
         private readonly rowsWithValues: ReadonlyArray<RowValue>
-    ) {}
+    ) {
+        this.parser = new VariableParser();
+    }
 
     /**
      *
@@ -84,8 +91,18 @@ export class RowDefinitionBinder<
     /**
      *
      */
-    bind(type: new (def: BaseRowMetaDefinition<TExecutionContext, TRowType>) => TRowType): Array<TRowType> {
+    private bindAST(rows: ReadonlyArray<RowValue>): void {
+        for (const row of rows) {
+            row.ast = this.parser.parseAction(row.key);
+        }
+    }
+
+    /**
+     *
+     */
+    public bind(type: new (def: BaseRowMetaDefinition<TExecutionContext, TRowType>) => TRowType): Array<TRowType> {
         const rows = this.bindDefaultValues();
+        this.bindAST(rows);
 
         return rows?.map((row) => {
             const rowDef = {
@@ -97,32 +114,34 @@ export class RowDefinitionBinder<
 
             const definitions = this.rowDefinitions
                 .map((definition) => {
-                    const parts = row.key.split('#');
-                    const rowKey = parts.shift();
-                    const rowSelector = parts.join('#') || null;
-                    return { rowKey, rowSelector, key: definition.key.description, definition };
+                    return {
+                        ast: row.ast,
+                        key: definition.key.description,
+                        definition
+                    };
                 })
                 // longest key first, because longer key must match first
                 .sort((def1, def2) => def2.key.length - def1.key.length);
 
-            // Prioritize definitions without parameter higher
-            for (const def of definitions) {
-                rowDef.selector = def.rowSelector;
-                rowDef.definition = def.definition;
+            // Prioritize definitions higher without parameter
+            // for (const def of definitions) {
+            //     rowDef.selector = def.rowSelector;
+            //     rowDef.definition = def.definition;
 
-                if (def.key === def.rowKey) {
-                    rowDef.key = def.key;
-                    break;
-                }
-            }
+            //     if (def.key === def.rowKey) {
+            //         rowDef.key = def.key;
+            //         break;
+            //     }
+            // }
 
             if (!rowDef.key) {
                 // if not match found without parameter, check matching with parameters
                 for (const def of definitions) {
                     const defKey = def.key || '';
-                    if (def.rowKey.startsWith(`${defKey}:`)) {
+                    if (def.key.startsWith(`${defKey}:`)) {
                         rowDef.key = def.key;
-                        rowDef.para = def.rowKey.replace(`${defKey}:`, '');
+                        rowDef.ast = def.ast;
+                        rowDef.para = [def.ast.qualifier.value].concat(def.ast.qualifier.paras ?? []).join(':');
                         rowDef.definition = def.definition;
                         break;
                     }
@@ -136,6 +155,7 @@ export class RowDefinitionBinder<
             return new type({
                 _metaDefinition: rowDef.definition,
                 key: rowDef.key,
+                ast: rowDef.ast,
                 keyPara: rowDef.para,
                 selector: rowDef.selector,
                 values: row.values,

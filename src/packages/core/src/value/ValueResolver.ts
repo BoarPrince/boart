@@ -143,7 +143,7 @@ export class ValueResolver {
      *
      */
     private replaceOneMatch(value: string): string {
-        const ast = this.parser.parse(value);
+        const ast = this.parser.parseVariable(value);
 
         if (!ast) {
             return value;

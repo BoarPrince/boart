@@ -1,4 +1,5 @@
-import * as parser from './peggy/ParserVariable.js';
+import * as variableParser from './peggy/ParserVariable.js';
+import * as actionParser from './peggy/ParserAction.js';
 import { ASTVariable } from './ast/ASTVariable';
 import { Location } from './ast/Location.js';
 
@@ -49,13 +50,13 @@ export class VariableParser {
     /**
      *
      */
-    public parse(value: string): ASTVariable {
+    public parseVariable(value: string): ASTVariable {
         const match = this.getInnerMatch(value);
         if (!match) {
             return null;
         }
         try {
-            const result = parser.parse(match.match);
+            const result = variableParser.parse(match.match);
             return {
                 ...result,
                 match: match.input,
@@ -63,6 +64,23 @@ export class VariableParser {
             };
         } catch (e) {
             const valueWithErrorMarker = this.getValueWithMarker(e.location, match.input);
+            throw new Error(`${e.message}\n${valueWithErrorMarker}`);
+        }
+    }
+
+    /**
+     *
+     */
+    public parseAction(value: string): ASTVariable {
+        try {
+            const result = actionParser.parse(value);
+            return {
+                ...result,
+                match: value,
+                errs: result.errs || null
+            };
+        } catch (e) {
+            const valueWithErrorMarker = this.getValueWithMarker(e.location, value);
             throw new Error(`${e.message}\n${valueWithErrorMarker}`);
         }
     }

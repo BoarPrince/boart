@@ -60,7 +60,7 @@ it('check simple binding', () => {
             validators: null
         })
     ];
-    const rawRows = [{ key: 'a:a', values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
+    const rawRows = [{ key: 'a:a', ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
 
     const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
     const rows: RowWithOneValue[] = sut.bind(RowWithOneValue);
@@ -112,7 +112,7 @@ describe('check binding', () => {
                     validators: null
                 })
             ];
-            const rawRows = [{ key: rowKey, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
+            const rawRows = [{ key: rowKey, ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
 
             const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
             const rows = sut.bind(RowWithOneValue);
@@ -150,7 +150,7 @@ describe('check binding', () => {
                     validators: null
                 })
             ];
-            const rawRows = [{ key: rowKey, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
+            const rawRows = [{ key: rowKey, ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
 
             const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
             if (!!expectedErrorMessage) {
@@ -185,7 +185,7 @@ describe('check binding', () => {
                 })
             ];
 
-            const rawRows = [{ key: rowKey, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
+            const rawRows = [{ key: rowKey, ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
             const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
 
             expect(() => sut.bind(RowWithOneValue)).toThrowError(expectedErrorMessage);
@@ -249,7 +249,7 @@ describe('check binding with multiple definitions', () => {
             })
         ];
 
-        const rawRows = [{ key: 'a2', values: { value1: 'b2' }, values_replaced: { value1: 'b2' } }];
+        const rawRows = [{ key: 'a2', ast: null, values: { value1: 'b2' }, values_replaced: { value1: 'b2' } }];
         const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
         const boundRows = sut.bind(RowWithOneValue);
 
@@ -320,10 +320,10 @@ describe('check binding with multiple definitions', () => {
             ];
 
             const rawRows = [
-                { key: rowKey, values: { value1: 'b' }, values_replaced: { value1: 'b' } },
-                { key: 'a:a:para1', values: { value1: 'b1' }, values_replaced: { value1: 'b1' } },
-                { key: 'a:a:para:1', values: { value1: 'b:1' }, values_replaced: { value1: 'b:1' } },
-                { key: 'a:a:para:2', values: { value1: 'b:2' }, values_replaced: { value1: 'b:2' } }
+                { key: rowKey, ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } },
+                { key: 'a:a:para1', ast: null, values: { value1: 'b1' }, values_replaced: { value1: 'b1' } },
+                { key: 'a:a:para:1', ast: null, values: { value1: 'b:1' }, values_replaced: { value1: 'b:1' } },
+                { key: 'a:a:para:2', ast: null, values: { value1: 'b:2' }, values_replaced: { value1: 'b:2' } }
             ];
 
             const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
@@ -370,7 +370,7 @@ describe('check default value', () => {
                     validators: null
                 })
             ];
-            const rawRows = [{ key: 'a:a', values: { value1: rowValue }, values_replaced: { value1: rowValue } }];
+            const rawRows = [{ key: 'a:a', ast: null, values: { value1: rowValue }, values_replaced: { value1: rowValue } }];
 
             const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
             const rows = sut.bind(RowWithOneValue);
@@ -406,7 +406,7 @@ describe('check default value', () => {
                     validators: null
                 })
             ];
-            const rawRows = [{ key: 'a:a', values: { value1: rowValue }, values_replaced: { value1: rowValue } }];
+            const rawRows = [{ key: 'a:a', ast: null, values: { value1: rowValue }, values_replaced: { value1: rowValue } }];
 
             const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
             const rows = sut.bind(RowWithOneValue);
@@ -430,7 +430,7 @@ describe('check default value', () => {
             })
         ];
 
-        const rawRows = [{ key: 'a:a', values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
+        const rawRows = [{ key: 'a:a', ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
         const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
 
         try {
@@ -468,7 +468,7 @@ describe('check default value', () => {
             })
         ];
 
-        const rawRows = [{ key: 'a:a', values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
+        const rawRows = [{ key: 'a:a', ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
         const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
 
         const rows = sut.bind(RowWithOneValue);
@@ -508,7 +508,7 @@ describe('check default value', () => {
             })
         ];
 
-        const rawRows = [{ key: 'a:a:para1', values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
+        const rawRows = [{ key: 'a:a:para1', ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
         const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
 
         const rows = sut.bind(RowWithOneValue);

@@ -1,4 +1,5 @@
 import { ExecutionContext } from '../execution/ExecutionContext';
+import { ASTAction } from '../parser/ast/ASTAction';
 
 import { BaseRowType } from './BaseRowType';
 import { RowDefinition } from './RowDefinition';
@@ -11,6 +12,7 @@ export interface BaseRowMetaDefinition<
     TRowType extends BaseRowType<TExecutionContext>
 > {
     readonly key: string;
+    readonly ast: ASTAction;
     readonly keyPara?: string;
     readonly selector?: string;
     readonly values: Record<string, string | number | boolean>;
