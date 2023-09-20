@@ -1,5 +1,6 @@
 import { ScopeType } from '../types/ScopeType';
 import { OperatorType } from '../value/OperatorType';
+
 import { VariableParser } from './VariableParser';
 import { SelectorType } from './ast/SelectorType';
 
@@ -20,7 +21,7 @@ it('simple name', () => {
     expect(result.selectors).toBeArrayOfSize(0);
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('var');
+    expect(result.name.value).toBe('var');
 });
 
 /**
@@ -34,7 +35,7 @@ it('with selector', () => {
     expect(result.scope).toBeNull();
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('var');
+    expect(result.name.value).toBe('var');
 
     expect(result.selectors).toBeDefined();
     expect(result.selectors).toBeDefined();
@@ -53,7 +54,7 @@ it('with qualifier and selector', () => {
     expect(result.scope).toBeNull();
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('var');
+    expect(result.name.value).toBe('var');
 
     expect(result.selectors).toBeDefined();
     expect(result.selectors).toBeDefined();
@@ -77,7 +78,7 @@ it('with two selectors', () => {
     expect(result.scope).toBeNull();
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('var');
+    expect(result.name.value).toBe('var');
 
     expect(result.selectors).toBeDefined();
     expect(result.selectors).toBeDefined();
@@ -103,7 +104,7 @@ it('optional selectors', () => {
     expect(result.scope).toBeNull();
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('var');
+    expect(result.name.value).toBe('var');
 
     expect(result.selectors).toBeDefined();
     expect(result.selectors).toBeDefined();
@@ -133,7 +134,7 @@ it('simple qualifier', () => {
     expect(result.selectors).toBeArrayOfSize(0);
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('generate');
+    expect(result.name.value).toBe('generate');
 
     expect(result.qualifier).toBeDefined();
     expect(result.qualifier.paras).toBeArrayOfSize(0);
@@ -151,7 +152,7 @@ it('extended qualifier', () => {
     expect(result.selectors).toBeArrayOfSize(0);
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('generate');
+    expect(result.name.value).toBe('generate');
 
     expect(result.qualifier).toBeDefined();
     expect(result.qualifier.value).toBe('fake');
@@ -174,7 +175,7 @@ it('scope with extended qualifier', () => {
     expect(result.scope.value).toBe(ScopeType.Global);
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('generate');
+    expect(result.name.value).toBe('generate');
 
     expect(result.qualifier).toBeDefined();
     expect(result.qualifier.value).toBe('name');
@@ -193,7 +194,7 @@ it('with scope and selector', () => {
     expect(result.qualifier).toBeNull();
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('var');
+    expect(result.name.value).toBe('var');
 
     expect(result.scope).toBeDefined();
     expect(result.scope.value).toBe(ScopeType.Test);
@@ -228,7 +229,7 @@ it('nested', () => {
     expect(result.selectors).toBeArrayOfSize(0);
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('var2');
+    expect(result.name.value).toBe('var2');
 
     expect(result.scope).toBeDefined();
     expect(result.scope.value).toBe(ScopeType.Local);
@@ -245,7 +246,7 @@ it('with string para', () => {
     expect(result.selectors).toBeArrayOfSize(0);
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('generate');
+    expect(result.name.value).toBe('generate');
 
     expect(result.qualifier).toBeDefined();
     expect(result.qualifier.value).toBe('fake');
@@ -265,7 +266,7 @@ it('complex', () => {
     expect(result.qualifier.paras[1]).toBe('bb2');
 
     expect(result.name).toBeDefined();
-    expect(result.name.value).toEqual('var3');
+    expect(result.name.value).toBe('var3');
 
     expect(result.pipes).toBeArrayOfSize(1);
     expect(result.pipes[0].name).toBe('pipe');
@@ -403,4 +404,69 @@ it('error can occur', () => {
 it('error can occur in strings', () => {
     expect(() => sut.parseVariable('${var:aa:"\\n\\n""}')) //
         .toThrow('Expected "#", ":", ":-", ":=", "?#", "|", [ \\t], or end of input but "\\"" found.\n${var:aa:"\\n\\n" -> " <- }');
+});
+
+/**
+ *
+ */
+it('qualifier - action - stringValue - 1', () => {
+    const result = sut.parseAction('var:aa:bb:cc');
+    expect(result.qualifier.stringValue).toBe('aa:bb:cc');
+});
+
+/**
+ *
+ */
+it('qualifier - action - stringValue - 2', () => {
+    const result = sut.parseAction('var:aa');
+    expect(result.qualifier.stringValue).toBe('aa');
+});
+
+/**
+ *
+ */
+it('qualifier - variable - stringValue', () => {
+    const result = sut.parseVariable('${var:aa:bb:cc}');
+    expect(result.qualifier.stringValue).toBe('aa:bb:cc');
+});
+
+/**
+ *
+ */
+it('selector - action - stringValue - 1', () => {
+    const result = sut.parseAction('var#aa.bb.cc');
+    expect(result.selectors.stringValue).toBe('aa.bb.cc');
+});
+
+/**
+ *
+ */
+it('selector - action - stringValue - 2', () => {
+    const result = sut.parseAction('var#aa[6].bb.cc');
+    expect(result.selectors.stringValue).toBe('aa[6].bb.cc');
+});
+
+/**
+ *
+ */
+it('selector - action - stringValue - 3', () => {
+    const result = sut.parseAction('var#aa.bb[*].cc');
+    expect(result.selectors.stringValue).toBe('aa.bb[*].cc');
+});
+
+/**
+ *
+ */
+it('dataselector - action - 1', () => {
+    const result = sut.parseAction('var::data#aa.bb[*].cc');
+    expect(result.datascope).toBeDefined();
+    expect(result.datascope.value).toBe('data');
+});
+
+/**
+ *
+ */
+it('string value name', () => {
+    const result = sut.parseAction('var:qual:para1:para2');
+    expect(result.name.stringValue).toBe('var:qual:para1:para2');
 });

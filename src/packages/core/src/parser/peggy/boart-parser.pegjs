@@ -5,10 +5,10 @@ START_VARIABLE
         = _ name:NAME scope:SCOPE? qualifier:QUALIFIER? selector:SELECTOR? default_Operator:DEFAULT? pipes:PIPES? _
         { return { name: name, scope: scope, qualifier: qualifier, selectors: selector && selector.selectors || [], default: default_Operator, pipes: pipes } }
 
-/************* XXX **************/
+/************* A C T I O N  **************/
 START_ACTION 
-        = _ name:NAME scope:SCOPE? qualifier:QUALIFIER? selector:SELECTOR?
-        { return { name: name, scope: scope, qualifier: qualifier, selectors: selector && selector.selectors || [] } }
+        = _ name:NAME scope:SCOPE? qualifier:QUALIFIER? datascope:DATASCOPE? selector:SELECTOR?
+        { return { name: name, qualifier: qualifier, datascope: datascope, selectors: selector && selector.selectors || [] } }
 
 /************* NAME **************/
 NAME
@@ -19,6 +19,11 @@ NAME
 SCOPE
         = _ "@" _ scope:$SCOPETOKEN
         { return {'value': scope, 'location': location()} }
+
+/************* DATASCOPE **************/
+DATASCOPE
+        = _ "::" _ datascope:$TOKEN
+        { return {'value': datascope, 'location': location()} }
 
 /************* PIPE **************/
 DEFAULT

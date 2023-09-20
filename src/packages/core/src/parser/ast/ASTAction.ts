@@ -1,7 +1,15 @@
+import { DataScope } from './DataScope';
+import { Name } from './Name';
 import { Qualifier } from './Qualifier';
 import { Scope } from './Scope';
 import { Selector } from './Selector';
-import { Name } from './Name';
+
+/**
+ *
+ */
+interface SelectorArray extends Array<Selector> {
+    stringValue: string;
+}
 
 /**
  *
@@ -10,6 +18,7 @@ export interface ASTAction {
     name: Name;
     scope?: Scope;
     qualifier?: Qualifier;
-    selectors?: Selector[];
+    datascope?: DataScope;
+    selectors?: SelectorArray;
     match: string;
 }

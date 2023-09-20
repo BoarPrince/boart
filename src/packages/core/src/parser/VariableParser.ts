@@ -1,7 +1,9 @@
 import * as variableParser from './peggy/ParserVariable.js';
 import * as actionParser from './peggy/ParserAction.js';
 import { ASTVariable } from './ast/ASTVariable';
-import { Location } from './ast/Location.js';
+import { Location } from './ast/Location';
+import { ASTAction } from './ast/ASTAction';
+import { SelectorType } from './ast/SelectorType';
 
 /**
  *
@@ -27,6 +29,35 @@ export class VariableParser {
     /**
      *
      */
+    private addStringValueAccessor<T extends ASTVariable | ASTAction>(ast: T): T {
+        if (ast.selectors) {
+            ast.selectors.stringValue = ast.selectors
+                .reduce((stringValue, selector) => {
+                    switch (selector.type) {
+                        case SelectorType.INDEX:
+                            return `${stringValue}.${selector.value}[${selector.index}]`;
+                        case SelectorType.WILDCARD:
+                            return `${stringValue}.${selector.value}[*]`;
+                        default:
+                            return `${stringValue}.${selector.value}`;
+                    }
+                }, '')
+                .slice(1);
+        }
+
+        if (ast.qualifier) {
+            ast.qualifier.stringValue = [ast.qualifier.value].concat(ast.qualifier.paras ?? []).join(':');
+            ast.name.stringValue = ast.name.value + ':' + ast.qualifier.stringValue;
+        } else {
+            ast.name.stringValue = ast.name.value;
+        }
+
+        return ast;
+    }
+
+    /**
+     *
+     */
     public getValueWithStartMarker(location: Location, match: string): string {
         const start = location.start.column + 1;
         const end = location.end.column + 1;
@@ -39,6 +70,9 @@ export class VariableParser {
      *
      */
     public getValueWithMarker(location: Location, match: string): string {
+        if (!location) {
+            return '';
+        }
         const start = location.start.column + 1;
         const end = location.end.column + 1;
         const first = match.slice(0, start);
@@ -48,7 +82,7 @@ export class VariableParser {
     }
 
     /**
-     *
+     * V A R I A B L E S
      */
     public parseVariable(value: string): ASTVariable {
         const match = this.getInnerMatch(value);
@@ -57,11 +91,11 @@ export class VariableParser {
         }
         try {
             const result = variableParser.parse(match.match);
-            return {
+            return this.addStringValueAccessor({
                 ...result,
                 match: match.input,
                 errs: result.errs || null
-            };
+            });
         } catch (e) {
             const valueWithErrorMarker = this.getValueWithMarker(e.location, match.input);
             throw new Error(`${e.message}\n${valueWithErrorMarker}`);
@@ -69,16 +103,16 @@ export class VariableParser {
     }
 
     /**
-     *
+     * A C T I O N
      */
-    public parseAction(value: string): ASTVariable {
+    public parseAction(value: string): ASTAction {
         try {
             const result = actionParser.parse(value);
-            return {
+            return this.addStringValueAccessor({
                 ...result,
                 match: value,
                 errs: result.errs || null
-            };
+            });
         } catch (e) {
             const valueWithErrorMarker = this.getValueWithMarker(e.location, value);
             throw new Error(`${e.message}\n${valueWithErrorMarker}`);
