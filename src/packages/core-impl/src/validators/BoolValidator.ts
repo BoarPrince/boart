@@ -21,16 +21,16 @@ export class BoolValidator implements RowValidator {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validate(row: BaseRowMetaDefinition<any, any>) {
-        if (!Object.keys(row.values).some((key) => key === this.columnName)) {
+        if (!Object.keys(row.values_replaced).some((key) => key === this.columnName)) {
             throw Error(`Validator: '${this.constructor.name}' => column '${this.columnName}' is not defined`);
         }
 
-        const value = BoolValidator.lowercase(row.values[this.columnName]);
+        const value = BoolValidator.lowercase(row.values_replaced[this.columnName]);
         if (value !== 'true' && value !== 'false' && typeof value !== 'boolean') {
             throw Error(`column '${this.columnName}' must be a boolean value, but is '${value}'`);
         }
 
-        row.values[this.columnName] = value == 'true' || value === true;
-        row.values_replaced[this.columnName] = row.values[this.columnName];
+        row.values_replaced[this.columnName] = value == 'true' || value === true;
+        row.values_replaced[this.columnName] = row.values_replaced[this.columnName];
     }
 }

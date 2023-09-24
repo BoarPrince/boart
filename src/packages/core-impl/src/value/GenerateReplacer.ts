@@ -1,4 +1,5 @@
 import { GeneratorHandler, ScopedType, ScopeType, StoreWrapper, ValueReplacer } from '@boart/core';
+
 import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
 
 /**
@@ -70,7 +71,7 @@ export class GenerateReplacer implements ValueReplacer {
     replace2(arg: ReplaceArg, store?: StoreWrapper): string {
         const baseStore = store.store;
 
-        const qualifier = [arg.qualifier.value].concat(arg.qualifier.paras || []).join(':');
+        const qualifier = arg.qualifier.stringValue;
 
         const storeIdentifier = store ? `#${this.name}#:#${store.storeName}#:#${qualifier}#` : `#${this.name}#:#${qualifier}#`;
 

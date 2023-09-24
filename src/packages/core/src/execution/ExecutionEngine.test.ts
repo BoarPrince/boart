@@ -71,9 +71,7 @@ const createBaseRowType = (name: string, type: TableRowType, priority = 0): Base
         key: name,
         keyPara: null,
         selector: null,
-        values: {
-            value1: null
-        },
+        ast: null,
         values_replaced: {
             value1: null
         },
@@ -130,13 +128,13 @@ describe('default', () => {
         const context = await sut.execute([rowDataPost, rowDataConfig, rowDataPre]);
 
         expect(rowDataConfig.data._metaDefinition.executionUnit.execute) //
-            .toHaveBeenCalledBefore(rowDataPre.data._metaDefinition.executionUnit.execute as never);
+            .toHaveBeenCalledBefore(rowDataPre.data._metaDefinition.executionUnit.execute.bind(this));
 
         expect(rowDataPre.data._metaDefinition.executionUnit.execute) //
             .toHaveBeenCalledBefore(mainExecutionUnit.execute);
 
         expect(mainExecutionUnit.execute) //
-            .toHaveBeenCalledBefore(rowDataPost.data._metaDefinition.executionUnit.execute as never);
+            .toHaveBeenCalledBefore(rowDataPost.data._metaDefinition.executionUnit.execute.bind(this));
 
         expect(context.execution.data.join(',')).toBe('config,pre,main,post');
     });

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import { EnvLoader, GeneratorHandler, ScopedType, ScopeType, Store, TextLanguageHandler, ValueReplacer } from '@boart/core';
 
 import { EnvironmentReplacer } from './EnvironmentReplacer';

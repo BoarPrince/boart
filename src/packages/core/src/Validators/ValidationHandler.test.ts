@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import { AnyBaseRowType } from '../table/BaseRowType';
 import { RowDefinition } from '../table/RowDefinition';
 import { TableRowType } from '../table/TableRowType';
@@ -9,6 +8,9 @@ import { GroupValidator } from './GroupValidator';
 import { RowValidator } from './RowValidator';
 import { ValidationHandler } from './ValidationHandler';
 
+/**
+ *
+ */
 describe('check row validators', () => {
     /**
      *
@@ -24,9 +26,7 @@ describe('check row validators', () => {
                     key: 'a:a',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: 'a'
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: 'a'
                     },
@@ -61,9 +61,7 @@ describe('check row validators', () => {
                     key: 'a:a',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: 'a'
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: 'a'
                     },
@@ -80,8 +78,8 @@ describe('check row validators', () => {
 
             sut.validate([rowData]);
 
-            expect(validator.validate).toBeCalledTimes(1);
-            expect(validator.validate).toBeCalledWith(
+            expect(validator.validate).toHaveBeenCalledTimes(1);
+            expect(validator.validate).toHaveBeenCalledWith(
                 rowData.data,
                 [rowData].map((row) => row.data)
             );
@@ -105,9 +103,7 @@ describe('check row validators', () => {
                     key: 'a:a',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: 'a'
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: 'a'
                     },
@@ -124,8 +120,8 @@ describe('check row validators', () => {
 
             sut.validate([rowData]);
 
-            expect(validator.validate).toBeCalledTimes(1);
-            expect(validator.validate).toBeCalledWith([rowData].map((row) => row.data));
+            expect(validator.validate).toHaveBeenCalledTimes(1);
+            expect(validator.validate).toHaveBeenCalledWith([rowData].map((row) => row.data));
         });
 
         /**
@@ -146,9 +142,7 @@ describe('check row validators', () => {
                     key: 'a:a',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: 'a'
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: 'a'
                     },
@@ -164,7 +158,7 @@ describe('check row validators', () => {
             };
 
             sut.preValidate([rowData]);
-            expect(validator.validate).toBeCalledTimes(0);
+            expect(validator.validate).toHaveBeenCalledTimes(0);
         });
 
         /**
@@ -185,9 +179,7 @@ describe('check row validators', () => {
                     key: 'a:a',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: 'a'
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: 'a'
                     },
@@ -203,8 +195,8 @@ describe('check row validators', () => {
             };
 
             sut.preValidate([rowData]);
-            expect(validator.validate).toBeCalledTimes(1);
-            expect(validator.validate).toBeCalledWith(
+            expect(validator.validate).toHaveBeenCalledTimes(1);
+            expect(validator.validate).toHaveBeenCalledWith(
                 rowData.data,
                 [rowData].map((row) => row.data)
             );

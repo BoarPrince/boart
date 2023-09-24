@@ -17,13 +17,8 @@ describe('check Row Data Binder', () => {
      */
     it('check null parameter (all)', () => {
         const sut = new RowDataBinder(null, null, null);
-        try {
-            sut.check();
-        } catch (error) {
-            expect(error.message).toBe(`'null': parameter for table handler seems not to be a table`);
-            return;
-        }
-        throw Error('error must be thrown table instance is not correct or null');
+
+        expect(() => sut.check()).toThrow(`'null': parameter for table handler seems not to be a table`);
     });
 
     /**
@@ -42,13 +37,8 @@ describe('check Row Data Binder', () => {
         };
 
         const sut = new RowDataBinder(metaInfo.tableName, null, tableInstance);
-        try {
-            sut.check();
-        } catch (error) {
-            expect(error.message).toBe(`'test-table': missing table definition, column: 'no-meta-info'`);
-            return;
-        }
-        throw Error('error must be thrown table instance is not correct or null');
+
+        expect(() => sut.check()).toThrow(`'test-table': missing table definition, column: 'no-meta-info'`);
     });
 
     /**
@@ -63,13 +53,8 @@ describe('check Row Data Binder', () => {
             rows: []
         };
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance as TableRows);
-        try {
-            sut.check();
-        } catch (error) {
-            expect(error.message).toBe(`'test-table': parameter for table handler seems not to be a table`);
-            return;
-        }
-        throw Error('error must be thrown table instance is not correct or null');
+
+        expect(() => sut.check()).toThrow(`'test-table': parameter for table handler seems not to be a table`);
     });
 
     /**
@@ -83,13 +68,8 @@ describe('check Row Data Binder', () => {
             rows: []
         };
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
-        try {
-            sut.check();
-        } catch (error) {
-            expect(error.message).toBe(`'test-table': at least one row must be defined`);
-            return;
-        }
-        throw Error('error must be thrown table instance is not correct or null');
+
+        expect(() => sut.check()).toThrow(`'test-table': at least one row must be defined`);
     });
 
     /**
@@ -103,13 +83,8 @@ describe('check Row Data Binder', () => {
             rows: []
         };
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
-        try {
-            sut.check();
-        } catch (error) {
-            expect(error.message).toBe(`'test-table': at least one row must be defined`);
-            return;
-        }
-        throw Error('error must be thrown table instance is not correct or null');
+
+        expect(() => sut.check()).toThrow(`'test-table': at least one row must be defined`);
     });
 
     /**
@@ -127,13 +102,8 @@ describe('check Row Data Binder', () => {
             ]
         };
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
-        try {
-            sut.check();
-        } catch (error) {
-            expect(error.message).toBe(`column 'value3' is not defined!`);
-            return;
-        }
-        throw Error('error must be thrown if table instance is not correct or null');
+
+        expect(() => sut.check()).toThrow(`column 'value3' is not defined!`);
     });
 
     /**
@@ -151,13 +121,8 @@ describe('check Row Data Binder', () => {
             ]
         };
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
-        try {
-            sut.check();
-        } catch (error) {
-            expect(error.message).toBe(`'test-table': missing table definition, column: 'value2'`);
-            return;
-        }
-        throw Error('error must be thrown if table instance is not correct or null');
+
+        expect(() => sut.check()).toThrow(`'test-table': missing table definition, column: 'value2'`);
     });
 
     /**
@@ -175,13 +140,8 @@ describe('check Row Data Binder', () => {
             ]
         };
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
-        try {
-            sut.check();
-        } catch (error) {
-            expect(error.message).toBe(`'test-table': table parameter must have at least a key and one value`);
-            return;
-        }
-        throw Error('error must be thrown if table contains to less columns');
+
+        expect(() => sut.check()).toThrow(`'test-table': table parameter must have at least a key and one value`);
     });
 
     /**
@@ -199,13 +159,8 @@ describe('check Row Data Binder', () => {
             ]
         };
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
-        try {
-            sut.check();
-        } catch (error) {
-            expect(error.message).toBe(`'test-table': table parameter must have at least a key and one value`);
-            return;
-        }
-        throw Error('error must be thrown if table contains to less columns');
+
+        expect(() => sut.check()).toThrow(`'test-table': table parameter must have at least a key and one value`);
     });
 
     /**
@@ -225,7 +180,7 @@ describe('check Row Data Binder', () => {
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
         const rows = sut.bind();
         expect(rows).toBeDefined();
-        expect(rows.length).toBe(0);
+        expect(rows).toHaveLength(0);
     });
 
     /**
@@ -245,7 +200,7 @@ describe('check Row Data Binder', () => {
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
         const rows = sut.bind();
         expect(rows).toBeDefined();
-        expect(rows.length).toBe(1);
+        expect(rows).toHaveLength(1);
     });
 
     /**
@@ -264,7 +219,7 @@ describe('check Row Data Binder', () => {
         };
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
         const rows = sut.bind();
-        expect(rows).toEqual([{ key: 'a', values: { value1: 'b', value2: 'c' }, values_replaced: { value1: 'b', value2: 'c' } }]);
+        expect(rows).toStrictEqual([{ key: 'a', values_replaced: { value1: 'b', value2: 'c' } }]);
     });
 
     /**
@@ -286,9 +241,9 @@ describe('check Row Data Binder', () => {
         };
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
         const rows = sut.bind();
-        expect(rows).toEqual([
-            { key: 'a', values: { value1: 'b', value2: 'c' }, values_replaced: { value1: 'b', value2: 'c' } },
-            { key: 'd', values: { value1: 'e', value2: 'f' }, values_replaced: { value1: 'e', value2: 'f' } }
+        expect(rows).toStrictEqual([
+            { key: 'a', values_replaced: { value1: 'b', value2: 'c' } },
+            { key: 'd', values_replaced: { value1: 'e', value2: 'f' } }
         ]);
     });
 
@@ -303,7 +258,7 @@ describe('check Row Data Binder', () => {
 
         const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
         const rows = sut.bind();
-        expect(rows).toEqual([{ key: 'a', values: { value1: 'b', value2: 'c' }, values_replaced: { value1: 'b', value2: 'c' } }]);
+        expect(rows).toStrictEqual([{ key: 'a', values_replaced: { value1: 'b', value2: 'c' } }]);
     });
 
     /**
@@ -334,10 +289,9 @@ describe('check Row Data Binder', () => {
             };
             const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
             const rows = sut.bind();
-            expect(rows).toEqual([
+            expect(rows).toStrictEqual([
                 {
                     key: firstCellRow[0],
-                    values: { value1: firstCellValue, value2: secondCellValue },
                     values_replaced: { value1: firstCellValue, value2: secondCellValue }
                 }
             ]);
@@ -375,15 +329,13 @@ describe('check Row Data Binder', () => {
             };
             const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
             const rows = sut.bind();
-            expect(rows).toEqual([
+            expect(rows).toStrictEqual([
                 {
                     key: firstCellRow[0],
-                    values: { value1: firstCellValue, value2: secondCellValue },
                     values_replaced: { value1: firstCellValue, value2: secondCellValue }
                 },
                 {
                     key: 'b',
-                    values: { value1: '1', value2: '2' },
                     values_replaced: { value1: '1', value2: '2' }
                 }
             ]);
@@ -421,15 +373,13 @@ describe('check Row Data Binder', () => {
             };
             const sut = new RowDataBinder(metaInfo.tableName, metaInfo, tableInstance);
             const rows = sut.bind();
-            expect(rows).toEqual([
+            expect(rows).toStrictEqual([
                 {
                     key: 'b',
-                    values: { value1: '1', value2: '2' },
                     values_replaced: { value1: '1', value2: '2' }
                 },
                 {
                     key: firstCellRow[0],
-                    values: { value1: firstCellValue, value2: secondCellValue },
                     values_replaced: { value1: firstCellValue, value2: secondCellValue }
                 }
             ]);

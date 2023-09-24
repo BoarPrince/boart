@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import {
     ASTSelectorType,
     EnvLoader,
@@ -106,6 +105,7 @@ it('check environment replacement', () => {
 
     sut.replace2({
         qualifier: {
+            stringValue: '',
             value: 'yyyy',
             paras: null
         }
@@ -125,6 +125,7 @@ it('check text replacer', () => {
     expect(sut.name).toBe('text');
     sut.replace2({
         qualifier: {
+            stringValue: '',
             value: 'xxxx',
             paras: null
         }
@@ -149,6 +150,7 @@ describe('generate', () => {
         sut.replace2(
             {
                 qualifier: {
+                    stringValue: 'xxxx',
                     value: 'xxxx',
                     paras: null
                 }
@@ -173,6 +175,7 @@ describe('generate', () => {
         sut.replace2(
             {
                 qualifier: {
+                    stringValue: 'xxxx:arg1:arg2',
                     value: 'xxxx',
                     paras: ['arg1', 'arg2']
                 }
@@ -206,6 +209,7 @@ describe('reference', () => {
         sut.replace2(
             {
                 qualifier: {
+                    stringValue: '',
                     value: 'x',
                     paras: ['x-x', '-x-x']
                 },
@@ -243,6 +247,7 @@ describe('reference', () => {
         const value = sut.replace2(
             {
                 qualifier: {
+                    stringValue: '',
                     value: 'xxxxx',
                     paras: null
                 },
@@ -282,6 +287,7 @@ describe('store', () => {
         const replacedValue = sut.replace2(
             {
                 qualifier: {
+                    stringValue: '',
                     value: 'xxxxx',
                     paras: null
                 },
@@ -310,6 +316,7 @@ describe('store', () => {
         const replacedValue = sut.replace2(
             {
                 qualifier: {
+                    stringValue: '',
                     value: '',
                     paras: null
                 },
@@ -338,6 +345,7 @@ describe('store', () => {
         const replacedValue = sut.replace2(
             {
                 qualifier: {
+                    stringValue: '',
                     value: '',
                     paras: null
                 },
@@ -370,6 +378,7 @@ describe('store', () => {
         const replacedValue = sut.replace2(
             {
                 qualifier: {
+                    stringValue: '',
                     value: '',
                     paras: null
                 },
@@ -402,6 +411,7 @@ describe('store', () => {
         const replacedValue = sut.replace2(
             {
                 qualifier: {
+                    stringValue: '',
                     value: '',
                     paras: null
                 },
@@ -434,6 +444,7 @@ describe('store', () => {
         const replacedValue = sut.replace2(
             {
                 qualifier: {
+                    stringValue: '',
                     value: '',
                     paras: null
                 },
@@ -465,6 +476,7 @@ describe('store', () => {
 
         const replacedValue = sut.replace2({
             qualifier: {
+                stringValue: '',
                 value: '',
                 paras: null
             },
@@ -494,6 +506,7 @@ describe('store', () => {
 
         const replacedValue = sut.replace2({
             qualifier: {
+                stringValue: '',
                 value: '',
                 paras: null
             },
@@ -523,6 +536,7 @@ describe('store', () => {
 
         const replacedValue = sut.replace2({
             qualifier: {
+                stringValue: '',
                 value: '',
                 paras: null
             },
@@ -552,6 +566,7 @@ describe('store', () => {
 
         const replacedValue = sut.replace2({
             qualifier: {
+                stringValue: '',
                 value: '',
                 paras: null
             },
@@ -582,6 +597,7 @@ describe('store', () => {
 
         const replacedValue = sut.replace2({
             qualifier: {
+                stringValue: '',
                 value: 'a',
                 paras: null
             },

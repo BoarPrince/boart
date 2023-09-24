@@ -1,4 +1,5 @@
 import { DefaultOperatorParser, OperatorType, ScopedType, ScopeType, Store, StoreWrapper, ValueReplacer } from '@boart/core';
+
 import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
 
 /**
@@ -115,7 +116,7 @@ export class StoreReplacer implements ValueReplacer {
     replace2(arg: ReplaceArg, store: StoreWrapper): string {
         const isOptional = !!arg.default;
 
-        const selectors = arg.selectors.reduce((prev, current) => {
+        const selectors: string = arg.selectors.reduce((prev, current) => {
             const delim = (current.optional ? '?' : '') + '.';
             return prev + (prev ? delim : '') + current.value;
         }, arg.qualifier.value || '');

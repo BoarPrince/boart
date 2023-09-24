@@ -80,7 +80,11 @@ export class RowDataBinder {
     /**
      *
      */
-    constructor(private readonly tableName: string, private readonly columnMetaInfo: MetaInfo, tableDefinition: TableRows | string) {
+    constructor(
+        private readonly tableName: string,
+        private readonly columnMetaInfo: MetaInfo,
+        tableDefinition: TableRows | string
+    ) {
         this.tableDefinition = this.mapTableDefinition(tableDefinition);
     }
 
@@ -168,7 +172,6 @@ export class RowDataBinder {
 
             rows.push({
                 key: cells[keyIndex],
-                values: metaInfoValues.reduce((o, c) => values(o, c), {}),
                 get values_replaced() {
                     // lazy replace
                     return metaInfoValues.reduce((o, c) => valuesReplaced(o, c), {});

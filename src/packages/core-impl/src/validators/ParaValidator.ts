@@ -1,7 +1,7 @@
 import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
 
 /**
- *
+ * allowd paras can also be null if no parameter is possible too.
  */
 export class ParaValidator implements RowValidator {
     constructor(private readonly allowedPara: readonly string[]) {}

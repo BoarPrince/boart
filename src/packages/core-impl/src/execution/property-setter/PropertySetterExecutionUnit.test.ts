@@ -63,9 +63,7 @@ it('check (2 levels)', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        values: {
-            value: 'xxx'
-        },
+        ast: null,
         values_replaced: {
             value: 'xxx'
         },
@@ -86,9 +84,7 @@ it('check (1 level)', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        values: {
-            value: 'xxx'
-        },
+        ast: null,
         values_replaced: {
             value: 'xxx'
         },
@@ -110,9 +106,7 @@ it('check with concating (but not using)', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        values: {
-            value: 'xxx'
-        },
+        ast: null,
         values_replaced: {
             value: 'xxx'
         },
@@ -133,9 +127,7 @@ it('check null initialized', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        values: {
-            value: 'xxx'
-        },
+        ast: null,
         values_replaced: {
             value: 'xxx'
         },
@@ -156,9 +148,7 @@ it('check null initialized and selector', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: 'a',
-        values: {
-            value: 'xxx'
-        },
+        ast: null,
         values_replaced: {
             value: 'xxx'
         },
@@ -180,9 +170,7 @@ it('check NullContent initialized', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        values: {
-            value: 'xxx'
-        },
+        ast: null,
         values_replaced: {
             value: 'xxx'
         },
@@ -204,9 +192,7 @@ it('check NullContent initialized and selector', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: 'a',
-        values: {
-            value: 'xxx'
-        },
+        ast: null,
         values_replaced: {
             value: 'xxx'
         },
@@ -227,9 +213,7 @@ it('check with concating', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        values: {
-            value: 'xxx'
-        },
+        ast: null,
         values_replaced: {
             value: 'xxx'
         },
@@ -240,9 +224,7 @@ it('check with concating', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        values: {
-            value: 'yyy'
-        },
+        ast: null,
         values_replaced: {
             value: 'yyy'
         },
@@ -269,9 +251,7 @@ it('check with selector', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: 'c',
-        values: {
-            value: 'f'
-        },
+        ast: null,
         values_replaced: {
             value: 'f'
         },
@@ -297,9 +277,7 @@ it('check with selector - two changes', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: 'c',
-        values: {
-            value: 'f'
-        },
+        ast: null,
         values_replaced: {
             value: 'f'
         },
@@ -310,9 +288,7 @@ it('check with selector - two changes', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: 'e',
-        values: {
-            value: '4'
-        },
+        ast: null,
         values_replaced: {
             value: '4'
         },
@@ -335,9 +311,7 @@ it('check with selector - use object in context', () => {
         key: 'param',
         keyPara: undefined,
         selector: 'c',
-        values: {
-            value: '1'
-        },
+        ast: null,
         values_replaced: {
             value: '1'
         },
@@ -366,9 +340,7 @@ it('check with actionPara (deep)', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: 'a.f',
-        values: {
-            value: '5'
-        },
+        ast: null,
         values_replaced: {
             value: '5'
         },
@@ -389,9 +361,7 @@ it('check with actionPara (null init)', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: 'a.f',
-        values: {
-            value: '5'
-        },
+        ast: null,
         values_replaced: {
             value: '5'
         },
@@ -408,16 +378,14 @@ it('check with actionPara (null init)', () => {
 it('check with actionPara (use actionParaModifier)', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: false,
-        actionSelectorModifier: (rowValue) => `-${rowValue?.toString() || ''}-`
+        actionSelectorModifier: (rowValue) => `-${String(rowValue?.toString())}-`
     });
 
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
         selector: 'a.f',
-        values: {
-            value: '5'
-        },
+        ast: null,
         values_replaced: {
             value: '5'
         },
@@ -434,16 +402,14 @@ it('check with actionPara (use actionParaModifier)', () => {
 it('check without actionPara (use defaultModifier)', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: false,
-        defaultModifier: (rowValue) => `-${rowValue?.toString() || ''}-`
+        defaultModifier: (rowValue) => `-${String(rowValue?.toString())}-`
     });
 
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: '',
         selector: undefined,
-        values: {
-            value: '5'
-        },
+        ast: null,
         values_replaced: {
             value: '5'
         },
@@ -461,7 +427,7 @@ it('check query style (actionParaSetter), one para', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: false,
         actionSelectorSetter: (_value: ContentType, rowValue: ContentType, para: string): ContentType => {
-            return `${para}=${rowValue?.toString() || ''}`;
+            return `${para}=${String(rowValue?.toString())}`;
         }
     });
 
@@ -469,9 +435,7 @@ it('check query style (actionParaSetter), one para', () => {
         key: 'query',
         keyPara: undefined,
         selector: 'id',
-        values: {
-            value: '5'
-        },
+        ast: null,
         values_replaced: {
             value: '5'
         },
@@ -496,9 +460,7 @@ it('check query style (actionParaSetter), three paras', () => {
         key: 'query',
         keyPara: undefined,
         selector: 'id',
-        values: {
-            value: '5'
-        },
+        ast: null,
         values_replaced: {
             value: '5'
         },
@@ -509,9 +471,7 @@ it('check query style (actionParaSetter), three paras', () => {
         key: 'query',
         keyPara: undefined,
         selector: 'id2',
-        values: {
-            value: '6'
-        },
+        ast: null,
         values_replaced: {
             value: '6'
         },
@@ -522,9 +482,7 @@ it('check query style (actionParaSetter), three paras', () => {
         key: 'query',
         keyPara: undefined,
         selector: 'id3',
-        values: {
-            value: '7'
-        },
+        ast: null,
         values_replaced: {
             value: '7'
         },
@@ -554,9 +512,7 @@ it('check query style (actionParaSetter and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: 'id',
-        values: {
-            value: '5'
-        },
+        ast: null,
         values_replaced: {
             value: '5'
         },
@@ -575,7 +531,7 @@ it('check query style (default and modifier)', () => {
         concat: true,
         delimiter: '&',
         defaultModifier: (rowValue: ContentType): ContentType => {
-            return (rowValue || '')
+            return String(rowValue)
                 .toString()
                 .split('=')
                 .map((value) => `-${value}-`)
@@ -587,9 +543,7 @@ it('check query style (default and modifier)', () => {
         key: 'query',
         keyPara: '',
         selector: undefined,
-        values: {
-            value: 'a=1'
-        },
+        ast: null,
         values_replaced: {
             value: 'a=1'
         },
@@ -600,9 +554,7 @@ it('check query style (default and modifier)', () => {
         key: 'query',
         keyPara: '',
         selector: undefined,
-        values: {
-            value: 'b=2'
-        },
+        ast: null,
         values_replaced: {
             value: 'b=2'
         },
@@ -639,9 +591,7 @@ it('check query style (default, para and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: '',
-        values: {
-            value: 'a=1'
-        },
+        ast: null,
         values_replaced: {
             value: 'a=1'
         },
@@ -652,9 +602,7 @@ it('check query style (default, para and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: '',
-        values: {
-            value: 'b=2'
-        },
+        ast: null,
         values_replaced: {
             value: 'b=2'
         },
@@ -665,9 +613,7 @@ it('check query style (default, para and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: 'c',
-        values: {
-            value: '3'
-        },
+        ast: null,
         values_replaced: {
             value: '3'
         },
@@ -683,17 +629,17 @@ it('check query style (default, para and modifier)', () => {
 /**
  *
  */
-it('check query style (default, para and modifier)', () => {
+it('check query style - default, para and modifier', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: true,
         delimiter: '&',
         actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
             `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString() || ''}`,
         actionSelectorModifier: (rowValue: ContentType): ContentType => {
-            return `-${rowValue?.toString() || ''}-`;
+            return `-${String(rowValue?.toString())}-`;
         },
         defaultModifier: (rowValue: ContentType): ContentType => {
-            return (rowValue || '')
+            return String(rowValue)
                 .toString()
                 .split('=')
                 .map((value) => `-${value}-`)
@@ -705,9 +651,7 @@ it('check query style (default, para and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: '',
-        values: {
-            value: 'a=1'
-        },
+        ast: null,
         values_replaced: {
             value: 'a=1'
         },
@@ -718,9 +662,7 @@ it('check query style (default, para and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: '',
-        values: {
-            value: 'b=2'
-        },
+        ast: null,
         values_replaced: {
             value: 'b=2'
         },
@@ -731,9 +673,7 @@ it('check query style (default, para and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: 'c',
-        values: {
-            value: '3'
-        },
+        ast: null,
         values_replaced: {
             value: '3'
         },
@@ -756,10 +696,10 @@ it('check query style (default, para, default and modifier)', () => {
         actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
             `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString() || ''}`,
         actionSelectorModifier: (rowValue: ContentType): ContentType => {
-            return `-${rowValue?.toString() || ''}-`;
+            return `-${String(rowValue?.toString())}-`;
         },
         defaultModifier: (rowValue: ContentType): ContentType => {
-            return (rowValue || '')
+            return String(rowValue)
                 .toString()
                 .split('=')
                 .map((value) => `-${value}-`)
@@ -771,9 +711,7 @@ it('check query style (default, para, default and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: '',
-        values: {
-            value: 'a=1'
-        },
+        ast: null,
         values_replaced: {
             value: 'a=1'
         },
@@ -784,9 +722,7 @@ it('check query style (default, para, default and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: '',
-        values: {
-            value: 'b=2'
-        },
+        ast: null,
         values_replaced: {
             value: 'b=2'
         },
@@ -797,9 +733,7 @@ it('check query style (default, para, default and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: 'c',
-        values: {
-            value: '3'
-        },
+        ast: null,
         values_replaced: {
             value: '3'
         },
@@ -819,7 +753,7 @@ it('check method/url style', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'restCall', {
         defaultSetter: (value: ContentType, rowValue: ContentType, para: string): RestCallContext => ({
             method: para,
-            url: rowValue?.toString() || ''
+            url: String(rowValue?.toString())
         })
     });
 
@@ -832,9 +766,7 @@ it('check method/url style', () => {
         key: 'method',
         keyPara: 'post',
         selector: undefined,
-        values: {
-            value: 'http://xyz'
-        },
+        ast: null,
         values_replaced: {
             value: 'http://xyz'
         },
@@ -842,7 +774,7 @@ it('check method/url style', () => {
     });
 
     sut.execute(context, row);
-    expect(context.config['restCall']).toEqual({ method: 'post', url: 'http://xyz' });
+    expect(context.config['restCall']).toStrictEqual({ method: 'post', url: 'http://xyz' });
 });
 
 /**
@@ -862,9 +794,7 @@ it('check param definition (actionParaSetter), three paras', () => {
         key: 'param',
         keyPara: 'para1',
         selector: undefined,
-        values: {
-            value: '1'
-        },
+        ast: null,
         values_replaced: {
             value: '1'
         },
@@ -875,9 +805,7 @@ it('check param definition (actionParaSetter), three paras', () => {
         key: 'param',
         keyPara: 'para2',
         selector: undefined,
-        values: {
-            value: '2'
-        },
+        ast: null,
         values_replaced: {
             value: '2'
         },
@@ -888,9 +816,7 @@ it('check param definition (actionParaSetter), three paras', () => {
         key: 'param',
         keyPara: 'para3',
         selector: undefined,
-        values: {
-            value: '3'
-        },
+        ast: null,
         values_replaced: {
             value: '3'
         },
@@ -903,7 +829,7 @@ it('check param definition (actionParaSetter), three paras', () => {
 
     expect(context.config['value']).toBeInstanceOf(Object);
     expect(context.config['value']?.constructor.name).toBe('Object');
-    expect(context.config['value']).toEqual({ para1: '1', para2: '2', para3: '3' });
+    expect(context.config['value']).toStrictEqual({ para1: '1', para2: '2', para3: '3' });
 });
 
 /**
@@ -918,9 +844,7 @@ it('use default type converter', () => {
         key: 'method',
         keyPara: undefined,
         selector: undefined,
-        values: {
-            value: 'x'
-        },
+        ast: null,
         values_replaced: {
             value: 'x'
         },
@@ -929,7 +853,7 @@ it('use default type converter', () => {
 
     sut.execute(context, row);
     expect(context.config.value).toBeInstanceOf(ObjectContent);
-    expect(context.config.value?.toString()).toEqual('x');
+    expect(context.config.value?.toString()).toBe('x');
 });
 
 /**
@@ -942,9 +866,7 @@ it('use enum value', () => {
         key: 'method',
         keyPara: undefined,
         selector: undefined,
-        values: {
-            value: 'nor'
-        },
+        ast: null,
         values_replaced: {
             value: 'nor'
         },
@@ -953,6 +875,6 @@ it('use enum value', () => {
 
     sut.execute(context, row);
 
-    expect(context.config.type).toEqual(ContextType.Nor);
+    expect(context.config.type).toBe(ContextType.Nor);
     expect(context.config.type).toBeString();
 });

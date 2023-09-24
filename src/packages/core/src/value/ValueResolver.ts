@@ -4,9 +4,9 @@ import { PipeResolver } from '../pipe/PipeResolver';
 import { Store } from '../store/Store';
 import { StoreWrapper } from '../store/StoreWrapper';
 import { ScopeType } from '../types/ScopeType';
+
 import { OperatorType } from './OperatorType';
 import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
-
 import { ValueReplacerHandler } from './ValueReplacerHandler';
 
 /**
@@ -73,10 +73,11 @@ export class ValueResolver {
             case OperatorType.Default:
                 return ast.default.value;
 
-            case OperatorType.DefaultAssignment:
-                const selectors = ast.selectors.map((s) => s.value).join('.');
+            case OperatorType.DefaultAssignment: {
+                const selectors = ast.selectors.stringValue;
                 store.put(selectors, ast.default.value);
                 return ast.default.value;
+            }
 
             case OperatorType.None:
                 return null;
@@ -105,7 +106,7 @@ export class ValueResolver {
         // check min qualifier parameter
         if (config.qualifierParaCountMin > ast.qualifier?.paras?.length) {
             throw Error(
-                `at least ${config.qualifierParaCountMin} qualifier(s) are required, but only ${
+                `at least ${config.qualifierParaCountMin || 0} qualifier(s) are required, but only ${
                     ast.qualifier?.paras?.length ?? 0
                 } exists: ${ast.qualifier.paras.join(':')}\n${ast.match}`
             );
@@ -114,7 +115,7 @@ export class ValueResolver {
         // check max qualifier parameter
         if (config.qualifierParaCountMax < ast.qualifier?.paras?.length) {
             throw Error(
-                `max ${config.qualifierParaCountMin} qualifier(s) allowed, but ${
+                `max ${config.qualifierParaCountMin || 0} qualifier(s) allowed, but ${
                     ast.qualifier?.paras?.length ?? 0
                 } found: ${ast.qualifier.paras.join(':')}\n${ast.match}`
             );
@@ -123,13 +124,15 @@ export class ValueResolver {
         // check min selector count
         if (config.selectorsCountMin > ast.selectors?.length) {
             throw Error(
-                `at least ${config.selectorsCountMin} selector(s) are required, but only ${ast.selectors?.length ?? 0} exists: ${ast.match}`
+                `at least ${config.selectorsCountMin || 0} selector(s) are required, but only ${ast.selectors?.length ?? 0} exists: ${
+                    ast.match
+                }`
             );
         }
 
         // check max selector count
         if (config.selectorsCountMax < ast.selectors?.length) {
-            throw Error(`max ${config.selectorsCountMax} selector(s) allowed, but ${ast.selectors?.length ?? 0} found: ${ast.match}`);
+            throw Error(`max ${config.selectorsCountMax || 0} selector(s) allowed, but ${ast.selectors?.length ?? 0} found: ${ast.match}`);
         }
 
         // check default assignment
@@ -153,11 +156,6 @@ export class ValueResolver {
         if (!replacer) {
             throw new Error(`replacer "${ast.name.value}" does not exist`);
         }
-
-        // if (replacer.scoped === ScopedType.false && !!ast.scope) {
-        //     const matchWithMarker = this.parser.getValueWithMarker(ast.scope.location, ast.match);
-        //     throw new Error(`value replacer "${ast.name.value}" can't have a scope!\n${matchWithMarker}`);
-        // }
 
         this.checkConfig(ast, replacer.config);
 

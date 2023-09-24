@@ -36,9 +36,7 @@ describe('check row validators', () => {
                     key: 'a:a',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: 'a'
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: 'a'
                     },
@@ -89,9 +87,7 @@ describe('check row validators', () => {
                     key: 'a:a',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: value
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: value
                     },
@@ -107,8 +103,8 @@ describe('check row validators', () => {
             };
 
             sut.validate([rowData]);
-            expect(typeof rowData.data.values.value1).toBe('boolean');
-            expect(rowData.data.values.value1).toBe(exptectedValue);
+            expect(typeof rowData.data.values_replaced.value1).toBe('boolean');
+            expect(rowData.data.values_replaced.value1).toBe(exptectedValue);
         });
 
         /**
@@ -131,9 +127,7 @@ describe('check row validators', () => {
                         key: 'a:a',
                         keyPara: null,
                         selector: null,
-                        values: {
-                            value1: value
-                        },
+                        ast: null,
                         values_replaced: {
                             value1: value
                         },
@@ -180,9 +174,7 @@ describe('check row validators', () => {
                     key: 'a:a',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: value
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: value
                     },
@@ -198,8 +190,8 @@ describe('check row validators', () => {
             };
 
             sut.validate([rowData]);
-            expect(typeof rowData.data.values.value1).toBe('number');
-            expect(rowData.data.values.value1).toBe(exptectedValue);
+            expect(typeof rowData.data.values_replaced.value1).toBe('number');
+            expect(rowData.data.values_replaced.value1).toBe(exptectedValue);
         });
 
         /**
@@ -222,9 +214,7 @@ describe('check row validators', () => {
                         key: 'a:a',
                         keyPara: null,
                         selector: null,
-                        values: {
-                            value1: value
-                        },
+                        ast: null,
                         values_replaced: {
                             value1: value
                         },
@@ -259,9 +249,7 @@ describe('check row validators', () => {
                 key: 'a:a',
                 keyPara: null,
                 selector: null,
-                values: {
-                    value1: null
-                },
+                ast: null,
                 values_replaced: {
                     value1: null
                 },
@@ -291,9 +279,7 @@ describe('check row validators', () => {
                     key: 'a:a',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: null
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: null
                     },
@@ -313,9 +299,7 @@ describe('check row validators', () => {
                     key: 'b:b',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: null
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: null
                     },
@@ -343,9 +327,7 @@ describe('check row validators', () => {
                     key: 'a:a',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: null
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: null
                     },
@@ -365,9 +347,7 @@ describe('check row validators', () => {
                     key: 'b:b',
                     keyPara: null,
                     selector: null,
-                    values: {
-                        value1: null
-                    },
+                    ast: null,
                     values_replaced: {
                         value1: null
                     },
@@ -423,9 +403,7 @@ describe('check row validators', () => {
                         key: 'a:1',
                         keyPara: null,
                         selector: null,
-                        values: {
-                            value1: null
-                        },
+                        ast: null,
                         values_replaced: {
                             value1: null
                         },
@@ -444,9 +422,7 @@ describe('check row validators', () => {
                         key: 'a:2',
                         keyPara: null,
                         selector: null,
-                        values: {
-                            value1: null
-                        },
+                        ast: null,
                         values_replaced: {
                             value1: null
                         },
@@ -465,9 +441,7 @@ describe('check row validators', () => {
                         key: 'a:3',
                         keyPara: null,
                         selector: null,
-                        values: {
-                            value1: null
-                        },
+                        ast: null,
                         values_replaced: {
                             value1: null
                         },
@@ -528,9 +502,7 @@ describe('check row validators', () => {
                         key: 'a:1',
                         keyPara: null,
                         selector: null,
-                        values: {
-                            value1: null
-                        },
+                        ast: null,
                         values_replaced: {
                             value1: null
                         },
@@ -549,9 +521,7 @@ describe('check row validators', () => {
                         key: 'a:2',
                         keyPara: null,
                         selector: null,
-                        values: {
-                            value1: null
-                        },
+                        ast: null,
                         values_replaced: {
                             value1: null
                         },
@@ -570,9 +540,7 @@ describe('check row validators', () => {
                         key: 'a:3',
                         keyPara: null,
                         selector: null,
-                        values: {
-                            value1: null
-                        },
+                        ast: null,
                         values_replaced: {
                             value1: null
                         },
@@ -621,9 +589,7 @@ describe('check row validators', () => {
                         key: key1.description,
                         keyPara: null,
                         selector: null,
-                        values: {
-                            value1: null
-                        },
+                        ast: null,
                         values_replaced: {
                             value1: null
                         },
@@ -642,9 +608,7 @@ describe('check row validators', () => {
                         key: key2.description,
                         keyPara: null,
                         selector: null,
-                        values: {
-                            value1: null
-                        },
+                        ast: null,
                         values_replaced: {
                             value1: null
                         },
@@ -697,9 +661,7 @@ describe('check row validators', () => {
                             key: key.description,
                             keyPara: para,
                             selector: null,
-                            values: {
-                                value1: null
-                            },
+                            ast: null,
                             values_replaced: {
                                 value1: null
                             },
@@ -757,10 +719,7 @@ describe('check row validators', () => {
                             key: 'xxx',
                             keyPara: null,
                             selector: null,
-                            values: {
-                                value1,
-                                value2
-                            },
+                            ast: null,
                             values_replaced: {
                                 value1,
                                 value2

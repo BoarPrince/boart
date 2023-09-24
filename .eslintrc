@@ -52,6 +52,12 @@
     }
   ],
   "rules": {
+    // jest
+    "jest/expect-expect": "off",
+    "jest/consistent-test-it": "off",
+    "jest/max-expects": "off",
+    "jest/require-top-level-describe": "off",
+    "jest/no-untyped-mock-factory": "off",
     // old
     "no-extra-boolean-cast": "off",
     "@typescript-eslint/rule-name": "off",
