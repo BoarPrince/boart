@@ -20,7 +20,7 @@ import BasicGroupDefinition from './BasicDataGroupDefinition';
 /**
  *
  */
-export type MockContext = ExecutionContext<
+type MockContext = ExecutionContext<
     {
         confValue: string;
     },
@@ -143,1044 +143,1046 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
  */
 const sut = new MockTableHandler();
 
-/**
- *
- */
-beforeEach(() => {
-    intialContext.data = null;
-    intialContext.header = null;
-    intialContext.transformed = null;
-});
-
-/**
- *
- */
-it('wrong action key must throw an error', async () => {
-    const tableDef = MarkdownTableReader.convert(
-        `|action       |value  |
-         |-------------|-------|
-         |wrong action |       |`
-    );
-
-    await expect(async () => {
-        await sut.handler.process(tableDef);
-    }).rejects.toThrowError(`'undefined': key 'wrong action' is not valid`);
-});
-
-/**
- *
- */
-describe('check expected,expected:data', () => {
+describe('basic group definition', () => {
     /**
      *
      */
-    it('expected:data can check value defined by config unit', async () => {
+    beforeEach(() => {
+        intialContext.data = null;
+        intialContext.header = null;
+        intialContext.transformed = null;
+    });
+
+    /**
+     *
+     */
+    it('wrong action key must throw an error', async () => {
         const tableDef = MarkdownTableReader.convert(
-            `|action       |value |
+            `|action       |value  |
+             |-------------|-------|
+             |wrong-action |       |`
+        );
+
+        await expect(async () => {
+            await sut.handler.process(tableDef);
+        }).rejects.toThrow(`'undefined': key 'wrong-action' is not valid`);
+    });
+
+    /**
+     *
+     */
+    describe('check expected,expected:data', () => {
+        /**
+         *
+         */
+        it('expected:data can check value defined by config unit', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action       |value |
              |-------------|------|
              |data:config  |xyz   |
              |expected:data|xyz   |`
-        );
+            );
 
-        const context = await sut.handler.process(tableDef);
-        expect(context.execution.data?.toString()).toBe('xyz');
-    });
+            const context = await sut.handler.process(tableDef);
+            expect(context.execution.data?.toString()).toBe('xyz');
+        });
 
-    /**
-     *
-     */
-    it('expected:data can check complete value - correct', async () => {
-        intialContext.data = new TextContent('xxx');
+        /**
+         *
+         */
+        it('expected:data can check complete value - correct', async () => {
+            intialContext.data = new TextContent('xxx');
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action       |value  |
-             |-------------|-------|
-             |expected:data|xxx    |`
-        );
+            const tableDef = MarkdownTableReader.convert(
+                `|action       |value  |
+                 |-------------|-------|
+                 |expected:data|xxx    |`
+            );
 
-        await sut.handler.process(tableDef);
-    });
-
-    /**
-     *
-     */
-    it('expected can check complete value - correct', async () => {
-        intialContext.data = new TextContent('xxx');
-
-        const tableDef = MarkdownTableReader.convert(
-            `|action   |value  |
-             |---------|-------|
-             |expected |xxx    |`
-        );
-
-        await sut.handler.process(tableDef);
-    });
-
-    /**
-     *
-     */
-    it('expected:data can check complete value - incorrect', async () => {
-        intialContext.data = new TextContent('xxx');
-
-        const tableDef = MarkdownTableReader.convert(
-            `|action       |value  |
-             |-------------|-------|
-             |expected:data|x-x-x  |`
-        );
-
-        await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`error: expected:data\n\texpected: x-x-x\n\tactual: xxx`);
-    });
+        });
 
-    /**
-     *
-     */
-    it('expected:data can check complete value - negate', async () => {
-        sut.handler.executionEngine.context.execution.data = new TextContent('xxx');
+        /**
+         *
+         */
+        it('expected can check complete value - correct', async () => {
+            intialContext.data = new TextContent('xxx');
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action           |value  |
-             |-----------------|-------|
-             |expected:data:not|x-x-x  |`
-        );
+            const tableDef = MarkdownTableReader.convert(
+                `|action   |value  |
+                 |---------|-------|
+                 |expected |xxx    |`
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('expected:data can check value with selector', async () => {
-        intialContext.data = new ObjectContent({ a: 'xyz' });
+        /**
+         *
+         */
+        it('expected:data can check complete value - incorrect', async () => {
+            intialContext.data = new TextContent('xxx');
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action         |value |
-             |---------------|------|
-             |expected:data#a|xyz   |`
-        );
+            const tableDef = MarkdownTableReader.convert(
+                `|action       |value  |
+                 |-------------|-------|
+                 |expected:data|x-x-x  |`
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow(`error: expected:data\n\texpected: x-x-x\n\tactual: xxx`);
+        });
 
-    /**
-     *
-     */
-    it('expected:contains a null value', async () => {
-        intialContext.data = new ObjectContent({ a: null, b: 1 });
+        /**
+         *
+         */
+        it('expected:data can check complete value - negate', async () => {
+            sut.handler.executionEngine.context.execution.data = new TextContent('xxx');
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action            |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action           |value  |
+                 |-----------------|-------|
+                 |expected:data:not|x-x-x  |`
+            );
+
+            await sut.handler.process(tableDef);
+        });
+
+        /**
+         *
+         */
+        it('expected:data can check value with selector', async () => {
+            intialContext.data = new ObjectContent({ a: 'xyz' });
+
+            const tableDef = MarkdownTableReader.convert(
+                `|action         |value |
+                 |---------------|------|
+                 |expected:data#a|xyz   |`
+            );
+
+            await sut.handler.process(tableDef);
+        });
+
+        /**
+         *
+         */
+        it('expected:contains a null value', async () => {
+            intialContext.data = new ObjectContent({ a: null, b: 1 });
+
+            const tableDef = MarkdownTableReader.convert(
+                `|action            |value |
              |------------------|------|
              |expected:contains |null  |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('expected:contains a none null value', async () => {
-        intialContext.data = new ObjectContent({ a: 1, b: 2 });
+        /**
+         *
+         */
+        it('expected:contains a none null value', async () => {
+            intialContext.data = new ObjectContent({ a: 1, b: 2 });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action                |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action                |value |
              |----------------------|------|
              |expected:contains:not |null  |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('expected:contains a 0 value', async () => {
-        intialContext.data = new ObjectContent({ a: 0, b: 1 });
+        /**
+         *
+         */
+        it('expected:contains a 0 value', async () => {
+            intialContext.data = new ObjectContent({ a: 0, b: 1 });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action            |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action            |value |
              |------------------|------|
              |expected:contains |0     |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('expected:contains a none 0 value', async () => {
-        intialContext.data = new ObjectContent({ a: 1, b: 2 });
+        /**
+         *
+         */
+        it('expected:contains a none 0 value', async () => {
+            intialContext.data = new ObjectContent({ a: 1, b: 2 });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action                |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action                |value |
              |----------------------|------|
              |expected:contains:not |0     |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('expected:data can check value with selector - incorrect', async () => {
-        intialContext.data = new ObjectContent({ a: 'xy' });
+        /**
+         *
+         */
+        it('expected:data can check value with selector - incorrect', async () => {
+            intialContext.data = new ObjectContent({ a: 'xy' });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action         |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action         |value |
              |---------------|------|
              |expected:data#a|xyz   |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`error: expected:data#a\n\texpected: xyz\n\tactual: xy`);
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow(`error: expected:data#a\n\texpected: xyz\n\tactual: xy`);
+        });
 
-    /**
-     *
-     */
-    it('expected:data can check value without selector, but it is expected - incorrect', async () => {
-        intialContext.data = new ObjectContent({ a: 'xyz' });
+        /**
+         *
+         */
+        it('expected:data can check value without selector, but it is expected - incorrect', async () => {
+            intialContext.data = new ObjectContent({ a: 'xyz' });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action         |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action         |value |
              |---------------|------|
              |expected:data  |xyz   |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`error: expected:data\n\texpected: xyz\n\tactual: {"a":"xyz"}`);
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow(`error: expected:data\n\texpected: xyz\n\tactual: {"a":"xyz"}`);
+        });
 
-    /**
-     *
-     */
-    it('expected:data can check value with selector and regexp', async () => {
-        intialContext.data = new ObjectContent({ a: 'aabaa' });
+        /**
+         *
+         */
+        it('expected:data can check value with selector and regexp', async () => {
+            intialContext.data = new ObjectContent({ a: 'aabaa' });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action                |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action                |value |
              |----------------------|------|
              |expected:data:regexp#a|.+b.+ |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
+            await sut.handler.process(tableDef);
+        });
     });
-});
 
-/**
- *
- */
-describe('check expected:header', () => {
     /**
      *
      */
-    it('expected:header can check value defined by config unit', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action         |value |
+    describe('check expected:header', () => {
+        /**
+         *
+         */
+        it('expected:header can check value defined by config unit', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action         |value |
              |---------------|------|
              |header:config  |xyz   |
              |expected:header|xyz   |`
-        );
+            );
 
-        const context = await sut.handler.process(tableDef);
-        expect(context.execution.header?.toString()).toBe('xyz');
-    });
+            const context = await sut.handler.process(tableDef);
+            expect(context.execution.header?.toString()).toBe('xyz');
+        });
 
-    /**
-     *
-     */
-    it('expected:header can check complete value - correct', async () => {
-        intialContext.header = new TextContent('xxx');
+        /**
+         *
+         */
+        it('expected:header can check complete value - correct', async () => {
+            intialContext.header = new TextContent('xxx');
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action         |value  |
+            const tableDef = MarkdownTableReader.convert(
+                `|action         |value  |
              |---------------|-------|
              |expected:header|xxx    |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('expected:header can check complete value - incorrect', async () => {
-        intialContext.header = new TextContent('xxx');
+        /**
+         *
+         */
+        it('expected:header can check complete value - incorrect', async () => {
+            intialContext.header = new TextContent('xxx');
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action         |value  |
+            const tableDef = MarkdownTableReader.convert(
+                `|action         |value  |
              |---------------|-------|
              |expected:header|x-x-x  |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`error: expected:header\n\texpected: x-x-x\n\tactual: xxx`);
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow(`error: expected:header\n\texpected: x-x-x\n\tactual: xxx`);
+        });
 
-    /**
-     *
-     */
-    it('expected:header can check value with selector', async () => {
-        intialContext.header = new ObjectContent({ a: 'xyz' });
+        /**
+         *
+         */
+        it('expected:header can check value with selector', async () => {
+            intialContext.header = new ObjectContent({ a: 'xyz' });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action           |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action           |value |
              |-----------------|------|
              |expected:header#a|xyz   |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('expected:header can check value with selector - incorrect', async () => {
-        intialContext.header = new ObjectContent({ a: 'xy' });
+        /**
+         *
+         */
+        it('expected:header can check value with selector - incorrect', async () => {
+            intialContext.header = new ObjectContent({ a: 'xy' });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action           |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action           |value |
              |-----------------|------|
              |expected:header#a|xyz   |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`error: expected:header#a\n\texpected: xyz\n\tactual: xy`);
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow(`error: expected:header#a\n\texpected: xyz\n\tactual: xy`);
+        });
 
-    /**
-     *
-     */
-    it('expected:header can check value without selector, but it is expected - incorrect', async () => {
-        intialContext.header = new ObjectContent({ a: 'xyz' });
+        /**
+         *
+         */
+        it('expected:header can check value without selector, but it is expected - incorrect', async () => {
+            intialContext.header = new ObjectContent({ a: 'xyz' });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action           |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action           |value |
              |-----------------|------|
              |expected:header  |xyz   |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`error: expected:header\n\texpected: xyz\n\tactual: {"a":"xyz"}`);
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow(`error: expected:header\n\texpected: xyz\n\tactual: {"a":"xyz"}`);
+        });
     });
-});
 
-/**
- *
- */
-describe('check expected:transformed', () => {
     /**
      *
      */
-    it('expected:header can check value defined by config unit', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action              |value |
+    describe('check expected:transformed', () => {
+        /**
+         *
+         */
+        it('expected:header can check value defined by config unit', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action              |value |
              |--------------------|------|
              |transformed:config  |xyz   |
              |expected:transformed|xyz   |`
-        );
+            );
 
-        const context = await sut.handler.process(tableDef);
-        expect(context.execution.transformed?.toString()).toBe('xyz');
-    });
+            const context = await sut.handler.process(tableDef);
+            expect(context.execution.transformed?.toString()).toBe('xyz');
+        });
 
-    /**
-     *
-     */
-    it('expected:header can check complete value - correct', async () => {
-        intialContext.transformed = new TextContent('xxx');
+        /**
+         *
+         */
+        it('expected:header can check complete value - correct', async () => {
+            intialContext.transformed = new TextContent('xxx');
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action              |value  |
+            const tableDef = MarkdownTableReader.convert(
+                `|action              |value  |
              |--------------------|-------|
              |expected:transformed|xxx    |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
+            await sut.handler.process(tableDef);
+        });
     });
-});
 
-/**
- *
- */
-describe('check expected operators', () => {
     /**
      *
      */
-    it('default operator', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action       |value |
+    describe('check expected operators', () => {
+        /**
+         *
+         */
+        it('default operator', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action       |value |
              |-------------|------|
              |data:config  |xyz   |
              |expected     |xyz   |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('default negate operator', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action       |value |
+        /**
+         *
+         */
+        it('default negate operator', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action       |value |
              |-------------|------|
              |data:config  |xyz   |
              |expected:not |zyx   |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('null operator - falure', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action        |value |
+        /**
+         *
+         */
+        it('null operator - falure', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action        |value |
              |--------------|------|
              |data:config   |xyz   |
              |expected:null |xyz   |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError("error: expected, null: actual: 'xyz'");
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow("error: expected, null: actual: 'xyz'");
+        });
 
-    /**
-     *
-     */
-    it('count operator, object', async () => {
-        intialContext.data = new ObjectContent({ a: 'a', b: 'a', c: 'a' });
+        /**
+         *
+         */
+        it('count operator, object', async () => {
+            intialContext.data = new ObjectContent({ a: 'a', b: 'a', c: 'a' });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action         |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action         |value |
              |---------------|------|
              |expected:count | 3    |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('not:count header operator, object', async () => {
-        intialContext.header = new ObjectContent({ a: 'a', b: 'a', c: 'a' });
+        /**
+         *
+         */
+        it('not:count header operator, object', async () => {
+            intialContext.header = new ObjectContent({ a: 'a', b: 'a', c: 'a' });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action                    |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action                    |value |
              |--------------------------|------|
              |expected:header:count:not | 3    |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError('error: expected:header\n\tcount:not: 3');
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow('error: expected:header\n\tcount:not: 3');
+        });
 
-    /**
-     *
-     */
-    it('count operator, array', async () => {
-        intialContext.data = new ObjectContent(['a', 'b', 'c']);
+        /**
+         *
+         */
+        it('count operator, array', async () => {
+            intialContext.data = new ObjectContent(['a', 'b', 'c']);
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action         |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action         |value |
              |---------------|------|
              |expected:count | 3    |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('not:count header operator, array', async () => {
-        intialContext.header = new ObjectContent(['a', 'b', 'c']);
+        /**
+         *
+         */
+        it('not:count header operator, array', async () => {
+            intialContext.header = new ObjectContent(['a', 'b', 'c']);
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action                    |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action                    |value |
              |--------------------------|------|
              |expected:header:count:not | 3    |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError('error: expected:header\n\tcount:not: 3');
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow('error: expected:header\n\tcount:not: 3');
+        });
 
-    /**
-     *
-     */
-    it('expected int', async () => {
-        intialContext.data = new ObjectContent({ a: '11', b: 11, c: '1-1' });
+        /**
+         *
+         */
+        it('expected int', async () => {
+            intialContext.data = new ObjectContent({ a: '11', b: 11, c: '1-1' });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action             |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action             |value |
              |-------------------|------|
              |expected:int#a     |      |
              |expected:int#b     |      |
              |expected:int:not#c |      |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('expected number', async () => {
-        intialContext.data = new ObjectContent({ a: '11', b: 11, c: '11.1', d: 11.1, e: '11.1.1' });
+        /**
+         *
+         */
+        it('expected number', async () => {
+            intialContext.data = new ObjectContent({ a: '11', b: 11, c: '11.1', d: 11.1, e: '11.1.1' });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action                |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action                |value |
              |----------------------|------|
              |expected:number#a     |      |
              |expected:number#b     |      |
              |expected:number#c     |      |
              |expected:number#d     |      |
              |expected:number:not#e |      |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('expected string', async () => {
-        intialContext.data = new ObjectContent({ a: '11', b: 'dd', c: '11.1', d: 11.1 });
+        /**
+         *
+         */
+        it('expected string', async () => {
+            intialContext.data = new ObjectContent({ a: '11', b: 'dd', c: '11.1', d: 11.1 });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action                |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action                |value |
              |----------------------|------|
              |expected:string:not#a |      |
              |expected:string#b     |      |
              |expected:string:not#c |      |
              |expected:string:not#d |      |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
+            await sut.handler.process(tableDef);
+        });
     });
-});
 
-/**
- *
- */
-describe('check expected JsonLogic', () => {
     /**
      *
      */
-    it('uninitialized', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                  |value                            |
+    describe('check expected JsonLogic', () => {
+        /**
+         *
+         */
+        it('uninitialized', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                  |value                            |
              |------------------------|---------------------------------|
              |expected:jsonLogic:true |{ "===" : [{"var": ""}, "xyz"] } |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError('jsonLogic expression must be true: "{ \\"===\\" : [{\\"var\\": \\"\\"}, \\"xyz\\"] }"');
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow('jsonLogic expression must be true: "{ \\"===\\" : [{\\"var\\": \\"\\"}, \\"xyz\\"] }"');
+        });
 
-    /**
-     *
-     */
-    it('null', async () => {
-        sut.handler.executionEngine.context.execution.data = new NullContent();
-        sut.handler.executionEngine.context.execution.transformed = new NullContent();
+        /**
+         *
+         */
+        it('null', async () => {
+            sut.handler.executionEngine.context.execution.data = new NullContent();
+            sut.handler.executionEngine.context.execution.transformed = new NullContent();
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action                  |value                            |
+            const tableDef = MarkdownTableReader.convert(
+                `|action                  |value                            |
              |------------------------|---------------------------------|
              |expected:jsonLogic:true |{ "===" : [{"var": ""}, "xyz"] } |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError('jsonLogic expression must be true: "{ \\"===\\" : [{\\"var\\": \\"\\"}, \\"xyz\\"] }"');
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow('jsonLogic expression must be true: "{ \\"===\\" : [{\\"var\\": \\"\\"}, \\"xyz\\"] }"');
+        });
 
-    /**
-     *
-     */
-    it('default', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                  |value                            |
+        /**
+         *
+         */
+        it('default', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                  |value                            |
              |------------------------|---------------------------------|
              |data:config             |xyz                              |
              |expected:jsonLogic:true |{ "===" : [{"var": ""}, "xyz"] } |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('default false', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                   |value                            |
+        /**
+         *
+         */
+        it('default false', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                   |value                            |
              |-------------------------|---------------------------------|
              |data:config              |xyz                              |
              |expected:jsonLogic:false |{ "===" : [{"var": ""}, "xyy"] } |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('default, object as string', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                  |value                             |
+        /**
+         *
+         */
+        it('default, object as string', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                  |value                             |
              |------------------------|----------------------------------|
              |data:config             |{"a": "bcd"}                      |
              |expected:jsonLogic:true |{ "===" : [{"var": "a"}, "bcd"] } |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('default, object with selector', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                  |value                             |
+        /**
+         *
+         */
+        it('default, object with selector', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                  |value                             |
              |------------------------|----------------------------------|
              |data:config#a           |bcd                               |
              |expected:jsonLogic:true |{ "===" : [{"var": "a"}, "bcd"] } |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('default, object with selector, failure', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                  |value                             |
+        /**
+         *
+         */
+        it('default, object with selector, failure', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                  |value                             |
              |------------------------|----------------------------------|
              |data:config#a           |bcd                               |
              |expected:jsonLogic:true |{ "===" : [{"var": "a"}, "bce"] } |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError('jsonLogic expression must be true: "{ \\"===\\" : [{\\"var\\": \\"a\\"}, \\"bce\\"] }"');
-    });
-});
-
-/**
- *
- */
-describe('check transformed jpath', () => {
-    /**
-     *
-     */
-    beforeEach(() => {
-        intialContext.data = new NullContent();
-        intialContext.header = null;
-        intialContext.transformed = new NullContent();
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow('jsonLogic expression must be true: "{ \\"===\\" : [{\\"var\\": \\"a\\"}, \\"bce\\"] }"');
+        });
     });
 
     /**
      *
      */
-    it('not initialized', async () => {
-        intialContext.data = undefined;
-        intialContext.transformed = undefined;
+    describe('check transformed jpath', () => {
+        /**
+         *
+         */
+        beforeEach(() => {
+            intialContext.data = new NullContent();
+            intialContext.header = null;
+            intialContext.transformed = new NullContent();
+        });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action          |value |
+        /**
+         *
+         */
+        it('not initialized', async () => {
+            intialContext.data = undefined;
+            intialContext.transformed = undefined;
+
+            const tableDef = MarkdownTableReader.convert(
+                `|action          |value |
              |----------------|------|
              |transform:jpath | .b   |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError("cannot evaluate jpath expression, rule: '.b', data: null");
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow("cannot evaluate jpath expression, rule: '.b', data: null");
+        });
 
-    /**
-     *
-     */
-    it('null', async () => {
-        sut.handler.executionEngine.context.execution.data = new NullContent();
-        sut.handler.executionEngine.context.execution.transformed = new NullContent();
+        /**
+         *
+         */
+        it('null', async () => {
+            sut.handler.executionEngine.context.execution.data = new NullContent();
+            sut.handler.executionEngine.context.execution.transformed = new NullContent();
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action          |value |
+            const tableDef = MarkdownTableReader.convert(
+                `|action          |value |
              |----------------|------|
              |transform:jpath | .b   |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError("cannot evaluate jpath expression, rule: '.b', data: null");
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow("cannot evaluate jpath expression, rule: '.b', data: null");
+        });
 
-    /**
-     *
-     */
-    it('default', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action          |value |
+        /**
+         *
+         */
+        it('default', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action          |value |
              |----------------|------|
              |data:config#a   | d    |
              |data:config#b   | e    |
              |transform:jpath | .b   |`
-        );
+            );
 
-        const result = await sut.handler.process(tableDef);
-        expect(result.execution.transformed).toBeInstanceOf(TextContent);
-        expect(result.execution.transformed?.toString()).toBe('e');
-    });
+            const result = await sut.handler.process(tableDef);
+            expect(result.execution.transformed).toBeInstanceOf(TextContent);
+            expect(result.execution.transformed?.toString()).toBe('e');
+        });
 
-    /**
-     *
-     */
-    it('deep data', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action            |value |
+        /**
+         *
+         */
+        it('deep data', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action            |value |
              |------------------|------|
              |data:config#b.c.d | e    |
              |transform:jpath   | .b   |`
-        );
+            );
 
-        const result = await sut.handler.process(tableDef);
-        expect(result.execution.transformed).toBeInstanceOf(ObjectContent);
-        expect(result.execution.transformed?.toJSON()).toBe('{"c":{"d":"e"}}');
-    });
+            const result = await sut.handler.process(tableDef);
+            expect(result.execution.transformed).toBeInstanceOf(ObjectContent);
+            expect(result.execution.transformed?.toJSON()).toBe('{"c":{"d":"e"}}');
+        });
 
-    /**
-     *
-     */
-    it('deep key and data', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action            |value   |
+        /**
+         *
+         */
+        it('deep key and data', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action            |value   |
              |------------------|--------|
              |data:config#b.c.d | e      |
              |transform:jpath   | .b.c.d |`
-        );
+            );
 
-        const result = await sut.handler.process(tableDef);
-        expect(result.execution.transformed).toBeInstanceOf(TextContent);
-        expect(result.execution.transformed?.toString()).toBe('e');
-    });
+            const result = await sut.handler.process(tableDef);
+            expect(result.execution.transformed).toBeInstanceOf(TextContent);
+            expect(result.execution.transformed?.toString()).toBe('e');
+        });
 
-    /**
-     *
-     */
-    it('deep data and expect jsonlogic', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                              |value                               |
+        /**
+         *
+         */
+        it('deep data and expect jsonlogic', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                              |value                               |
              |------------------------------------|------------------------------------|
              |data:config#b.c.d                   | e                                  |
              |transform:jpath                     | .b                                 |
              |expected:jsonLogic:transformed:true | { "===" : [ {"var": "c.d"}, "e" ]} |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('deep data and expected default', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action            |value               |
+        /**
+         *
+         */
+        it('deep data and expected default', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action            |value               |
              |------------------|--------------------|
              |data:config#b.c.d | e                  |
              |transform:jpath   | .b                 |
              |expected:transformed | {"c":{"d":"e"}} |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('deep data and expected not empty', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                         |value|
+        /**
+         *
+         */
+        it('deep data and expected not empty', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                         |value|
              |-------------------------------|-----|
              |data:config#b.c.d              | e   |
              |transform:jpath                | .b  |
              |expected:transformed:empty:not |     |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('deep data and expected empty with failure', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                     |value|
+        /**
+         *
+         */
+        it('deep data and expected empty with failure', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                     |value|
              |---------------------------|-----|
              |data:config#b.c.d          | e   |
              |transform:jpath            | .b  |
              |expected:transformed:empty |     |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError(`error: expected:transformed\n\tempty: \n\tactual: {"c":{"d":"e"}}`);
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow(`error: expected:transformed\n\tempty: \n\tactual: {"c":{"d":"e"}}`);
+        });
 
-    /**
-     *
-     */
-    it('transforming chain', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action             |value|
+        /**
+         *
+         */
+        it('transforming chain', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action             |value|
              |---------------------|-----|
              |data:config#b.c.d    | e   |
              |transform:jpath      | .b  |
              |transform:jpath      | .c  |
              |transform:jpath      | .d  |
              |expected:transformed | e   |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('reset', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action               |value                  |
+        /**
+         *
+         */
+        it('reset', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action               |value                  |
              |---------------------|-----------------------|
              |data:config#b.c.d    | e                     |
              |transform:jpath      | .b                    |
              |expected:transformed | {"c":{"d":"e"}}       |
              |transform:reset      |                       |
              |expected:transformed | {"b":{"c":{"d":"e"}}} |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
-});
-
-/**
- *
- */
-describe('check transformed jsonLogic', () => {
-    /**
-     *
-     */
-    beforeEach(() => {
-        intialContext.data = new NullContent();
-        intialContext.header = null;
-        intialContext.transformed = new NullContent();
+            await sut.handler.process(tableDef);
+        });
     });
 
     /**
      *
      */
-    it('not initialized', async () => {
-        intialContext.data = undefined;
-        intialContext.header = null;
-        intialContext.transformed = undefined;
+    describe('check transformed jsonLogic', () => {
+        /**
+         *
+         */
+        beforeEach(() => {
+            intialContext.data = new NullContent();
+            intialContext.header = null;
+            intialContext.transformed = new NullContent();
+        });
 
-        const tableDef = MarkdownTableReader.convert(
-            `|action              |value         |
+        /**
+         *
+         */
+        it('not initialized', async () => {
+            intialContext.data = undefined;
+            intialContext.header = null;
+            intialContext.transformed = undefined;
+
+            const tableDef = MarkdownTableReader.convert(
+                `|action              |value         |
              |--------------------|--------------|
              |transform:jsonLogic | {"var": "b"} |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('null', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action              |value         |
+        /**
+         *
+         */
+        it('null', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action              |value         |
              |--------------------|--------------|
              |transform:jsonLogic | {"var": "b"} |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('wrong rule', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action              |value        |
+        /**
+         *
+         */
+        it('wrong rule', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action              |value        |
              |--------------------|-------------|
              |transform:jsonLogic | {"var": "b" |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError('cannot parse rule: {"var": "b"');
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow('cannot parse rule: {"var": "b"');
+        });
 
-    /**
-     *
-     */
-    it('default', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action              |value         |
+        /**
+         *
+         */
+        it('default', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action              |value         |
              |--------------------|--------------|
              |data:config#a       | d            |
              |data:config#b       | e            |
              |transform:jsonLogic | {"var": "b"} |`
-        );
+            );
 
-        const result = await sut.handler.process(tableDef);
-        expect(result.execution.transformed).toBeInstanceOf(TextContent);
-        expect(result.execution.transformed?.toString()).toBe('e');
-    });
+            const result = await sut.handler.process(tableDef);
+            expect(result.execution.transformed).toBeInstanceOf(TextContent);
+            expect(result.execution.transformed?.toString()).toBe('e');
+        });
 
-    /**
-     *
-     */
-    it('deep data', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action              |value         |
+        /**
+         *
+         */
+        it('deep data', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action              |value         |
              |--------------------|--------------|
              |data:config#b.c.d   | e            |
              |transform:jsonLogic | {"var": "b"} |`
-        );
+            );
 
-        const result = await sut.handler.process(tableDef);
-        expect(result.execution.transformed).toBeInstanceOf(ObjectContent);
-        expect(result.execution.transformed?.toJSON()).toBe('{"c":{"d":"e"}}');
-    });
+            const result = await sut.handler.process(tableDef);
+            expect(result.execution.transformed).toBeInstanceOf(ObjectContent);
+            expect(result.execution.transformed?.toJSON()).toBe('{"c":{"d":"e"}}');
+        });
 
-    /**
-     *
-     */
-    it('deep key and data', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action              |value             |
+        /**
+         *
+         */
+        it('deep key and data', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action              |value             |
              |--------------------|------------------|
              |data:config#b.c.d   | e                |
              |transform:jsonLogic | {"var": "b.c.d"} |`
-        );
+            );
 
-        const result = await sut.handler.process(tableDef);
-        expect(result.execution.transformed).toBeInstanceOf(TextContent);
-        expect(result.execution.transformed?.toString()).toBe('e');
-    });
+            const result = await sut.handler.process(tableDef);
+            expect(result.execution.transformed).toBeInstanceOf(TextContent);
+            expect(result.execution.transformed?.toString()).toBe('e');
+        });
 
-    /**
-     *
-     */
-    it('deep data and expect jsonpath', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                              |value                               |
+        /**
+         *
+         */
+        it('deep data and expect jsonpath', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                              |value                               |
              |------------------------------------|------------------------------------|
              |data:config#b.c.d                   | e                                  |
              |transform:jsonLogic                 | {"var": "b"}                       |
              |expected:jsonLogic:transformed:true | { "===" : [ {"var": "c.d"}, "e" ]} |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('deep data and expected default', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action               |value            |
+        /**
+         *
+         */
+        it('deep data and expected default', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action               |value            |
              |---------------------|-----------------|
              |data:config#b.c.d    | e               |
              |transform:jsonLogic  | {"var": "b"}    |
              |expected:transformed | {"c":{"d":"e"}} |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('deep data and expected not empty', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                         |value         |
+        /**
+         *
+         */
+        it('deep data and expected not empty', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                         |value         |
              |-------------------------------|--------------|
              |data:config#b.c.d              | e            |
              |transform:jsonLogic            | {"var": "b"} |
              |expected:transformed:empty:not |              |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('deep data and expected empty with failure', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action                     |value         |
+        /**
+         *
+         */
+        it('deep data and expected empty with failure', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action                     |value         |
              |---------------------------|--------------|
              |data:config#b.c.d          | e            |
              |transform:jsonLogic        | {"var": "b"} |
              |expected:transformed:empty |              |`
-        );
+            );
 
-        await expect(async () => {
-            await sut.handler.process(tableDef);
-        }).rejects.toThrowError('error: expected:transformed\n\tempty: \n\tactual: {"c":{"d":"e"}}');
-    });
+            await expect(async () => {
+                await sut.handler.process(tableDef);
+            }).rejects.toThrow('error: expected:transformed\n\tempty: \n\tactual: {"c":{"d":"e"}}');
+        });
 
-    /**
-     *
-     */
-    it('transforming chain', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action               |value         |
+        /**
+         *
+         */
+        it('transforming chain', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action               |value         |
              |---------------------|--------------|
              |data:config#b.c.d    | e            |
              |transform:jsonLogic  | {"var": "b"} |
              |transform:jsonLogic  | {"var": "c"} |
              |transform:jsonLogic  | {"var": "d"} |
              |expected:transformed | e            |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
-    });
+            await sut.handler.process(tableDef);
+        });
 
-    /**
-     *
-     */
-    it('reset', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action               |value                  |
+        /**
+         *
+         */
+        it('reset', async () => {
+            const tableDef = MarkdownTableReader.convert(
+                `|action               |value                  |
              |---------------------|-----------------------|
              |data:config#b.c.d    | e                     |
              |transform:jsonLogic  | {"var": "b"}          |
              |expected:transformed | {"c":{"d":"e"}}       |
              |transform:reset      |                       |
              |expected:transformed | {"b":{"c":{"d":"e"}}} |`
-        );
+            );
 
-        await sut.handler.process(tableDef);
+            await sut.handler.process(tableDef);
+        });
     });
 });

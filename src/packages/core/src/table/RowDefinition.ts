@@ -1,4 +1,3 @@
-import { RowValidator } from '../validators/RowValidator';
 import { Description } from '../description/Description';
 import { DescriptionHandler } from '../description/DescriptionHandler';
 import { Descriptionable } from '../description/Descriptionable';
@@ -6,6 +5,7 @@ import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
+import { RowValidator } from '../validators/RowValidator';
 
 import { BaseRowType } from './BaseRowType';
 import { RowValue } from './RowValue';
@@ -27,6 +27,7 @@ interface RowDefinitionPara<
     TRowType extends BaseRowType<TExecutionContext>
 > extends Descriptionable {
     readonly key?: symbol;
+    readonly qualifier?: symbol;
     readonly priority?: number;
     readonly type: TableRowType;
     readonly defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
@@ -47,6 +48,7 @@ export class RowDefinition<
 > implements Descriptionable
 {
     public key: symbol;
+    public qualifier: symbol;
     public defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
     public defaultValueColumn?: symbol;
     public description?: Description;
@@ -55,6 +57,8 @@ export class RowDefinition<
     public readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
     public readonly parameterType: ParaType = ParaType.False;
     public readonly selectorType: SelectorType = SelectorType.False;
+    public readonly scopeType: SelectorType = SelectorType.False;
+    public readonly dataScopeType: SelectorType = SelectorType.False;
     public readonly validators = new Array<RowValidator>();
 
     /**
@@ -62,6 +66,7 @@ export class RowDefinition<
      */
     constructor(value: RowDefinitionPara<TExecutionContext, TRowType>) {
         this.key = value.key || Symbol(DescriptionHandler.solve(value.executionUnit?.description).title);
+        this.qualifier = value.qualifier;
         this.type = value.type;
         this.description = value.description;
         this.priority = value.priority || value.executionUnit?.priority || this.priority;

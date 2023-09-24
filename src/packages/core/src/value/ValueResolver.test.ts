@@ -1,9 +1,7 @@
 import { ParaDescription } from '../pipe/ParaDescription';
 import { Pipe } from '../pipe/Pipe';
 import { PipeHandler } from '../pipe/PipeHandler';
-import { PipeResolver } from '../pipe/PipeResolver';
 import { Store } from '../store/Store';
-import { StoreWrapper } from '../store/StoreWrapper';
 import { ScopeType } from '../types/ScopeType';
 import { ScopedType } from '../types/ScopedType';
 
@@ -19,17 +17,11 @@ type ReplaceResult = string | null | undefined;
 /**
  *
  */
-const valueReplacerHandlerMock = (
-    returnValue: string = '#',
-    config: ValueReplacerConfig = {},
-    scoped = ScopedType.true,
-    priority = 100,
-    name = 'ValueReplacerMock'
-) => {
+const valueReplacerHandlerMock = (returnValue = '#', config: ValueReplacerConfig = {}, scoped = ScopedType.true, priority = 100) => {
     const replacer: {
         handler: ValueReplacerHandler;
         replacer: ValueReplacer;
-    } = {} as any;
+    } = {} as never;
 
     replacer.handler = {
         get: (name: string): ValueReplacer => {
@@ -40,7 +32,7 @@ const valueReplacerHandlerMock = (
             }
             return replacer.replacer;
         }
-    } as any;
+    } as never;
     return replacer;
 };
 
@@ -54,7 +46,7 @@ class ValueReplacerMock implements ValueReplacer {
     }
     priority = 100;
     scoped = ScopedType.true;
-    replace = jest.fn((property: string): ReplaceResult => null);
+    replace = jest.fn((): ReplaceResult => null);
     replace2 = jest.fn((arg: ReplaceArg): ReplaceResult => {
         let value = `${arg.qualifier.value}`;
 
@@ -81,8 +73,8 @@ class ValueReplacerCustimizeMock implements ValueReplacer {
         public priority,
         public name
     ) {}
-    replace = jest.fn((property: string): ReplaceResult => this.returnValue);
-    replace2 = jest.fn((arg: ReplaceArg, store: StoreWrapper): ReplaceResult => this.returnValue);
+    replace = jest.fn((): ReplaceResult => this.returnValue);
+    replace2 = jest.fn((): ReplaceResult => this.returnValue);
 }
 
 /**
@@ -128,7 +120,7 @@ it('deep 2', () => {
 /**
  *
  */
-it('deep 2', () => {
+it('deep 3', () => {
     const replacedValue = sut.replace('--${replacer:${replacer:d}}--');
     expect(replacedValue).toBe('--d--');
 });
@@ -171,7 +163,7 @@ it('step store is not defined', () => {
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
-    expect(mock.replacer.replace2).toBeCalledWith(expect.anything(), null);
+    expect(mock.replacer.replace2).toHaveBeenCalledWith(expect.anything(), null);
 });
 
 /**
@@ -182,7 +174,7 @@ it('step store is default scope', () => {
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
-    expect(mock.replacer.replace2).toBeCalledWith(expect.anything(), Store.instance.stepStore);
+    expect(mock.replacer.replace2).toHaveBeenCalledWith(expect.anything(), Store.instance.stepStore);
 });
 
 /**
@@ -193,7 +185,7 @@ it('when no scope is defined, take default scope - local', () => {
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
-    expect(mock.replacer.replace2).toBeCalledWith(expect.anything(), Store.instance.testStore);
+    expect(mock.replacer.replace2).toHaveBeenCalledWith(expect.anything(), Store.instance.testStore);
 });
 
 /**
@@ -204,7 +196,7 @@ it('when no scope is defined, take default scope - global', () => {
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
-    expect(mock.replacer.replace2).toBeCalledWith(expect.anything(), Store.instance.globalStore);
+    expect(mock.replacer.replace2).toHaveBeenCalledWith(expect.anything(), Store.instance.globalStore);
 });
 
 /**
@@ -215,7 +207,7 @@ it('defined scope must be used', () => {
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer@g:a}');
-    expect(mock.replacer.replace2).toBeCalledWith(expect.anything(), Store.instance.globalStore);
+    expect(mock.replacer.replace2).toHaveBeenCalledWith(expect.anything(), Store.instance.globalStore);
 });
 
 /**
@@ -225,7 +217,7 @@ it('wrong scope is used', () => {
     const mock = valueReplacerHandlerMock('', { defaultScopeType: ScopeType.Test });
     sut = new ValueResolver(mock.handler);
 
-    expect(() => sut.replace('${replacer@z:a}')).toThrowError('Expected [ \\t] or [glts] but "z" found.\n${replacer@ -> z <- :a}');
+    expect(() => sut.replace('${replacer@z:a}')).toThrow('Expected [ \\t] or [glts] but "z" found.\n${replacer@ -> z <- :a}');
 });
 
 /**
@@ -235,7 +227,7 @@ it('replacer does not expect a scope', () => {
     const mock = valueReplacerHandlerMock('', { defaultScopeType: ScopeType.Test, scopeAllowed: false });
     sut = new ValueResolver(mock.handler);
 
-    expect(() => sut.replace('${replacer@t:a}')).toThrowError('scope not allowed: ${replacer -> @t <- :a}\n${replacer@t:a}');
+    expect(() => sut.replace('${replacer@t:a}')).toThrow('scope not allowed: ${replacer -> @t <- :a}\n${replacer@t:a}');
 });
 
 /**
@@ -245,7 +237,7 @@ it('replacer needs at least one selector', () => {
     const mock = valueReplacerHandlerMock('xxx', { defaultScopeType: ScopeType.Test, scopeAllowed: false, selectorsCountMin: 1 });
     sut = new ValueResolver(mock.handler);
 
-    expect(() => sut.replace('${replacer:a}')).toThrowError('at least 1 selector(s) are required, but only 0 exists: ${replacer:a}');
+    expect(() => sut.replace('${replacer:a}')).toThrow('at least 1 selector(s) are required, but only 0 exists: ${replacer:a}');
 });
 
 /**
@@ -255,9 +247,7 @@ it('replacer cannot have too much selectors', () => {
     const mock = valueReplacerHandlerMock('xxx', { defaultScopeType: ScopeType.Test, scopeAllowed: false, selectorsCountMax: 2 });
     sut = new ValueResolver(mock.handler);
 
-    expect(() => sut.replace('${replacer:a#a.b.c.d.e.f}')).toThrowError(
-        'max 2 selector(s) allowed, but 6 found: ${replacer:a#a.b.c.d.e.f}'
-    );
+    expect(() => sut.replace('${replacer:a#a.b.c.d.e.f}')).toThrow('max 2 selector(s) allowed, but 6 found: ${replacer:a#a.b.c.d.e.f}');
 });
 
 /**
@@ -292,7 +282,7 @@ describe('default', () => {
         const mock = valueReplacerHandlerMock(null, { defaultScopeType: ScopeType.Test });
         sut = new ValueResolver(mock.handler);
 
-        expect(() => sut.replace('${replacer:a := "aaa"}')).toThrowError(
+        expect(() => sut.replace('${replacer:a := "aaa"}')).toThrow(
             `selector is required in case of default assignment: \${replacer:a  -> := "aaa"\n\${replacer:a := "aaa"}`
         );
     });
@@ -351,6 +341,6 @@ describe('using pipe', () => {
      *
      */
     it('wrong pipes', () => {
-        expect(() => sut.replace('--${replacer:a | pippes}--')).toThrowError(`pipe 'pippes' does not exist\n--> '\${replacer:a | pippes}'`);
+        expect(() => sut.replace('--${replacer:a | pippes}--')).toThrow(`pipe 'pippes' does not exist\n--> '\${replacer:a | pippes}'`);
     });
 });

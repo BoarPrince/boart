@@ -1,5 +1,5 @@
-import { GroupRowDefinition, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
-import { IntValidator, RowTypeValue } from '@boart/core-impl';
+import { GroupRowDefinition, ParaType, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
+import { IntValidator, ParaValidator, RowTypeValue } from '@boart/core-impl';
 
 import { DataExecutionUnit } from './DataExecutionUnit';
 import { RepeatableDataExecutionContext } from './DataTableContext';
@@ -54,25 +54,18 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
         tableHandler.addRowDefinition(
             new RowDefinition({
                 key: Symbol('repeat:wait'),
+                parameterType: ParaType.Optional,
                 type: TableRowType.Configuration,
                 executionUnit: {
                     execute: (context: RepeatableDataExecutionContext, row: RowTypeValue<RepeatableDataExecutionContext>): void => {
-                        context.repetition.pause = row.value as number;
+                        if (row.ast.qualifier.stringValue === 'wait:sec') {
+                            context.repetition.pause = (row.value as number) * 1000;
+                        } else {
+                            context.repetition.pause = row.value as number;
+                        }
                     }
                 },
-                validators: [new IntValidator('value')]
-            })
-        );
-
-        tableHandler.addRowDefinition(
-            new RowDefinition({
-                key: Symbol('repeat:wait:sec'),
-                type: TableRowType.Configuration,
-                executionUnit: {
-                    execute: (context: RepeatableDataExecutionContext, row: RowTypeValue<RepeatableDataExecutionContext>): void => {
-                        context.repetition.pause = (row.value as number) * 1000;
-                    }
-                },
+                // validators: [new IntValidator('value'), new ParaValidator([null, 'sec'])]
                 validators: [new IntValidator('value')]
             })
         );

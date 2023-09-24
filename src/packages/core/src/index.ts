@@ -29,6 +29,7 @@ import { ExpectedOperator, ExpectedOperatorResult } from './expected/ExpectedOpe
 import { ExpectedOperatorInitializer } from './expected/ExpectedOperatorInitializer';
 import { Generator } from './generator/Generator';
 import { GeneratorHandler } from './generator/GeneratorHandler';
+import { SelectorType as ASTSelectorType } from './parser/ast/SelectorType';
 import { LocalContext } from './runtime/LocalContext';
 import { Runtime } from './runtime/Runtime';
 import { RuntimeResultContext } from './runtime/RuntimeContext';
@@ -56,7 +57,6 @@ import { ParaType } from './types/ParaType';
 import { ScopeType } from './types/ScopeType';
 import { ScopedType } from './types/ScopedType';
 import { SelectorType } from './types/SelectorType';
-import { SelectorType as ASTSelectorType} from './parser/ast/SelectorType';
 import { GroupValidator } from './validators/GroupValidator';
 import { RowValidator } from './validators/RowValidator';
 import { ValidationHandler } from './validators/ValidationHandler';

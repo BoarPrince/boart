@@ -14,12 +14,8 @@ import { MetaInfo } from './TableMetaInfo';
 /**
  *
  */
-interface RowDef<TExecutionContext extends ExecutionContext<object, object, object>, TRowType extends BaseRowType<TExecutionContext>> {
-    key: string;
+interface RowValueWithAst extends RowValue {
     ast: ASTAction;
-    para: string;
-    selector: string;
-    definition: RowDefinition<TExecutionContext, TRowType>;
 }
 
 /**
@@ -38,7 +34,7 @@ export class RowDefinitionBinder<
         private readonly tableName: string,
         private readonly columnMetaInfo: MetaInfo,
         private readonly rowDefinitions: ReadonlyArray<RowDefinition<TExecutionContext, TRowType>>,
-        private readonly rowsWithValues: ReadonlyArray<RowValue>
+        private readonly rowValues: ReadonlyArray<RowValue>
     ) {
         this.parser = new VariableParser();
     }
@@ -61,7 +57,7 @@ export class RowDefinitionBinder<
             ?.filter(
                 (row) =>
                     !!row.defaultValue &&
-                    !this.rowsWithValues.find(
+                    !this.rowValues.find(
                         (rowWithValue) =>
                             rowWithValue.key === row.key.description || //
                             rowWithValue.key.startsWith(row.key.description || '' + ':')
@@ -69,9 +65,7 @@ export class RowDefinitionBinder<
             )
             .map((row) => {
                 const column = row.defaultValueColumn.description;
-                const value = (
-                    typeof row.defaultValue === 'function' ? row.defaultValue(this.rowsWithValues) : row.defaultValue
-                )?.toString();
+                const value = (typeof row.defaultValue === 'function' ? row.defaultValue(this.rowValues) : row.defaultValue)?.toString();
 
                 const values = {} as Record<string, string>;
                 values[column] = value;
@@ -85,15 +79,84 @@ export class RowDefinitionBinder<
                     values_replaced: valuesReplaced
                 } as RowValue;
             })
-            .concat(this.rowsWithValues);
+            .concat(this.rowValues);
     }
 
     /**
      *
      */
-    private bindAST(rows: ReadonlyArray<RowValue>): void {
-        for (const row of rows) {
-            row.ast = this.parser.parseAction(row.key);
+    private findDefinition(row: RowValueWithAst): RowDefinition<TExecutionContext, TRowType> {
+        const sortedDefinitions = Array.from(this.rowDefinitions).sort(
+            (def1, def2) => def2.key.description.length - def1.key.description.length
+        );
+
+        return sortedDefinitions.find((def) => {
+            const defKey =
+                (!def.qualifier?.description
+                    ? def.key.description //
+                    : def.key.description + ':' + def.qualifier.description) + ':';
+            const keyStringValue = row.ast.name.stringValue + ':';
+            return keyStringValue.startsWith(defKey);
+        });
+    }
+
+    /**
+     * checks the correct binding  result
+     */
+    private checkBinding(ast: ASTAction, rowDefinition: RowDefinition<TExecutionContext, TRowType>): void {
+        const throwIf = (condition: boolean, errorMessage: () => string): void => {
+            if (condition) {
+                throw Error(errorMessage());
+            }
+        };
+
+        switch (rowDefinition.parameterType) {
+            case ParaType.True:
+                throwIf(!ast.qualifier, () => `'${this.tableName}': key '${rowDefinition.key.description}' must have a parameter!`);
+                break;
+            case ParaType.Optional:
+                break;
+            case ParaType.False:
+                throwIf(
+                    !!ast.qualifier && !!ast.qualifier.paras?.length,
+                    () =>
+                        `'${this.tableName}': key '${ast.match}' with definition '${
+                            rowDefinition.key.description
+                        }' cannot have a parameter: '${ast.qualifier.paras.join(':')}'!`
+                );
+                break;
+        }
+
+        switch (rowDefinition.selectorType) {
+            case SelectorType.True:
+                throwIf(!ast.selectors?.length, () => `'${this.tableName}': key '${ast.match}' must have a selector!`);
+                break;
+            case SelectorType.Optional:
+                break;
+            case SelectorType.False:
+                throwIf(
+                    !!ast.selectors?.length,
+                    () => `'${this.tableName}': key '${ast.match}' cannot have a selector: '${ast.selectors.stringValue}'!`
+                );
+                break;
+        }
+
+        switch (rowDefinition.scopeType) {
+            case SelectorType.True:
+                throwIf(!ast.scope.value, () => `'${this.tableName}': key '${ast.match}' must have a scope!`);
+                break;
+            case SelectorType.Optional:
+                break;
+            case SelectorType.False:
+                throwIf(
+                    !!ast.scope?.value,
+                    () =>
+                        `'${this.tableName}': key '${ast.match}' cannot have a scope: '${ast.scope.value}\n${this.parser.getValueWithMarker(
+                            ast.scope.location,
+                            ast.match
+                        )}'!`
+                );
+                break;
         }
     }
 
@@ -102,107 +165,46 @@ export class RowDefinitionBinder<
      */
     public bind(type: new (def: BaseRowMetaDefinition<TExecutionContext, TRowType>) => TRowType): Array<TRowType> {
         const rows = this.bindDefaultValues();
-        this.bindAST(rows);
 
-        return rows?.map((row) => {
-            const rowDef = {
-                key: '',
-                para: null,
-                selector: null,
-                definition: null
-            } as RowDef<TExecutionContext, TRowType>;
+        return rows?.map((row: RowValueWithAst) => {
+            //----------------------------------------------------------------
+            // 1. map ast to values
+            //----------------------------------------------------------------
+            row.ast = this.parser.parseAction(row.key);
 
-            const definitions = this.rowDefinitions
-                .map((definition) => {
-                    return {
-                        ast: row.ast,
-                        key: definition.key.description,
-                        definition
-                    };
-                })
-                // longest key first, because longer key must match first
-                .sort((def1, def2) => def2.key.length - def1.key.length);
-
-            // Prioritize definitions higher without parameter
-            // for (const def of definitions) {
-            //     rowDef.selector = def.rowSelector;
-            //     rowDef.definition = def.definition;
-
-            //     if (def.key === def.rowKey) {
-            //         rowDef.key = def.key;
-            //         break;
-            //     }
-            // }
-
-            if (!rowDef.key) {
-                // if not match found without parameter, check matching with parameters
-                for (const def of definitions) {
-                    const defKey = def.key || '';
-                    if (def.key.startsWith(`${defKey}:`)) {
-                        rowDef.key = def.key;
-                        rowDef.ast = def.ast;
-                        rowDef.para = [def.ast.qualifier.value].concat(def.ast.qualifier.paras ?? []).join(':');
-                        rowDef.definition = def.definition;
-                        break;
-                    }
-                }
+            //----------------------------------------------------------------
+            // 2. map to definition and if it could mapped
+            //----------------------------------------------------------------
+            const rowDefinition = this.findDefinition(row);
+            if (!rowDefinition) {
+                throw Error(`'${this.tableName}': key '${row.key}' is not valid`);
             }
 
-            // checks if the binding could be fullfilled
-            this.checkBinding(row, rowDef);
+            //----------------------------------------------------------------
+            // 3. checks the correct usage (definition)
+            //----------------------------------------------------------------
+            this.checkBinding(row.ast, rowDefinition);
 
-            let lazyValue: Record<string, string>;
+            //----------------------------------------------------------------
+            // Return definition
+            //----------------------------------------------------------------
+            let lazyLoad: Record<string, string>;
+            const key = rowDefinition.key.description;
+            const keyPart = key.split(':').slice(1).join(':');
+
+            const keyPara = row.ast.qualifier?.stringValue || '';
+            const selector = row.ast.selectors?.stringValue || null;
+
             return new type({
-                _metaDefinition: rowDef.definition,
-                key: rowDef.key,
-                ast: rowDef.ast,
-                keyPara: rowDef.para,
-                selector: rowDef.selector,
-                values: row.values,
+                _metaDefinition: rowDefinition,
+                key,
+                ast: row.ast,
+                keyPara: keyPara.replace(new RegExp('^' + keyPart + ':?'), '') || null,
+                selector,
                 get values_replaced() {
-                    return !lazyValue ? (lazyValue = row.values_replaced) : lazyValue;
+                    return !lazyLoad ? (lazyLoad = row.values_replaced) : lazyLoad;
                 }
             });
         });
-    }
-
-    /**
-     * checks the correct binding  result
-     */
-    private checkBinding(row: RowValue, rowDef: RowDef<TExecutionContext, TRowType>): void {
-        const throwIf = (condition: boolean, errorMessage: string): void => {
-            if (condition) {
-                throw Error(errorMessage);
-            }
-        };
-
-        if (!rowDef.key) {
-            throw Error(`'${this.tableName}': key '${row.key}' is not valid`);
-        }
-
-        switch (rowDef.definition.parameterType) {
-            case ParaType.True:
-                throwIf(!rowDef.para, `'${this.tableName}': key '${row.key}' must have a parameter!`);
-                break;
-            case ParaType.Optional:
-                break;
-            case ParaType.False:
-                throwIf(
-                    !!rowDef.para,
-                    `'${this.tableName}': key '${row.key}' with definition '${rowDef.key}' cannot have a parameter: '${rowDef.para}'!`
-                );
-                break;
-        }
-
-        switch (rowDef.definition.selectorType) {
-            case SelectorType.True:
-                throwIf(!rowDef.selector, `'${this.tableName}': key '${row.key}' must have a selector!`);
-                break;
-            case SelectorType.Optional:
-                break;
-            case SelectorType.False:
-                throwIf(!!rowDef.selector, `'${this.tableName}': key '${row.key}' cannot have a selector: '${rowDef.selector}'!`);
-                break;
-        }
     }
 }

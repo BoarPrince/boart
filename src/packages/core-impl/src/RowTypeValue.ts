@@ -8,6 +8,9 @@ export class RowTypeValue<TExecutionContext extends ExecutionContext<object, obj
     get action() {
         return this.data.key;
     }
+    get ast() {
+        return this.data.ast;
+    }
     get actionPara() {
         return this.data.keyPara;
     }

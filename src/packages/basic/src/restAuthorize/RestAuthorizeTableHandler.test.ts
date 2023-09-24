@@ -6,7 +6,6 @@ import { MarkdownTableReader, Runtime, StepContext, Store } from '@boart/core';
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
 
-fetchMock.enableMocks();
 const sut = new RestAuthorizeTableHandler();
 
 /**
@@ -49,13 +48,8 @@ jest.mock('fs');
  *
  */
 beforeEach(() => {
+    fetchMock.enableMocks();
     Store.instance.testStore.clear();
-});
-
-/**
- *
- */
-beforeEach(() => {
     jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
 });
@@ -86,7 +80,7 @@ it('default password', async () => {
 
     await sut.handler.process(tableRows);
 
-    expect(sut.handler.executionEngine.context.execution.header.getValue()).toEqual({
+    expect(sut.handler.executionEngine.context.execution.header.getValue()).toStrictEqual({
         duration: 0,
         retries: 1,
         option: {
@@ -106,7 +100,7 @@ it('default password', async () => {
         url: '/token'
     });
 
-    expect(fetchMock.mock.calls).toEqual([
+    expect(fetchMock.mock.calls).toStrictEqual([
         [
             '/token',
             {
@@ -146,8 +140,8 @@ it('token must be generated (default name)', async () => {
 
     await sut.handler.process(tableRows);
 
-    expect(sut.handler.executionEngine.context.execution.token).toEqual('T.O.K.E.N');
-    expect(Store.instance.testStore.get('authorization').valueOf()).toEqual('T.O.K.E.N');
+    expect(sut.handler.executionEngine.context.execution.token).toBe('T.O.K.E.N');
+    expect(Store.instance.testStore.get('authorization').valueOf()).toBe('T.O.K.E.N');
 });
 
 /**
@@ -170,7 +164,7 @@ it('token must be generated (custom name)', async () => {
 
     await sut.handler.process(tableRows);
 
-    expect(sut.handler.executionEngine.context.execution.token).toEqual('T.O.K.E.N');
+    expect(sut.handler.executionEngine.context.execution.token).toBe('T.O.K.E.N');
     expect(Store.instance.testStore.get('authorization')).toBeNull();
     expect(Store.instance.testStore.get('XauthX').valueOf()).toBe('T.O.K.E.N');
 });
@@ -193,7 +187,7 @@ it('default client_credential', async () => {
 
     await sut.handler.process(tableRows);
 
-    expect(sut.handler.executionEngine.context.execution.header.getValue()).toEqual({
+    expect(sut.handler.executionEngine.context.execution.header.getValue()).toStrictEqual({
         duration: 0,
         retries: 1,
         option: {
@@ -212,7 +206,7 @@ it('default client_credential', async () => {
         url: '/token'
     });
 
-    expect(fetchMock.mock.calls).toEqual([
+    expect(fetchMock.mock.calls).toStrictEqual([
         [
             '/token',
             {
@@ -245,7 +239,7 @@ it('grantType:client_credential depends on', async () => {
          | scope     | s.c.o.p.e          |`
     );
 
-    await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError(
+    await expect(async () => await sut.handler.process(tableRows)).rejects.toThrow(
         "key 'grantType:client_credentials' depends on 'clientSecret', but it does not exist!"
     );
 });
@@ -263,7 +257,7 @@ it('grantType:password depends on', async () => {
          | password  | p.a.s.s.w.o.r.d |`
     );
 
-    await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError(
+    await expect(async () => await sut.handler.process(tableRows)).rejects.toThrow(
         "key 'grantType:password' depends on 'clientId', but it does not exist!"
     );
 });

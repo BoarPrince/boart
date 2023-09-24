@@ -44,7 +44,6 @@ jest.mock<typeof import('@boart/core')>('@boart/core', () => {
 /**
  *
  */
-// eslint-disable-next-line jest/no-untyped-mock-factory
 jest.mock('crypto', () => {
     return {
         randomUUID: () => 'x-x-x'

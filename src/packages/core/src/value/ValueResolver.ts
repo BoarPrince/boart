@@ -84,7 +84,7 @@ export class ValueResolver {
 
             case OperatorType.Unknown:
             default:
-                throw Error(`store default operator '${ast.default.operator}' not valid (${ast.match})`);
+                throw Error(`store default operator '${ast.default.operator}' not valid (${ast.match || ''})`);
         }
     }
 

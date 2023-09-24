@@ -54,13 +54,13 @@ it('check null parameter', () => {
 it('check simple binding', () => {
     const rowDefinitions = [
         new RowDefinition({
-            key: Symbol('a:a'),
+            key: Symbol('aa'),
             type: TableRowType.PostProcessing,
             executionUnit: null,
             validators: null
         })
     ];
-    const rawRows = [{ key: 'a:a', ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
+    const rawRows = [{ key: 'aa', ast: null, values_replaced: { value1: 'b' } }];
 
     const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
     const rows: RowWithOneValue[] = sut.bind(RowWithOneValue);
@@ -68,7 +68,7 @@ it('check simple binding', () => {
     expect(rows).toBeDefined();
     expect(rows).toBeInstanceOf(Array);
     expect(rows.length).toBe(1);
-    expect(rows[0].action).toBe('a:a');
+    expect(rows[0].action).toBe('aa');
     expect(rows[0].actionPara).toBeNull();
     expect(rows[0].value1).toBe('b');
 });
@@ -81,37 +81,46 @@ describe('check binding', () => {
      *
      */
     it.each([
-        ['01.', 'a:a', ParaType.False, 'a:a', 'a:a', null, null],
-        ['02.', 'a:a', ParaType.Optional, 'a:a', 'a:a', null, null],
-        ['03.', 'a:a', ParaType.Optional, 'a:a:para', 'a:a', 'para', null],
-        ['04.', 'a-a', ParaType.Optional, 'a-a:para', 'a-a', 'para', null],
-        ['05.', 'a:a', ParaType.True, 'a:a:para', 'a:a', 'para', null],
-        ['06.', 'a:a', ParaType.True, 'a:a:para:1', 'a:a', 'para:1', null],
-        ['07.', 'a:a', ParaType.Optional, 'a:a:para:1', 'a:a', 'para:1', null],
-        ['08.', 'a:a', ParaType.Optional, 'a:a:para:1#s1', 'a:a', 'para:1', 's1'],
-        ['09.', 'a:a', ParaType.Optional, 'a:a:para#s1', 'a:a', 'para', 's1'],
-        ['10.', 'a:a', ParaType.Optional, 'a:a#s1', 'a:a', null, 's1']
+        ['01.', ['aa'], '', ParaType.False, 'aa', 'aa', null, null],
+        ['02.', ['aa'], '', ParaType.Optional, 'aa', 'aa', null, null],
+        ['03.', ['aa'], '', ParaType.Optional, 'aa:para', 'aa', 'para', null],
+        ['04.', ['a-a'], '', ParaType.Optional, 'a-a:para', 'a-a', 'para', null],
+        ['05.', ['aa'], '', ParaType.True, 'aa:para', 'aa', 'para', null],
+        ['06.', ['aa'], '', ParaType.True, 'aa:para:1', 'aa', 'para:1', null],
+        ['07.', ['aa'], '', ParaType.Optional, 'aa:para:1', 'aa', 'para:1', null],
+        ['08.', ['aa'], '', ParaType.Optional, 'aa:para:1#s1', 'aa', 'para:1', 's1'],
+        ['09.', ['aa'], '', ParaType.Optional, 'aa:para#s1', 'aa', 'para', 's1'],
+        ['10.', ['aa'], '', ParaType.Optional, 'aa#s1', 'aa', null, 's1'],
+        ['11.', ['aa'], 'para', ParaType.Optional, 'aa:para#s1', 'aa', 'para', 's1'],
+        ['12.', ['aa'], 'para', ParaType.True, 'aa:para', 'aa', 'para', null],
+        ['13.', ['aa'], 'para', ParaType.True, 'aa:para:1:2', 'aa', 'para:1:2', null],
+        ['14.', ['aa:para'], '', ParaType.True, 'aa:para:1:2', 'aa:para', '1:2', null],
+        ['15.', ['repeat:wait:sec', 'repeat:wait'], '', ParaType.True, 'repeat:wait:sec', 'repeat:wait:sec', null, null]
     ])(
-        `%s: check key and para defKey: '%s', paraType '%p', key: '%s', expected key: '%s', expected para: '%s'. expected selector: '%s'`,
+        `%s: check key and para defKey: '%s', defQualifier: '%s', paraType '%p', key: '%s', expected key: '%s', expected para: '%s'. expected selector: '%s'`,
         (
             _: string,
-            defKey: string,
+            defKeys: Array<string>,
+            defQualifier: string,
             paraType: ParaType,
             rowKey: string,
             expectedKey: string,
             expectedPara: string | null,
             expectedSelector: string | null
         ) => {
-            const rowDefinitions = [
-                new RowDefinition({
-                    key: Symbol(defKey),
-                    parameterType: paraType,
-                    selectorType: SelectorType.Optional,
-                    type: TableRowType.PostProcessing,
-                    executionUnit: null,
-                    validators: null
-                })
-            ];
+            const rowDefinitions = defKeys.map(
+                (defKey) =>
+                    new RowDefinition({
+                        key: Symbol(defKey),
+                        qualifier: Symbol(defQualifier),
+                        parameterType: paraType,
+                        selectorType: SelectorType.Optional,
+                        type: TableRowType.PostProcessing,
+                        executionUnit: null,
+                        validators: null
+                    })
+            );
+
             const rawRows = [{ key: rowKey, ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
 
             const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
@@ -119,11 +128,13 @@ describe('check binding', () => {
 
             expect(rows).toBeDefined();
             expect(rows.length).toBe(1);
-            expect(rows[0]).toBeDefined();
-            expect(rows[0].action).toBe(expectedKey);
-            expect(rows[0].actionPara).toBe(expectedPara);
-            expect(rows[0].data.selector).toBe(expectedSelector);
-            expect(rows[0].value1).toBe('b');
+
+            const firstRow = rows[0];
+            expect(firstRow).toBeDefined();
+            expect(expectedKey).toBe(firstRow.action);
+            expect(expectedPara).toBe(firstRow.actionPara);
+            expect(expectedSelector).toBe(firstRow.data.selector);
+            expect(firstRow.value1).toBe('b');
         }
     );
 
@@ -171,7 +182,7 @@ describe('check binding', () => {
     it.each([
         ['b1.', 'a:a', ParaType.False, 'a:a:para', "'test-table': key 'a:a:para' with definition 'a:a' cannot have a parameter: 'para'!"],
         ['b2.', 'a:a', ParaType.False, 'aa', `'test-table': key 'aa' is not valid`],
-        ['b3.', 'a:a', ParaType.True, 'a:a', `'test-table': key 'a:a' must have a parameter!`]
+        ['b3.', 'aa', ParaType.True, 'aa', `'test-table': key 'aa' must have a parameter!`]
     ])(
         `%s: check error for key and para (defKey: '%s', paraType: '%p', key: '%s', expected key: '%s', expected para: '%s'`,
         (_: string, defKey: string, paraType: ParaType, rowKey: string, expectedErrorMessage: string) => {
@@ -266,13 +277,13 @@ describe('check binding with multiple definitions', () => {
      *
      */
     it.each([
-        ['01.', 'a:a', ParaType.False, 'a:a', 'a:a', null, null],
-        ['02.', 'a:a', ParaType.True, 'a:a:para1', 'a:a:para1', null, null],
-        ['03.', 'a:a', ParaType.False, 'a:a:para1', 'a:a:para1', null, null],
-        ['04.', 'a:a', ParaType.Optional, 'a:a:para3', 'a:a', 'para3', null],
-        ['05.', 'a:a', ParaType.True, 'a:a:para1#selector', 'a:a:para1', null, 'selector'],
-        ['06.', 'a:a', ParaType.Optional, 'a:a:para3#selector', 'a:a', 'para3', 'selector'],
-        ['07.', 'a:a:para:1:2', ParaType.Optional, 'a:a:para:1:2:3', 'a:a:para:1:2', '3', null]
+        ['01.', 'aa', ParaType.False, 'aa', 'aa', null, null],
+        ['02.', 'aa', ParaType.True, 'aa:para1', 'aa:para1', null, null],
+        ['03.', 'aa', ParaType.False, 'aa:para1', 'aa:para1', null, null],
+        ['04.', 'aa', ParaType.Optional, 'aa:para3', 'aa', 'para3', null],
+        ['05.', 'aa', ParaType.True, 'aa:para1#selector', 'aa:para1', null, 'selector'],
+        ['06.', 'aa', ParaType.Optional, 'aa:para3#selector', 'aa', 'para3', 'selector'],
+        ['07.', 'aa:para:1:2', ParaType.Optional, 'aa:para:1:2:3', 'aa:para:1:2', '3', null]
     ])(
         `%s use multiple rows and multiple definitions => check key and para defKey: '%s', paraType '%p', key: '%s', expected key: '%s', expected para: '%s'. expected selector: '%s'`,
         (
@@ -286,7 +297,7 @@ describe('check binding with multiple definitions', () => {
         ) => {
             const rowDefinitions = [
                 new RowDefinition({
-                    key: Symbol('a:a:para:1'),
+                    key: Symbol('aa:para1'),
                     parameterType: ParaType.False,
                     selectorType: SelectorType.Optional,
                     type: TableRowType.PostProcessing,
@@ -302,7 +313,7 @@ describe('check binding with multiple definitions', () => {
                     validators: null
                 }),
                 new RowDefinition({
-                    key: Symbol('a:a:para:2'),
+                    key: Symbol('aa:para:2'),
                     parameterType: ParaType.Optional,
                     selectorType: SelectorType.Optional,
                     type: TableRowType.PostProcessing,
@@ -310,7 +321,7 @@ describe('check binding with multiple definitions', () => {
                     validators: null
                 }),
                 new RowDefinition({
-                    key: Symbol('a:a:para1'),
+                    key: Symbol('aa:para:1'),
                     parameterType: ParaType.Optional,
                     selectorType: SelectorType.Optional,
                     type: TableRowType.PostProcessing,
@@ -321,9 +332,9 @@ describe('check binding with multiple definitions', () => {
 
             const rawRows = [
                 { key: rowKey, ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } },
-                { key: 'a:a:para1', ast: null, values: { value1: 'b1' }, values_replaced: { value1: 'b1' } },
-                { key: 'a:a:para:1', ast: null, values: { value1: 'b:1' }, values_replaced: { value1: 'b:1' } },
-                { key: 'a:a:para:2', ast: null, values: { value1: 'b:2' }, values_replaced: { value1: 'b:2' } }
+                { key: 'aa:para1', ast: null, values: { value1: 'b1' }, values_replaced: { value1: 'b1' } },
+                { key: 'aa:para:1', ast: null, values: { value1: 'b:1' }, values_replaced: { value1: 'b:1' } },
+                { key: 'aa:para:2', ast: null, values: { value1: 'b:2' }, values_replaced: { value1: 'b:2' } }
             ];
 
             const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
