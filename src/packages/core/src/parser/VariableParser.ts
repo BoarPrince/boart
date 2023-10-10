@@ -1,9 +1,8 @@
-import * as variableParser from './peggy/ParserVariable.js';
-import * as actionParser from './peggy/ParserAction.js';
+import { ASTAction } from './ast/ASTAction';
 import { ASTVariable } from './ast/ASTVariable';
 import { Location } from './ast/Location';
-import { ASTAction } from './ast/ASTAction';
-import { SelectorType } from './ast/SelectorType';
+import * as actionParser from './peggy/ParserAction.js';
+import * as variableParser from './peggy/ParserVariable.js';
 
 /**
  *
@@ -30,19 +29,8 @@ export class VariableParser {
      *
      */
     private addStringValueAccessor<T extends ASTVariable | ASTAction>(ast: T): T {
-        if (ast.selectors) {
-            ast.selectors.stringValue = ast.selectors
-                .reduce((stringValue, selector) => {
-                    switch (selector.type) {
-                        case SelectorType.INDEX:
-                            return `${stringValue}.${selector.value}[${selector.index}]`;
-                        case SelectorType.WILDCARD:
-                            return `${stringValue}.${selector.value}[*]`;
-                        default:
-                            return `${stringValue}.${selector.value}`;
-                    }
-                }, '')
-                .slice(1);
+        if (ast.selectors?.match) {
+            ast.selectors.match = ast.selectors.match.replace(/^[?]?#/, '');
         }
 
         if (ast.qualifier) {

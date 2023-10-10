@@ -435,7 +435,7 @@ it('qualifier - variable - stringValue', () => {
  */
 it('selector - action - stringValue - 1', () => {
     const result = sut.parseAction('var#aa.bb.cc');
-    expect(result.selectors.stringValue).toBe('aa.bb.cc');
+    expect(result.selectors.match).toBe('aa.bb.cc');
 });
 
 /**
@@ -443,7 +443,7 @@ it('selector - action - stringValue - 1', () => {
  */
 it('selector - action - stringValue - 2', () => {
     const result = sut.parseAction('var#aa[6].bb.cc');
-    expect(result.selectors.stringValue).toBe('aa[6].bb.cc');
+    expect(result.selectors.match).toBe('aa[6].bb.cc');
 });
 
 /**
@@ -451,7 +451,68 @@ it('selector - action - stringValue - 2', () => {
  */
 it('selector - action - stringValue - 3', () => {
     const result = sut.parseAction('var#aa.bb[*].cc');
-    expect(result.selectors.stringValue).toBe('aa.bb[*].cc');
+    expect(result.selectors.match).toBe('aa.bb[*].cc');
+});
+
+/**
+ *
+ */
+it('selector - action - stringValue - 4', () => {
+    const result = sut.parseAction('var#aa?.bb[*].cc');
+    expect(result.selectors.match).toBe('aa?.bb[*].cc');
+});
+
+/**
+ *
+ */
+it('selector - index - without value - 1', () => {
+    const result = sut.parseAction('var#[1].cc');
+
+    expect(result.selectors[0].type).toBe(SelectorType.INDEX);
+    expect(result.selectors[0].index).toBe(1);
+    expect(result.selectors[0].value).toBeEmpty();
+
+    expect(result.selectors[1].type).toBe(SelectorType.SIMPLE);
+    expect(result.selectors[1].index).toBeUndefined();
+    expect(result.selectors[1].value).toBe('cc');
+});
+
+/**
+ *
+ */
+it('selector - index - without value - 2', () => {
+    const result = sut.parseAction('var#[1][2].cc');
+
+    expect(result.selectors[0].type).toBe(SelectorType.INDEX);
+    expect(result.selectors[0].index).toBe(1);
+    expect(result.selectors[0].value).toBeEmpty();
+
+    expect(result.selectors[1].type).toBe(SelectorType.INDEX);
+    expect(result.selectors[1].index).toBe(2);
+    expect(result.selectors[1].value).toBeEmpty();
+
+    expect(result.selectors[2].type).toBe(SelectorType.SIMPLE);
+    expect(result.selectors[2].index).toBeUndefined();
+    expect(result.selectors[2].value).toBe('cc');
+});
+
+/**
+ *
+ */
+it('selector - index - without value - 3', () => {
+    const result = sut.parseAction('var#[1].cc[2][3]');
+
+    expect(result.selectors[0].type).toBe(SelectorType.INDEX);
+    expect(result.selectors[0].index).toBe(1);
+    expect(result.selectors[0].value).toBeEmpty();
+
+    expect(result.selectors[1].type).toBe(SelectorType.INDEX);
+    expect(result.selectors[1].index).toBe(2);
+    expect(result.selectors[1].value).toBe('cc');
+
+    expect(result.selectors[2].type).toBe(SelectorType.INDEX);
+    expect(result.selectors[2].index).toBe(3);
+    expect(result.selectors[2].value).toBeEmpty();
 });
 
 /**
