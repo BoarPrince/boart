@@ -9,6 +9,7 @@ import { NativeContent } from './NativeContent';
 import { NullContent } from './NullContent';
 import { ObjectContent } from './ObjectContent';
 import { TextContent } from './TextContent';
+import { WildcardObjectContent } from './WildcardObjectContent';
 
 /**
  *
@@ -206,37 +207,7 @@ export class DataContentHelper {
     public static getByPath(selector: string, value: DataContent, optional?: boolean): DataContent;
     public static getByPath(properties: PropertyIterable, value: DataContent, optional?: boolean): DataContent;
     public static getByPath(selectorOrProperties: string | PropertyIterable, value: DataContent, optional = false): DataContent {
-        if (typeof selectorOrProperties == 'string') {
-            selectorOrProperties = PropertyParser.parseProperty(selectorOrProperties);
-        }
-
-        if (selectorOrProperties.length === 0) {
-            return value;
-        }
-
-        let contentValue = value;
-        for (const property of selectorOrProperties) {
-            const contentValueAsObject = contentValue?.asDataContentObject();
-            if (contentValueAsObject == null) {
-                DataContentHelper.throwRecursiveError(property.path, property.key, contentValue?.getValue());
-            }
-
-            if (property.isArrayIndex && !Array.isArray(contentValueAsObject.valueOf())) {
-                DataContentHelper.throwRecursiveArrayError(property.path, property.key, contentValueAsObject);
-            }
-            const propertyValue = contentValueAsObject.get(property.key);
-            const prevContentValue = contentValue;
-            contentValue = DataContentHelper.create(propertyValue);
-            if (propertyValue == null) {
-                if (property.isOptional || optional) {
-                    break;
-                } else if (!contentValueAsObject.has(property.key)) {
-                    DataContentHelper.throwRecursiveError(property.path, property.key, prevContentValue.getValue());
-                }
-            }
-        }
-
-        return contentValue;
+        throw 'not defined anymore';
     }
 
     /**
@@ -245,33 +216,7 @@ export class DataContentHelper {
     public static hasPath(selector: string, value: DataContent): boolean;
     public static hasPath(properties: PropertyIterable, value: DataContent): boolean;
     public static hasPath(selectorOrProperties: string | PropertyIterable, value: DataContent): boolean {
-        if (typeof selectorOrProperties == 'string') {
-            selectorOrProperties = PropertyParser.parseProperty(selectorOrProperties);
-        }
-
-        if (selectorOrProperties.length === 0) {
-            return true;
-        }
-
-        let contentValue = value;
-        for (const property of selectorOrProperties) {
-            const contentValueAsObject = contentValue?.asDataContentObject();
-            if (contentValueAsObject == null) {
-                return false;
-            }
-
-            const propertyValue = contentValueAsObject.get(property.key);
-            contentValue = DataContentHelper.create(propertyValue);
-            if (propertyValue == null) {
-                if (property.isOptional) {
-                    break;
-                } else if (!contentValueAsObject.has(property.key)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        throw 'not defined anymore';
     }
 
     /**
@@ -280,32 +225,6 @@ export class DataContentHelper {
     public static setByPath(selector: string, value: ContentType, content: DataContent): DataContent;
     public static setByPath(properties: PropertyIterable, value: ContentType, content: DataContent): DataContent;
     public static setByPath(selectorOrProperties: string | PropertyIterable, value: ContentType, content: DataContent): DataContent {
-        if (typeof selectorOrProperties == 'string') {
-            selectorOrProperties = PropertyParser.parseProperty(selectorOrProperties);
-        }
-
-        content = DataContentHelper.isNullOrUndefined(content) ? null : content;
-        let currentContent = (content = DataContentHelper.create(content || {}));
-        for (const property of selectorOrProperties.noLast()) {
-            if (!currentContent.asDataContentObject()) {
-                throw Error(
-                    `cannot set value to an '${ContentInstance[currentContent.type]}' value, selector: ${JSON.stringify(
-                        selectorOrProperties.path
-                    )}`
-                );
-            }
-
-            const currentValue = currentContent.asDataContentObject().get(property.key);
-            if (currentValue == null) {
-                const emptyObject = DataContentHelper.create({});
-                currentContent.asDataContentObject().set(property.key, emptyObject);
-                currentContent = emptyObject;
-            } else {
-                currentContent = DataContentHelper.create(currentValue);
-            }
-        }
-
-        currentContent.asDataContentObject().set(selectorOrProperties.last().key, DataContentHelper.create(value));
-        return content;
+        throw 'not defined anymore';
     }
 }

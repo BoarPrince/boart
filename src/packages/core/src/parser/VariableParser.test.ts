@@ -518,6 +518,24 @@ it('selector - index - without value - 3', () => {
 /**
  *
  */
+it('selector - variable - must have a match', () => {
+    const result = sut.parseVariable('${var#[1].cc[2][3]}');
+
+    expect(result.selectors.match).toBe('[1].cc[2][3]');
+});
+
+/**
+ *
+ */
+it('selector - action - must have a match', () => {
+    const result = sut.parseAction('var#[1].cc[2][3]');
+
+    expect(result.selectors.match).toBe('[1].cc[2][3]');
+});
+
+/**
+ *
+ */
 it('dataselector - action - 1', () => {
     const result = sut.parseAction('var::data#aa.bb[*].cc');
     expect(result.datascope).toBeDefined();

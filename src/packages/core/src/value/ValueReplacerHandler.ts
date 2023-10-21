@@ -1,10 +1,7 @@
 import { Initializer } from '../common/Initializer';
-import { Store } from '../store/Store';
-import { StoreWrapper } from '../store/StoreWrapper';
-import { ScopeType } from '../types/ScopeType';
 
-import { PropertyParser } from './PropertyParser';
 import { ValueReplacer } from './ValueReplacer';
+import { ValueResolver } from './ValueResolver';
 
 /**
  *
@@ -17,22 +14,16 @@ type ValueReplaceItem = {
 /**
  *
  */
-enum ReplacementMode {
-    RemoveBrackets,
-    RetractBrackets
-}
-
-/**
- *
- */
 export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     private valueReplacers: Array<ValueReplaceItem>;
+    private valueResolver: ValueResolver;
 
     /**
      *
      */
     private constructor() {
         this.valueReplacers = [];
+        this.valueResolver = new ValueResolver(this);
     }
 
     /**
@@ -61,10 +52,12 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     }
 
     /**
-     * 
+     *
      */
     public get(name: string): ValueReplacer {
-        return this.valueReplacers.find((r) => r.identifier !== name)?.replacer;
+        return this.valueReplacers.find((r) => {
+            return r.identifier === name;
+        })?.replacer;
     }
 
     /**
@@ -74,7 +67,7 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
         if (!!this.valueReplacers.find((r) => r.identifier === name)) {
             throw Error(`valueReplacer '${name}' already exists!`);
         }
-        
+
         // eslint-disable-next-line @typescript-eslint/unbound-method
         item.defaultScopeType = item.defaultScopeType || (() => null);
 
@@ -93,31 +86,6 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
     }
 
     /**
-     * Needed for inplace/recursive replacement, e.g. store
-     *
-     * When a complete JSON expression is used as parameter.
-     * Can happen with a statement like this ${store:att1.att11:=${store:att2}}
-     * and ${store:att2} is replaced to JSON expression.
-     */
-    private static replaceCurlyBrackets(value: string, mode: ReplacementMode): string {
-        if (!value) {
-            return value;
-        }
-
-        if (mode === ReplacementMode.RemoveBrackets) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            return value.replaceAll('{', '\x01').replaceAll('}', '\x02');
-        } else {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            return value
-                .replaceAll('\x01', '{') //
-                .replaceAll('\x03', '{')
-                .replaceAll('\x02', '}')
-                .replaceAll('\x04', '}');
-        }
-    }
-
-    /**
      *
      * @param value contains replacement expressions
      *              like: ${store:var}
@@ -131,116 +99,6 @@ export class ValueReplacerHandler implements Initializer<ValueReplacer> {
      *
      */
     public replace(value: string): string {
-        // replace without null checking
-        let replacedValue = this.replaceOnce(value, false);
-        while (value !== replacedValue) {
-            value = replacedValue;
-            // recursive replacement
-            replacedValue = this.replaceOnce(value, false);
-        }
-
-        // replace with null checking, if needed
-        replacedValue = this.replaceOnce(value);
-        while (value !== replacedValue) {
-            value = replacedValue;
-            // recursive replacement
-            replacedValue = this.replaceOnce(value);
-        }
-
-        replacedValue = ValueReplacerHandler.replaceCurlyBrackets(value, ReplacementMode.RetractBrackets);
-        if (!replacedValue) {
-            return replacedValue;
-        } else {
-            return replacedValue.replace(/[\n]?\s[^\S]*\/\/.*[\n]?/g, '');
-        }
-    }
-
-    /**
-     *
-     */
-    private static checkNull(
-        value: string,
-        nullable: boolean,
-        optional: boolean,
-        identifier: string,
-        property: string,
-        checkNull: boolean
-    ): string {
-        if (value == null && !(nullable && optional)) {
-            if (checkNull === true) {
-                throw new Error(`can't find value of '${identifier}:${property}'`);
-            }
-            return `$\x03${identifier}:${property}\x04`;
-        } else {
-            return value;
-        }
-    }
-
-    /**
-     *
-     */
-    private static getStore(scope: string): StoreWrapper {
-        switch (scope) {
-            case ScopeType.Global: {
-                return Store.instance.globalStore;
-            }
-            case ScopeType.Local: {
-                return Store.instance.localStore;
-            }
-            case ScopeType.Step: {
-                return Store.instance.stepStore;
-            }
-            case ScopeType.Test: {
-                return Store.instance.testStore;
-            }
-            default: {
-                return Store.instance.nullStore;
-            }
-        }
-    }
-
-    /**
-     *
-     */
-    private stringReplacer(r: ValueReplaceItem, optional: boolean, scope: string, property: string, checkNull: boolean) {
-        property = ValueReplacerHandler.replaceCurlyBrackets(property, ReplacementMode.RetractBrackets);
-        const defaultScope = r.replacer.defaultScopeType(property);
-        const store = ValueReplacerHandler.getStore(scope || defaultScope);
-        const content = r.replacer.replace(property, store, scope as ScopeType);
-
-        return ValueReplacerHandler.replaceCurlyBrackets(
-            ValueReplacerHandler.checkNull(content, r.replacer.nullable, optional, r.identifier, property, checkNull),
-            ReplacementMode.RemoveBrackets
-        );
-    }
-
-    /**
-     *
-     */
-    private replaceOnce(value: string, checkNull = true): string {
-        // eslint-disable-next-line no-control-regex
-        const re = new RegExp(/\$[{|\x03]([^{}\x03\x04]+)[}|\x04]/, 'g');
-        const replacedValue = !value
-            ? value
-            : value.replace(re, (matchedValue: string) => {
-                  const property = PropertyParser.parse(matchedValue.replace('\x03', '{').replace('\x04', '}'));
-
-                  return this.valueReplacers.reduce((v, r) => {
-                      return !!property &&
-                          // replacer must fit
-                          property.replacer === r.identifier
-                          ? this.stringReplacer(r, property.isOptional, property.scope, property.name, checkNull)
-                          : v;
-                  }, matchedValue);
-              });
-
-        switch (replacedValue) {
-            case 'null':
-                return null;
-            case 'undefined':
-                return undefined;
-            default:
-                return replacedValue;
-        }
+        return this.valueResolver.replace(value);
     }
 }

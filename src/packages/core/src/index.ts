@@ -63,7 +63,7 @@ import { ValidationHandler } from './validators/ValidationHandler';
 import { DefaultOperator } from './value/DefaultOperator';
 import { DefaultOperatorParser } from './value/DefaultOperatorParser';
 import { OperatorType } from './value/OperatorType';
-import { ReplaceArg, ValueReplacer } from './value/ValueReplacer';
+import { ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from './value/ValueReplacer';
 import { ValueReplacerHandler } from './value/ValueReplacerHandler';
 
 /**
@@ -110,7 +110,6 @@ export {
     OperatorType,
     ParaType,
     RepeatableExecutionContext,
-    ReplaceArg,
     RowDefinition,
     RowValidator,
     Runtime,
@@ -138,6 +137,9 @@ export {
     UrlLoader,
     ValidationHandler,
     value,
+    ValueReplaceArg as ReplaceArg,
+    ValueReplaceArg,
     ValueReplacer,
+    ValueReplacerConfig,
     ValueReplacerHandler
 };

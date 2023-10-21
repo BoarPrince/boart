@@ -1,4 +1,3 @@
-import { last } from 'rxjs';
 import { Selector } from '../parser/ast/Selector';
 import { SelectorArray } from '../parser/ast/SelectorArray';
 import { SelectorType } from '../parser/ast/SelectorType';
@@ -8,6 +7,7 @@ import { ContentType } from './ContentType';
 import { DataContent } from './DataContent';
 import { DataContentHelper } from './DataContentHelper';
 import { ObjectContent } from './ObjectContent';
+import { WildcardObjectContent } from './WildcardObjectContent';
 
 /**
  *
@@ -16,7 +16,7 @@ export class SelectorExtractor {
     /**
      *
      */
-    private static throwRecursiveError(property: string, current: string, content?: ContentType) {
+    private static throwRecursiveError(property: string, current: string, content?: ContentType): DataContent {
         const contentMsg = !content ? '' : `\nData context:\n${JSON.stringify(content, null, '  ')}`;
         throw Error(`getting "${property}" not possible, because "${current}" is not an object or an array.${contentMsg}`);
     }
@@ -24,7 +24,7 @@ export class SelectorExtractor {
     /**
      *
      */
-    private static throwRecursiveArrayError(property: string, current: string, content?: ContentType) {
+    private static throwRecursiveArrayError(property: string, current: string, content?: ContentType): DataContent {
         const contentMsg = !content ? '' : `\nData context:\n${JSON.stringify(content, null, '  ')}`;
         throw Error(`getting "${property}" not possible, because "${current}" does not used for an array.${contentMsg}`);
     }
@@ -32,9 +32,9 @@ export class SelectorExtractor {
     /**
      *
      */
-    public static getValueBySelector(selectors: SelectorArray, value: ContentType): DataContent {
+    public static getValueBySelector(selectors: SelectorArray, value: ContentType, throwError = true): DataContent {
         let contentValue = DataContentHelper.create(value);
-        let propertyValue: ContentType;
+        let propertyValue: DataContent;
 
         for (const selector of selectors) {
             // Content must be an object, otherwise no selector can be used
@@ -45,62 +45,68 @@ export class SelectorExtractor {
             }
 
             if (selector.type === SelectorType.SIMPLE) {
-                propertyValue = contentValueAsObject.get(selector.value);
+                const extractedValue = contentValueAsObject.get(selector.value);
+                propertyValue = extractedValue ? DataContentHelper.create(extractedValue) : null;
             } else {
                 // if the selector starts with an array selector
                 propertyValue = propertyValue ?? contentValue;
 
-                // all other selector types are array types
-                if (Array.isArray(propertyValue.valueOf())) {
-                    const internalArray = propertyValue.valueOf() as object as Array<ContentType>;
+                const arrayPropertyValue = selector.value
+                    ? // when e.g. a[1]
+                      DataContentHelper.create(propertyValue.asDataContentObject().get(selector.value)).asDataContentObject()
+                    : // all other selector types are only array types
+                      // only [1]
+                      propertyValue.asDataContentObject();
 
+                if (arrayPropertyValue) {
                     switch (selector.type) {
                         case SelectorType.INDEX: {
-                            propertyValue = internalArray[selector.index || 0];
+                            propertyValue = DataContentHelper.create(arrayPropertyValue.get(selector.index));
                             break;
                         }
                         case SelectorType.LIST: {
-                            propertyValue = new Array<ContentType>();
+                            propertyValue = new ObjectContent([]);
                             for (const index of selector.indexes) {
-                                (propertyValue as Array<ContentType>).push(internalArray[index]);
+                                propertyValue.asDataContentObject().set(index, arrayPropertyValue.get(index));
                             }
                             break;
                         }
                         case SelectorType.START: {
-                            propertyValue = new Array<ContentType>();
+                            propertyValue = new ObjectContent([]);
                             const start: number = selector.start;
-                            for (let index = start; index < internalArray.length; index++) {
-                                (propertyValue as Array<ContentType>).push(internalArray[index]);
+                            for (let index = start; index < arrayPropertyValue.length; index++) {
+                                propertyValue.asDataContentObject().set(index, arrayPropertyValue.get(index));
                             }
                             break;
                         }
                         case SelectorType.END: {
-                            propertyValue = new Array<ContentType>();
-                            const end: number = selector.end >= 0 ? selector.end : internalArray.length + (selector.end || 0);
+                            propertyValue = new ObjectContent([]);
+                            const end: number = selector.end >= 0 ? selector.end : arrayPropertyValue.length + (selector.end || 0);
                             for (let index = 0; index < end; index++) {
-                                (propertyValue as Array<ContentType>).push(internalArray[index]);
+                                propertyValue.asDataContentObject().set(index, arrayPropertyValue.get(index));
                             }
                             break;
                         }
                         case SelectorType.STARTEND: {
-                            propertyValue = new Array<ContentType>();
+                            propertyValue = new ObjectContent([]);
                             const start: number = selector.start;
-                            const end: number = selector.end >= 0 ? selector.end : internalArray.length + (selector.end || 0);
+                            const end: number = selector.end >= 0 ? selector.end : arrayPropertyValue.length + (selector.end || 0);
                             for (let index = start; index < end; index++) {
-                                (propertyValue as Array<ContentType>).push(internalArray[index]);
+                                propertyValue.asDataContentObject().set(index, arrayPropertyValue.get(index));
                             }
                             break;
                         }
                         case SelectorType.WILDCARD: {
-                            propertyValue = new Array<ContentType>();
-                            for (const value of internalArray) {
-                                (propertyValue as Array<ContentType>).push(value);
-                            }
+                            const wildCardArray = [];
+                            arrayPropertyValue.keys().forEach((key, index) => {
+                                wildCardArray[index] = arrayPropertyValue.get(key);
+                            });
+                            propertyValue = new WildcardObjectContent(wildCardArray);
                             break;
                         }
                     }
                 } else {
-                    SelectorExtractor.throwRecursiveArrayError(selectors.match, selector.value, propertyValue);
+                    return throwError ? SelectorExtractor.throwRecursiveArrayError(selectors.match, selector.value, propertyValue) : null;
                 }
             }
 
@@ -110,7 +116,9 @@ export class SelectorExtractor {
                 if (selector.optional) {
                     break;
                 } else if (!contentValueAsObject.has(selector.value)) {
-                    SelectorExtractor.throwRecursiveError(selectors.match, selector.value, prevContentValue?.getValue());
+                    return throwError
+                        ? SelectorExtractor.throwRecursiveError(selectors.match, selector.value, prevContentValue?.getValue())
+                        : null;
                 }
             }
         }
@@ -129,18 +137,23 @@ export class SelectorExtractor {
      */
     public static setValueBySelector(selectors: SelectorArray, value: ContentType, contentValue: DataContent): DataContent {
         const lastSelector = selectors.pop();
+        const selectorList = new Array<{ sel: Selector; cont: DataContent }>();
 
         // all selectors are optional when setting a value
         selectors.forEach((selector) => (selector.optional = true));
 
         let currentContentValue = contentValue;
         for (const selector of selectors) {
-            const contentValueAfterSelect = this.getValueBySelector([selector], currentContentValue);
+            selectorList.push({ sel: selector, cont: currentContentValue });
+
+            const selectorArry: SelectorArray = [selector];
+            selectorArry.match = selectors.match;
+            const contentValueAfterSelect = this.getValueBySelector(selectorArry, currentContentValue, false);
 
             // auto extend object tree
-            if (!contentValueAfterSelect.valueOf()) {
+            if (!contentValueAfterSelect?.valueOf()) {
                 const emptyObjectContent = new ObjectContent({});
-                currentContentValue.asDataContentObject().set(selector.value, emptyObjectContent);
+                this.setValue(selector, currentContentValue, emptyObjectContent);
                 currentContentValue = emptyObjectContent;
             } else {
                 currentContentValue = contentValueAfterSelect;
@@ -156,7 +169,36 @@ export class SelectorExtractor {
             }
         }
 
-        currentContentValue.asDataContentObject().set(lastSelector.value, value);
+        selectorList.push({ sel: lastSelector, cont: currentContentValue });
+
+        return selectorList
+            .reverse()
+            .reduce(
+                (currentValue, selectorElement) => SelectorExtractor.setValue(selectorElement.sel, selectorElement.cont, currentValue),
+                new ObjectContent(value)
+            );
+    }
+
+    /**
+     *
+     */
+    private static setValue(selector: Selector, contentValue: DataContent, value: ContentType): DataContent {
+        switch (selector.type) {
+            case SelectorType.SIMPLE: {
+                contentValue.asDataContentObject().set(selector.value, value);
+                break;
+            }
+            case SelectorType.INDEX: {
+                if (!selector.value) {
+                    // start selector
+                    contentValue.asDataContentObject().set(selector.index, value);
+                } else {
+                    const arrayValue = new ObjectContent(contentValue.asDataContentObject()?.get(selector.value) || []);
+                    arrayValue.set(selector.index, value);
+                    contentValue.asDataContentObject().set(selector.value, arrayValue);
+                }
+            }
+        }
         return contentValue;
     }
 }

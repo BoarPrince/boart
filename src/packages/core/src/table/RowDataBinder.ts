@@ -161,10 +161,6 @@ export class RowDataBinder {
                 valueEntry[columnName] = cells[index];
             });
 
-            const values = (o: Record<string, string>, c: string): Record<string, string> => {
-                o[c] = valueEntry[c];
-                return o;
-            };
             const valuesReplaced = (o: Record<string, string>, c: string): Record<string, string> => {
                 o[c] = ValueReplacerHandler.instance.replace(valueEntry[c]);
                 return o;

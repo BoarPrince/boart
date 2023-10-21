@@ -70,7 +70,7 @@ export class VariableParser {
     }
 
     /**
-     * V A R I A B L E S
+     * V A R I A B L E
      */
     public parseVariable(value: string): ASTVariable {
         const match = this.getInnerMatch(value);
@@ -86,7 +86,7 @@ export class VariableParser {
             });
         } catch (e) {
             const valueWithErrorMarker = this.getValueWithMarker(e.location, match.input);
-            throw new Error(`${e.message}\n${valueWithErrorMarker}`);
+            throw new Error(`${e.message || ''}\n${valueWithErrorMarker}`);
         }
     }
 

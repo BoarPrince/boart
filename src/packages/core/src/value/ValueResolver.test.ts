@@ -5,7 +5,7 @@ import { Store } from '../store/Store';
 import { ScopeType } from '../types/ScopeType';
 import { ScopedType } from '../types/ScopedType';
 
-import { ReplaceArg, ValueReplacer, ValueReplacerConfig } from './ValueReplacer';
+import { ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from './ValueReplacer';
 import { ValueReplacerHandler } from './ValueReplacerHandler';
 import { ValueResolver } from './ValueResolver';
 
@@ -47,7 +47,7 @@ class ValueReplacerMock implements ValueReplacer {
     priority = 100;
     scoped = ScopedType.true;
     replace = jest.fn((): ReplaceResult => null);
-    replace2 = jest.fn((arg: ReplaceArg): ReplaceResult => {
+    replace2 = jest.fn((arg: ValueReplaceArg): ReplaceResult => {
         let value = `${arg.qualifier.value}`;
 
         if (arg.qualifier.paras?.length) {
@@ -107,6 +107,14 @@ it('default', () => {
 it('deep 1', () => {
     const replacedValue = sut.replace('--${replacer:a:"${replacer:b}"}--');
     expect(replacedValue).toBe('--a:b:--');
+});
+
+/**
+ *
+ */
+it('multiple 1', () => {
+    const replacedValue = sut.replace('--${replacer:a}--${replacer:b}--');
+    expect(replacedValue).toBe('--a--b--');
 });
 
 /**

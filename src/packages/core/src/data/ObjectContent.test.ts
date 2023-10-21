@@ -123,6 +123,46 @@ describe('check object content', () => {
     /**
      *
      */
+    it('length - object', () => {
+        const val = new ObjectContent({ a: 'b', c: 1, d: { e: 'f' } });
+        expect(val).toHaveLength(3);
+    });
+
+    /**
+     *
+     */
+    it('length - array', () => {
+        const val = new ObjectContent([1, 1, 1, 1]);
+        expect(val).toHaveLength(4);
+    });
+
+    /**
+     *
+     */
+    it('length - native - 1', () => {
+        const val = new ObjectContent(4);
+        expect(val).toHaveLength(0);
+    });
+
+    /**
+     *
+     */
+    it('length - native - 2', () => {
+        const val = new ObjectContent('111111');
+        expect(val).toHaveLength(0);
+    });
+
+    /**
+     *
+     */
+    it('length - native - 3', () => {
+        const val = new ObjectContent(undefined);
+        expect(val).toHaveLength(0);
+    });
+
+    /**
+     *
+     */
     it('get keys', () => {
         const sut = new ObjectContent('{"a": "1", "b": 2, "c": {"e": "f"}}');
         expect(sut.isObject()).toBeTrue();

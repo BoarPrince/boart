@@ -10,6 +10,10 @@ import { DataContentObject } from './DataContentObject';
 export class NullContent implements DataContent {
     readonly type = ContentInstance.Null;
 
+    valueOf(): string | number | boolean | object {
+        return null;
+    }
+
     getValue(): ContentType {
         return null;
     }

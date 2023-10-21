@@ -6,7 +6,7 @@ import { StoreWrapper } from '../store/StoreWrapper';
 import { ScopeType } from '../types/ScopeType';
 
 import { OperatorType } from './OperatorType';
-import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
+import { ValueReplaceArg, ValueReplacerConfig } from './ValueReplacer';
 import { ValueReplacerHandler } from './ValueReplacerHandler';
 
 /**
@@ -15,6 +15,7 @@ import { ValueReplacerHandler } from './ValueReplacerHandler';
 export class ValueResolver {
     private readonly parser: VariableParser;
     private readonly pipeResolver: PipeResolver;
+    private readonly singleVarRe: RegExp;
 
     /**
      *
@@ -22,14 +23,19 @@ export class ValueResolver {
     constructor(private handler: ValueReplacerHandler) {
         this.parser = new VariableParser();
         this.pipeResolver = new PipeResolver();
+        this.singleVarRe = /\$\{[^{}]+\}/;
     }
 
     /**
      *
      */
     public replace(value: string): string {
+        let iterationCount = 0;
         let replacedValue = this.replaceOneMatch(value);
         while (value !== replacedValue) {
+            if (iterationCount++ >= 10) {
+                throw new Error(`"${value}" cannot be resolved`);
+            }
             value = replacedValue;
             // recursive replacement
             replacedValue = this.replaceOneMatch(value);
@@ -64,7 +70,7 @@ export class ValueResolver {
     /**
      *
      */
-    private default(ast: ReplaceArg, store: StoreWrapper): string {
+    private default(ast: ValueReplaceArg, store: StoreWrapper): string {
         if (!ast.default) {
             return null;
         }
@@ -74,7 +80,7 @@ export class ValueResolver {
                 return ast.default.value;
 
             case OperatorType.DefaultAssignment: {
-                const selectors = ast.selectors.stringValue;
+                const selectors = ast.selectors.match;
                 store.put(selectors, ast.default.value);
                 return ast.default.value;
             }
@@ -146,7 +152,8 @@ export class ValueResolver {
      *
      */
     private replaceOneMatch(value: string): string {
-        const ast = this.parser.parseVariable(value);
+        const match = this.singleVarRe.exec(value);
+        const ast = match ? this.parser.parseVariable(match[0]) : null;
 
         if (!ast) {
             return value;
@@ -154,7 +161,8 @@ export class ValueResolver {
 
         const replacer = this.handler.get(ast.name.value);
         if (!replacer) {
-            throw new Error(`replacer "${ast.name.value}" does not exist`);
+            return value;
+            // throw new Error(`replacer "${ast.name.value}" does not exist`);
         }
 
         this.checkConfig(ast, replacer.config);

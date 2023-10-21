@@ -3,27 +3,16 @@ import { PropertyIterable } from './PropertyIterable';
 /**
  *
  */
-type DefaultOp = {
-    operator: string;
-    value: string;
-};
-
-/**
- *
- */
 export class PropertyParser {
     /**
      *
      */
-    private constructor(readonly replacer: string, readonly isOptional: boolean, readonly scope: string, readonly name: string) {}
-    // private constructor(
-    //     readonly replacer: string,
-    //     readonly isOptional: boolean,
-    //     readonly scope: string,
-    //     readonly property: string,
-    //     readonly selector: string,
-    //     readonly defaultOp: DefaultOp
-    // ) {}
+    private constructor(
+        readonly replacer: string,
+        readonly isOptional: boolean,
+        readonly scope: string,
+        readonly name: string
+    ) {}
 
     /**
      *

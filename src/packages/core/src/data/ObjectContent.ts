@@ -8,14 +8,15 @@ import { DataContentObject } from './DataContentObject';
 /**
  *
  */
-
 export class ObjectContent extends DataContentBase implements DataContentObject {
     private dirty = true;
 
     /**
      *
      */
-    readonly type = ContentInstance.Object;
+    public get type(): ContentInstance {
+        return ContentInstance.Object;
+    }
 
     /**
      *
@@ -140,19 +141,25 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
     /**
      *
      */
-    get(key: string): ContentType {
-        if (key === '*') {
-            return !Array.isArray(this.value) ? null : new WildcardObjectContent(this.value);
-        } else {
-            return this.value[key];
-        }
+    get length(): number {
+        return typeof this.value === 'string' ? 0 : Object.values(this.value).length;
     }
 
     /**
      *
      */
-    set(key: string, value: ContentType): DataContent {
+    get(key: string | number): ContentType {
+        return this.value[key];
+    }
+
+    /**
+     *
+     */
+    set(key: string | number, value: ContentType): DataContent {
         this.dirty = true;
+        if (!(this.value instanceof Object)) {
+            this.value = {};
+        }
         this.value[key] = this.deepDeconstruct(value);
         return this;
     }
@@ -177,61 +184,5 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
      */
     isNullOrUndefined() {
         return this.value == null;
-    }
-}
-
-/**
- *
- */
-class WildcardObjectContent extends ObjectContent {
-    /**
-     *
-     */
-    // constructor(value: Array<string | boolean | number | object | DataContent>) {
-    constructor(value: ContentType) {
-        super(value);
-    }
-
-    /**
-     *
-     */
-    has(key: string): boolean {
-        return Object.values(this.value).some((v) => !!v[key]);
-    }
-
-    /**
-     *
-     */
-    get(key: string): ContentType {
-        if (key == '*') {
-            return new WildcardObjectContent(this.value);
-        }
-
-        if (!this.has(key)) {
-            return null;
-        }
-
-        const collectedValue = this.value as Array<unknown>;
-
-        const collected = new Array<unknown>();
-        collectedValue.forEach((v) => {
-            if (Array.isArray(v[key])) {
-                (v[key] as Array<unknown>)?.forEach((elements) => collected.push(elements));
-            } else {
-                collected.push(v[key]);
-            }
-        });
-
-        return new WildcardObjectContent(collected);
-    }
-
-    /**
-     *
-     */
-    set(key: string, value: ContentType): DataContent {
-        Object.values(this.value).forEach((v) => {
-            v[key] = value;
-        });
-        return this;
     }
 }

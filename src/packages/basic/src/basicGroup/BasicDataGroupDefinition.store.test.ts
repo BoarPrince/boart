@@ -178,7 +178,7 @@ describe('out store', () => {
 
         await expect(async () => {
             await sut.handler.process(tableDef);
-        }).rejects.toThrowError('store:name is missing');
+        }).rejects.toThrow('store:name is missing');
     });
 
     /**
@@ -836,10 +836,7 @@ describe('out store from payload', () => {
              |store     | var        |`
         );
 
-        await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
-
-        expect(result.toString()).toBe('${sore:a}');
+        await expect(() => sut.handler.process(tableDef)).rejects.toThrow('replacer "sore" does not exist');
     });
 
     /**
@@ -884,7 +881,7 @@ describe('out store from payload', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |
              |----------|------------------|
-             |payload#a | \${store:a.p:-1} |
+             |payload#a | \${store:a#p:-1} |
              |store     | var              |`
         );
 
@@ -902,7 +899,7 @@ describe('out store from payload', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |
              |----------|------------------|
-             |payload#a | \${store:a.p:-2} |
+             |payload#a | \${store:a#p:-2} |
              |store     | var              |`
         );
 
@@ -945,7 +942,7 @@ describe('out store from payload', () => {
         await sut.handler.process(tableDef);
         const result = Store.instance.testStore.get('var');
 
-        expect(result.valueOf()).toEqual({ a: 'undefined', b: 2 });
+        expect(result.valueOf()).toStrictEqual({ a: 'undefined', b: 2 });
     });
 
     /**
@@ -955,14 +952,15 @@ describe('out store from payload', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |
              |----------|------------------|
-             |payload   | \${store:a.p:=1} |
+             |payload   | \${store:a#p:=1} |
              |store     | var              |`
         );
 
         await sut.handler.process(tableDef);
         const result = Store.instance.testStore.get('var');
 
-        expect(result.valueOf()).toEqual(1);
+        expect(result.valueOf()).toBe(1);
+        expect(Store.instance.testStore.get('a')).toBeDefined();
         expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 1 });
     });
 

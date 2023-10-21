@@ -136,7 +136,7 @@ export class RowDefinitionBinder<
             case SelectorType.False:
                 throwIf(
                     !!ast.selectors?.length,
-                    () => `'${this.tableName}': key '${ast.match}' cannot have a selector: '${ast.selectors.stringValue}'!`
+                    () => `'${this.tableName}': key '${ast.match}' cannot have a selector: '${ast.selectors.match || ''}'!`
                 );
                 break;
         }
@@ -193,7 +193,7 @@ export class RowDefinitionBinder<
             const keyPart = key.split(':').slice(1).join(':');
 
             const keyPara = row.ast.qualifier?.stringValue || '';
-            const selector = row.ast.selectors?.stringValue || null;
+            const selector = row.ast.selectors?.match || null;
 
             return new type({
                 _metaDefinition: rowDefinition,

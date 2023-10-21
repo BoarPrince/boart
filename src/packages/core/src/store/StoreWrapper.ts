@@ -2,9 +2,11 @@ import { ContentType } from '../data/ContentType';
 import { DataContent } from '../data/DataContent';
 import { DataContentHelper } from '../data/DataContentHelper';
 import { ObjectContent } from '../data/ObjectContent';
+import { SelectorExtractor } from '../data/SelectorExtractor';
 import { LogProvider } from '../logging/LogProvider';
 import { ScopeType } from '../types/ScopeType';
 import { PropertyParser } from '../value/PropertyParser';
+import { ValueReplaceArg } from '../value/ValueReplacer';
 
 import { Store } from './Store';
 import { StoreMap } from './StoreMap';
@@ -92,6 +94,25 @@ export class StoreWrapper implements StoreMap {
             const contentValue = DataContentHelper.create(value);
             this.store.put(key, contentValue);
         }
+    }
+
+    /**
+     *
+     */
+    getByAst(arg: ValueReplaceArg): ContentType {
+        const contentValue = this.store.get(arg.qualifier.value);
+        if (contentValue == null) {
+            return null;
+        }
+
+        const dataContentValue = DataContentHelper.create(contentValue);
+        const value = SelectorExtractor.getValueBySelector(arg.selectors, dataContentValue);
+
+        this.logger.trace(
+            () => `get ${arg.selectors.match || ''}`,
+            () => value
+        );
+        return value;
     }
 
     /**

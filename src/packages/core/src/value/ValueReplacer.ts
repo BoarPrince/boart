@@ -6,13 +6,6 @@ import { ScopedType } from '../types/ScopedType';
 /**
  *
  */
-export interface ReplaceArg extends Omit<ASTVariable, 'scope' | 'match' | 'name'> {
-    match?: string;
-}
-
-/**
- *
- */
 export class ValueReplacerConfig {
     scopeAllowed?: boolean;
     defaultScopeType?: ScopeType;
@@ -27,6 +20,13 @@ export class ValueReplacerConfig {
 /**
  *
  */
+export interface ValueReplaceArg extends Omit<ASTVariable, 'scope' | 'match' | 'name'> {
+    match: string;
+}
+
+/**
+ *
+ */
 export interface ValueReplacer {
     readonly name: string;
     readonly priority: number;
@@ -36,5 +36,5 @@ export interface ValueReplacer {
     replace(property: string, store?: StoreWrapper, scope?: ScopeType): string;
 
     readonly config: ValueReplacerConfig;
-    replace2?(arg: ReplaceArg, store?: StoreWrapper): string;
+    replace2(ast: ValueReplaceArg, store?: StoreWrapper): string;
 }
