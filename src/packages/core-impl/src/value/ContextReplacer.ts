@@ -1,5 +1,4 @@
-import { Context, DataContentHelper, DefaultOperatorParser, OperatorType, ScopedType, ValueReplacer } from '@boart/core';
-import { ValueReplacerConfig } from './ValueReplacer';
+import { Context, DataContentHelper, ScopedType, ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from '@boart/core';
 
 /**
  *
@@ -7,7 +6,7 @@ import { ValueReplacerConfig } from './ValueReplacer';
 export class ContextReplacer implements ValueReplacer {
     readonly name = 'context';
 
-    readonly scoped = ScopedType.false;
+    readonly scoped = ScopedType.False;
     readonly nullable = true;
 
     /**
@@ -27,23 +26,18 @@ export class ContextReplacer implements ValueReplacer {
     /**
      *
      */
-    replace(property: string): string {
-        const defaultOperator = DefaultOperatorParser.parse(property);
-        const operator = defaultOperator.operator;
-
-        if (![OperatorType.None, OperatorType.Default].includes(operator.type)) {
-            throw Error(`default operator '${defaultOperator.operator.value}' not allowed`);
-        }
-
-        const value = Context.instance.get(defaultOperator.property);
+    replace(ast: ValueReplaceArg): string {
+        // e.g. read context:payload -> get the payload
+        // or   read context:payload#id -> get the payload#id
+        const value = Context.instance.get(ast);
         if (!DataContentHelper.isNullOrUndefined(value)) {
             return value.toString();
         }
 
-        if (operator.type === OperatorType.None) {
-            throw Error(`context '${defaultOperator.property}' not defined`);
+        if (!ast.default) {
+            throw Error(`context '${ast.qualifier.selectorMatch ?? ''}' not defined`);
         }
 
-        return defaultOperator.defaultValue;
+        return ast.default.value;
     }
 }

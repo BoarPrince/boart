@@ -1,6 +1,4 @@
-import { DefaultOperatorParser, OperatorType, ScopedType, ScopeType, Store, StoreWrapper, ValueReplacer } from '@boart/core';
-
-import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
+import { ScopedType, ScopeType, Store, StoreWrapper, ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from '@boart/core';
 
 /**
  *
@@ -17,7 +15,7 @@ export class StoreReplacer implements ValueReplacer {
         scopeAllowed: true,
         hasQualifier: true,
         qualifierParaCountMax: 0,
-        selectorsCountMin: 1,
+        selectorsCountMin: 0,
         selectorsCountMax: Number.MAX_VALUE,
         defaultScopeType: ScopeType.Test
     };
@@ -26,7 +24,7 @@ export class StoreReplacer implements ValueReplacer {
      *
      */
     get scoped(): ScopedType {
-        return ScopedType.multiple;
+        return ScopedType.Optional;
     }
 
     /**
@@ -55,82 +53,21 @@ export class StoreReplacer implements ValueReplacer {
     }
 
     /**
-     *
-     */
-    private getPropertyValue(property: string, store: StoreWrapper, scope: ScopeType, optional: boolean): string {
-        if (!scope) {
-            for (const store of this.stores) {
-                const storeContent = store.get(property, optional)?.toString();
-                if (storeContent != null) {
-                    return storeContent;
-                }
-            }
-        } else {
-            return store.get(property, optional)?.toString();
-        }
-    }
-
-    /**
-     *
-     */
-    replace(definition: string, store: StoreWrapper, scope: ScopeType): string {
-        const defaultOperator = DefaultOperatorParser.parse(definition);
-
-        const property = defaultOperator.property;
-        const content = this.getPropertyValue(property, store, scope, !!defaultOperator.operator);
-
-        if (content == null) {
-            switch (defaultOperator.operator.type) {
-                case OperatorType.Default:
-                    return defaultOperator.defaultValue;
-                case OperatorType.DefaultAssignment:
-                    store.put(property, defaultOperator.defaultValue);
-                    return defaultOperator.defaultValue;
-                case OperatorType.None:
-                    return null;
-                case OperatorType.Unknown:
-                default:
-                    throw Error(`store default operator '${defaultOperator.operator.value}' not valid (${definition})`);
-            }
-        } else {
-            switch (defaultOperator.operator.type) {
-                case OperatorType.Unknown:
-                    switch (defaultOperator.operator.value) {
-                        case 'lowercase':
-                            return content.toLowerCase();
-                        case 'upercase':
-                            return content.toUpperCase();
-                    }
-                    break;
-                default:
-                    return content;
-            }
-        }
-    }
-
-    /**
-     *
+     * Reads value from the store
      * @param arg parser arguments
      * @param store store to be used
      */
-    replace2(arg: ReplaceArg, store: StoreWrapper): string {
-        const isOptional = !!arg.default;
-
-        const selectors: string = arg.selectors.reduce((prev, current) => {
-            const delim = (current.optional ? '?' : '') + '.';
-            return prev + (prev ? delim : '') + current.value;
-        }, arg.qualifier.value || '');
-
+    replace(arg: ValueReplaceArg, store: StoreWrapper): string {
         if (!store) {
             // if no scope is defined, iterate over the scopes
             for (const store of this.stores) {
-                const storeContent = store.get(selectors, isOptional);
+                const storeContent = store.get(arg);
                 if (storeContent != null) {
                     return storeContent.toString();
                 }
             }
         } else {
-            return store.get(selectors, isOptional)?.toString();
+            return store.get(arg)?.toString();
         }
     }
 }

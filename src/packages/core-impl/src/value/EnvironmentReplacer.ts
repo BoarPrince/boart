@@ -1,5 +1,4 @@
-import { EnvLoader, ScopedType, ValueReplacer } from '@boart/core';
-import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
+import { EnvLoader, ScopedType, ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from '@boart/core';
 
 export class EnvironmentReplacer implements ValueReplacer {
     readonly name = 'env';
@@ -15,7 +14,7 @@ export class EnvironmentReplacer implements ValueReplacer {
      *
      */
     get scoped(): ScopedType {
-        return ScopedType.false;
+        return ScopedType.False;
     }
 
     /**
@@ -27,16 +26,10 @@ export class EnvironmentReplacer implements ValueReplacer {
 
     /**
      *
-     */
-    replace(property: string): string {
-        return EnvLoader.instance.get(property, null, true);
-    }
-
-    /**
-     *
      * @param arg parser arguments
      */
-    replace2?(arg: ReplaceArg): string {
-        return EnvLoader.instance.get(arg.qualifier.value, null, true);
+    replace(ast: ValueReplaceArg): string {
+        const key: string = ast?.qualifier?.stringValue;
+        return EnvLoader.instance.get(key, null, true);
     }
 }

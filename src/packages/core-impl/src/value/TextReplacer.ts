@@ -1,5 +1,4 @@
-import { ScopedType, TextLanguageHandler, ValueReplacer } from '@boart/core';
-import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
+import { ScopedType, TextLanguageHandler, ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from '@boart/core';
 
 export class TextReplacer implements ValueReplacer {
     readonly name = 'text';
@@ -15,7 +14,7 @@ export class TextReplacer implements ValueReplacer {
      *
      */
     get scoped(): ScopedType {
-        return ScopedType.false;
+        return ScopedType.False;
     }
 
     /**
@@ -27,16 +26,9 @@ export class TextReplacer implements ValueReplacer {
 
     /**
      *
+     * @param ast parser arguments
      */
-    replace(property: string): string {
-        return TextLanguageHandler.instance.get(property);
-    }
-
-    /**
-     *
-     * @param arg parser arguments
-     */
-    replace2?(arg: ReplaceArg): string {
-        return TextLanguageHandler.instance.get(arg.qualifier.value);
+    replace(ast: ValueReplaceArg): string {
+        return TextLanguageHandler.instance.get(ast.qualifier.value);
     }
 }

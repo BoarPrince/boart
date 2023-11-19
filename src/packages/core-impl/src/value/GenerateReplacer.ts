@@ -1,12 +1,18 @@
-import { GeneratorHandler, ScopedType, ScopeType, StoreWrapper, ValueReplacer } from '@boart/core';
-
-import { ReplaceArg, ValueReplacerConfig } from './ValueReplacer';
+import {
+    GeneratorHandler,
+    ScopedType,
+    ScopeType,
+    StoreMap,
+    StoreWrapper,
+    ValueReplaceArg,
+    ValueReplacer,
+    ValueReplacerConfig
+} from '@boart/core';
 
 /**
  *
  */
 export class GenerateReplacer implements ValueReplacer {
-    private static readonly re = /^(@(?<scopename>[^@:]+):)?(?<property>.+)$/;
     readonly name = 'generate';
 
     /**
@@ -15,15 +21,15 @@ export class GenerateReplacer implements ValueReplacer {
     readonly config: ValueReplacerConfig = {
         scopeAllowed: true,
         hasQualifier: true,
-        qualifierParaCountMin: 1,
-        defaultScopeType: ScopeType.None
+        qualifierParaCountMin: 0,
+        defaultScopeType: ScopeType.Test
     };
 
     /**
      *
      */
     get scoped(): ScopedType {
-        return ScopedType.true;
+        return ScopedType.True;
     }
 
     /**
@@ -35,45 +41,17 @@ export class GenerateReplacer implements ValueReplacer {
 
     /**
      *
-     */
-    defaultScopeType(property: string): ScopeType {
-        const match = property.match(GenerateReplacer.re);
-        return !match.groups.scopename ? null : ScopeType.Step;
-    }
-
-    /**
-     *
-     */
-    replace(property: string, store: StoreWrapper): string {
-        const baseStore = store.store;
-
-        const match = property.match(GenerateReplacer.re);
-        property = match.groups.property;
-
-        const storeIdentifier = match.groups.scopename
-            ? `#${this.name}#:#${match.groups.scopename}#:#${property}#`
-            : `#${this.name}#:#${property}#`;
-
-        let content: string = baseStore.get(storeIdentifier)?.toString();
-        if (!content) {
-            content = GeneratorHandler.instance.generate(property);
-            baseStore.put(storeIdentifier, content);
-        }
-
-        return content;
-    }
-
-    /**
-     *
      * @param arg parser arguments
      * @param store store to be used
      */
-    replace2(arg: ReplaceArg, store?: StoreWrapper): string {
+    replace(arg: ValueReplaceArg, store?: StoreWrapper): string {
         const baseStore = store.store;
 
         const qualifier = arg.qualifier.stringValue;
 
-        const storeIdentifier = store ? `#${this.name}#:#${store.storeName}#:#${qualifier}#` : `#${this.name}#:#${qualifier}#`;
+        const storeIdentifier = store
+            ? StoreMap.getStoreIdentifier(`#${this.name}#:#${store.storeName}#:#${qualifier}#`)
+            : StoreMap.getStoreIdentifier(`#${this.name}#:#${qualifier}#`);
 
         let content: string = baseStore.get(storeIdentifier)?.toString();
         if (!content) {

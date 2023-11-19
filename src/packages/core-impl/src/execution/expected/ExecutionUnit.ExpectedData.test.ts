@@ -224,7 +224,7 @@ describe('check expected:data execution units', () => {
             ['3. number', 'a.b', new ObjectContent({ a: { b: 10 } }), '10'],
             ['4. boolean (false)', 'a.b', new ObjectContent({ a: { b: false } }), 'false'],
             ['5. boolean (true)', 'a.b', new ObjectContent({ a: { b: true } }), 'true']
-        ])(`%s, property: %s, data: %s -> expected: %s `, async (_: string, property: string, data: DataContent, expected: string) => {
+        ])(`%s, property: %s, data: %s -> expected: %s`, async (_: string, property: string, data: DataContent, expected: string) => {
             intialContext.data = data;
             await tableHandler.process({
                 headers: {
@@ -763,7 +763,10 @@ describe('check expected:data ci operator', () => {
         /**
          *
          */
-        constructor(public name: string, def = false) {
+        constructor(
+            public name: string,
+            def = false
+        ) {
             this.default = def;
         }
         default = false;

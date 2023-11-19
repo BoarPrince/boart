@@ -6,10 +6,12 @@ import {
     NullContent,
     ObjectContent,
     RowDefinition,
+    SelectorType,
     Store,
     StoreWrapper,
     TableHandler,
-    TableRowType
+    TableRowType,
+    VariableParser
 } from '@boart/core';
 
 import { DataContext, DataExecutionContext, DataPreExecutionContext } from '../../DataExecutionContext';
@@ -21,6 +23,8 @@ import { OutStoreExecutionUnit } from './ExecutionUnit.OutStore';
  *
  */
 class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+    selectorType = SelectorType.Optional;
+
     /**
      *
      */
@@ -44,7 +48,7 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
 /**
  *
  */
-export type ExtendedDataContext = ExecutionContext<
+type ExtendedDataContext = ExecutionContext<
     object,
     DataPreExecutionContext,
     DataExecutionContext & {
@@ -100,17 +104,19 @@ class ExecutionEngineMock<MockContext extends DataContext> extends ExecutionEngi
  * O U T : S T O R E
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
-const tableHandler = new TableHandler(RowTypeValue, () => new ExecutionEngineMock());
+let tableHandler: TableHandler<any, any>;
 const sut = new OutStoreExecutionUnit();
 const sutData = new OutStoreExecutionUnit('data');
 const sutHeader = new OutStoreExecutionUnit('header');
 const sutTransformed = new OutStoreExecutionUnit('transformed');
 const sutPayload = new OutStoreExecutionUnit('payload');
+const variableParser = new VariableParser();
 
 /**
  *
  */
 beforeEach(() => {
+    tableHandler = new TableHandler(RowTypeValue, () => new ExecutionEngineMock());
     tableHandler.addRowDefinition(
         new RowDefinition({
             type: TableRowType.PostProcessing,
@@ -146,19 +152,7 @@ beforeEach(() => {
             validators: null
         })
     );
-});
 
-/**
- *
- */
-afterEach(() => {
-    tableHandler.removeAllRowDefinitions();
-});
-
-/**
- *
- */
-beforeEach(() => {
     Store.instance.testStore.clear();
     Store.instance.globalStore.clear();
     Store.instance.localStore.clear();
@@ -168,6 +162,13 @@ beforeEach(() => {
     initialContext.execution.header = null;
     initialContext.execution.transformed = null;
     initialContext.preExecution.payload = null;
+});
+
+/**
+ *
+ */
+afterEach(() => {
+    tableHandler.removeAllRowDefinitions();
 });
 
 /**
@@ -193,7 +194,7 @@ describe('check test store', () => {
         `%s, data: %s, store postfix: %s, var postfix: %s, expected %s`,
         async (_: string, data: DataContent, storePostfix: string, varPostfix: string, expected: string) => {
             initialContext.execution.transformed = data;
-            await tableHandler.process({
+            const tableRow = {
                 headers: {
                     cells: ['action', 'value']
                 },
@@ -202,9 +203,11 @@ describe('check test store', () => {
                         cells: [`store${storePostfix}`, `var${varPostfix}`]
                     }
                 ]
-            });
+            };
+            await tableHandler.process(tableRow);
 
-            expect(Store.instance.testStore.get('var').toString()).toBe(expected);
+            const ast = variableParser.parseAction('store:var');
+            expect(Store.instance.testStore.get(ast).toString()).toBe(expected);
         }
     );
 });
@@ -217,20 +220,20 @@ describe('check all store types', () => {
      *
      */
     it.each([
-        ['value can be picked from global store', Store.instance.globalStore, new ObjectContent({ a: 'b' }), ':g#a', '', 'b'], //
-        ['regular way from test store', Store.instance.testStore, new ObjectContent({ a: 'b' }), ':t', '', '{"a":"b"}'],
-        ['regular way from local store', Store.instance.localStore, new ObjectContent({ a: 'b' }), ':l', '', '{"a":"b"}'],
-        ['regular way from step store', Store.instance.stepStore, new ObjectContent({ a: 'b' }), ':s', '', '{"a":"b"}'],
+        ['value can be picked from global store', Store.instance.globalStore, new ObjectContent({ a: 'b' }), '@g#a', '', 'b'], //
+        ['regular way from test store', Store.instance.testStore, new ObjectContent({ a: 'b' }), '@t', '', '{"a":"b"}'],
+        ['regular way from local store', Store.instance.localStore, new ObjectContent({ a: 'b' }), '@l', '', '{"a":"b"}'],
+        ['regular way from step store', Store.instance.stepStore, new ObjectContent({ a: 'b' }), '@s', '', '{"a":"b"}'],
         [
             'deep value can be picked and set to step store',
             Store.instance.stepStore,
             new ObjectContent({ a: 'b' }),
-            ':s#a',
+            '@s#a',
             '#b',
             '{"b":"b"}'
         ]
     ])(
-        `%s, data: %s, store postfix: %s, var postfix: %s, expected %s`,
+        `%s, %s, data: %s, store postfix: %s, var postfix: %s, expected %s`,
         async (_: string, storeWrapper: StoreWrapper, data: DataContent, storePostfix: string, varPostfix: string, expected: string) => {
             initialContext.execution.transformed = data;
             await tableHandler.process({
@@ -244,7 +247,8 @@ describe('check all store types', () => {
                 ]
             });
 
-            expect(storeWrapper.get('var').toString()).toBe(expected);
+            const ast = variableParser.parseAction('store:var');
+            expect(storeWrapper.get(ast).toString()).toBe(expected);
         }
     );
 });
@@ -257,7 +261,7 @@ describe('check data, heading and transformed', () => {
      *
      */
     it.each([
-        ['1. regular way for data', 'data', new ObjectContent({ a: 'b' }), ':data', '', '{"a":"b"}'], //
+        ['1. regular way for data', 'data', new ObjectContent({ a: 'b' }), '::data', '', '{"a":"b"}'], //
         ['2. deep value can be picked for data', 'data', new ObjectContent({ a: 'b' }), ':data#a', '', 'b'],
         ['3. deep value can be set for header', 'header', new ObjectContent({ a: 'b' }), ':header', '#c', '{"c":{"a":"b"}}'],
         ['4. deep value can be picked and set for header', 'header', new ObjectContent({ a: 'b' }), ':header#a', '#b', '{"b":"b"}'],
@@ -273,7 +277,7 @@ describe('check data, heading and transformed', () => {
     ])(
         `%s, data: %s, store postfix: %s, var postfix: %s, expected %s`,
         async (_: string, type: string, data: DataContent, storePostfix: string, varPostfix: string, expected: string) => {
-            tableHandler.executionEngine.context.execution[type] = data;
+            tableHandler.getExecutionEngine().context.execution[type] = data;
             await tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
@@ -285,7 +289,8 @@ describe('check data, heading and transformed', () => {
                 ]
             });
 
-            expect(Store.instance.testStore.get('var').toString()).toBe(expected);
+            const ast = variableParser.parseAction('store:var');
+            expect(Store.instance.testStore.get(ast).toString()).toBe(expected);
         }
     );
 });
@@ -313,7 +318,8 @@ describe('check preExecution.payload', () => {
             ]
         });
 
-        expect(Store.instance.testStore.get('var').toString()).toBe('{"a":1}');
+        const ast = variableParser.parseAction('store:var');
+        expect(Store.instance.testStore.get(ast).toString()).toBe('{"a":1}');
     });
 
     /**
@@ -335,7 +341,8 @@ describe('check preExecution.payload', () => {
             ]
         });
 
-        expect(Store.instance.testStore.get('var').toString()).toBe('{"c":3}');
+        const ast = variableParser.parseAction('store:var');
+        expect(Store.instance.testStore.get(ast).toString()).toBe('{"c":3}');
     });
 });
 
@@ -347,7 +354,7 @@ describe('check extended context', () => {
      *
      */
     it('use other property with extended data context', async () => {
-        (tableHandler.executionEngine.context as ExtendedDataContext).execution.extendedProperty = 'xxx';
+        (tableHandler.getExecutionEngine().context as ExtendedDataContext).execution.extendedProperty = 'xxx';
 
         const sut = new OutStoreExecutionUnit<ExtendedDataContext>('extendedProperty');
         sut.key = 'store';
@@ -371,14 +378,15 @@ describe('check extended context', () => {
             ]
         });
 
-        expect(Store.instance.testStore.get('var').toString()).toBe('xxx');
+        const ast = variableParser.parseAction('store:var');
+        expect(Store.instance.testStore.get(ast).toString()).toBe('xxx');
     });
 
     /**
      *
      */
     it('use other property with extended data context and key', async () => {
-        (tableHandler.executionEngine.context as ExtendedDataContext).execution.extendedPropertyWithKey = { key: 'xxx' };
+        (tableHandler.getExecutionEngine().context as ExtendedDataContext).execution.extendedPropertyWithKey = { key: 'xxx' };
 
         const sut = new OutStoreExecutionUnit<ExtendedDataContext>('extendedPropertyWithKey', 'key');
         sut.key = 'store';
@@ -402,7 +410,8 @@ describe('check extended context', () => {
             ]
         });
 
-        expect(Store.instance.testStore.get('var').toString()).toBe('xxx');
+        const ast = variableParser.parseAction('store:var');
+        expect(Store.instance.testStore.get(ast).toString()).toBe('xxx');
     });
 });
 
@@ -429,7 +438,8 @@ describe('executionContext can be null or undefined', () => {
             ]
         });
 
-        expect(Store.instance.testStore.get('var').valueOf()).toStrictEqual({ a: 2 });
+        const ast = variableParser.parseAction('store:var');
+        expect(Store.instance.testStore.get(ast).valueOf()).toStrictEqual({ a: 2 });
     });
 
     /**
@@ -451,7 +461,8 @@ describe('executionContext can be null or undefined', () => {
             ]
         });
 
-        expect(Store.instance.testStore.get('var').valueOf()).toStrictEqual({ a: 1 });
+        const ast = variableParser.parseAction('store:var');
+        expect(Store.instance.testStore.get(ast).valueOf()).toStrictEqual({ a: 1 });
     });
 
     /**
@@ -473,6 +484,7 @@ describe('executionContext can be null or undefined', () => {
             ]
         });
 
-        expect(Store.instance.testStore.get('var').valueOf()).toStrictEqual({ a: 1 });
+        const ast = variableParser.parseAction('store:var');
+        expect(Store.instance.testStore.get(ast).valueOf()).toStrictEqual({ a: 1 });
     });
 });

@@ -1,4 +1,15 @@
-import { DataContent, DataContentHelper, ExecutionUnit, key, ParaType, ScopeType, SelectorType, StoreWrapper } from '@boart/core';
+import {
+    DataContent,
+    DataContentHelper,
+    ExecutionUnit,
+    ParaType,
+    ScopeType,
+    ScopedType,
+    SelectorExtractor,
+    SelectorType,
+    StoreWrapper,
+    VariableParser
+} from '@boart/core';
 import { Description } from 'core/src/description/Description';
 
 import { DataContext, DataExecutionContext, DataPreExecutionContext } from '../../DataExecutionContext';
@@ -33,8 +44,10 @@ import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator'
  */
 export class OutStoreExecutionUnit<StoreContext extends DataContext> implements ExecutionUnit<StoreContext, RowTypeValue<StoreContext>> {
     private _key: string;
+    readonly valueParser = new VariableParser();
     readonly selectorType = SelectorType.Optional;
     readonly parameterType = ParaType.Optional;
+    readonly scopedType = ScopedType.Optional;
     readonly validators = [
         new ParaValidator([ScopeType.Global, ScopeType.Local, ScopeType.Step, ScopeType.Test]),
         new ValueRequiredValidator('value', 'name is missing')
@@ -47,7 +60,10 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
     constructor(executionType: 'payload');
     constructor(executionType: keyof StoreContext['execution']);
     constructor(executionType: keyof StoreContext['execution'], executionKey: StoreContext['execution'][keyof StoreContext['execution']]);
-    constructor(private executionType?: string, private executionKey?: string) {}
+    constructor(
+        private executionType?: string,
+        private executionKey?: string
+    ) {}
 
     /**
      *
@@ -82,7 +98,7 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
         const executionContext = context.execution || ({} as DataExecutionContext);
         const preExecutionContext = context.preExecution || ({} as DataPreExecutionContext);
 
-        if (!!this.executionType) {
+        if (this.executionType) {
             return !this.executionKey
                 ? executionContext[this.executionType] //
                 : executionContext[this.executionType][this.executionKey];
@@ -99,12 +115,12 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
      *
      */
     execute(context: StoreContext, row: RowTypeValue<DataContext>): void {
-        const storeNameAndSelector = row.value.toString();
-
         const value = this.getDataContent(context);
-        const data = !row.selector ? value : DataContentHelper.getByPath(row.selector, value);
+        const data = SelectorExtractor.getValueBySelector(row.ast.selectors, value);
 
-        const store = StoreWrapper.getWrapperByScope(row.actionPara);
-        store.put(storeNameAndSelector, data);
+        const store = StoreWrapper.getWrapperByScope(row.ast.scope?.value);
+        const valueAst = this.valueParser.parseValue(row.value.toString());
+
+        store.put(valueAst, data);
     }
 }

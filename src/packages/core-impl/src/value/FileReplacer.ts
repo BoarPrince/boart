@@ -1,6 +1,7 @@
-import fs from 'fs';
+import * as fs from 'fs';
 
 import { EnvLoader, ReplaceArg, ScopedType, ValueReplacer } from '@boart/core';
+
 import { ValueReplacerConfig } from './ValueReplacer';
 
 export class FileReplacer implements ValueReplacer {
@@ -18,7 +19,7 @@ export class FileReplacer implements ValueReplacer {
      *
      */
     get scoped(): ScopedType {
-        return ScopedType.false;
+        return ScopedType.False;
     }
 
     /**
@@ -30,18 +31,11 @@ export class FileReplacer implements ValueReplacer {
 
     /**
      *
-     */
-    replace(property: string): string {
-        const fileName = EnvLoader.instance.mapDataFileName(property);
-        return fs.readFileSync(fileName).toString();
-    }
-
-    /**
-     *
      * @param arg parser arguments
      */
-    replace2(arg: ReplaceArg): string {
-        const fileName = [arg.qualifier.value].concat(arg.qualifier.paras || []).join('/');
+    replace(arg: ReplaceArg): string {
+        const documentName = [arg.qualifier.value].concat(arg.qualifier.paras || []).join('/');
+        const fileName = EnvLoader.instance.mapDataFileName(documentName);
         return fs.readFileSync(fileName).toString();
     }
 }
