@@ -28,9 +28,7 @@ export class TableHandler<
     private readonly rowDefinitions = new Map<string, RowDefinition<TExecutionContext, TRowType>>();
     private readonly groupValidations = new Array<TypedGroupValidator<TExecutionContext, TRowType>>();
     private readonly logger = LogProvider.create('core').logger('tableHandler');
-
-    // only public, because of use in tests
-    public executionEngine: ExecutionEngine<TExecutionContext, TRowType>;
+    private executionEngine: ExecutionEngine<TExecutionContext, TRowType>;
 
     /**
      *
@@ -40,6 +38,14 @@ export class TableHandler<
         public readonly executionEngineCreator: () => ExecutionEngine<TExecutionContext, TRowType>
     ) {
         this.columnMetaInfo = TableMetaInfo.get(rowType);
+    }
+
+    /**
+     * used only for test reasons
+     */
+    public getExecutionEngine(): ExecutionEngine<TExecutionContext, TRowType> {
+        this.executionEngine = this.executionEngineCreator();
+        return this.executionEngine;
     }
 
     /**

@@ -1,5 +1,7 @@
 import { ContentType } from '../data/ContentType';
 import { DataContentHelper } from '../data/DataContentHelper';
+import { SelectorExtractor } from '../data/SelectorExtractor';
+import { ValueReplaceArg } from '../value/ValueReplacer';
 
 import { Store } from './Store';
 import { StoreMap } from './StoreMap';
@@ -9,8 +11,8 @@ import { StoreWrapper } from './StoreWrapper';
  * Uses Execution Context
  * or value by Context.put
  */
-export class Context implements StoreMap {
-    private static readonly Key = ':#:context:#:';
+export class Context extends StoreMap {
+    private static readonly Key = StoreMap.getStoreIdentifier(':#:context:#:');
     private context: object = {};
     private contextMap = new StoreWrapper({}, 'context');
 
@@ -18,7 +20,7 @@ export class Context implements StoreMap {
      *
      */
     private constructor() {
-        // singleton
+        super();
     }
 
     /**
@@ -43,35 +45,54 @@ export class Context implements StoreMap {
     /**
      *
      */
-    put(key: string, value: ContentType): void {
-        this.contextMap.put(key, value);
+    put(ast: ValueReplaceArg | string, value: ContentType): void {
+        this.contextMap.put(ast, value);
     }
 
     /**
      *
      */
-    get(key: string): ContentType {
-        // try context value...
-        const context = DataContentHelper.create(this.context);
-        const contextValue = DataContentHelper.getByPath(key, context, true);
-
-        if (contextValue.isNullOrUndefined()) {
-            // ...if context not exists, try map value
-            return this.contextMap.get(key, true);
+    get(ast: ValueReplaceArg | string): ContentType {
+        if (typeof ast === 'string') {
+            throw 'not implemented anymore';
+        } else {
+            return this.getByAst(ast);
         }
+    }
+
+    /**
+     *
+     */
+    private getByAst(ast: ValueReplaceArg): ContentType {
+        const contextMapValue = this.contextMap.get(ast);
+        if (contextMapValue) {
+            // ...if context not exists, try map value
+            return contextMapValue;
+        }
+
+        // try context value...
+        const context = DataContentHelper.create(this.context).asDataContentObject();
+
+        // e.g. read context:payload#id -> get the 'payload'
+        const storeName = this.getKey(ast);
+        const storeValue = context.get(storeName);
+
+        ast.selectors.forEach((sel) => (sel.optional = true));
+        const contextValue = SelectorExtractor.getValueBySelector(ast.selectors, storeValue);
+
         return contextValue;
     }
 
     /**
      *
      */
-    has(key: string): boolean {
+    has(ast: ValueReplaceArg): boolean {
         // try context value...
         const context = DataContentHelper.create(this.context);
 
-        if (!DataContentHelper.hasPath(key, context)) {
+        if (!SelectorExtractor.hasValueBySelector(ast.selectors, context)) {
             // ...if context not exists, try map value
-            return this.contextMap.has(key);
+            return this.contextMap.has(ast);
         }
         return true;
     }

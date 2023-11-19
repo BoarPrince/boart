@@ -1,8 +1,9 @@
-import { RowValidator } from '../validators/RowValidator';
 import { Descriptionable } from '../description/Descriptionable';
 import { BaseRowType } from '../table/BaseRowType';
 import { ParaType } from '../types/ParaType';
+import { ScopedType } from '../types/ScopedType';
 import { SelectorType } from '../types/SelectorType';
+import { RowValidator } from '../validators/RowValidator';
 
 import { ExecutionContext } from './ExecutionContext';
 
@@ -32,6 +33,11 @@ export interface ExecutionUnit<
      *
      */
     readonly selectorType?: SelectorType;
+
+    /**
+     *
+     */
+    readonly scopedType?: ScopedType;
 
     /**
      *

@@ -117,7 +117,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create string', () => {
+    it('create string', () => {
         const value = DataContentHelper.create('a');
         expect(value).toBeInstanceOf(TextContent);
         expect(value.toString()).toBe('a');
@@ -126,7 +126,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create string is not nullOrUndefined', () => {
+    it('create string is not nullOrUndefined', () => {
         const value = DataContentHelper.create('a');
         expect(value).toBeInstanceOf(TextContent);
         expect(value.isNullOrUndefined()).toBeFalsy();
@@ -135,7 +135,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create undefined is native', () => {
+    it('create undefined is native', () => {
         const value = DataContentHelper.create();
         expect(value).toBeInstanceOf(NativeContent);
     });
@@ -143,7 +143,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create undefined is undefined value', () => {
+    it('create undefined is undefined value', () => {
         const value = DataContentHelper.create();
         expect(value.toString()).toBeUndefined();
     });
@@ -151,7 +151,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create null is native', () => {
+    it('create null is native', () => {
         const value = DataContentHelper.create(null);
         expect(value).toBeInstanceOf(NullContent);
     });
@@ -159,7 +159,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create null is null value', () => {
+    it('create null is null value', () => {
         const value = DataContentHelper.create(null);
         expect(value.getValue()).toBe(null);
         expect(value.getText()).toBeNull();
@@ -169,7 +169,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create a number', () => {
+    it('create a number', () => {
         const value = DataContentHelper.create(1);
         expect(value).toBeInstanceOf(NativeContent);
     });
@@ -177,7 +177,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create a boolean', () => {
+    it('create a boolean', () => {
         const value = DataContentHelper.create(true);
         expect(value).toBeInstanceOf(NativeContent);
     });
@@ -185,7 +185,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create an object', () => {
+    it('create an object', () => {
         const value = DataContentHelper.create({});
         expect(value).toBeInstanceOf(ObjectContent);
     });
@@ -193,7 +193,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create an array', () => {
+    it('create an array', () => {
         const value = DataContentHelper.create(['d', 'e', 5]);
         expect(value).toBeInstanceOf(ObjectContent);
         expect(value.toJSON()).toBe('["d","e",5]');
@@ -202,7 +202,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create a multi dimensional array', () => {
+    it('create a multi dimensional array', () => {
         const value = DataContentHelper.create(['a', 'b']);
         expect(value).toBeInstanceOf(ObjectContent);
         expect(value.toJSON()).toBe('["a","b"]');
@@ -211,7 +211,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create an one dimensional string array', () => {
+    it('create an one dimensional string array', () => {
         const value = DataContentHelper.create(['a']);
         expect(value).toBeInstanceOf(ObjectContent);
         expect(value.toJSON()).toBe('["a"]');
@@ -220,48 +220,48 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create an one dimensional boolean array (true)', () => {
+    it('create an one dimensional boolean array (true)', () => {
         const value = DataContentHelper.create([true]);
         expect(value).toBeInstanceOf(ObjectContent);
-        expect(value.getValue()).toEqual([true]);
-        expect(JSON.stringify(value.getValue())).toEqual('[true]');
+        expect(value.getValue()).toStrictEqual([true]);
+        expect(JSON.stringify(value.getValue())).toStrictEqual('[true]');
         expect(value.toJSON()).toBe('[true]');
     });
 
     /**
      *
      */
-    it('Create an one dimensional boolean array (false)', () => {
+    it('create an one dimensional boolean array (false)', () => {
         const value = DataContentHelper.create([false]);
         expect(value).toBeInstanceOf(ObjectContent);
-        expect(value.getValue()).toEqual([false]);
+        expect(value.getValue()).toStrictEqual([false]);
         expect(value.toJSON()).toBe('[false]');
     });
 
     /**
      *
      */
-    it('Create an one dimensional number array', () => {
+    it('create an one dimensional number array', () => {
         const value = DataContentHelper.create([1]);
         expect(value).toBeInstanceOf(ObjectContent);
-        expect(value.getValue()).toEqual([1]);
+        expect(value.getValue()).toStrictEqual([1]);
         expect(value.toJSON()).toBe('[1]');
     });
 
     /**
      *
      */
-    it('Create an one dimensional number array', () => {
+    it('create an one dimensional number array', () => {
         const value = DataContentHelper.create([0]);
         expect(value).toBeInstanceOf(ObjectContent);
-        expect(value.getValue()).toEqual([0]);
+        expect(value.getValue()).toStrictEqual([0]);
         expect(value.toJSON()).toBe('[0]');
     });
 
     /**
      *
      */
-    it('Create an one dimensional undefined array', () => {
+    it('create an one dimensional undefined array', () => {
         const value = DataContentHelper.create([undefined]);
         expect(value).toBeInstanceOf(ObjectContent);
         expect(value.toJSON()).toBe('[null]');
@@ -270,7 +270,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create an one dimensional null array', () => {
+    it('create an one dimensional null array', () => {
         const value = DataContentHelper.create([null]);
         expect(value).toBeInstanceOf(ObjectContent);
         expect(value.toJSON()).toBe('[null]');
@@ -279,7 +279,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create an one dimensional unassigned array', () => {
+    it('create an one dimensional unassigned array', () => {
         const value = DataContentHelper.create([]);
         expect(value).toBeInstanceOf(ObjectContent);
         expect(value.toJSON()).toBe('[]');
@@ -288,7 +288,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create an one dimensional object', () => {
+    it('create an one dimensional object', () => {
         const value = DataContentHelper.create([{}]);
         expect(value).toBeInstanceOf(ObjectContent);
     });
@@ -296,7 +296,7 @@ describe('check create DataContent', () => {
     /**
      *
      */
-    it('Create an one dimensional dataContent (NativeContent)', () => {
+    it('create an one dimensional dataContent (NativeContent)', () => {
         const value = DataContentHelper.create([new NativeContent(1)]);
         expect(value).toBeInstanceOf(ObjectContent);
         expect(value.toJSON()).toBe('[1]');
@@ -398,804 +398,6 @@ describe('check create DataContent', () => {
 /**
  *
  */
-describe('deep getting', () => {
-    /**
-     *
-     */
-    it('deep get property (object) - leaf', () => {
-        const val = new ObjectContent({
-            a: {
-                b: {
-                    c: {
-                        d: 'e'
-                    }
-                }
-            }
-        });
-        const propValue = DataContentHelper.getByPath('a#b#c#d', val);
-        expect(propValue.toString()).toBe('e');
-    });
-
-    /**
-     *
-     */
-    it('deep get property (object) - root', () => {
-        const val = new ObjectContent({
-            a: {
-                b: {
-                    c: {
-                        d: 'e'
-                    }
-                }
-            }
-        });
-        const propValue = DataContentHelper.getByPath('a', val);
-        expect(propValue.toString()).toBe('{"b":{"c":{"d":"e"}}}');
-    });
-
-    /**
-     *
-     */
-    it('deep get property (object) - multiple keys', () => {
-        const val = new ObjectContent({
-            a: {
-                b: {
-                    c: {
-                        d: 'e'
-                    }
-                }
-            }
-        });
-        const propValue = DataContentHelper.getByPath('a.b.c', val);
-        expect(propValue.toString()).toBe('{"d":"e"}');
-    });
-
-    /**
-     *
-     */
-    it('deep get property (object) - multiple keys - datacontent', () => {
-        const val = new ObjectContent({
-            a: {
-                b: new ObjectContent({
-                    c: new ObjectContent({
-                        d: 'e'
-                    })
-                })
-            }
-        });
-        const propValue = DataContentHelper.getByPath('a.b.c', val);
-        expect(propValue.toString()).toBe('{"d":"e"}');
-    });
-
-    /**
-     *
-     */
-    it('get deep property (string) from object value', () => {
-        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
-        const propValue1 = DataContentHelper.getByPath('d', val);
-        const propValue = DataContentHelper.getByPath('e', propValue1);
-
-        expect(propValue).toBeInstanceOf(TextContent);
-        expect(propValue.toString()).toBe('f');
-    });
-
-    /**
-     *
-     */
-    it('get deep property with array (first level)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, { d: 'e' }] });
-        const propValue = DataContentHelper.getByPath('a.0.b', val);
-
-        expect(propValue).toBeInstanceOf(TextContent);
-        expect(propValue.toString()).toBe('c');
-    });
-
-    /**
-     *
-     */
-    it('get deep property with array (second level)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, { d: ['e', 7] }] });
-        const propValue = DataContentHelper.getByPath('a.1.d.1', val);
-
-        expect(propValue).toBeInstanceOf(NativeContent);
-        expect(propValue.toString()).toBe('7');
-    });
-
-    /**
-     *
-     */
-    it('get deep property with array (second level, array syntax)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, { d: ['e', 7] }] });
-        const propValue = DataContentHelper.getByPath('a[1].d[1]', val);
-
-        expect(propValue).toBeInstanceOf(NativeContent);
-        expect(propValue.toString()).toBe('7');
-    });
-
-    /**
-     *
-     */
-    it('get deep property with array (two levels, array syntax)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, ['e', 7]] });
-        const propValue = DataContentHelper.getByPath('a[1][1]', val);
-
-        expect(propValue).toBeInstanceOf(NativeContent);
-        expect(propValue.toString()).toBe('7');
-    });
-
-    /**
-     *
-     */
-    it('get deep property with array (starting with array, array syntax)', () => {
-        const val = new ObjectContent(['a', ['b', { c: 7 }]]);
-        const propValue = DataContentHelper.getByPath('[1][1].c', val);
-
-        expect(propValue).toBeInstanceOf(NativeContent);
-        expect(propValue.toString()).toBe('7');
-    });
-
-    /**
-     *
-     */
-    it('get deep property from string', () => {
-        const val = new ObjectContent('a');
-
-        expect(() => DataContentHelper.getByPath('z', val)).toThrowError(
-            'getting "z" not possible, because "z" is not an object or an array.\nData context:\n"a"'
-        );
-    });
-
-    /**
-     *
-     */
-    it('get deep but property does not exists (1)', () => {
-        const val = new ObjectContent('{"a": "b"}');
-
-        try {
-            DataContentHelper.getByPath('a.c', val);
-        } catch (error) {
-            expect(error.message).toBe('getting "a.c" not possible, because "c" is not an object or an array.\nData context:\n"b"');
-            return;
-        }
-
-        throw Error('error must be thrown if property does not exists');
-    });
-
-    /**
-     *
-     */
-    it('get deep but property does not exists (2)', () => {
-        const val = new ObjectContent('{"a": "b"}');
-
-        const errorMsg = `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
-            val.valueOf(),
-            null,
-            '  '
-        )}`;
-        expect(() => DataContentHelper.getByPath('z', val)).toThrowError(errorMsg);
-    });
-
-    /**
-     *
-     */
-    it('get deep property from object value (wrong path, second element)', () => {
-        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
-        const propValue = DataContentHelper.getByPath('d', val);
-
-        const errorMsg = `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
-            propValue.valueOf(),
-            null,
-            '  '
-        )}`;
-        expect(() => DataContentHelper.getByPath('z', propValue)).toThrowError(errorMsg);
-    });
-
-    /**
-     *
-     */
-    it('get deep property from object value (wrong path, first element)', () => {
-        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
-
-        const errorMsg = `getting "z" not possible, because "z" is not an object or an array.\nData context:\n${JSON.stringify(
-            val.valueOf(),
-            null,
-            '  '
-        )}`;
-        expect(() => DataContentHelper.getByPath('z', val)).toThrowError(errorMsg);
-    });
-
-    /**
-     *
-     */
-    it('get deep property from recursice containing ObjectContents', () => {
-        const val = new ObjectContent({ a: new ObjectContent({ b: new ObjectContent({ c: new TextContent('d') }) }) });
-        const propValue = DataContentHelper.getByPath('a.b.c', val);
-
-        expect(propValue).toBeInstanceOf(TextContent);
-        expect(propValue.toString()).toBe('d');
-    });
-
-    /**
-     *
-     */
-    it('try getting value from none DataContent', () => {
-        const data = new TextContent('abc');
-        try {
-            DataContentHelper.getByPath('a.b', data);
-        } catch (error) {
-            expect(error.message).toBe(`getting "a.b" not possible, because "a" is not an object or an array.\nData context:\n"abc"`);
-            return;
-        }
-        fail('expection was not thrown');
-    });
-
-    /**
-     *
-     */
-    it('try getting with wrong path', () => {
-        const data = new ObjectContent({ a: { b: 'c' } });
-        try {
-            DataContentHelper.getByPath('a.c', data);
-        } catch (error) {
-            expect(error.message).toBe(
-                `getting "a.c" not possible, because "c" is not an object or an array.\nData context:\n${JSON.stringify(
-                    { b: 'c' },
-                    null,
-                    '  '
-                )}`
-            );
-            return;
-        }
-        fail('expection was not thrown');
-    });
-
-    /**
-     *
-     */
-    it('try getting null value', () => {
-        const result = DataContentHelper.getByPath('a.b', new ObjectContent({ a: { b: null } }));
-        expect(result).toBeInstanceOf(NullContent);
-    });
-
-    /**
-     *
-     */
-    it('try getting null value - deep', () => {
-        const data = new ObjectContent({ a: { b: null } });
-
-        expect(() => DataContentHelper.getByPath('a.b.c', data)).toThrowError(
-            'getting "a.b.c" not possible, because "c" is not an object or an array.'
-        );
-    });
-
-    /**
-     *
-     */
-    it('check if content data is null', () => {
-        try {
-            DataContentHelper.getByPath('a.b.c', null);
-        } catch (error) {
-            expect(error.message).toBe('getting "a.b.c" not possible, because "a" is not an object or an array.');
-            return;
-        }
-        fail('expection was not thrown');
-    });
-
-    /**
-     *
-     */
-    it('try get wrong path value', () => {
-        const data = new ObjectContent({ a: { b: new ObjectContent({ c: 'd' }) } });
-        try {
-            DataContentHelper.getByPath('a.b.d', data);
-        } catch (error) {
-            expect(error.message).toBe(
-                `getting "a.b.d" not possible, because "d" is not an object or an array.\nData context:\n${JSON.stringify(
-                    { c: 'd' },
-                    null,
-                    '  '
-                )}`
-            );
-            return;
-        }
-        fail('expection was not thrown');
-    });
-});
-
-/**
- *
- */
-describe('deep has', () => {
-    /**
-     *
-     */
-    it('deep has property (object) - leaf', () => {
-        const val = new ObjectContent({
-            a: {
-                b: {
-                    c: {
-                        d: 'e'
-                    }
-                }
-            }
-        });
-        const result = DataContentHelper.hasPath('a#b#c#d', val);
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('deep has property (object) - root', () => {
-        const val = new ObjectContent({
-            a: {
-                b: {
-                    c: {
-                        d: 'e'
-                    }
-                }
-            }
-        });
-        const result = DataContentHelper.hasPath('a', val);
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('deep has property (object) - multiple keys', () => {
-        const val = new ObjectContent({
-            a: {
-                b: {
-                    c: {
-                        d: 'e'
-                    }
-                }
-            }
-        });
-        const result = DataContentHelper.getByPath('a.b.c', val);
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('deep has property (object) - multiple keys - datacontent', () => {
-        const val = new ObjectContent({
-            a: {
-                b: new ObjectContent({
-                    c: new ObjectContent({
-                        d: 'e'
-                    })
-                })
-            }
-        });
-        const result = DataContentHelper.getByPath('a.b.c', val);
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('has deep property (string) from object value', () => {
-        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
-        const propValue = DataContentHelper.getByPath('d', val);
-        const result = DataContentHelper.hasPath('e', propValue);
-
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('has deep property with array (first level)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, { d: 'e' }] });
-        const result = DataContentHelper.hasPath('a.0.b', val);
-
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('has deep property with array (second level)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, { d: ['e', 7] }] });
-        const result = DataContentHelper.hasPath('a.1.d.1', val);
-
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('has deep property with array (second level, array syntax)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, { d: ['e', 7] }] });
-        const result = DataContentHelper.hasPath('a[1].d[1]', val);
-
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('has deep property with array (two levels, array syntax)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, ['e', 7]] });
-        const result = DataContentHelper.hasPath('a[1][1]', val);
-
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('has deep property with array (starting with array, array syntax)', () => {
-        const val = new ObjectContent(['a', ['b', { c: 7 }]]);
-        const result = DataContentHelper.hasPath('[1][1].c', val);
-
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('has deep property from string', () => {
-        const val = new ObjectContent('a');
-
-        const result = DataContentHelper.hasPath('z', val);
-        expect(result).toBeFalsy();
-    });
-
-    /**
-     *
-     */
-    it('has deep but property does not exists (1)', () => {
-        const val = new ObjectContent('{"a": "b"}');
-
-        const result = DataContentHelper.hasPath('a.c', val);
-        expect(result).toBeFalsy();
-    });
-
-    /**
-     *
-     */
-    it('has deep but property does not exists (2)', () => {
-        const val = new ObjectContent('{"a": "b"}');
-
-        const result = DataContentHelper.hasPath('z', val);
-        expect(result).toBeFalsy();
-    });
-
-    /**
-     *
-     */
-    it('has deep property from object value (wrong path, second element)', () => {
-        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
-        const propValue = DataContentHelper.getByPath('d', val);
-
-        const result = DataContentHelper.hasPath('z', propValue);
-        expect(result).toBeFalsy();
-    });
-
-    /**
-     *
-     */
-    it('has deep property from object value (wrong path, first element)', () => {
-        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
-
-        const result = DataContentHelper.hasPath('z', val);
-        expect(result).toBeFalsy();
-    });
-
-    /**
-     *
-     */
-    it('has deep property from recursice containing ObjectContents', () => {
-        const val = new ObjectContent({ a: new ObjectContent({ b: new ObjectContent({ c: new TextContent('d') }) }) });
-        const result = DataContentHelper.hasPath('a.b.c', val);
-
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('check getting value from none DataContent', () => {
-        const data = new TextContent('abc');
-        const result = DataContentHelper.hasPath('a.b', data);
-
-        expect(result).toBeFalsy();
-    });
-
-    /**
-     *
-     */
-    it('check getting with wrong path', () => {
-        const data = new ObjectContent({ a: { b: 'c' } });
-        const result = DataContentHelper.hasPath('a.c', data);
-
-        expect(result).toBeFalsy();
-    });
-
-    /**
-     *
-     */
-    it('check getting null value', () => {
-        const result = DataContentHelper.hasPath('a.b', new ObjectContent({ a: { b: null } }));
-
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('check getting undefined value', () => {
-        const result = DataContentHelper.hasPath('a.b', new ObjectContent({ a: { b: undefined } }));
-
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('check getting null value - deep', () => {
-        const data = new ObjectContent({ a: { b: null } });
-        const result = DataContentHelper.hasPath('a.b.c', data);
-
-        expect(result).toBeFalsy();
-    });
-
-    /**
-     *
-     */
-    it('check if content data is null', () => {
-        const result = DataContentHelper.hasPath('a.b.c', null);
-
-        expect(result).toBeFalsy();
-    });
-
-    /**
-     *
-     */
-    it('check get wrong path value', () => {
-        const data = new ObjectContent({ a: { b: new ObjectContent({ c: 'd' }) } });
-        const result = DataContentHelper.hasPath('a.b.d', data);
-
-        expect(result).toBeFalsy();
-    });
-});
-
-/**
- *
- */
-describe('deep setting', () => {
-    /**
-     *
-     */
-    it('set first level value (empty object)', () => {
-        const sut = DataContentHelper.setByPath('a', 'a', new ObjectContent());
-        expect(sut.toJSON()).toBe('{"a":"a"}');
-    });
-
-    /**
-     *
-     */
-    it('set first level value (empty map ffddfd)', () => {
-        const sut = DataContentHelper.setByPath('a', 'a', new ObjectContent());
-        expect(sut.toJSON()).toBe('{"a":"a"}');
-    });
-
-    /**
-     *
-     */
-    it('create array one dimensional (first level)', () => {
-        const sut = DataContentHelper.setByPath('0', 'a', new ObjectContent());
-        expect(sut.toJSON()).toBe('["a"]');
-    });
-
-    /**
-     *
-     */
-    it('set deep on new object', () => {
-        const sut = DataContentHelper.setByPath('a.b.c.d.e.f.g', 'a', new ObjectContent());
-        expect(sut.toJSON()).toBe('{"a":{"b":{"c":{"d":{"e":{"f":{"g":"a"}}}}}}}');
-    });
-
-    /**
-     *
-     */
-    it('set deep on new object (with array)', () => {
-        const sut = DataContentHelper.setByPath('[0].d', 'a', new ObjectContent());
-        expect(sut.toJSON()).toBe('[{"d":"a"}]');
-    });
-
-    /**
-     *
-     */
-    it('set deep on new object (with array) adsf', () => {
-        const sut = DataContentHelper.setByPath('a.b.c[0].d.e.f.g', 'a', new ObjectContent());
-        expect(sut.toJSON()).toBe('{"a":{"b":{"c":[{"d":{"e":{"f":{"g":"a"}}}}]}}}');
-    });
-
-    /**
-     *
-     */
-    it.each([
-        ['01', null, 'a', 'a', '{"a":"a"}'],
-        ['02', undefined, 'a', 'a', '{"a":"a"}'],
-        ['03', { a: 1 }, 'a', '[]', '{"a":[]}'],
-        ['04', { a: 'b' }, 'a', 'a', '{"a":"a"}'],
-        ['05', { b: 'b' }, 'a', 'a', '{"b":"b","a":"a"}'],
-        ['06', { b: 'b' }, 'a#b', 'a', '{"b":"b","a":{"b":"a"}}'],
-        ['07', { b: 'b' }, 'a#b', 'a', '{"b":"b","a":{"b":"a"}}'],
-        ['08', { b: 'b' }, 'a#b#c', 'd', '{"b":"b","a":{"b":{"c":"d"}}}'],
-        ['09', { b: [{ c: 'd' }, 'e', 5] }, 'b.0.c', 'a', '{"b":[{"c":"a"},"e",5]}'],
-        ['10', { b: { c: ['d', 'e', 5] } }, 'b.c.0', 'a', '{"b":{"c":["a","e",5]}}']
-    ])(
-        `%s:, intial: %s, path: '%s', value: '%s', expected: %s`,
-        (_: string, initialContent: ContentType, selector: string, value: ContentType, expectedJSON: string) => {
-            const sut_object = DataContentHelper.setByPath(selector, value, new ObjectContent(initialContent));
-            expect(sut_object.toJSON()).toBe(expectedJSON);
-        }
-    );
-
-    /**
-     *
-     */
-    it('set path two times', () => {
-        const sut_object = DataContentHelper.setByPath('a', 'c', new ObjectContent({ a: 'b' }));
-        expect(sut_object.toJSON()).toBe('{"a":"c"}');
-
-        const sut_object2 = DataContentHelper.setByPath('a', 'd', sut_object);
-        expect(sut_object2.toJSON()).toBe('{"a":"d"}');
-    });
-
-    /**
-     *
-     */
-    it('try set deep structure to a none object', () => {
-        const dataContent = DataContentHelper.setByPath('a', 'a', new ObjectContent({ a: { b: 'c' } }));
-        try {
-            DataContentHelper.setByPath('a#b#c', 'd', dataContent);
-        } catch (error) {
-            expect(error.message).toBe('cannot set value to an \'Text\' value, selector: "a.b.c"');
-            return;
-        }
-        fail('expection was not thrown');
-    });
-});
-
-/**
- *
- */
-describe('wildcard', () => {
-    /**
-     *
-     */
-    it('only wildcard', () => {
-        const val = new ObjectContent({ a: [{ b: 1 }, { b: 2 }] });
-        const propValue = DataContentHelper.getByPath('a[*]', val);
-
-        expect(propValue.valueOf()).toEqual([{ b: 1 }, { b: 2 }]);
-    });
-
-    /**
-     *
-     */
-    it('get first level', () => {
-        const val = new ObjectContent({ a: [{ b: 1 }, { b: 2 }] });
-        const propValue = DataContentHelper.getByPath('a[*].b', val);
-
-        expect(propValue.valueOf()).toEqual([1, 2]);
-    });
-
-    /**
-     *
-     */
-    it('get first level, when not all entries are collectable', () => {
-        const val = new ObjectContent({ a: [{ b: 1 }, ['b', 2]] });
-        const propValue = DataContentHelper.getByPath('a[*].b', val);
-
-        expect(propValue.valueOf()).toEqual([1]);
-    });
-
-    /**
-     *
-     */
-    it('wildcard selects a none array element', () => {
-        const val = new ObjectContent({ a: [{ b: 1 }, { b: 2 }], b: { c: 3 } });
-
-        expect(() => DataContentHelper.getByPath('b[*]', val)).toThrowError(
-            'getting "b.*" not possible, because "*" is not an object or an array.\nData context:\n' +
-                JSON.stringify(
-                    {
-                        c: 3
-                    },
-                    null,
-                    '  '
-                )
-        );
-    });
-
-    /**
-     *
-     */
-    it('get second level', () => {
-        const val = new ObjectContent({ a: [{ b: [{ c: 3 }, { c: 4 }] }] });
-        const propValue = DataContentHelper.getByPath('a[*].b[*].c', val);
-
-        expect(propValue.valueOf()).toEqual([3, 4]);
-    });
-
-    /**
-     *
-     */
-    it('get third level - one element', () => {
-        const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: 4 }] }] });
-        const propValue = DataContentHelper.getByPath('a[*].b[*].c.d', val);
-
-        expect(propValue.valueOf()).toEqual([5]);
-    });
-
-    /**
-     *
-     */
-    it('get third level - more elements', () => {
-        const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: { d: 6 } }] }] });
-        const propValue = DataContentHelper.getByPath('a[*].b[*].c.d', val);
-
-        expect(propValue.valueOf()).toEqual([5, 6]);
-    });
-
-    /**
-     *
-     */
-    it('get third level - array elements', () => {
-        const val = new ObjectContent({ a: [{ b: [{ c: { d: [5, 6, 7] } }, { c: { d: [8, 9, 10] } }] }] });
-        const propValue = DataContentHelper.getByPath('a[*].b[*].c.d', val);
-
-        expect(propValue.valueOf()).toEqual([5, 6, 7, 8, 9, 10]);
-    });
-
-    /**
-     *
-     */
-    it('at least one element must have a parameter', () => {
-        const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: 4 }] }] });
-
-        expect(() => DataContentHelper.getByPath('a[*].b[*].d', val)).toThrowError(
-            `getting "a.*.b.*.d" not possible, because "d" is not an object or an array.\nData context:\n` +
-                JSON.stringify(
-                    [
-                        {
-                            c: {
-                                d: 5
-                            }
-                        },
-                        {
-                            c: 4
-                        }
-                    ],
-                    null,
-                    '  '
-                )
-        );
-    });
-
-    /**
-     *
-     */
-    it(`no property fits, but it's optional`, () => {
-        const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: 4 }] }] });
-
-        const propValue = DataContentHelper.getByPath('a[*].b[*].d?', val);
-
-        expect(propValue.valueOf()).toBeInstanceOf(NullContent);
-    });
-});
-
-/**
- *
- */
 describe('null or undefined', () => {
     /**
      *
@@ -1208,15 +410,7 @@ describe('null or undefined', () => {
     /**
      *
      */
-    it('null', () => {
-        const result = DataContentHelper.isNullOrUndefined(null);
-        expect(result).toBeTruthy();
-    });
-
-    /**
-     *
-     */
-    it('NullContent', () => {
+    it('nullContent', () => {
         const result = DataContentHelper.isNullOrUndefined(new NullContent());
         expect(result).toBeTruthy();
     });
@@ -1224,7 +418,7 @@ describe('null or undefined', () => {
     /**
      *
      */
-    it('NativeContent - undefined', () => {
+    it('nativeContent - undefined', () => {
         const result = DataContentHelper.isNullOrUndefined(new NativeContent(undefined));
         expect(result).toBeTruthy();
     });
@@ -1240,7 +434,7 @@ describe('null or undefined', () => {
     /**
      *
      */
-    it('NativeContent - number', () => {
+    it('nativeContent - number', () => {
         const result = DataContentHelper.isNullOrUndefined(new NativeContent(1));
         expect(result).toBeFalsy();
     });

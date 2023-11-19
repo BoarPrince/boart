@@ -37,7 +37,7 @@ export class DescriptionHandler {
         const tableHandlerList = Array.from(TableHandlerInstances.instance.values);
         return tableHandlerList.map((tableHandler) => {
             const desc: TableHandlerDescription = {
-                desc: DescriptionHandler.solve(tableHandler.executionEngine?.mainExecutionUnit().description),
+                desc: DescriptionHandler.solve(tableHandler.getExecutionEngine()?.mainExecutionUnit().description),
                 dataTables: tableHandler
                     .getRowDefinitions()
                     .filter((def) => !!def.description)

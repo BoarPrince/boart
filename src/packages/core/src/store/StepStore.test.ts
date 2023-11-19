@@ -1,6 +1,7 @@
 import { Subject } from 'rxjs';
 
 import { TextContent } from '../data/TextContent';
+import { VariableParser } from '../parser/VariableParser';
 
 import { StepStore } from './StepStore';
 
@@ -24,16 +25,22 @@ jest.mock('../runtime/Runtime', () => {
 /**
  *
  */
+const pegParser = new VariableParser();
+
+/**
+ *
+ */
 describe('check step store', () => {
     /**
      *
      */
     it('put and get string value', () => {
         const sut = new StepStore();
+        const ast = pegParser.parseAction('store:a');
 
-        sut.put('a', 'b');
+        sut.put(ast, 'b');
 
-        expect(sut.get('a')).toBe('b');
+        expect(sut.get(ast)).toBe('b');
     });
 
     /**
@@ -41,10 +48,12 @@ describe('check step store', () => {
      */
     it('put and get DataContent value', () => {
         const sut = new StepStore();
-        sut.put('a', new TextContent('b'));
+        const ast = pegParser.parseAction('store:a');
 
-        expect(sut.get('a')).toBeInstanceOf(TextContent);
-        expect(sut.get('a').toString()).toBe('b');
+        sut.put(ast, new TextContent('b'));
+
+        expect(sut.get(ast)).toBeInstanceOf(TextContent);
+        expect(sut.get(ast).toString()).toBe('b');
     });
 
     /**
@@ -52,13 +61,15 @@ describe('check step store', () => {
      */
     it('put and get and change context', () => {
         const sut = new StepStore();
+        const ast = pegParser.parseAction('store:a');
+        const ast_b = pegParser.parseAction('store:b');
 
-        sut.put('a', new TextContent('b'));
+        sut.put(ast, new TextContent('b'));
         onStartSubject.next();
-        sut.put('b', 'c');
+        sut.put(ast_b, 'c');
 
-        expect(sut.get('a')).toBeUndefined();
-        expect(sut.get('b')).toBe('c');
+        expect(sut.get(ast)).toBeUndefined();
+        expect(sut.get(ast_b)).toBe('c');
     });
 
     /**
@@ -66,14 +77,16 @@ describe('check step store', () => {
      */
     it('clear step store', () => {
         const sut = new StepStore();
+        const ast = pegParser.parseAction('store:a');
+        const ast_b = pegParser.parseAction('store:b');
 
-        sut.put('a', new TextContent('b'));
-        sut.put('b', 'c');
+        sut.put(ast, new TextContent('b'));
+        sut.put(ast_b, 'c');
 
-        expect(sut.get('a')).toBeDefined();
-        expect(sut.get('b')).toBe('c');
+        expect(sut.get(ast)).toBeDefined();
+        expect(sut.get(ast_b)).toBe('c');
         sut.clear();
-        expect(sut.get('a')).toBeUndefined();
-        expect(sut.get('b')).toBeUndefined();
+        expect(sut.get(ast)).toBeUndefined();
+        expect(sut.get(ast_b)).toBeUndefined();
     });
 });

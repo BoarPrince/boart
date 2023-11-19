@@ -1,3 +1,4 @@
+import { VariableParser } from '../parser/VariableParser';
 import { ParaDescription } from '../pipe/ParaDescription';
 import { Pipe } from '../pipe/Pipe';
 import { PipeHandler } from '../pipe/PipeHandler';
@@ -17,7 +18,7 @@ type ReplaceResult = string | null | undefined;
 /**
  *
  */
-const valueReplacerHandlerMock = (returnValue = '#', config: ValueReplacerConfig = {}, scoped = ScopedType.true, priority = 100) => {
+const valueReplacerHandlerMock = (returnValue = '#', config: ValueReplacerConfig = {}, scoped = ScopedType.True, priority = 100) => {
     const replacer: {
         handler: ValueReplacerHandler;
         replacer: ValueReplacer;
@@ -45,9 +46,8 @@ class ValueReplacerMock implements ValueReplacer {
         return 'ValueReplacerMock';
     }
     priority = 100;
-    scoped = ScopedType.true;
-    replace = jest.fn((): ReplaceResult => null);
-    replace2 = jest.fn((arg: ValueReplaceArg): ReplaceResult => {
+    scoped = ScopedType.True;
+    replace = jest.fn((arg: ValueReplaceArg): ReplaceResult => {
         let value = `${arg.qualifier.value}`;
 
         if (arg.qualifier.paras?.length) {
@@ -171,7 +171,7 @@ it('step store is not defined', () => {
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
-    expect(mock.replacer.replace2).toHaveBeenCalledWith(expect.anything(), null);
+    expect(mock.replacer.replace).toHaveBeenCalledWith(expect.anything(), null);
 });
 
 /**
@@ -182,7 +182,7 @@ it('step store is default scope', () => {
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
-    expect(mock.replacer.replace2).toHaveBeenCalledWith(expect.anything(), Store.instance.stepStore);
+    expect(mock.replacer.replace).toHaveBeenCalledWith(expect.anything(), Store.instance.stepStore);
 });
 
 /**
@@ -193,7 +193,7 @@ it('when no scope is defined, take default scope - local', () => {
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
-    expect(mock.replacer.replace2).toHaveBeenCalledWith(expect.anything(), Store.instance.testStore);
+    expect(mock.replacer.replace).toHaveBeenCalledWith(expect.anything(), Store.instance.testStore);
 });
 
 /**
@@ -204,7 +204,7 @@ it('when no scope is defined, take default scope - global', () => {
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer:a}');
-    expect(mock.replacer.replace2).toHaveBeenCalledWith(expect.anything(), Store.instance.globalStore);
+    expect(mock.replacer.replace).toHaveBeenCalledWith(expect.anything(), Store.instance.globalStore);
 });
 
 /**
@@ -215,7 +215,7 @@ it('defined scope must be used', () => {
     sut = new ValueResolver(mock.handler);
 
     sut.replace('${replacer@g:a}');
-    expect(mock.replacer.replace2).toHaveBeenCalledWith(expect.anything(), Store.instance.globalStore);
+    expect(mock.replacer.replace).toHaveBeenCalledWith(expect.anything(), Store.instance.globalStore);
 });
 
 /**
@@ -265,6 +265,11 @@ describe('default', () => {
     /**
      *
      */
+    const pegParser = new VariableParser();
+
+    /**
+     *
+     */
     beforeEach(() => {
         Store.instance.globalStore.clear();
         Store.instance.localStore.clear();
@@ -302,9 +307,11 @@ describe('default', () => {
         const mock = valueReplacerHandlerMock(null, { defaultScopeType: ScopeType.Test });
         sut = new ValueResolver(mock.handler);
 
-        const replacedValue = sut.replace('${replacer#a:=bbb}');
+        const replacedValue = sut.replace('${replacer:a#b:=bbb}');
         expect(replacedValue).toBe('bbb');
-        expect(Store.instance.testStore.get('a').valueOf()).toBe('bbb');
+
+        const ast = pegParser.parseAction('store:a');
+        expect(Store.instance.testStore.get(ast).valueOf()).toStrictEqual({ b: 'bbb' });
     });
 });
 

@@ -33,8 +33,7 @@ export interface ValueReplacer {
     readonly scoped: ScopedType;
     readonly nullable?: boolean;
     defaultScopeType?(property?: string): ScopeType;
-    replace(property: string, store?: StoreWrapper, scope?: ScopeType): string;
 
     readonly config: ValueReplacerConfig;
-    replace2(ast: ValueReplaceArg, store?: StoreWrapper): string;
+    replace(ast: ValueReplaceArg, store?: StoreWrapper): string;
 }

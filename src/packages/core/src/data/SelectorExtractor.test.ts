@@ -57,6 +57,17 @@ describe('deep getting simple', () => {
     /**
      *
      */
+    it('deep get property - object - leaf - boolean', () => {
+        const val = new ObjectContent({
+            a: false
+        });
+        const propValue = SelectorExtractor.getValueBySelector([createSelector('a')], val);
+        expect(propValue.valueOf()).toBe(false);
+    });
+
+    /**
+     *
+     */
     it('deep get property - native object - leaf', () => {
         const val = {
             a: {
@@ -333,7 +344,7 @@ describe('deep getting simple', () => {
     /**
      *
      */
-    it('get deep property from recursice containing ObjectContents', () => {
+    it('get deep property from recursive containing ObjectContents', () => {
         const val = new ObjectContent({ a: new ObjectContent({ b: new ObjectContent({ c: new TextContent('d') }) }) });
 
         const propValue = SelectorExtractor.getValueBySelector(
@@ -370,37 +381,55 @@ describe('deep getting simple', () => {
      *
      */
     it('try getting with wrong path', () => {
-        const data = new ObjectContent({ a: { b: 'c' } });
-        try {
-            DataContentHelper.getByPath('a.c', data);
-        } catch (error) {
-            expect(error.message).toBe(
-                `getting "a.c" not possible, because "c" is not an object or an array.\nData context:\n${JSON.stringify(
-                    { b: 'c' },
-                    null,
-                    '  '
-                )}`
-            );
-            return;
-        }
-        fail('expection was not thrown');
+        const selectors = pegParser.parseAction('test#a[*]').selectors;
+        const val = new ObjectContent({ c: [{ b: 1 }, { b: 2 }] });
+
+        expect(() => SelectorExtractor.getValueBySelector(selectors, val)).toThrow(
+            `getting "a[*]" not possible, because "a" is not used for an array.\nData context:`
+        );
     });
 
     /**
      *
      */
     it('try getting null value', () => {
-        const result = DataContentHelper.getByPath('a.b', new ObjectContent({ a: { b: null } }));
-        expect(result).toBeInstanceOf(NullContent);
+        const selectors = pegParser.parseAction('test#a.b').selectors;
+        const val = new ObjectContent({ a: { b: null } });
+        const sut = SelectorExtractor.getValueBySelector(selectors, val);
+
+        expect(sut).toBeInstanceOf(NullContent);
+    });
+
+    /**
+     *
+     */
+    it('try getting null value with qualifier - 1 level', () => {
+        const selectors = pegParser.parseAction('test:c#a').selectors;
+        const val = new ObjectContent({ a: { b: 'c' } });
+        const sut = SelectorExtractor.getValueBySelector(selectors, val);
+
+        expect(sut.valueOf()).toStrictEqual({ b: 'c' });
+    });
+
+    /**
+     *
+     */
+    it('try getting null value with qualifier - 2 levels', () => {
+        const selectors = pegParser.parseAction('test:c#a.b').selectors;
+        const val = new ObjectContent({ a: { b: null } });
+        const sut = SelectorExtractor.getValueBySelector(selectors, val);
+
+        expect(sut).toBeInstanceOf(NullContent);
     });
 
     /**
      *
      */
     it('try getting null value - deep', () => {
-        const data = new ObjectContent({ a: { b: null } });
+        const selectors = pegParser.parseAction('test#a.b.c').selectors;
+        const val = new ObjectContent({ a: { b: null } });
 
-        expect(() => DataContentHelper.getByPath('a.b.c', data)).toThrowError(
+        expect(() => SelectorExtractor.getValueBySelector(selectors, val)).toThrow(
             'getting "a.b.c" not possible, because "c" is not an object or an array.'
         );
     });
@@ -409,33 +438,24 @@ describe('deep getting simple', () => {
      *
      */
     it('check if content data is null', () => {
-        try {
-            DataContentHelper.getByPath('a.b.c', null);
-        } catch (error) {
-            expect(error.message).toBe('getting "a.b.c" not possible, because "a" is not an object or an array.');
-            return;
-        }
-        fail('expection was not thrown');
+        const selectors = pegParser.parseAction('test#a.b.c').selectors;
+        const val = null;
+
+        expect(() => SelectorExtractor.getValueBySelector(selectors, val)).toThrow(
+            'getting "a.b.c" not possible, because "a" is not an object or an array.'
+        );
     });
 
     /**
      *
      */
     it('try get wrong path value', () => {
-        const data = new ObjectContent({ a: { b: new ObjectContent({ c: 'd' }) } });
-        try {
-            DataContentHelper.getByPath('a.b.d', data);
-        } catch (error) {
-            expect(error.message).toBe(
-                `getting "a.b.d" not possible, because "d" is not an object or an array.\nData context:\n${JSON.stringify(
-                    { c: 'd' },
-                    null,
-                    '  '
-                )}`
-            );
-            return;
-        }
-        fail('expection was not thrown');
+        const selectors = pegParser.parseAction('test#a.b.d').selectors;
+        const val = new ObjectContent({ a: { b: new ObjectContent({ c: 'd' }) } });
+
+        expect(() => SelectorExtractor.getValueBySelector(selectors, val)).toThrow(
+            'getting "a.b.d" not possible, because "d" is not an object or an array.'
+        );
     });
 });
 
@@ -468,245 +488,245 @@ describe('deep has', () => {
         expect(result).toBeTruthy();
     });
 
-    /**
-     *
-     */
-    it('deep has property (object) - root', () => {
-        const val = new ObjectContent({
-            a: {
-                b: {
-                    c: {
-                        d: 'e'
-                    }
-                }
-            }
-        });
-        const result = DataContentHelper.hasPath('a', val);
-        expect(result).toBeTruthy();
-    });
+    // /**
+    //  *
+    //  */
+    // it('deep has property (object) - root', () => {
+    //     const val = new ObjectContent({
+    //         a: {
+    //             b: {
+    //                 c: {
+    //                     d: 'e'
+    //                 }
+    //             }
+    //         }
+    //     });
+    //     const result = DataContentHelper.hasPath('a', val);
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('deep has property (object) - multiple keys', () => {
-        const val = new ObjectContent({
-            a: {
-                b: {
-                    c: {
-                        d: 'e'
-                    }
-                }
-            }
-        });
-        const result = DataContentHelper.getByPath('a.b.c', val);
-        expect(result).toBeTruthy();
-    });
+    // /**
+    //  *
+    //  */
+    // it('deep has property (object) - multiple keys', () => {
+    //     const val = new ObjectContent({
+    //         a: {
+    //             b: {
+    //                 c: {
+    //                     d: 'e'
+    //                 }
+    //             }
+    //         }
+    //     });
+    //     const result = DataContentHelper.getByPath('a.b.c', val);
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('deep has property (object) - multiple keys - datacontent', () => {
-        const val = new ObjectContent({
-            a: {
-                b: new ObjectContent({
-                    c: new ObjectContent({
-                        d: 'e'
-                    })
-                })
-            }
-        });
-        const result = DataContentHelper.getByPath('a.b.c', val);
-        expect(result).toBeTruthy();
-    });
+    // /**
+    //  *
+    //  */
+    // it('deep has property (object) - multiple keys - datacontent', () => {
+    //     const val = new ObjectContent({
+    //         a: {
+    //             b: new ObjectContent({
+    //                 c: new ObjectContent({
+    //                     d: 'e'
+    //                 })
+    //             })
+    //         }
+    //     });
+    //     const result = DataContentHelper.getByPath('a.b.c', val);
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep property (string) from object value', () => {
-        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
-        const propValue = DataContentHelper.getByPath('d', val);
-        const result = DataContentHelper.hasPath('e', propValue);
+    // /**
+    //  *
+    //  */
+    // it('has deep property (string) from object value', () => {
+    //     const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
+    //     const propValue = DataContentHelper.getByPath('d', val);
+    //     const result = DataContentHelper.hasPath('e', propValue);
 
-        expect(result).toBeTruthy();
-    });
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep property with array (first level)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, { d: 'e' }] });
-        const result = DataContentHelper.hasPath('a.0.b', val);
+    // /**
+    //  *
+    //  */
+    // it('has deep property with array (first level)', () => {
+    //     const val = new ObjectContent({ a: [{ b: 'c' }, { d: 'e' }] });
+    //     const result = DataContentHelper.hasPath('a.0.b', val);
 
-        expect(result).toBeTruthy();
-    });
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep property with array (second level)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, { d: ['e', 7] }] });
-        const result = DataContentHelper.hasPath('a.1.d.1', val);
+    // /**
+    //  *
+    //  */
+    // it('has deep property with array (second level)', () => {
+    //     const val = new ObjectContent({ a: [{ b: 'c' }, { d: ['e', 7] }] });
+    //     const result = DataContentHelper.hasPath('a.1.d.1', val);
 
-        expect(result).toBeTruthy();
-    });
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep property with array (second level, array syntax)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, { d: ['e', 7] }] });
-        const result = DataContentHelper.hasPath('a[1].d[1]', val);
+    // /**
+    //  *
+    //  */
+    // it('has deep property with array (second level, array syntax)', () => {
+    //     const val = new ObjectContent({ a: [{ b: 'c' }, { d: ['e', 7] }] });
+    //     const result = DataContentHelper.hasPath('a[1].d[1]', val);
 
-        expect(result).toBeTruthy();
-    });
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep property with array (two levels, array syntax)', () => {
-        const val = new ObjectContent({ a: [{ b: 'c' }, ['e', 7]] });
-        const result = DataContentHelper.hasPath('a[1][1]', val);
+    // /**
+    //  *
+    //  */
+    // it('has deep property with array (two levels, array syntax)', () => {
+    //     const val = new ObjectContent({ a: [{ b: 'c' }, ['e', 7]] });
+    //     const result = DataContentHelper.hasPath('a[1][1]', val);
 
-        expect(result).toBeTruthy();
-    });
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep property with array (starting with array, array syntax)', () => {
-        const val = new ObjectContent(['a', ['b', { c: 7 }]]);
-        const result = DataContentHelper.hasPath('[1][1].c', val);
+    // /**
+    //  *
+    //  */
+    // it('has deep property with array (starting with array, array syntax)', () => {
+    //     const val = new ObjectContent(['a', ['b', { c: 7 }]]);
+    //     const result = DataContentHelper.hasPath('[1][1].c', val);
 
-        expect(result).toBeTruthy();
-    });
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep property from string', () => {
-        const val = new ObjectContent('a');
+    // /**
+    //  *
+    //  */
+    // it('has deep property from string', () => {
+    //     const val = new ObjectContent('a');
 
-        const result = DataContentHelper.hasPath('z', val);
-        expect(result).toBeFalsy();
-    });
+    //     const result = DataContentHelper.hasPath('z', val);
+    //     expect(result).toBeFalsy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep but property does not exists (1)', () => {
-        const val = new ObjectContent('{"a": "b"}');
+    // /**
+    //  *
+    //  */
+    // it('has deep but property does not exists (1)', () => {
+    //     const val = new ObjectContent('{"a": "b"}');
 
-        const result = DataContentHelper.hasPath('a.c', val);
-        expect(result).toBeFalsy();
-    });
+    //     const result = DataContentHelper.hasPath('a.c', val);
+    //     expect(result).toBeFalsy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep but property does not exists (2)', () => {
-        const val = new ObjectContent('{"a": "b"}');
+    // /**
+    //  *
+    //  */
+    // it('has deep but property does not exists (2)', () => {
+    //     const val = new ObjectContent('{"a": "b"}');
 
-        const result = DataContentHelper.hasPath('z', val);
-        expect(result).toBeFalsy();
-    });
+    //     const result = DataContentHelper.hasPath('z', val);
+    //     expect(result).toBeFalsy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep property from object value (wrong path, second element)', () => {
-        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
-        const propValue = DataContentHelper.getByPath('d', val);
+    // /**
+    //  *
+    //  */
+    // it('has deep property from object value (wrong path, second element)', () => {
+    //     const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
+    //     const propValue = DataContentHelper.getByPath('d', val);
 
-        const result = DataContentHelper.hasPath('z', propValue);
-        expect(result).toBeFalsy();
-    });
+    //     const result = DataContentHelper.hasPath('z', propValue);
+    //     expect(result).toBeFalsy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep property from object value (wrong path, first element)', () => {
-        const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
+    // /**
+    //  *
+    //  */
+    // it('has deep property from object value (wrong path, first element)', () => {
+    //     const val = new ObjectContent('{"a": "b", "c": 1, "d": {"e": "f"}}');
 
-        const result = DataContentHelper.hasPath('z', val);
-        expect(result).toBeFalsy();
-    });
+    //     const result = DataContentHelper.hasPath('z', val);
+    //     expect(result).toBeFalsy();
+    // });
 
-    /**
-     *
-     */
-    it('has deep property from recursice containing ObjectContents', () => {
-        const val = new ObjectContent({ a: new ObjectContent({ b: new ObjectContent({ c: new TextContent('d') }) }) });
-        const result = DataContentHelper.hasPath('a.b.c', val);
+    // /**
+    //  *
+    //  */
+    // it('has deep property from recursice containing ObjectContents', () => {
+    //     const val = new ObjectContent({ a: new ObjectContent({ b: new ObjectContent({ c: new TextContent('d') }) }) });
+    //     const result = DataContentHelper.hasPath('a.b.c', val);
 
-        expect(result).toBeTruthy();
-    });
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('check getting value from none DataContent', () => {
-        const data = new TextContent('abc');
-        const result = DataContentHelper.hasPath('a.b', data);
+    // /**
+    //  *
+    //  */
+    // it('check getting value from none DataContent', () => {
+    //     const data = new TextContent('abc');
+    //     const result = DataContentHelper.hasPath('a.b', data);
 
-        expect(result).toBeFalsy();
-    });
+    //     expect(result).toBeFalsy();
+    // });
 
-    /**
-     *
-     */
-    it('check getting with wrong path', () => {
-        const data = new ObjectContent({ a: { b: 'c' } });
-        const result = DataContentHelper.hasPath('a.c', data);
+    // /**
+    //  *
+    //  */
+    // it('check getting with wrong path', () => {
+    //     const data = new ObjectContent({ a: { b: 'c' } });
+    //     const result = DataContentHelper.hasPath('a.c', data);
 
-        expect(result).toBeFalsy();
-    });
+    //     expect(result).toBeFalsy();
+    // });
 
-    /**
-     *
-     */
-    it('check getting null value', () => {
-        const result = DataContentHelper.hasPath('a.b', new ObjectContent({ a: { b: null } }));
+    // /**
+    //  *
+    //  */
+    // it('check getting null value', () => {
+    //     const result = DataContentHelper.hasPath('a.b', new ObjectContent({ a: { b: null } }));
 
-        expect(result).toBeTruthy();
-    });
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('check getting undefined value', () => {
-        const result = DataContentHelper.hasPath('a.b', new ObjectContent({ a: { b: undefined } }));
+    // /**
+    //  *
+    //  */
+    // it('check getting undefined value', () => {
+    //     const result = DataContentHelper.hasPath('a.b', new ObjectContent({ a: { b: undefined } }));
 
-        expect(result).toBeTruthy();
-    });
+    //     expect(result).toBeTruthy();
+    // });
 
-    /**
-     *
-     */
-    it('check getting null value - deep', () => {
-        const data = new ObjectContent({ a: { b: null } });
-        const result = DataContentHelper.hasPath('a.b.c', data);
+    // /**
+    //  *
+    //  */
+    // it('check getting null value - deep', () => {
+    //     const data = new ObjectContent({ a: { b: null } });
+    //     const result = DataContentHelper.hasPath('a.b.c', data);
 
-        expect(result).toBeFalsy();
-    });
+    //     expect(result).toBeFalsy();
+    // });
 
-    /**
-     *
-     */
-    it('check if content data is null', () => {
-        const result = DataContentHelper.hasPath('a.b.c', null);
+    // /**
+    //  *
+    //  */
+    // it('check if content data is null', () => {
+    //     const result = DataContentHelper.hasPath('a.b.c', null);
 
-        expect(result).toBeFalsy();
-    });
+    //     expect(result).toBeFalsy();
+    // });
 
-    /**
-     *
-     */
-    it('check get wrong path value', () => {
-        const data = new ObjectContent({ a: { b: new ObjectContent({ c: 'd' }) } });
-        const result = DataContentHelper.hasPath('a.b.d', data);
+    // /**
+    //  *
+    //  */
+    // it('check get wrong path value', () => {
+    //     const data = new ObjectContent({ a: { b: new ObjectContent({ c: 'd' }) } });
+    //     const result = DataContentHelper.hasPath('a.b.d', data);
 
-        expect(result).toBeFalsy();
-    });
+    //     expect(result).toBeFalsy();
+    // });
 });
 
 /**
@@ -835,6 +855,26 @@ describe('deep setting', () => {
     /**
      *
      */
+    it('setting null', () => {
+        const ast = pegParser.parseAction('test#a').selectors;
+        const sut = SelectorExtractor.setValueBySelector(ast, null, new ObjectContent());
+
+        expect(sut.valueOf()).toStrictEqual({ a: null });
+    });
+
+    /**
+     *
+     */
+    it('deep setting null', () => {
+        const ast = pegParser.parseAction('test#a.b').selectors;
+        const sut = SelectorExtractor.setValueBySelector(ast, null, new ObjectContent());
+
+        expect(sut.valueOf()).toStrictEqual({ a: { b: null } });
+    });
+
+    /**
+     *
+     */
     it('try set deep structure to a none object', () => {
         const sut_content = SelectorExtractor.setValueBySelector(
             pegParser.parseAction('test#a').selectors,
@@ -865,7 +905,7 @@ describe('wildcard', () => {
     /**
      *
      */
-    fit('get first level', () => {
+    it('get first level', () => {
         const selectors = pegParser.parseAction('test#a[*].b').selectors;
         const val = new ObjectContent({ a: [{ b: 1 }, { b: 2 }] });
         const sut = SelectorExtractor.getValueBySelector(selectors, val);
@@ -877,27 +917,22 @@ describe('wildcard', () => {
      *
      */
     it('get first level, when not all entries are collectable', () => {
+        const selectors = pegParser.parseAction('test#a[*].b').selectors;
         const val = new ObjectContent({ a: [{ b: 1 }, ['b', 2]] });
-        const propValue = DataContentHelper.getByPath('a[*].b', val);
+        const sut = SelectorExtractor.getValueBySelector(selectors, val);
 
-        expect(propValue.valueOf()).toEqual([1]);
+        expect(sut.valueOf()).toStrictEqual([1]);
     });
 
     /**
      *
      */
     it('wildcard selects a none array element', () => {
+        const selectors = pegParser.parseAction('test#b[*]').selectors;
         const val = new ObjectContent({ a: [{ b: 1 }, { b: 2 }], b: { c: 3 } });
 
-        expect(() => DataContentHelper.getByPath('b[*]', val)).toThrowError(
-            'getting "b.*" not possible, because "*" is not an object or an array.\nData context:\n' +
-                JSON.stringify(
-                    {
-                        c: 3
-                    },
-                    null,
-                    '  '
-                )
+        expect(() => SelectorExtractor.getValueBySelector(selectors, val)).toThrow(
+            `getting "b[*]" not possible, because "b" is not used for an array.`
         );
     });
 
@@ -905,64 +940,56 @@ describe('wildcard', () => {
      *
      */
     it('get second level', () => {
+        const selectors = pegParser.parseAction('test#a[*].b[*].c').selectors;
         const val = new ObjectContent({ a: [{ b: [{ c: 3 }, { c: 4 }] }] });
-        const propValue = DataContentHelper.getByPath('a[*].b[*].c', val);
+        const sut = SelectorExtractor.getValueBySelector(selectors, val);
 
-        expect(propValue.valueOf()).toEqual([3, 4]);
+        expect(sut.valueOf()).toStrictEqual([3, 4]);
     });
 
     /**
      *
      */
     it('get third level - one element', () => {
-        const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: 4 }] }] });
-        const propValue = DataContentHelper.getByPath('a[*].b[*].c.d', val);
+        const selectors = pegParser.parseAction('test#a[*].b[*].c').selectors;
+        const val = new ObjectContent({ a: [{ b: { c: 5 } }] });
+        const sut = SelectorExtractor.getValueBySelector(selectors, val);
 
-        expect(propValue.valueOf()).toEqual([5]);
+        expect(sut).toBeInstanceOf(ObjectContent);
+        expect(sut.valueOf()).toStrictEqual([5]);
     });
 
     /**
      *
      */
     it('get third level - more elements', () => {
+        const selectors = pegParser.parseAction('test#a[*].b[*].c[*].d').selectors;
         const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: { d: 6 } }] }] });
-        const propValue = DataContentHelper.getByPath('a[*].b[*].c.d', val);
+        const sut = SelectorExtractor.getValueBySelector(selectors, val);
 
-        expect(propValue.valueOf()).toEqual([5, 6]);
+        expect(sut.valueOf()).toStrictEqual([5, 6]);
     });
 
     /**
      *
      */
     it('get third level - array elements', () => {
+        const selectors = pegParser.parseAction('test#a[*].b[*].c[*].d').selectors;
         const val = new ObjectContent({ a: [{ b: [{ c: { d: [5, 6, 7] } }, { c: { d: [8, 9, 10] } }] }] });
-        const propValue = DataContentHelper.getByPath('a[*].b[*].c.d', val);
+        const sut = SelectorExtractor.getValueBySelector(selectors, val);
 
-        expect(propValue.valueOf()).toEqual([5, 6, 7, 8, 9, 10]);
+        expect(sut.valueOf()).toStrictEqual([5, 6, 7, 8, 9, 10]);
     });
 
     /**
      *
      */
     it('at least one element must have a parameter', () => {
+        const selectors = pegParser.parseAction('test#a[*].b[*].e').selectors;
         const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: 4 }] }] });
 
-        expect(() => DataContentHelper.getByPath('a[*].b[*].d', val)).toThrowError(
-            `getting "a.*.b.*.d" not possible, because "d" is not an object or an array.\nData context:\n` +
-                JSON.stringify(
-                    [
-                        {
-                            c: {
-                                d: 5
-                            }
-                        },
-                        {
-                            c: 4
-                        }
-                    ],
-                    null,
-                    '  '
-                )
+        expect(() => SelectorExtractor.getValueBySelector(selectors, val)).toThrow(
+            `getting "a[*].b[*].e" not possible, because "e" is not an object or an array.`
         );
     });
 
@@ -970,11 +997,11 @@ describe('wildcard', () => {
      *
      */
     it(`no property fits, but it's optional`, () => {
+        const selectors = pegParser.parseAction('test#a[*].b[*]?.d').selectors;
         const val = new ObjectContent({ a: [{ b: [{ c: { d: 5 } }, { c: 4 }] }] });
+        const sut = SelectorExtractor.getValueBySelector(selectors, val);
 
-        const propValue = DataContentHelper.getByPath('a[*].b[*].d?', val);
-
-        expect(propValue.valueOf()).toBeInstanceOf(NullContent);
+        expect(sut).toBeInstanceOf(NullContent);
     });
 });
 

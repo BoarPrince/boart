@@ -5,7 +5,6 @@ import { ObjectContent } from '../data/ObjectContent';
 import { SelectorExtractor } from '../data/SelectorExtractor';
 import { LogProvider } from '../logging/LogProvider';
 import { ScopeType } from '../types/ScopeType';
-import { PropertyParser } from '../value/PropertyParser';
 import { ValueReplaceArg } from '../value/ValueReplacer';
 
 import { Store } from './Store';
@@ -14,26 +13,28 @@ import { StoreMap } from './StoreMap';
 /**
  *
  */
-class ObjectWrapper implements StoreMap {
+class ObjectWrapper extends StoreMap {
     /**
      *
      */
-    constructor(private map: object) {}
+    constructor(private map: object) {
+        super();
+    }
 
     /**
      *
      */
-    put = (key: string, value: DataContent) => (this.map[key] = value);
+    put = (ast: ValueReplaceArg, value: DataContent) => (this.map[this.getKey(ast)] = value);
 
     /**
      *
      */
-    get = (key: string) => this.map[key] as DataContent;
+    get = (ast: ValueReplaceArg) => this.map[this.getKey(ast)] as DataContent;
 
     /**
      *
      */
-    has = (key: string) => Object.keys(this.map).includes(key);
+    has = (ast: ValueReplaceArg) => Object.keys(this.map).includes(this.getKey(ast));
 
     /**
      *
@@ -44,7 +45,7 @@ class ObjectWrapper implements StoreMap {
 /**
  *
  */
-export class StoreWrapper implements StoreMap {
+export class StoreWrapper extends StoreMap {
     public readonly store: StoreMap;
     public readonly storeName: string;
     private readonly logger = LogProvider.create('core').logger('storeWrapper');
@@ -53,6 +54,8 @@ export class StoreWrapper implements StoreMap {
      *
      */
     constructor(store: StoreMap | object | null, storeName: string) {
+        super();
+
         if (!store) {
             this.store = new ObjectWrapper({});
         } else if (typeof store === 'object' && store.constructor.name === 'Object') {
@@ -73,89 +76,61 @@ export class StoreWrapper implements StoreMap {
     /**
      *
      */
-    put(key: string, value: ContentType) {
-        this.logger.trace(
-            () => `put ${key}`,
-            () => value
-        );
-        const properties = PropertyParser.parseProperty(key);
-
-        if (properties.length === 0) {
-            throw Error('name must be defined for saving value in storage');
+    put(ast: ValueReplaceArg | string, value: ContentType): void {
+        if (typeof ast === 'string') {
+            throw 'not implemented anymore';
         }
 
-        if (properties.length > 1) {
-            const nativeContentValue = this.store.get(properties.first().key);
-            let contentValue = nativeContentValue != null ? DataContentHelper.create(nativeContentValue) : new ObjectContent();
-
-            contentValue = DataContentHelper.setByPath(properties.nofirst(), value, contentValue);
-            this.store.put(properties.first().key, contentValue);
-        } else {
+        if (!ast.selectors?.length) {
             const contentValue = DataContentHelper.create(value);
-            this.store.put(key, contentValue);
+            this.store.put(ast, contentValue);
+        } else {
+            const storeValue = this.store.get(ast);
+            const storeContentValue = !storeValue ? new ObjectContent() : DataContentHelper.create(storeValue);
+
+            const contentValue = SelectorExtractor.setValueBySelector(ast.selectors, value, storeContentValue);
+            this.store.put(ast, contentValue);
         }
     }
 
     /**
      *
      */
-    getByAst(arg: ValueReplaceArg): ContentType {
-        const contentValue = this.store.get(arg.qualifier.value);
-        if (contentValue == null) {
+    get(ast: ValueReplaceArg | string): ContentType {
+        if (typeof ast === 'string') {
+            throw 'not implemented anymore';
+        }
+
+        const storeValue = this.store.get(ast);
+        if (storeValue == null) {
             return null;
         }
 
-        const dataContentValue = DataContentHelper.create(contentValue);
-        const value = SelectorExtractor.getValueBySelector(arg.selectors, dataContentValue);
+        try {
+            const dataContentValue = DataContentHelper.create(storeValue);
+            const value = SelectorExtractor.getValueBySelector(ast.selectors, dataContentValue);
 
-        this.logger.trace(
-            () => `get ${arg.selectors.match || ''}`,
-            () => value
-        );
-        return value;
+            this.logger.trace(
+                () => `get ${ast.selectors.match || ''}`,
+                () => value
+            );
+            return value;
+        } catch (error) {
+            throw new Error(`store '${this.getKey(ast)}' -> ${(<Error>error).message}`);
+        }
     }
 
     /**
      *
      */
-    get(key: string, optional = false): ContentType {
-        const properties = PropertyParser.parseProperty(key);
-
-        if (properties.length === 0) {
-            throw Error('name must be defined for getting value from storage');
-        }
-
-        const contentValue = this.store.get(properties.first().key);
-        if (contentValue == null) {
-            return null;
-        }
-
-        const dataContentValue = DataContentHelper.create(contentValue);
-        const value = DataContentHelper.getByPath(properties.nofirst(), dataContentValue, optional);
-        this.logger.trace(
-            () => `get ${key}`,
-            () => value
-        );
-        return value;
-    }
-
-    /**
-     *
-     */
-    has(key: string): boolean {
-        const properties = PropertyParser.parseProperty(key);
-
-        if (properties.length === 0) {
+    has(ast: ValueReplaceArg): boolean {
+        const storeValue = this.store.get(ast);
+        if (storeValue == null) {
             return false;
+        } else {
+            const dataContentValue = DataContentHelper.create(storeValue);
+            return SelectorExtractor.hasValueBySelector(ast.selectors, dataContentValue);
         }
-
-        if (!this.store.has(properties.first().key)) {
-            return false;
-        }
-
-        const contentValue = this.store.get(properties.first().key);
-        const dataContentValue = DataContentHelper.create(contentValue);
-        return !DataContentHelper.getByPath(properties.nofirst(), dataContentValue, true).isNullOrUndefined();
     }
 
     /**

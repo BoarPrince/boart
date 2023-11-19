@@ -1,9 +1,18 @@
 import { ASTAction } from './ast/ASTAction';
+import { ASTValue } from './ast/ASTValue';
 import { ASTVariable } from './ast/ASTVariable';
 import { Location } from './ast/Location';
 import * as actionParser from './peggy/ParserAction.js';
+import * as valueParser from './peggy/ParserValue.js';
 import * as variableParser from './peggy/ParserVariable.js';
 
+/**
+ *
+ */
+class ParserException {
+    message: string;
+    location: Location;
+}
 /**
  *
  */
@@ -35,9 +44,13 @@ export class VariableParser {
 
         if (ast.qualifier) {
             ast.qualifier.stringValue = [ast.qualifier.value].concat(ast.qualifier.paras ?? []).join(':');
-            ast.name.stringValue = ast.name.value + ':' + ast.qualifier.stringValue;
+            ast.qualifier.selectorMatch = [ast.qualifier.stringValue].concat(ast.selectors?.match ?? []).join('#');
         } else {
             ast.name.stringValue = ast.name.value;
+        }
+
+        if (ast.name && ast.qualifier) {
+            ast.name.stringValue = ast.name.value + ':' + ast.qualifier.stringValue;
         }
 
         return ast;
@@ -85,8 +98,9 @@ export class VariableParser {
                 errs: result.errs || null
             });
         } catch (e) {
-            const valueWithErrorMarker = this.getValueWithMarker(e.location, match.input);
-            throw new Error(`${e.message || ''}\n${valueWithErrorMarker}`);
+            const error = e as ParserException;
+            const valueWithErrorMarker = this.getValueWithMarker(error.location, match.input);
+            throw new Error(`${error.message || ''}\n${valueWithErrorMarker}`);
         }
     }
 
@@ -102,8 +116,27 @@ export class VariableParser {
                 errs: result.errs || null
             });
         } catch (e) {
-            const valueWithErrorMarker = this.getValueWithMarker(e.location, value);
-            throw new Error(`${e.message}\n${valueWithErrorMarker}`);
+            const error = e as ParserException;
+            const valueWithErrorMarker = this.getValueWithMarker(error.location, value);
+            throw new Error(`${error.message}\n${valueWithErrorMarker}`);
+        }
+    }
+
+    /**
+     * V A L U E
+     */
+    public parseValue(value: string): ASTValue {
+        try {
+            const result = valueParser.parse(value);
+            return this.addStringValueAccessor({
+                ...result,
+                match: value,
+                errs: result.errs || null
+            });
+        } catch (e) {
+            const error = e as ParserException;
+            const valueWithErrorMarker = this.getValueWithMarker(error.location, value);
+            throw new Error(`${error.message}\n${valueWithErrorMarker}`);
         }
     }
 }

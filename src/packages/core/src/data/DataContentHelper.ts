@@ -1,7 +1,3 @@
-import { PropertyIterable } from '../value/PropertyIterable';
-import { PropertyParser } from '../value/PropertyParser';
-
-import { ContentInstance } from './ContentInstance';
 import { ContentType } from './ContentType';
 import { DataContent } from './DataContent';
 import { DataType } from './DataType.enum';
@@ -9,7 +5,6 @@ import { NativeContent } from './NativeContent';
 import { NullContent } from './NullContent';
 import { ObjectContent } from './ObjectContent';
 import { TextContent } from './TextContent';
-import { WildcardObjectContent } from './WildcardObjectContent';
 
 /**
  *
@@ -120,10 +115,6 @@ export class DataContentHelper {
             return false;
         }
 
-        // if (typeof variable === 'object') {
-        //     return true;
-        // }
-
         if (!DataContentHelper.isContent(variable)) {
             return false;
         }
@@ -185,46 +176,11 @@ export class DataContentHelper {
         }
     }
 
-    /**
-     *
-     */
-    private static throwRecursiveError(property: string, current: string, content?: ContentType) {
-        const contentMsg = !content ? '' : `\nData context:\n${JSON.stringify(content, null, '  ')}`;
-        throw Error(`getting "${property}" not possible, because "${current}" is not an object or an array.${contentMsg}`);
+    public static getByPath(a: any, b: any): DataContent {
+        throw 'not implemented';
     }
 
-    /**
-     *
-     */
-    private static throwRecursiveArrayError(property: string, current: string, content?: ContentType) {
-        const contentMsg = !content ? '' : `\nData context:\n${JSON.stringify(content, null, '  ')}`;
-        throw Error(`getting "${property}" not possible, because "${current}" does not used for an array.${contentMsg}`);
-    }
-
-    /**
-     *
-     */
-    public static getByPath(selector: string, value: DataContent, optional?: boolean): DataContent;
-    public static getByPath(properties: PropertyIterable, value: DataContent, optional?: boolean): DataContent;
-    public static getByPath(selectorOrProperties: string | PropertyIterable, value: DataContent, optional = false): DataContent {
-        throw 'not defined anymore';
-    }
-
-    /**
-     *
-     */
-    public static hasPath(selector: string, value: DataContent): boolean;
-    public static hasPath(properties: PropertyIterable, value: DataContent): boolean;
-    public static hasPath(selectorOrProperties: string | PropertyIterable, value: DataContent): boolean {
-        throw 'not defined anymore';
-    }
-
-    /**
-     *
-     */
-    public static setByPath(selector: string, value: ContentType, content: DataContent): DataContent;
-    public static setByPath(properties: PropertyIterable, value: ContentType, content: DataContent): DataContent;
-    public static setByPath(selectorOrProperties: string | PropertyIterable, value: ContentType, content: DataContent): DataContent {
-        throw 'not defined anymore';
+    public static setByPath(a: any, b: any, c: any): DataContent {
+        throw 'not implemented';
     }
 }

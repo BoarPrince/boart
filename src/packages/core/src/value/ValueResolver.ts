@@ -80,8 +80,7 @@ export class ValueResolver {
                 return ast.default.value;
 
             case OperatorType.DefaultAssignment: {
-                const selectors = ast.selectors.match;
-                store.put(selectors, ast.default.value);
+                store.put(ast, ast.default.value);
                 return ast.default.value;
             }
 
@@ -162,14 +161,13 @@ export class ValueResolver {
         const replacer = this.handler.get(ast.name.value);
         if (!replacer) {
             return value;
-            // throw new Error(`replacer "${ast.name.value}" does not exist`);
         }
 
         this.checkConfig(ast, replacer.config);
 
         const store = ValueResolver.getStore(ast.scope?.value || replacer.config.defaultScopeType);
 
-        const replacement = replacer.replace2(ast, store) ?? this.default(ast, store);
+        const replacement = replacer.replace(ast, store) ?? this.default(ast, store);
         const replacedValue = value.replace(ast.match, replacement);
 
         switch (replacedValue) {

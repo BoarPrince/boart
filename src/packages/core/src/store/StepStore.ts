@@ -1,20 +1,22 @@
 import { DataContent } from '../data/DataContent';
 import { Runtime } from '../runtime/Runtime';
+import { ValueReplaceArg } from '../value/ValueReplacer';
 
 import { StoreMap } from './StoreMap';
 
 /**
  *
  */
-export class StepStore implements StoreMap {
+export class StepStore extends StoreMap {
     private readonly store: Map<string, DataContent | string>;
 
     /**
      *
      */
     constructor() {
-        this.store = new Map<string, DataContent | string>();
+        super();
 
+        this.store = new Map<string, DataContent | string>();
         Runtime.instance.stepRuntime.onStart().subscribe(() => {
             this.clear();
         });
@@ -23,22 +25,22 @@ export class StepStore implements StoreMap {
     /**
      *
      */
-    get(key: string): DataContent {
-        return this.store.get(key) as DataContent;
+    get(ast: ValueReplaceArg): DataContent {
+        return this.store.get(this.getKey(ast)) as DataContent;
     }
 
     /**
      *
      */
-    has(key: string): boolean {
-        return this.store.has(key);
+    has(ast: ValueReplaceArg): boolean {
+        return this.store.has(this.getKey(ast));
     }
 
     /**
      *
      */
-    put(key: string, value: DataContent | string): ReadonlyMap<string, DataContent | string> {
-        return this.store.set(key, value);
+    put(ast: ValueReplaceArg, value: DataContent | string): ReadonlyMap<string, DataContent | string> {
+        return this.store.set(this.getKey(ast), value);
     }
 
     /**

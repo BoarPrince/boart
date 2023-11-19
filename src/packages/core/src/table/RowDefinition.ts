@@ -4,6 +4,7 @@ import { Descriptionable } from '../description/Descriptionable';
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { ParaType } from '../types/ParaType';
+import { ScopedType } from '../types/ScopedType';
 import { SelectorType } from '../types/SelectorType';
 import { RowValidator } from '../validators/RowValidator';
 
@@ -36,6 +37,7 @@ interface RowDefinitionPara<
     readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType> | null;
     readonly parameterType?: ParaType;
     readonly selectorType?: SelectorType;
+    readonly scopedType?: ScopedType;
     readonly validators: ReadonlyArray<RowValidator> | null;
 }
 
@@ -57,7 +59,7 @@ export class RowDefinition<
     public readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
     public readonly parameterType: ParaType = ParaType.False;
     public readonly selectorType: SelectorType = SelectorType.False;
-    public readonly scopeType: SelectorType = SelectorType.False;
+    public readonly scopedType: ScopedType = ScopedType.False;
     public readonly dataScopeType: SelectorType = SelectorType.False;
     public readonly validators = new Array<RowValidator>();
 
@@ -76,6 +78,7 @@ export class RowDefinition<
         this.executionUnit = value.executionUnit;
         this.parameterType = value.executionUnit?.parameterType || value.parameterType || this.parameterType;
         this.selectorType = value.executionUnit?.selectorType || value.selectorType || this.selectorType;
+        this.scopedType = value.executionUnit?.scopedType || value.scopedType || this.scopedType;
         this.validators = (value.executionUnit?.validators || []).concat(value.validators || []);
     }
 

@@ -15,6 +15,7 @@ import { NativeContent } from './data/NativeContent';
 import { NativeType } from './data/NativeType';
 import { NullContent } from './data/NullContent';
 import { ObjectContent } from './data/ObjectContent';
+import { SelectorExtractor } from './data/SelectorExtractor';
 import { TextContent } from './data/TextContent';
 import { Description } from './description/Description';
 import { DescriptionHandler } from './description/DescriptionHandler';
@@ -29,6 +30,7 @@ import { ExpectedOperator, ExpectedOperatorResult } from './expected/ExpectedOpe
 import { ExpectedOperatorInitializer } from './expected/ExpectedOperatorInitializer';
 import { Generator } from './generator/Generator';
 import { GeneratorHandler } from './generator/GeneratorHandler';
+import { VariableParser } from './parser/VariableParser';
 import { SelectorType as ASTSelectorType } from './parser/ast/SelectorType';
 import { LocalContext } from './runtime/LocalContext';
 import { Runtime } from './runtime/Runtime';
@@ -60,8 +62,6 @@ import { SelectorType } from './types/SelectorType';
 import { GroupValidator } from './validators/GroupValidator';
 import { RowValidator } from './validators/RowValidator';
 import { ValidationHandler } from './validators/ValidationHandler';
-import { DefaultOperator } from './value/DefaultOperator';
-import { DefaultOperatorParser } from './value/DefaultOperatorParser';
 import { OperatorType } from './value/OperatorType';
 import { ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from './value/ValueReplacer';
 import { ValueReplacerHandler } from './value/ValueReplacerHandler';
@@ -81,8 +81,6 @@ export {
     DataContentBase,
     DataContentHelper,
     DataType,
-    DefaultOperator,
-    DefaultOperatorParser,
     Description,
     DescriptionHandler,
     EnvLoader,
@@ -120,6 +118,7 @@ export {
     ScopedType,
     ScopeType,
     SelectorType,
+    SelectorExtractor,
     Semaphore,
     StepContext,
     Store,
@@ -141,5 +140,6 @@ export {
     ValueReplaceArg,
     ValueReplacer,
     ValueReplacerConfig,
-    ValueReplacerHandler
+    ValueReplacerHandler,
+    VariableParser
 };

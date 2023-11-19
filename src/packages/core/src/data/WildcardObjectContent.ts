@@ -1,6 +1,7 @@
 import { ContentInstance } from './ContentInstance';
 import { ContentType } from './ContentType';
 import { DataContent } from './DataContent';
+import { DataContentHelper } from './DataContentHelper';
 import { ObjectContent } from './ObjectContent';
 
 /**
@@ -17,7 +18,6 @@ export class WildcardObjectContent extends ObjectContent {
     /**
      *
      */
-    // constructor(value: Array<string | boolean | number | object | DataContent>) {
     constructor(value: Array<unknown> = []) {
         super(value);
     }
@@ -26,7 +26,8 @@ export class WildcardObjectContent extends ObjectContent {
      *
      */
     has(key: string): boolean {
-        return Object.values(this.value).some((v) => !!v[key]);
+        const valueAsArray = this.value.valueOf() as Array<unknown>;
+        return valueAsArray.map((v) => v[key]).some((v) => !!v);
     }
 
     /**
@@ -37,18 +38,23 @@ export class WildcardObjectContent extends ObjectContent {
             return null;
         }
 
-        const collectedValue = this.value as Array<unknown>;
+        const valueAsArray = this.value.valueOf() as Array<unknown>;
 
         const collected = new Array<unknown>();
-        collectedValue.forEach((v) => {
-            if (Array.isArray(v[key])) {
-                (v[key] as Array<unknown>)?.forEach((elements) => collected.push(elements));
-            } else {
-                collected.push(v[key]);
-            }
-        });
+        valueAsArray
+            .map((v) => v[key]) //
+            .filter((value) => value !== undefined)
+            .forEach((value) => {
+                if (Array.isArray(value)) {
+                    value.forEach((elements) => {
+                        collected.push(elements);
+                    });
+                } else {
+                    collected.push(value);
+                }
+            });
 
-        return new WildcardObjectContent(collected);
+        return collected.length <= 1 ? DataContentHelper.create(collected) : new ObjectContent(collected);
     }
 
     /**

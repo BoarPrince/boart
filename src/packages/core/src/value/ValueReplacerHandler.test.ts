@@ -54,9 +54,8 @@ class NamedValueReplacerMock implements ValueReplacer {
     }
     config = {};
     priority = 100;
-    scoped = ScopedType.true;
-    replace = jest.fn((property: string) => `#${property}#`);
-    replace2 = jest.fn((ast: ValueReplaceArg) => (this._value ? this._value : `#${ast.qualifier.value}#`));
+    scoped = ScopedType.True;
+    replace = jest.fn((ast: ValueReplaceArg) => (this._value ? this._value : `#${ast.qualifier.value}#`));
 }
 
 /**
@@ -68,20 +67,10 @@ class ValueReplacerMock implements ValueReplacer {
     }
     config = {};
     priority = 100;
-    scoped = ScopedType.true;
-    replace = jest.fn((property: string): string | null | undefined => `#${property}#`);
-    replace2 = jest.fn((ast: ValueReplaceArg, store: StoreWrapper) => {
+    scoped = ScopedType.True;
+    replace = jest.fn((ast: ValueReplaceArg, store: StoreWrapper) => {
         return ast.qualifier ? `#${ast.qualifier.value}#` : undefined;
     });
-}
-
-/**
- *
- */
-class StoreReplacerMock extends ValueReplacerMock {
-    get name() {
-        return 'StoreReplacerMock';
-    }
 }
 
 /**
@@ -98,31 +87,13 @@ class NullableReplacerMock extends ValueReplacerMock {
     get name() {
         return 'NullReplacerMock';
     }
-    replace = jest.fn((property: string) => {
-        if (this.printProperty) {
-            return `${property}:${this.value || ''}`;
-        } else {
-            return this.value;
-        }
-    });
-    replace2 = jest.fn((ast: ValueReplaceArg, store: StoreWrapper) => {
+    replace = jest.fn((ast: ValueReplaceArg, store: StoreWrapper) => {
         if (this.printProperty) {
             return `${ast.qualifier.stringValue}:${this.value || ''}`;
         } else {
             return this.value;
         }
     });
-}
-
-class StoreReplacerNoMatchMock implements ValueReplacer {
-    readonly name = 'StoreReplacerNoMatchMock';
-    config = {};
-    priority = 100;
-    scoped = ScopedType.true;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    replace = jest.fn((_p: string) => null);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    replace2 = jest.fn((_ast: ValueReplaceArg) => null);
 }
 
 const sut = ValueReplacerHandler.instance;
@@ -209,20 +180,20 @@ describe('check valueHandler (unscoped)', () => {
      */
     it('replacement without scope', () => {
         const valueReplacer = new ValueReplacerMock();
-        valueReplacer.scoped = ScopedType.false;
+        valueReplacer.scoped = ScopedType.False;
 
         sut.add('test', valueReplacer);
         const replacedValue = sut.replace('--${test:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(valueReplacer.replace2).toHaveBeenLastCalledWith(
+        expect(valueReplacer.replace).toHaveBeenLastCalledWith(
             expect.objectContaining({
                 default: null,
                 errs: null,
                 match: '${test:a}',
                 name: { stringValue: 'test:a', value: 'test' },
                 pipes: [],
-                qualifier: { paras: [], stringValue: 'a', value: 'a' },
+                qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
                 scope: null
             }),
             null
@@ -238,14 +209,14 @@ describe('check valueHandler (unscoped)', () => {
         const replacedValue = sut.replace('--${test@g:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(valueReplacer.replace2).toHaveBeenLastCalledWith(
+        expect(valueReplacer.replace).toHaveBeenLastCalledWith(
             {
                 default: null,
                 errs: null,
                 match: '${test@g:a}',
                 name: { stringValue: 'test:a', value: 'test' },
                 pipes: [],
-                qualifier: { paras: [], stringValue: 'a', value: 'a' },
+                qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
                 scope: {
                     location: { end: { column: 7, line: 1, offset: 6 }, source: undefined, start: { column: 5, line: 1, offset: 4 } },
                     value: 'g'
@@ -266,14 +237,14 @@ describe('check valueHandler (unscoped)', () => {
         const replacedValue = sut.replace('--${test@l:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(valueReplacer.replace2).toHaveBeenLastCalledWith(
+        expect(valueReplacer.replace).toHaveBeenLastCalledWith(
             {
                 default: null,
                 errs: null,
                 match: '${test@l:a}',
                 name: { stringValue: 'test:a', value: 'test' },
                 pipes: [],
-                qualifier: { paras: [], stringValue: 'a', value: 'a' },
+                qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
                 scope: {
                     location: { end: { column: 7, line: 1, offset: 6 }, source: undefined, start: { column: 5, line: 1, offset: 4 } },
                     value: 'l'
@@ -294,14 +265,14 @@ describe('check valueHandler (unscoped)', () => {
         const replacedValue = sut.replace('--${test@t:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(valueReplacer.replace2).toHaveBeenLastCalledWith(
+        expect(valueReplacer.replace).toHaveBeenLastCalledWith(
             {
                 default: null,
                 errs: null,
                 match: '${test@t:a}',
                 name: { stringValue: 'test:a', value: 'test' },
                 pipes: [],
-                qualifier: { paras: [], stringValue: 'a', value: 'a' },
+                qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
                 scope: {
                     location: { end: { column: 7, line: 1, offset: 6 }, source: undefined, start: { column: 5, line: 1, offset: 4 } },
                     value: 't'
@@ -322,14 +293,14 @@ describe('check valueHandler (unscoped)', () => {
         const replacedValue = sut.replace('--${test@s:a}--');
 
         expect(replacedValue).toBe('--#a#--');
-        expect(valueReplacer.replace2).toHaveBeenLastCalledWith(
+        expect(valueReplacer.replace).toHaveBeenLastCalledWith(
             {
                 default: null,
                 errs: null,
                 match: '${test@s:a}',
                 name: { stringValue: 'test:a', value: 'test' },
                 pipes: [],
-                qualifier: { paras: [], stringValue: 'a', value: 'a' },
+                qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
                 scope: {
                     location: { end: { column: 7, line: 1, offset: 6 }, source: undefined, start: { column: 5, line: 1, offset: 4 } },
                     value: 's'
@@ -346,7 +317,7 @@ describe('check valueHandler (unscoped)', () => {
      */
     it('replacement multiple values in one text', () => {
         const replacer = new ValueReplacerMock();
-        replacer.scoped = ScopedType.multiple;
+        replacer.scoped = ScopedType.Optional;
         sut.add('store', replacer);
         const result = sut.replace('--${store:a}--${store:b}--');
 

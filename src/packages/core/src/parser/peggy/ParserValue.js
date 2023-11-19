@@ -173,8 +173,8 @@ function peg$parse(input, options) {
   var peg$FAILED = {};
   var peg$source = options.grammarSource;
 
-  var peg$startRuleFunctions = { START_ACTION: peg$parseSTART_ACTION };
-  var peg$startRuleFunction = peg$parseSTART_ACTION;
+  var peg$startRuleFunctions = { START_VALUE: peg$parseSTART_VALUE };
+  var peg$startRuleFunction = peg$parseSTART_VALUE;
 
   var peg$c0 = "@";
   var peg$c1 = "::";

@@ -10,7 +10,7 @@ import { StoreWrapper } from './StoreWrapper';
 /**
  *
  */
-class NullStoreMap implements StoreMap {
+class NullStoreMap extends StoreMap {
     put(): void {
         // do nothing
     }

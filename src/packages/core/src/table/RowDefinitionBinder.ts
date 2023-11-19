@@ -2,6 +2,8 @@ import { ExecutionContext } from '../execution/ExecutionContext';
 import { VariableParser } from '../parser/VariableParser';
 import { ASTAction } from '../parser/ast/ASTAction';
 import { ParaType } from '../types/ParaType';
+import { ScopeType } from '../types/ScopeType';
+import { ScopedType } from '../types/ScopedType';
 import { SelectorType } from '../types/SelectorType';
 import { ValueReplacerHandler } from '../value/ValueReplacerHandler';
 
@@ -141,20 +143,19 @@ export class RowDefinitionBinder<
                 break;
         }
 
-        switch (rowDefinition.scopeType) {
-            case SelectorType.True:
+        switch (rowDefinition.scopedType) {
+            case ScopedType.True:
                 throwIf(!ast.scope.value, () => `'${this.tableName}': key '${ast.match}' must have a scope!`);
                 break;
-            case SelectorType.Optional:
+            case ScopedType.Optional:
                 break;
-            case SelectorType.False:
+            case ScopedType.False:
                 throwIf(
                     !!ast.scope?.value,
                     () =>
-                        `'${this.tableName}': key '${ast.match}' cannot have a scope: '${ast.scope.value}\n${this.parser.getValueWithMarker(
-                            ast.scope.location,
-                            ast.match
-                        )}'!`
+                        `'${this.tableName}': key '${ast.match}' cannot have a scope: '${
+                            ast.scope.value
+                        }'\n${this.parser.getValueWithMarker(ast.scope.location, ast.match)}'!`
                 );
                 break;
         }

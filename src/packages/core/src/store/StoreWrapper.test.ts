@@ -1,9 +1,9 @@
-import { fail } from 'assert';
-
 import { DataContent } from '../data/DataContent';
 import { NativeContent } from '../data/NativeContent';
 import { ObjectContent } from '../data/ObjectContent';
 import { TextContent } from '../data/TextContent';
+import { VariableParser } from '../parser/VariableParser';
+import { ValueReplaceArg } from '../value/ValueReplacer';
 
 import { Store } from './Store';
 import { StoreMap } from './StoreMap';
@@ -12,19 +12,24 @@ import { StoreWrapper } from './StoreWrapper';
 /**
  *
  */
-class MockStore implements StoreMap {
+const pegParser = new VariableParser();
+
+/**
+ *
+ */
+class MockStore extends StoreMap {
     private map = new Map<string, DataContent>();
 
-    put(key: string, value: DataContent) {
-        this.map.set(key, value);
+    put(ast: ValueReplaceArg, value: DataContent) {
+        this.map.set(this.getKey(ast), value);
     }
 
-    get(key: string): DataContent {
-        return this.map.get(key);
+    get(ast: ValueReplaceArg): DataContent {
+        return this.map.get(this.getKey(ast));
     }
 
-    has(key: string): boolean {
-        return this.map.has(key);
+    has(ast: ValueReplaceArg): boolean {
+        return this.map.has(this.getKey(ast));
     }
 
     clear() {
@@ -73,8 +78,10 @@ describe('check store', () => {
      */
     it('add value to internal store', () => {
         sut = new StoreWrapper(null, 'test');
-        sut.put('a', 'b');
-        expect(sut.get('a').toString()).toBe('b');
+        const ast = pegParser.parseAction('store:a');
+
+        sut.put(ast, 'b');
+        expect(sut.get(ast).toString()).toBe('b');
     });
 
     /**
@@ -82,26 +89,35 @@ describe('check store', () => {
      */
     it('clear values from internal store', () => {
         sut = new StoreWrapper(null, 'test');
-        sut.put('a', 'b');
+        const ast = pegParser.parseAction('store:a');
+
+        sut.put(ast, 'b');
         sut.clear();
-        expect(sut.get('a')).toBeNull();
+        expect(sut.get(ast)).toBeNull();
     });
 
     /**
      *
      */
     it('get simple string', () => {
-        sut.put('a', 'b');
-        expect(sut.get('a')).toBeInstanceOf(TextContent);
-        expect(sut.get('a').toString()).toBe('b');
+        const ast = pegParser.parseAction('store:a');
+
+        sut.put(ast, 'b');
+
+        expect(sut.get(ast)).toBeInstanceOf(TextContent);
+        expect(sut.get(ast).toString()).toBe('b');
     });
 
     /**
      *
      */
     it('get object from store (first level)', () => {
-        sut.put('a', { b: 'c' });
-        const value = sut.get('a').valueOf();
+        const ast = pegParser.parseAction('store:a');
+
+        sut.put(ast, { b: 'c' });
+
+        const value = sut.get(ast).valueOf();
+
         expect(value).toStrictEqual({ b: 'c' });
         expect(JSON.stringify(value)).toBe('{"b":"c"}');
     });
@@ -110,62 +126,79 @@ describe('check store', () => {
      *
      */
     it('get object from store (first level), plain store', () => {
+        const ast = pegParser.parseAction('store:a');
         sut = new StoreWrapper({}, 'test');
-        sut.put('a', { b: 'c' });
-        expect(sut.get('a').valueOf()).toStrictEqual({ b: 'c' });
+
+        sut.put(ast, { b: 'c' });
+
+        expect(sut.get(ast).valueOf()).toStrictEqual({ b: 'c' });
     });
 
     /**
      *
      */
     it('get object from store (second level)', () => {
-        sut.put('a', { b: 'c' });
-        expect(sut.get('a#b').valueOf()).toStrictEqual('c');
+        const ast = pegParser.parseAction('store:a');
+        sut.put(ast, { b: 'c' });
+
+        const astGet = pegParser.parseAction('store:a#b');
+        expect(sut.get(astGet).valueOf()).toBe('c');
     });
 
     /**
      *
      */
     it('get object from store (string, text content)', () => {
-        sut.put('a', new TextContent('c'));
-        expect(sut.get('a').valueOf()).toStrictEqual('c');
+        const ast = pegParser.parseAction('store:a');
+
+        sut.put(ast, new TextContent('c'));
+
+        expect(sut.get(ast).valueOf()).toBe('c');
     });
 
     /**
      *
      */
     it('get object from store (string, object content)', () => {
-        sut.put('a', new ObjectContent('c'));
-        expect(sut.get('a').valueOf()).toStrictEqual('c');
+        const ast = pegParser.parseAction('store:a');
+
+        sut.put(ast, new ObjectContent('c'));
+
+        expect(sut.get(ast).valueOf()).toBe('c');
     });
 
     /**
      *
      */
     it('get deep structure from string value', () => {
-        sut.put('a', 'b');
+        const ast = pegParser.parseAction('store:a');
 
-        expect(() => sut.get('a.b.c')).toThrowError('getting "a.b.c" not possible, because "b" is not an object or an array');
+        sut.put(ast, 'b');
+
+        const astGet = pegParser.parseAction('store:a#b.c');
+        expect(() => sut.get(astGet)).toThrow(`store 'a' -> getting "b.c" not possible, because "b" is not an object or an array`);
     });
 
     /**
      *
      */
     it('get as string must return a string', () => {
-        sut.put('a', 'b');
+        const ast = pegParser.parseAction('store:a');
+        sut.put(ast, 'b');
 
-        const value = sut.get('a').toString();
-        if (typeof value !== 'string') {
-            fail(`return type must be of type 'string'`);
-        }
+        const value = sut.get(ast).valueOf();
+
+        expect(value).toBeString();
     });
 
     /**
      *
      */
     it('set object value', () => {
-        sut.put('a.b', new TextContent('hallo'));
-        expect(sut.get('a.b').toString()).toBe('hallo');
+        const ast = pegParser.parseAction('store:a#b');
+        sut.put(ast, new TextContent('hallo'));
+
+        expect(sut.get(ast).valueOf()).toBe('hallo');
     });
 
     /**
@@ -178,10 +211,12 @@ describe('check store', () => {
         valC.set('c', new TextContent('hallo'));
         valB.set('b', valC);
 
-        sut.put('a', valB);
+        const ast = pegParser.parseAction('store:a');
+        sut.put(ast, valB);
 
-        expect(sut.get('a#b#c').toString()).toBe('hallo');
-        expect(sut.get('a').valueOf()).toStrictEqual({ b: { c: 'hallo' } });
+        const astDeep = pegParser.parseAction('store:a#b.c');
+        expect(sut.get(astDeep).toString()).toBe('hallo');
+        expect(sut.get(ast).valueOf()).toStrictEqual({ b: { c: 'hallo' } });
     });
 
     /**
@@ -194,10 +229,12 @@ describe('check store', () => {
         valC.set('c', new NativeContent(1));
         valB.set('b', valC);
 
-        sut.put('a', valB);
+        const ast = pegParser.parseAction('store:a');
+        sut.put(ast, valB);
 
-        expect(sut.get('a#b#c').toString()).toBe('1');
-        expect(sut.get('a').valueOf()).toStrictEqual({ b: { c: 1 } });
+        const astDeep = pegParser.parseAction('store:a#b.c');
+        expect(sut.get(astDeep).toString()).toBe('1');
+        expect(sut.get(ast).valueOf()).toStrictEqual({ b: { c: 1 } });
     });
 
     /**
@@ -210,10 +247,12 @@ describe('check store', () => {
         valC.set('c', new NativeContent(true));
         valB.set('b', valC);
 
-        sut.put('a', valB);
+        const ast = pegParser.parseAction('store:a');
+        sut.put(ast, valB);
 
-        expect(sut.get('a.b.c').toString()).toBe('true');
-        expect(sut.get('a').valueOf()).toStrictEqual({ b: { c: true } });
+        const astDeep = pegParser.parseAction('store:a#b.c');
+        expect(sut.get(astDeep).toString()).toBe('true');
+        expect(sut.get(ast).valueOf()).toStrictEqual({ b: { c: true } });
     });
 
     /**
@@ -226,94 +265,69 @@ describe('check store', () => {
         valC.set('c', new NativeContent(false));
         valB.set('b', valC);
 
-        sut.put('a', valB);
+        const ast = pegParser.parseAction('store:a');
+        sut.put(ast, valB);
 
-        expect(sut.get('a#b#c').toString()).toBe('false');
-        expect(sut.get('a').valueOf()).toStrictEqual({ b: { c: false } });
+        const astDeep = pegParser.parseAction('store:a#b.c');
+        expect(sut.get(astDeep).toString()).toBe('false');
+        expect(sut.get(ast).valueOf()).toStrictEqual({ b: { c: false } });
     });
 
     /**
      *
      */
     it('set object value (structure)', () => {
-        sut.put('var.a', new NativeContent(1));
-        sut.put('var.b', new NativeContent(2));
+        const astA = pegParser.parseAction('store:var#a');
+        sut.put(astA, new NativeContent(1));
 
-        expect(sut.get('var').toString()).toBe('{"a":1,"b":2}');
+        const astB = pegParser.parseAction('store:var#b');
+        sut.put(astB, new NativeContent(2));
+
+        const ast = pegParser.parseAction('store:var');
+        expect(sut.get(ast).toString()).toBe('{"a":1,"b":2}');
     });
 
     /**
      *
      */
     it('try setting with empty string', () => {
-        try {
-            sut.put('', 'a');
-        } catch (error) {
-            expect(error.message).toBe('name must be defined for saving value in storage');
-            return;
-        }
-
-        throw Error('error must occur');
+        const ast = pegParser.parseAction('store');
+        expect(() => sut.put(ast, 'a')).toThrow('qualifier must be defined for identifying the store name');
     });
 
     /**
      *
      */
     it('try getting none existing value', () => {
-        expect(sut.get('a')).toBeNull();
-    });
-
-    /**
-     *
-     */
-    it('try getting with empty string', () => {
-        try {
-            sut.get('');
-        } catch (error) {
-            expect(error.message).toBe(`name must be defined for getting value from storage`);
-            return;
-        }
-
-        throw Error('error must occur');
+        const ast = pegParser.parseAction('store:a');
+        expect(sut.get(ast)).toBeNull();
     });
 
     /**
      *
      */
     it('try getting with null', () => {
-        try {
-            sut.get(null);
-        } catch (error) {
-            expect(error.message).toBe(`name must be defined for getting value from storage`);
-            return;
-        }
-
-        throw Error('error must occur');
+        expect(() => sut.get(null)).toThrow(`qualifier must be defined for identifying the store name`);
     });
 
     /**
      *
      */
     it('try getting with undefined', () => {
-        try {
-            sut.get(undefined);
-        } catch (error) {
-            expect(error.message).toBe(`name must be defined for getting value from storage`);
-            return;
-        }
-
-        throw Error('error must occur');
+        expect(() => sut.get(undefined)).toThrow(`qualifier must be defined for identifying the store name`);
     });
 
     /**
      *
      */
     it('clear store', () => {
-        sut.put('a', 'b');
-        expect(sut.get('a').toString()).toEqual('b');
+        const ast = pegParser.parseAction('store:a');
+        sut.put(ast, 'b');
+
+        expect(sut.get(ast).toString()).toBe('b');
 
         sut.clear();
-        expect(sut.get('a')).toBeNull();
+        expect(sut.get(ast)).toBeNull();
     });
 
     /**

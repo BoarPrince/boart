@@ -26,7 +26,7 @@ export class SelectorExtractor {
      */
     private static throwRecursiveArrayError(property: string, current: string, content?: ContentType): DataContent {
         const contentMsg = !content ? '' : `\nData context:\n${JSON.stringify(content, null, '  ')}`;
-        throw Error(`getting "${property}" not possible, because "${current}" does not used for an array.${contentMsg}`);
+        throw Error(`getting "${property}" not possible, because "${current}" is not used for an array.${contentMsg}`);
     }
 
     /**
@@ -36,7 +36,7 @@ export class SelectorExtractor {
         let contentValue = DataContentHelper.create(value);
         let propertyValue: DataContent;
 
-        for (const selector of selectors) {
+        for (const selector of selectors || []) {
             // Content must be an object, otherwise no selector can be used
             // array is an object
             const contentValueAsObject = contentValue?.asDataContentObject();
@@ -46,7 +46,7 @@ export class SelectorExtractor {
 
             if (selector.type === SelectorType.SIMPLE) {
                 const extractedValue = contentValueAsObject.get(selector.value);
-                propertyValue = extractedValue ? DataContentHelper.create(extractedValue) : null;
+                propertyValue = extractedValue != null ? DataContentHelper.create(extractedValue) : null;
             } else {
                 // if the selector starts with an array selector
                 propertyValue = propertyValue ?? contentValue;
@@ -59,6 +59,12 @@ export class SelectorExtractor {
                       propertyValue.asDataContentObject();
 
                 if (arrayPropertyValue) {
+                    if (!Array.isArray(arrayPropertyValue.valueOf())) {
+                        return throwError
+                            ? SelectorExtractor.throwRecursiveArrayError(selectors.match, selector.value, arrayPropertyValue)
+                            : null;
+                    }
+
                     switch (selector.type) {
                         case SelectorType.INDEX: {
                             propertyValue = DataContentHelper.create(arrayPropertyValue.get(selector.index));
@@ -97,11 +103,7 @@ export class SelectorExtractor {
                             break;
                         }
                         case SelectorType.WILDCARD: {
-                            const wildCardArray = [];
-                            arrayPropertyValue.keys().forEach((key, index) => {
-                                wildCardArray[index] = arrayPropertyValue.get(key);
-                            });
-                            propertyValue = new WildcardObjectContent(wildCardArray);
+                            propertyValue = new WildcardObjectContent(arrayPropertyValue.valueOf() as Array<object>);
                             break;
                         }
                     }
@@ -136,18 +138,20 @@ export class SelectorExtractor {
      *
      */
     public static setValueBySelector(selectors: SelectorArray, value: ContentType, contentValue: DataContent): DataContent {
-        const lastSelector = selectors.pop();
+        const selectors_: SelectorArray = Object.assign([], selectors);
+
+        const lastSelector = selectors_.pop();
         const selectorList = new Array<{ sel: Selector; cont: DataContent }>();
 
         // all selectors are optional when setting a value
-        selectors.forEach((selector) => (selector.optional = true));
+        selectors_.forEach((selector) => (selector.optional = true));
 
         let currentContentValue = contentValue;
-        for (const selector of selectors) {
+        for (const selector of selectors_) {
             selectorList.push({ sel: selector, cont: currentContentValue });
 
             const selectorArry: SelectorArray = [selector];
-            selectorArry.match = selectors.match;
+            selectorArry.match = selectors_.match;
             const contentValueAfterSelect = this.getValueBySelector(selectorArry, currentContentValue, false);
 
             // auto extend object tree
@@ -163,7 +167,7 @@ export class SelectorExtractor {
             if (!currentContentValue.asDataContentObject()) {
                 throw Error(
                     `cannot set value to an '${ContentInstance[contentValueAfterSelect.type]}' value, selector: ${JSON.stringify(
-                        selectors.match
+                        selectors_.match
                     )}, current element: ${lastSelector.value}`
                 );
             }
@@ -175,7 +179,7 @@ export class SelectorExtractor {
             .reverse()
             .reduce(
                 (currentValue, selectorElement) => SelectorExtractor.setValue(selectorElement.sel, selectorElement.cont, currentValue),
-                new ObjectContent(value)
+                DataContentHelper.create(value)
             );
     }
 
