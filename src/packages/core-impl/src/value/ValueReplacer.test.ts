@@ -371,6 +371,7 @@ describe('store', () => {
             match: 'store:a',
             name: { stringValue: 'store:a', value: 'store' },
             qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+            scope: null,
             selectors: []
         });
         expect(Store.instance.localStore.get).not.toHaveBeenCalled();
@@ -458,6 +459,7 @@ describe('store', () => {
             match: 'store:a',
             name: { stringValue: 'store:a', value: 'store' },
             qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+            scope: null,
             selectors: []
         };
         expect(Store.instance.globalStore.get).toHaveBeenCalledWith(calledStructure);
@@ -487,6 +489,7 @@ describe('store', () => {
             match: 'store:a',
             name: { stringValue: 'store:a', value: 'store' },
             qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+            scope: null,
             selectors: []
         };
         expect(Store.instance.localStore.get).toHaveBeenCalledWith(calledStructure);
@@ -517,6 +520,7 @@ describe('store', () => {
             match: 'store:a',
             name: { stringValue: 'store:a', value: 'store' },
             qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+            scope: null,
             selectors: []
         };
         expect(Store.instance.testStore.get).toHaveBeenCalledWith(calledStructure);
@@ -546,6 +550,7 @@ describe('store', () => {
             match: 'store:a',
             name: { stringValue: 'store:a', value: 'store' },
             qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+            scope: null,
             selectors: []
         };
         expect(Store.instance.stepStore.get).toHaveBeenCalledWith(calledStructure);
@@ -575,6 +580,8 @@ describe('store', () => {
             match: 'store:a#b',
             name: { stringValue: 'store:a', value: 'store' },
             qualifier: { paras: [], selectorMatch: 'a#b', stringValue: 'a', value: 'a' },
+            scope: null,
+
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             selectors: expect.any(Array)
         };

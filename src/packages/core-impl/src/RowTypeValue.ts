@@ -1,6 +1,4 @@
-import { BaseRowType, ExecutionContext, key, value } from '@boart/core';
-
-import { ASTAction } from './parser/ast/ASTAction';
+import { ASTAction, BaseRowType, ExecutionContext, key, value } from '@boart/core';
 
 /**
  *

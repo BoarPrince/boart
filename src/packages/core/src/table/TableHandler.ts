@@ -44,7 +44,7 @@ export class TableHandler<
      * used only for test reasons
      */
     public getExecutionEngine(): ExecutionEngine<TExecutionContext, TRowType> {
-        this.executionEngine = this.executionEngineCreator();
+        this.executionEngine = this.executionEngine ?? this.executionEngineCreator();
         return this.executionEngine;
     }
 

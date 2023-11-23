@@ -54,20 +54,20 @@ export class StoreReplacer implements ValueReplacer {
 
     /**
      * Reads value from the store
-     * @param arg parser arguments
+     * @param ast parser arguments
      * @param store store to be used
      */
-    replace(arg: ValueReplaceArg, store: StoreWrapper): string {
+    replace(ast: ValueReplaceArg, store: StoreWrapper): string {
         if (!store) {
             // if no scope is defined, iterate over the scopes
             for (const store of this.stores) {
-                const storeContent = store.get(arg);
+                const storeContent = store.get(ast);
                 if (storeContent != null) {
                     return storeContent.toString();
                 }
             }
         } else {
-            return store.get(arg)?.toString();
+            return store.get(ast)?.toString();
         }
     }
 }

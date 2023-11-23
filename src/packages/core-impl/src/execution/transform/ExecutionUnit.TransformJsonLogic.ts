@@ -1,4 +1,4 @@
-import { DataContent, DataContentHelper, ExecutionUnit, ParaType, SelectorType } from '@boart/core';
+import { DataContentHelper, ExecutionUnit, ParaType, SelectorExtractor, SelectorType } from '@boart/core';
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -54,6 +54,6 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
 
         context.execution.transformed = !row.selector
             ? transformedResult
-            : DataContentHelper.setByPath(row.selector, transformedResult, context.execution.transformed);
+            : SelectorExtractor.setValueBySelector(row.ast.selectors, transformedResult, context.execution.transformed);
     }
 }

@@ -31,7 +31,7 @@ export class ContextReplacer implements ValueReplacer {
         // or   read context:payload#id -> get the payload#id
         const value = Context.instance.get(ast);
         if (!DataContentHelper.isNullOrUndefined(value)) {
-            return value.toString();
+            return DataContentHelper.create(value).toString();
         }
 
         if (!ast.default) {

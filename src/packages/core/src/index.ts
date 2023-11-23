@@ -31,6 +31,9 @@ import { ExpectedOperatorInitializer } from './expected/ExpectedOperatorInitiali
 import { Generator } from './generator/Generator';
 import { GeneratorHandler } from './generator/GeneratorHandler';
 import { VariableParser } from './parser/VariableParser';
+import { ASTAction } from './parser/ast/ASTAction';
+import { ASTValue } from './parser/ast/ASTValue';
+import { ASTVariable } from './parser/ast/ASTVariable';
 import { SelectorType as ASTSelectorType } from './parser/ast/SelectorType';
 import { LocalContext } from './runtime/LocalContext';
 import { Runtime } from './runtime/Runtime';
@@ -72,6 +75,9 @@ import { ValueReplacerHandler } from './value/ValueReplacerHandler';
 export {
     ArraySubject,
     ASTSelectorType,
+    ASTVariable,
+    ASTValue,
+    ASTAction,
     BaseRowMetaDefinition,
     BaseRowType,
     ContentInstance,

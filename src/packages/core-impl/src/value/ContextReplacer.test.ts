@@ -15,6 +15,13 @@ const sut = new ContextReplacer();
 /**
  *
  */
+beforeEach(() => {
+    Context.instance.clear();
+});
+
+/**
+ *
+ */
 it('get value - int', () => {
     const ast = pegParser.parseAction('context:a');
 
@@ -47,15 +54,14 @@ it('get value - null', () => {
  */
 it('get value deep - null', () => {
     const ast = pegParser.parseAction('context:a#b');
-
     Context.instance.put(ast, null);
-    expect(() => sut.replace(ast)).toThrow(`context 'a#b' not defined`);
+    expect(() => sut.replace(ast)).toThrow(`'context:a#b' not defined`);
 });
 
 /**
  *
  */
-it('get value - null', () => {
+it('get value - null - 2', () => {
     const ast = pegParser.parseAction('context:a');
 
     Context.instance.put(ast, null);

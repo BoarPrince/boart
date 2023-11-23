@@ -1,4 +1,4 @@
-import { DataContentHelper, ExecutionUnit, ParaType, SelectorType } from '@boart/core';
+import { DataContentHelper, ExecutionUnit, ParaType, SelectorExtractor, SelectorType } from '@boart/core';
 import JSPath from 'jspath';
 
 import { DataContext } from '../../DataExecutionContext';
@@ -70,6 +70,6 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
 
         context.execution.transformed = !row.selector
             ? transformedResult
-            : DataContentHelper.setByPath(row.selector, transformedResult, context.execution.transformed);
+            : SelectorExtractor.setValueBySelector(row.ast.selectors, transformedResult, context.execution.transformed);
     }
 }

@@ -1,10 +1,31 @@
-import { ContentType, ExecutionContext, NullContent, ObjectContent } from '@boart/core';
+import { ASTVariable, ContentType, ExecutionContext, NullContent, ObjectContent, VariableParser } from '@boart/core';
 
 import { DataExecutionContext } from '../../DataExecutionContext';
 import { RowTypePropValue } from '../../RowTypePropValue';
 import { RowTypeValue } from '../../RowTypeValue';
 
 import { PropertySetterExecutionUnit } from './PropertySetterExecutionUnit';
+
+/**
+ *
+ */
+const variableParser = new VariableParser();
+
+/**
+ *
+ */
+const defaultActionSelectorSetter = (aggregationValue: ContentType, rowValue: ContentType, ast: ASTVariable): ContentType => {
+    const selector: string = ast.selectors.match;
+    const value = !aggregationValue ? '' : aggregationValue.toString() + '&';
+    return `${value}${selector}=${rowValue.toString()}`;
+};
+
+/**
+ *
+ */
+const defaultActionSelectorModifier = (rowValue: ContentType): ContentType => {
+    return `-${rowValue?.toString() || ''}-`;
+};
 
 /**
  *
@@ -59,11 +80,12 @@ beforeEach(() => {
 it('check (2 levels)', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
 
+    const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'xxx'
         },
@@ -80,11 +102,12 @@ it('check (2 levels)', () => {
 it('check (1 level)', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config');
 
+    const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'xxx'
         },
@@ -102,11 +125,12 @@ it('check with concating (but not using)', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: true });
 
     context.config.value = '';
+    const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'xxx'
         },
@@ -123,11 +147,12 @@ it('check with concating (but not using)', () => {
 it('check null initialized', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
 
+    const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'xxx'
         },
@@ -144,11 +169,11 @@ it('check null initialized', () => {
 it('check null initialized and selector', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
 
+    const ast = variableParser.parseAction('a:a#a');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
-        selector: 'a',
-        ast: null,
+        ast,
         values_replaced: {
             value: 'xxx'
         },
@@ -166,11 +191,12 @@ it('check NullContent initialized', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
     context.config.value = new NullContent();
 
+    const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'xxx'
         },
@@ -188,11 +214,11 @@ it('check NullContent initialized and selector', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
     context.config.value = new NullContent();
 
+    const ast = variableParser.parseAction('a:a#a');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
-        selector: 'a',
-        ast: null,
+        ast,
         values_replaced: {
             value: 'xxx'
         },
@@ -209,11 +235,12 @@ it('check NullContent initialized and selector', () => {
 it('check with concating', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: true });
 
+    const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'xxx'
         },
@@ -224,7 +251,7 @@ it('check with concating', () => {
         key: 'a:a',
         keyPara: undefined,
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'yyy'
         },
@@ -247,11 +274,11 @@ it('check with selector', () => {
         e: 3
     });
 
+    const ast = variableParser.parseAction('a:a#c');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
-        selector: 'c',
-        ast: null,
+        ast,
         values_replaced: {
             value: 'f'
         },
@@ -273,22 +300,22 @@ it('check with selector - two changes', () => {
         e: 3
     });
 
+    const ast = variableParser.parseAction('a:a#c');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
-        selector: 'c',
-        ast: null,
+        ast,
         values_replaced: {
             value: 'f'
         },
         _metaDefinition: null
     });
 
+    const ast2 = variableParser.parseAction('a:a#e');
     const row2 = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
-        selector: 'e',
-        ast: null,
+        ast: ast2,
         values_replaced: {
             value: '4'
         },
@@ -307,11 +334,11 @@ it('check with selector - use object in context', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
     context.config.value = new ObjectContent();
 
+    const ast = variableParser.parseAction('param#c');
     const row = new RowTypePropValue<DataContext>({
         key: 'param',
         keyPara: undefined,
-        selector: 'c',
-        ast: null,
+        ast,
         values_replaced: {
             value: '1'
         },
@@ -336,11 +363,11 @@ it('check with actionPara (deep)', () => {
         e: 3
     });
 
+    const ast = variableParser.parseAction('a:a#a.f');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
-        selector: 'a.f',
-        ast: null,
+        ast,
         values_replaced: {
             value: '5'
         },
@@ -357,11 +384,11 @@ it('check with actionPara (deep)', () => {
 it('check with actionPara (null init)', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: false });
 
+    const ast = variableParser.parseAction('a:a#a.f');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
-        selector: 'a.f',
-        ast: null,
+        ast,
         values_replaced: {
             value: '5'
         },
@@ -381,11 +408,11 @@ it('check with actionPara (use actionParaModifier)', () => {
         actionSelectorModifier: (rowValue) => `-${String(rowValue?.toString())}-`
     });
 
+    const ast = variableParser.parseAction('a:a#a.f');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: undefined,
-        selector: 'a.f',
-        ast: null,
+        ast,
         values_replaced: {
             value: '5'
         },
@@ -405,11 +432,12 @@ it('check without actionPara (use defaultModifier)', () => {
         defaultModifier: (rowValue) => `-${String(rowValue?.toString())}-`
     });
 
+    const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
         key: 'a:a',
         keyPara: '',
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: '5'
         },
@@ -426,16 +454,17 @@ it('check without actionPara (use defaultModifier)', () => {
 it('check query style (actionParaSetter), one para', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: false,
-        actionSelectorSetter: (_value: ContentType, rowValue: ContentType, para: string): ContentType => {
-            return `${para}=${String(rowValue?.toString())}`;
+        actionSelectorSetter: (_value: ContentType, rowValue: ContentType, ast: ASTVariable): ContentType => {
+            const selector: string = ast.selectors.match;
+            return `${selector}=${String(rowValue?.toString())}`;
         }
     });
 
+    const ast = variableParser.parseAction('query#id');
     const row = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
-        selector: 'id',
-        ast: null,
+        ast,
         values_replaced: {
             value: '5'
         },
@@ -452,37 +481,36 @@ it('check query style (actionParaSetter), one para', () => {
 it('check query style (actionParaSetter), three paras', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: false,
-        actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-            `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString() || ''}`
+        actionSelectorSetter: defaultActionSelectorSetter
     });
 
+    const ast = variableParser.parseAction('query#id');
     const row = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
-        selector: 'id',
-        ast: null,
+        ast,
         values_replaced: {
             value: '5'
         },
         _metaDefinition: null
     });
 
+    const ast2 = variableParser.parseAction('query#id2');
     const row2 = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
-        selector: 'id2',
-        ast: null,
+        ast: ast2,
         values_replaced: {
             value: '6'
         },
         _metaDefinition: null
     });
 
+    const ast3 = variableParser.parseAction('query#id3');
     const row3 = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
-        selector: 'id3',
-        ast: null,
+        ast: ast3,
         values_replaced: {
             value: '7'
         },
@@ -501,18 +529,16 @@ it('check query style (actionParaSetter), three paras', () => {
 it('check query style (actionParaSetter and modifier)', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: false,
-        actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-            `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString() || ''}`,
-        actionSelectorModifier: (rowValue: ContentType): ContentType => {
-            return `-${rowValue?.toString() || ''}-`;
-        }
+        actionSelectorSetter: defaultActionSelectorSetter,
+        actionSelectorModifier: defaultActionSelectorModifier
     });
 
+    const ast = variableParser.parseAction('query#id');
     const row = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
         selector: 'id',
-        ast: null,
+        ast,
         values_replaced: {
             value: '5'
         },
@@ -539,11 +565,11 @@ it('check query style (default and modifier)', () => {
         }
     });
 
+    const ast = variableParser.parseAction('query');
     const row = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: '',
-        selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'a=1'
         },
@@ -553,8 +579,7 @@ it('check query style (default and modifier)', () => {
     const row2 = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: '',
-        selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'b=2'
         },
@@ -573,11 +598,8 @@ it('check query style (default, para and modifier)', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: true,
         delimiter: '&',
-        actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-            `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString() || ''}`,
-        actionSelectorModifier: (rowValue: ContentType): ContentType => {
-            return `-${rowValue?.toString() || ''}-`;
-        },
+        actionSelectorSetter: defaultActionSelectorSetter,
+        actionSelectorModifier: defaultActionSelectorModifier,
         defaultModifier: (rowValue: ContentType): ContentType => {
             return (rowValue || '')
                 .toString()
@@ -587,11 +609,12 @@ it('check query style (default, para and modifier)', () => {
         }
     });
 
+    const ast = variableParser.parseAction('query');
     const row = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
         selector: '',
-        ast: null,
+        ast,
         values_replaced: {
             value: 'a=1'
         },
@@ -602,18 +625,19 @@ it('check query style (default, para and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: '',
-        ast: null,
+        ast,
         values_replaced: {
             value: 'b=2'
         },
         _metaDefinition: null
     });
 
+    const ast3 = variableParser.parseAction('query#c');
     const row3 = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
         selector: 'c',
-        ast: null,
+        ast: ast3,
         values_replaced: {
             value: '3'
         },
@@ -633,11 +657,8 @@ it('check query style - default, para and modifier', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: true,
         delimiter: '&',
-        actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-            `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString() || ''}`,
-        actionSelectorModifier: (rowValue: ContentType): ContentType => {
-            return `-${String(rowValue?.toString())}-`;
-        },
+        actionSelectorSetter: defaultActionSelectorSetter,
+        actionSelectorModifier: defaultActionSelectorModifier,
         defaultModifier: (rowValue: ContentType): ContentType => {
             return String(rowValue)
                 .toString()
@@ -647,11 +668,12 @@ it('check query style - default, para and modifier', () => {
         }
     });
 
+    const ast = variableParser.parseAction('query');
     const row = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
         selector: '',
-        ast: null,
+        ast,
         values_replaced: {
             value: 'a=1'
         },
@@ -662,18 +684,18 @@ it('check query style - default, para and modifier', () => {
         key: 'query',
         keyPara: undefined,
         selector: '',
-        ast: null,
+        ast,
         values_replaced: {
             value: 'b=2'
         },
         _metaDefinition: null
     });
 
+    const ast3 = variableParser.parseAction('query#c');
     const row3 = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
-        selector: 'c',
-        ast: null,
+        ast: ast3,
         values_replaced: {
             value: '3'
         },
@@ -693,11 +715,8 @@ it('check query style (default, para, default and modifier)', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
         concat: true,
         delimiter: '&',
-        actionSelectorSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType =>
-            `${!value ? '' : value?.toString() + '&'}${para}=${rowValue?.toString() || ''}`,
-        actionSelectorModifier: (rowValue: ContentType): ContentType => {
-            return `-${String(rowValue?.toString())}-`;
-        },
+        actionSelectorSetter: defaultActionSelectorSetter,
+        actionSelectorModifier: defaultActionSelectorModifier,
         defaultModifier: (rowValue: ContentType): ContentType => {
             return String(rowValue)
                 .toString()
@@ -707,11 +726,12 @@ it('check query style (default, para, default and modifier)', () => {
         }
     });
 
+    const ast = variableParser.parseAction('query');
     const row = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
         selector: '',
-        ast: null,
+        ast,
         values_replaced: {
             value: 'a=1'
         },
@@ -722,18 +742,18 @@ it('check query style (default, para, default and modifier)', () => {
         key: 'query',
         keyPara: undefined,
         selector: '',
-        ast: null,
+        ast,
         values_replaced: {
             value: 'b=2'
         },
         _metaDefinition: null
     });
 
+    const ast3 = variableParser.parseAction('query#c');
     const row3 = new RowTypePropValue<DataContext>({
         key: 'query',
         keyPara: undefined,
-        selector: 'c',
-        ast: null,
+        ast: ast3,
         values_replaced: {
             value: '3'
         },
@@ -762,11 +782,12 @@ it('check method/url style', () => {
         method: ''
     };
 
+    const ast = variableParser.parseAction('method:post');
     const row = new RowTypePropValue<DataContext>({
         key: 'method',
         keyPara: 'post',
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'http://xyz'
         },
@@ -790,33 +811,36 @@ it('check param definition (actionParaSetter), three paras', () => {
 
     context.config.value = {};
 
+    const ast = variableParser.parseAction('param:para1');
     const row = new RowTypePropValue<DataContext>({
         key: 'param',
         keyPara: 'para1',
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: '1'
         },
         _metaDefinition: null
     });
 
+    const ast2 = variableParser.parseAction('param:para2');
     const row2 = new RowTypePropValue<DataContext>({
         key: 'param',
         keyPara: 'para2',
         selector: undefined,
-        ast: null,
+        ast: ast2,
         values_replaced: {
             value: '2'
         },
         _metaDefinition: null
     });
 
+    const ast3 = variableParser.parseAction('param:para3');
     const row3 = new RowTypePropValue<DataContext>({
         key: 'param',
         keyPara: 'para3',
         selector: undefined,
-        ast: null,
+        ast: ast3,
         values_replaced: {
             value: '3'
         },
@@ -840,11 +864,12 @@ it('use default type converter', () => {
         defaultTypeConverter: (value: ContentType) => new ObjectContent(value)
     });
 
+    const ast = variableParser.parseAction('method');
     const row = new RowTypePropValue<DataContext>({
         key: 'method',
         keyPara: undefined,
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'x'
         },
@@ -862,11 +887,12 @@ it('use default type converter', () => {
 it('use enum value', () => {
     const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'type');
 
+    const ast = variableParser.parseAction('method');
     const row = new RowTypePropValue<DataContext>({
         key: 'method',
         keyPara: undefined,
         selector: undefined,
-        ast: null,
+        ast,
         values_replaced: {
             value: 'nor'
         },

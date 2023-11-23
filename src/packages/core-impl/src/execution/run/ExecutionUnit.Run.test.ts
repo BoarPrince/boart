@@ -1,10 +1,15 @@
-import { Context, NativeContent, NullContent, Runtime, RuntimeStatus, StepContext, Store } from '@boart/core';
+import { Context, Runtime, RuntimeStatus, StepContext, Store, VariableParser } from '@boart/core';
 
 import { AnyContext } from '../../AnyContext';
 import { RowTypeValue } from '../../RowTypeValue';
 
 import { RunNotExecutionUnit } from './ExecutionUnit.RunNot';
 import { RunOnlyExecutionUnit } from './ExecutionUnit.RunOnly';
+
+/**
+ *
+ */
+const variableParser = new VariableParser();
 
 /**
  *
@@ -57,11 +62,15 @@ describe('run:only', () => {
     it('with parameter', () => {
         sut.execute(null, {
             value: 'a:1:2',
-            actionPara: 'a'
+            actionPara: 'a',
+            ast: null
         } as RowTypeValue<AnyContext>);
 
-        expect(Context.instance.get('arg1').valueOf()).toBe(1);
-        expect(Context.instance.get('arg2').valueOf()).toBe(2);
+        const ast1 = variableParser.parseAction('context:arg1');
+        expect(Context.instance.get(ast1).valueOf()).toBe(1);
+
+        const ast2 = variableParser.parseAction('context:arg2');
+        expect(Context.instance.get(ast2).valueOf()).toBe(2);
     });
 
     /**
@@ -73,7 +82,8 @@ describe('run:only', () => {
             actionPara: 'b'
         } as RowTypeValue<AnyContext>);
 
-        expect(Context.instance.get('arg1')).toBeNull();
+        const ast1 = variableParser.parseAction('context:arg1');
+        expect(Context.instance.get(ast1)).toBeNull();
     });
 });
 

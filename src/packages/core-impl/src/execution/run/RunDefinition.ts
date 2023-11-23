@@ -1,4 +1,4 @@
-import { Context } from '@boart/core';
+import { Context, ValueReplaceArg } from '@boart/core';
 
 import { RunArg } from './RunArg';
 
@@ -10,7 +10,10 @@ export class RunDefinition {
     /**
      *
      */
-    private constructor(public name: string, public args: Record<string, string>) {}
+    private constructor(
+        public name: string,
+        public args: Record<string, string>
+    ) {}
 
     /**
      *
@@ -25,7 +28,15 @@ export class RunDefinition {
      */
     public addArgsToContext(): void {
         Object.entries(this.args).forEach(([name, value]) => {
-            Context.instance.put(name, value);
+            const ast: ValueReplaceArg = {
+                match: name,
+                qualifier: {
+                    value: name,
+                    paras: [],
+                    stringValue: name
+                }
+            };
+            Context.instance.put(ast, value);
         });
     }
 }

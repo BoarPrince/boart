@@ -64,12 +64,6 @@ export class Context extends StoreMap {
      *
      */
     private getByAst(ast: ValueReplaceArg): ContentType {
-        const contextMapValue = this.contextMap.get(ast);
-        if (contextMapValue) {
-            // ...if context not exists, try map value
-            return contextMapValue;
-        }
-
         // try context value...
         const context = DataContentHelper.create(this.context).asDataContentObject();
 
@@ -78,9 +72,13 @@ export class Context extends StoreMap {
         const storeValue = context.get(storeName);
 
         ast.selectors.forEach((sel) => (sel.optional = true));
-        const contextValue = SelectorExtractor.getValueBySelector(ast.selectors, storeValue);
+        const contextValue = SelectorExtractor.getValueByAst(ast, storeValue);
 
-        return contextValue;
+        if (!contextValue?.isNullOrUndefined()) {
+            // ...if context not exists, try map value
+            return contextValue;
+        }
+        return this.contextMap.get(ast);
     }
 
     /**
@@ -102,5 +100,6 @@ export class Context extends StoreMap {
      */
     clear(): void {
         this.contextMap.clear();
+        this.context = {};
     }
 }

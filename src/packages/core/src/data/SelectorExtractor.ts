@@ -1,6 +1,7 @@
 import { Selector } from '../parser/ast/Selector';
 import { SelectorArray } from '../parser/ast/SelectorArray';
 import { SelectorType } from '../parser/ast/SelectorType';
+import { ValueReplaceArg } from '../value/ValueReplacer';
 
 import { ContentInstance } from './ContentInstance';
 import { ContentType } from './ContentType';
@@ -27,6 +28,21 @@ export class SelectorExtractor {
     private static throwRecursiveArrayError(property: string, current: string, content?: ContentType): DataContent {
         const contentMsg = !content ? '' : `\nData context:\n${JSON.stringify(content, null, '  ')}`;
         throw Error(`getting "${property}" not possible, because "${current}" is not used for an array.${contentMsg}`);
+    }
+
+    /**
+     *
+     */
+    public static getValueByAst(ast: ValueReplaceArg, value: ContentType, throwError = true): DataContent {
+        if (!!ast.default?.value) {
+            ast.selectors?.forEach((selector) => (selector.optional = true));
+        }
+
+        try {
+            return SelectorExtractor.getValueBySelector(ast.selectors, value, throwError);
+        } catch (error) {
+            throw new Error(`'${ast.match}' not defined`);
+        }
     }
 
     /**
@@ -137,6 +153,21 @@ export class SelectorExtractor {
     /**
      *
      */
+    public static setValueByAst(ast: ValueReplaceArg, value: ContentType, contentValue: DataContent): DataContent {
+        if (!!ast.default?.value) {
+            ast.selectors?.forEach((selector) => (selector.optional = true));
+        }
+
+        try {
+            return SelectorExtractor.setValueBySelector(ast.selectors, value, contentValue);
+        } catch (error) {
+            throw new Error(`'${ast.match}' not defined`);
+        }
+    }
+
+    /**
+     *
+     */
     public static setValueBySelector(selectors: SelectorArray, value: ContentType, contentValue: DataContent): DataContent {
         const selectors_: SelectorArray = Object.assign([], selectors);
 
@@ -175,18 +206,20 @@ export class SelectorExtractor {
 
         selectorList.push({ sel: lastSelector, cont: currentContentValue });
 
-        return selectorList
-            .reverse()
-            .reduce(
-                (currentValue, selectorElement) => SelectorExtractor.setValue(selectorElement.sel, selectorElement.cont, currentValue),
-                DataContentHelper.create(value)
-            );
+        return selectorList.reverse().reduce((currentValue, selectorElement) => {
+            const result = SelectorExtractor.setValue(selectorElement.sel, selectorElement.cont, currentValue);
+            return result;
+        }, DataContentHelper.create(value));
     }
 
     /**
      *
      */
     private static setValue(selector: Selector, contentValue: DataContent, value: ContentType): DataContent {
+        if (!selector) {
+            return DataContentHelper.create(value);
+        }
+
         switch (selector.type) {
             case SelectorType.SIMPLE: {
                 contentValue.asDataContentObject().set(selector.value, value);

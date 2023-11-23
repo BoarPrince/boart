@@ -91,11 +91,11 @@ export class VariableParser {
             return null;
         }
         try {
-            const result = variableParser.parse(match.match);
+            const result: ASTVariable = variableParser.parse(match.match);
             return this.addStringValueAccessor({
                 ...result,
                 match: match.input,
-                errs: result.errs || null
+                errs: (result as any).errs || null
             });
         } catch (e) {
             const error = e as ParserException;
