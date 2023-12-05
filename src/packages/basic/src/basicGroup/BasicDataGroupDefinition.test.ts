@@ -238,7 +238,7 @@ describe('basic group definition', () => {
          *
          */
         it('expected:data can check complete value - negate', async () => {
-            sut.handler.executionEngine.context.execution.data = new TextContent('xxx');
+            sut.handler.getExecutionEngine().context.execution.data = new TextContent('xxx');
 
             const tableDef = MarkdownTableReader.convert(
                 `|action           |value  |
@@ -700,8 +700,8 @@ describe('basic group definition', () => {
          *
          */
         it('null', async () => {
-            sut.handler.executionEngine.context.execution.data = new NullContent();
-            sut.handler.executionEngine.context.execution.transformed = new NullContent();
+            sut.handler.getExecutionEngine().context.execution.data = new NullContent();
+            sut.handler.getExecutionEngine().context.execution.transformed = new NullContent();
 
             const tableDef = MarkdownTableReader.convert(
                 `|action                  |value                            |
@@ -822,8 +822,8 @@ describe('basic group definition', () => {
          *
          */
         it('null', async () => {
-            sut.handler.executionEngine.context.execution.data = new NullContent();
-            sut.handler.executionEngine.context.execution.transformed = new NullContent();
+            sut.handler.getExecutionEngine().context.execution.data = new NullContent();
+            sut.handler.getExecutionEngine().context.execution.transformed = new NullContent();
 
             const tableDef = MarkdownTableReader.convert(
                 `|action          |value |

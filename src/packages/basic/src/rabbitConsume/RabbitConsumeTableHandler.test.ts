@@ -13,6 +13,7 @@ import {
     Store,
     TestContext,
     TextContent,
+    ValueReplaceArg,
     ValueReplacer,
     ValueReplacerHandler
 } from '@boart/core';
@@ -76,21 +77,18 @@ beforeEach(() => {
     Runtime.instance.localRuntime.notifyStart({} as LocalContext);
     Runtime.instance.testRuntime.notifyStart({} as TestContext);
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
-});
 
-/**
- *
- */
-beforeEach(() => {
     ValueReplacerHandler.instance.clear();
-    ValueReplacerHandler.instance.add('env', {
+    const item: ValueReplacer = {
         name: '',
         priority: 0,
-        scoped: ScopedType.false,
-        replace: (property: string): string => {
-            return property === 'rabbitmq_port' ? '0' : property;
+        config: null,
+        scoped: ScopedType.False,
+        replace: (ast: ValueReplaceArg): string => {
+            return ast.qualifier.value === 'rabbitmq_port' ? '0' : ast.qualifier.value;
         }
-    } as ValueReplacer);
+    };
+    ValueReplacerHandler.instance.add('env', item);
 });
 
 /**
@@ -126,8 +124,8 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
     });
 
     /**
@@ -154,7 +152,7 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual([{ a: '1' }, { b: '2' }]);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual([{ a: '1' }, { b: '2' }]);
     });
 
     /**
@@ -183,7 +181,7 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config).toEqual({
+        expect(sut.handler.getExecutionEngine().context.config).toEqual({
             count_max: null,
             count_min: 1,
             hostname: 'p',
@@ -235,7 +233,7 @@ describe('filter', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
     });
 
     /**
@@ -267,7 +265,7 @@ describe('filter', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
     });
 
     /**
@@ -305,7 +303,7 @@ describe('filter', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual([{ a: '1' }, { a: '2' }]);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual([{ a: '1' }, { a: '2' }]);
     });
 });
 
@@ -336,7 +334,7 @@ describe('expected', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
     });
 
     /**
@@ -362,7 +360,7 @@ describe('expected', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
     });
 
     /**
@@ -388,7 +386,7 @@ describe('expected', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
     });
 
     /**
@@ -475,8 +473,8 @@ describe('count', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { a: 2 }]);
+        expect(sut.handler.getExecutionEngine().context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { a: 2 }]);
     });
 
     /**
@@ -505,8 +503,8 @@ describe('count', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { a: 2 }]);
+        expect(sut.handler.getExecutionEngine().context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { a: 2 }]);
     });
 
     /**
@@ -576,8 +574,8 @@ describe('count', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual({ a: 1 });
+        expect(sut.handler.getExecutionEngine().context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual({ a: 1 });
     });
 
     /**
@@ -605,8 +603,8 @@ describe('count', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { b: 2 }]);
+        expect(sut.handler.getExecutionEngine().context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { b: 2 }]);
     });
 
     /**
@@ -633,8 +631,8 @@ describe('count', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual({ a: 1 });
+        expect(sut.handler.getExecutionEngine().context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual({ a: 1 });
     });
 
     /**
@@ -688,8 +686,8 @@ describe('count', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual({ a: 1 });
+        expect(sut.handler.getExecutionEngine().context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual({ a: 1 });
     });
 
     /**
@@ -718,8 +716,8 @@ describe('count', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { b: 2 }]);
+        expect(sut.handler.getExecutionEngine().context.execution.data).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { b: 2 }]);
     });
 
     /**
@@ -776,7 +774,7 @@ describe('count', () => {
         );
 
         await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(`maximum 2 message(s) expected, but 3 message(s) received`);
-        expect(sut.handler.executionEngine.context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { b: 2 }, { c: 3 }]);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { b: 2 }, { c: 3 }]);
     });
 });
 
@@ -807,7 +805,7 @@ describe('transform & output', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.transformed.getValue()).toEqual('x');
+        expect(sut.handler.getExecutionEngine().context.execution.transformed.getValue()).toEqual('x');
     });
 
     /**

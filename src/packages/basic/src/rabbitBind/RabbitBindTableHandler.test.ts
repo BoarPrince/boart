@@ -1,6 +1,19 @@
 import fs from 'fs';
 
-import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, RuntimeStatus, ScopeType, ScopedType, StepContext, Store, StoreWrapper, TestContext, ValueReplacer, ValueReplacerHandler } from '@boart/core';
+import {
+    LocalContext,
+    MarkdownTableReader,
+    Runtime,
+    RuntimeContext,
+    RuntimeStatus,
+    ScopedType,
+    StepContext,
+    Store,
+    TestContext,
+    ValueReplaceArg,
+    ValueReplacer,
+    ValueReplacerHandler
+} from '@boart/core';
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
 import { StepReport } from '@boart/protocol';
 
@@ -61,21 +74,18 @@ beforeEach(() => {
     Runtime.instance.localRuntime.notifyStart({} as LocalContext);
     Runtime.instance.testRuntime.notifyStart({} as TestContext);
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
-});
 
-/**
- *
- */
-beforeEach(() => {
     ValueReplacerHandler.instance.clear();
-    ValueReplacerHandler.instance.add('env', {
+    const item: ValueReplacer = {
         name: '',
         priority: 0,
-        scoped: ScopedType.false,
-        replace: (property: string): string => {
-            return property === 'rabbitmq_port' ? '0' : property;
+        config: null,
+        scoped: ScopedType.False,
+        replace: (ast: ValueReplaceArg): string => {
+            return ast.qualifier.value === 'rabbitmq_port' ? '0' : ast.qualifier.value;
         }
-    } as ValueReplacer);
+    };
+    ValueReplacerHandler.instance.add('env', item);
 });
 
 /**
@@ -103,10 +113,10 @@ describe('default', () => {
         const mock = await getAmqplibMock();
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config.exchange).toBe('exchange');
-        expect(sut.handler.executionEngine.context.config.queue).toBe('queue');
-        expect(sut.handler.executionEngine.context.config.queue_create).toBe(true);
-        expect(sut.handler.executionEngine.context.config.queue_delete).toBe(true);
+        expect(sut.handler.getExecutionEngine().context.config.exchange).toBe('exchange');
+        expect(sut.handler.getExecutionEngine().context.config.queue).toBe('queue');
+        expect(sut.handler.getExecutionEngine().context.config.queue_create).toBe(true);
+        expect(sut.handler.getExecutionEngine().context.config.queue_delete).toBe(true);
 
         expect(mock.channel.assertQueue).toBeCalledWith('queue', { durable: false });
         expect(mock.channel.bindQueue).toBeCalledWith('queue', 'exchange', '');

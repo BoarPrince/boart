@@ -11,6 +11,7 @@ import {
     StepContext,
     Store,
     TestContext,
+    ValueReplaceArg,
     ValueReplacer,
     ValueReplacerHandler
 } from '@boart/core';
@@ -80,21 +81,18 @@ describe('default', () => {
         Runtime.instance.localRuntime.notifyStart({} as LocalContext);
         Runtime.instance.testRuntime.notifyStart({} as TestContext);
         Runtime.instance.stepRuntime.notifyStart({} as StepContext);
-    });
 
-    /**
-     *
-     */
-    beforeEach(() => {
         ValueReplacerHandler.instance.clear();
-        ValueReplacerHandler.instance.add('env', {
+        const item: ValueReplacer = {
             name: '',
             priority: 0,
-            scoped: ScopedType.false,
-            replace: (property: string): string => {
-                return property === 'rabbitmq_port' ? '0' : property;
+            config: null,
+            scoped: ScopedType.False,
+            replace: (ast: ValueReplaceArg): string => {
+                return ast.qualifier.value === 'rabbitmq_port' ? '0' : ast.qualifier.value;
             }
-        } as ValueReplacer);
+        };
+        ValueReplacerHandler.instance.add('env', item);
     });
 
     /**
@@ -127,7 +125,7 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config).toEqual({
+        expect(sut.handler.getExecutionEngine().context.config).toEqual({
             exchange: '',
             hostname: 'rabbitmq_hostname',
             password: 'rabbitmq_password',
@@ -179,7 +177,7 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config).toEqual({
+        expect(sut.handler.getExecutionEngine().context.config).toEqual({
             exchange: 'myExchange',
             hostname: 'rabbitmq_hostname',
             password: 'rabbitmq_password',

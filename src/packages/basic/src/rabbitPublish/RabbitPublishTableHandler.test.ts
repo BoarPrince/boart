@@ -1,7 +1,20 @@
 import fs from 'fs';
 
 import { RabbitPublishTableHandler } from '@boart/basic';
-import { LocalContext, MarkdownTableReader, ObjectContent, Runtime, RuntimeContext, ScopedType, StepContext, Store, TestContext, ValueReplacer, ValueReplacerHandler } from '@boart/core';
+import {
+    LocalContext,
+    MarkdownTableReader,
+    ObjectContent,
+    Runtime,
+    RuntimeContext,
+    ScopedType,
+    StepContext,
+    Store,
+    TestContext,
+    ValueReplaceArg,
+    ValueReplacer,
+    ValueReplacerHandler
+} from '@boart/core';
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
 import { StepReport } from '@boart/protocol';
 
@@ -11,15 +24,6 @@ const sut = new RabbitPublishTableHandler();
  *
  */
 jest.mock('fs');
-
-/**
- *
- */
-beforeEach(() => {
-    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
-    Store.instance.testStore.clear();
-    Runtime.instance.stepRuntime.notifyStart({} as StepContext);
-});
 
 /**
  *
@@ -74,27 +78,27 @@ beforeAll(() => {
  *
  */
 beforeEach(() => {
-    Store.instance.initTestStore({});
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+    Store.instance.testStore.clear();
+    Runtime.instance.stepRuntime.notifyStart({} as StepContext);
 
+    Store.instance.initTestStore({});
     Runtime.instance.runtime.notifyStart({} as RuntimeContext);
     Runtime.instance.localRuntime.notifyStart({} as LocalContext);
     Runtime.instance.testRuntime.notifyStart({} as TestContext);
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
-});
 
-/**
- *
- */
-beforeEach(() => {
     ValueReplacerHandler.instance.clear();
-    ValueReplacerHandler.instance.add('env', {
+    const item: ValueReplacer = {
         name: '',
         priority: 0,
-        scoped: ScopedType.false,
-        replace: (property: string): string => {
-            return property === 'rabbitmq_port' ? '0' : property;
+        config: null,
+        scoped: ScopedType.False,
+        replace: (ast: ValueReplaceArg): string => {
+            return ast.qualifier.value === 'rabbitmq_port' ? '0' : ast.qualifier.value;
         }
-    } as ValueReplacer);
+    };
+    ValueReplacerHandler.instance.add('env', item);
 });
 
 /**
@@ -121,8 +125,8 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.preExecution.payload.valueOf()).toEqual({ a: 1 });
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload.valueOf()).toEqual({ a: 1 });
     });
 
     /**
@@ -138,8 +142,8 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.preExecution.payload.valueOf()).toEqual({ a: 1 });
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload.valueOf()).toEqual({ a: 1 });
     });
 
     /**
@@ -157,9 +161,9 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.preExecution.payload.valueOf()).toEqual({ a: 1 });
-        expect(sut.handler.executionEngine.context.preExecution.header.valueOf()).toEqual({ h1: 'x', h2: 'y' });
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload.valueOf()).toEqual({ a: 1 });
+        expect(sut.handler.getExecutionEngine().context.preExecution.header.valueOf()).toEqual({ h1: 'x', h2: 'y' });
     });
 
     /**
@@ -175,8 +179,8 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.preExecution.payload.valueOf()).toEqual({ a: 1 });
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload.valueOf()).toEqual({ a: 1 });
     });
 
     /**
@@ -193,8 +197,8 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.executionEngine.context.preExecution.payload.valueOf()).toEqual({ a: 1, b: 2 });
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload.valueOf()).toEqual({ a: 1, b: 2 });
     });
 });
 

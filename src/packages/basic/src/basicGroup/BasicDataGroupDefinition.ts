@@ -15,7 +15,7 @@ if (!GroupRowDefinition.contains('basic-data')) {
     const basicGroup = GroupRowDefinition.getInstance<DataContext, RowTypeValue<DataContext>>('basic-data');
 
     //-------------------------------------------------------------------------
-    // Expected
+    // Set Payload
     //-------------------------------------------------------------------------
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({

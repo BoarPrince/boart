@@ -176,7 +176,7 @@ describe('check store', () => {
         sut.put(ast, 'b');
 
         const astGet = pegParser.parseAction('store:a#b.c');
-        expect(() => sut.get(astGet)).toThrow(`store 'a' -> getting "b.c" not possible, because "b" is not an object or an array`);
+        expect(() => sut.get(astGet)).toThrow(`store 'a' -> 'store:a#b.c' not defined`);
     });
 
     /**

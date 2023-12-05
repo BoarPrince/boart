@@ -102,7 +102,7 @@ describe('text result', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(sut.handler.executionEngine.context.execution.data.valueOf()).toBe('simple text');
+        expect(sut.handler.getExecutionEngine().context.execution.data.valueOf()).toBe('simple text');
     });
 
     /**
@@ -123,7 +123,7 @@ describe('text result', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(sut.handler.executionEngine.context.execution.data.valueOf()).toStrictEqual({ a: 1 });
+        expect(sut.handler.getExecutionEngine().context.execution.data.valueOf()).toStrictEqual({ a: 1 });
     });
 
     /**
@@ -146,7 +146,7 @@ describe('text result', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(sut.handler.executionEngine.context.execution.data.valueOf()).toStrictEqual({ a: 1 });
+        expect(sut.handler.getExecutionEngine().context.execution.data.valueOf()).toStrictEqual({ a: 1 });
     });
 
     /**
@@ -172,7 +172,7 @@ describe('text result', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(sut.handler.executionEngine.context.execution.data.valueOf()).toStrictEqual([{ a: 1 }, { b: 1 }]);
+        expect(sut.handler.getExecutionEngine().context.execution.data.valueOf()).toStrictEqual([{ a: 1 }, { b: 1 }]);
     });
 
     /**
@@ -189,7 +189,7 @@ describe('text result', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(sut.handler.executionEngine.context.execution.data.valueOf()).toStrictEqual('1');
+        expect(sut.handler.getExecutionEngine().context.execution.data.valueOf()).toStrictEqual('1');
     });
 
     /**
@@ -206,7 +206,7 @@ describe('text result', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(sut.handler.executionEngine.context.execution.data.valueOf()).toStrictEqual('true');
+        expect(sut.handler.getExecutionEngine().context.execution.data.valueOf()).toStrictEqual('true');
     });
 
     /**

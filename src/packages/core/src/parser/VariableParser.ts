@@ -21,13 +21,10 @@ export class VariableParser {
      *
      */
     private getInnerMatch(value: string): { match: string; input: string } {
-        // "\\"" and "\$"" must be escaped. The underlying parser is unescaping again after parsing
-        value = value?.replace(/[\\][\\]/, '\\\x01')?.replace(/[\\][$]/, '\\\x02');
-
-        const r = /\s*\$\s*\{(.+)}\s*/;
+        const r = /\s*\$\s*\{(.+)\}\s*/;
         const match = r.exec(value);
         return match
-            ? this.getInnerMatch(match[1]) || {
+            ? {
                   match: match[1],
                   input: match[0]
               }
@@ -91,15 +88,18 @@ export class VariableParser {
             return null;
         }
         try {
+            // const result: ASTVariable = variableParser.parse(match.match);
             const result: ASTVariable = variableParser.parse(match.match);
             return this.addStringValueAccessor({
                 ...result,
                 match: match.input,
+                // match: value,
                 errs: (result as any).errs || null
             });
         } catch (e) {
             const error = e as ParserException;
-            const valueWithErrorMarker = this.getValueWithMarker(error.location, match.input);
+            // const valueWithErrorMarker = this.getValueWithMarker(error.location, match.input);
+            const valueWithErrorMarker = this.getValueWithMarker(error.location, value);
             throw new Error(`${error.message || ''}\n${valueWithErrorMarker}`);
         }
     }

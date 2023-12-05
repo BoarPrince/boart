@@ -221,23 +221,6 @@ it('with scope and selector', () => {
 /**
  *
  */
-it('nested', () => {
-    const result = sut.parseVariable('${var+name${var2@l}}');
-
-    expect(result.pipes).toBeArrayOfSize(0);
-    expect(result.qualifier).toBeNull();
-    expect(result.selectors).toBeArrayOfSize(0);
-
-    expect(result.name).toBeDefined();
-    expect(result.name.value).toBe('var2');
-
-    expect(result.scope).toBeDefined();
-    expect(result.scope.value).toBe(ScopeType.Local);
-});
-
-/**
- *
- */
 it('with string para', () => {
     const result = sut.parseVariable('${generate:fake:"pa\'ra"}');
 
@@ -362,9 +345,10 @@ it('default - complex 1', () => {
  *
  */
 it('default - complex 2', () => {
-    const result = sut.parseVariable('${var:aa :- "\\${aaa}"}');
+    const result = sut.parseVariable('${var:aa :- "${aaa}"}');
 
     expect(result.default).toBeDefined();
+    expect(result.default).not.toBeNull();
     expect(result.default.value).toBe('${aaa}');
     expect(result.default.operator).toBe(OperatorType.Default);
 });
@@ -372,7 +356,19 @@ it('default - complex 2', () => {
 /**
  *
  */
-it('default - complex 3', () => {
+it('default - complex 3 - with escaped characters', () => {
+    const result = sut.parseVariable('${var:aa :- "\\${aaa}"}');
+
+    expect(result.default).toBeDefined();
+    expect(result.default).not.toBeNull();
+    expect(result.default.value).toBe('${aaa}');
+    expect(result.default.operator).toBe(OperatorType.Default);
+});
+
+/**
+ *
+ */
+it('default - complex 4', () => {
     const result = sut.parseVariable('${var:aa :- "{aaa}"}');
 
     expect(result.default).toBeDefined();
@@ -393,9 +389,7 @@ it('no match', () => {
  */
 it('error can occur', () => {
     expect(() => sut.parseVariable('${var,var}')) //
-        .toThrow(
-            'Expected "#", ":", ":-", ":=", "?#", "@", "|", [ \\t], [a-zA-Z0-9\\-_], or end of input but "," found.\n${var -> , <- var}'
-        );
+        .toThrow('Expected "#", ":", ":-", ":=", "?#", "?:", "@", "|", [ \\t], [a-zA-Z0-9\\-_], or end of input but "," found');
 });
 
 /**

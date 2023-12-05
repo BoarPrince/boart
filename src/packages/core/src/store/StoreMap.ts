@@ -29,6 +29,7 @@ export abstract class StoreMap {
             qualifier: {
                 value: name,
                 paras: [],
+                optional: false,
                 stringValue: name
             },
             match: name

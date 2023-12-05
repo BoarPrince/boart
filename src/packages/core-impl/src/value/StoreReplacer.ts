@@ -1,4 +1,4 @@
-import { ScopedType, ScopeType, Store, StoreWrapper, ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from '@boart/core';
+import { ContentType, ScopedType, ScopeType, Store, StoreWrapper, ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from '@boart/core';
 
 /**
  *
@@ -63,11 +63,22 @@ export class StoreReplacer implements ValueReplacer {
             for (const store of this.stores) {
                 const storeContent = store.get(ast);
                 if (storeContent != null) {
-                    return storeContent.toString();
+                    return this.checkNull(ast, storeContent.toString());
                 }
             }
         } else {
-            return store.get(ast)?.toString();
+            return this.checkNull(ast, store.get(ast));
+        }
+    }
+
+    /**
+     *
+     */
+    private checkNull(ast: ValueReplaceArg, value: ContentType): string {
+        if (value == null && !ast.qualifier.optional && !ast.default) {
+            throw new Error(`can't find value of '${ast.match}'`);
+        } else {
+            return value?.toString();
         }
     }
 }

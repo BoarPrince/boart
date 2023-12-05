@@ -291,18 +291,6 @@ describe('default', () => {
     /**
      *
      */
-    it('default assignment needs at least one selector', () => {
-        const mock = valueReplacerHandlerMock(null, { defaultScopeType: ScopeType.Test });
-        sut = new ValueResolver(mock.handler);
-
-        expect(() => sut.replace('${replacer:a := "aaa"}')).toThrow(
-            `selector is required in case of default assignment: \${replacer:a  -> := "aaa"\n\${replacer:a := "aaa"}`
-        );
-    });
-
-    /**
-     *
-     */
     it('default assignment must additionally put the value to the store', () => {
         const mock = valueReplacerHandlerMock(null, { defaultScopeType: ScopeType.Test });
         sut = new ValueResolver(mock.handler);
@@ -312,6 +300,20 @@ describe('default', () => {
 
         const ast = pegParser.parseAction('store:a');
         expect(Store.instance.testStore.get(ast).valueOf()).toStrictEqual({ b: 'bbb' });
+    });
+
+    /**
+     *
+     */
+    it('default assignment can contain json objects', () => {
+        const mock = valueReplacerHandlerMock(null, { defaultScopeType: ScopeType.Test });
+        sut = new ValueResolver(mock.handler);
+
+        const replacedValue = sut.replace(`\${replacer:a#b:='{"p":3}'}`);
+        expect(replacedValue).toBe('{"p":3}');
+
+        const ast = pegParser.parseAction('store:a');
+        expect(Store.instance.testStore.get(ast).valueOf()).toStrictEqual({ b: { p: 3 } });
     });
 });
 

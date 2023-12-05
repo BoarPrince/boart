@@ -84,8 +84,8 @@ describe('get', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-        expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        expect(sut.handler.getExecutionEngine().context.execution.data?.toJSON()).toEqual('{"b":2}');
+        expect(sut.handler.getExecutionEngine().context.execution.header?.valueOf()).toEqual({
             duration: 0,
             statusText: 'OK',
             status: 200,
@@ -316,8 +316,8 @@ describe('post', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-        expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        expect(sut.handler.getExecutionEngine().context.execution.data?.toJSON()).toEqual('{"b":2}');
+        expect(sut.handler.getExecutionEngine().context.execution.header?.valueOf()).toEqual({
             duration: 0,
             statusText: 'OK',
             status: 200,
@@ -427,8 +427,8 @@ describe('put', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-        expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        expect(sut.handler.getExecutionEngine().context.execution.data?.toJSON()).toEqual('{"b":2}');
+        expect(sut.handler.getExecutionEngine().context.execution.header?.valueOf()).toEqual({
             duration: 0,
             statusText: 'OK',
             status: 200,
@@ -563,8 +563,8 @@ describe('post-param', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-        expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        expect(sut.handler.getExecutionEngine().context.execution.data?.toJSON()).toEqual('{"b":2}');
+        expect(sut.handler.getExecutionEngine().context.execution.header?.valueOf()).toEqual({
             duration: 0,
             statusText: 'OK',
             status: 200,
@@ -599,8 +599,8 @@ describe('post-param', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-        expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        expect(sut.handler.getExecutionEngine().context.execution.data?.toJSON()).toEqual('{"b":2}');
+        expect(sut.handler.getExecutionEngine().context.execution.header?.valueOf()).toEqual({
             duration: 0,
             statusText: 'OK',
             status: 200,
@@ -732,8 +732,8 @@ describe('form-data', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(sut.handler.executionEngine.context.execution.data?.toJSON()).toEqual('{"b":2}');
-        expect(sut.handler.executionEngine.context.execution.header?.valueOf()).toEqual({
+        expect(sut.handler.getExecutionEngine().context.execution.data?.toJSON()).toEqual('{"b":2}');
+        expect(sut.handler.getExecutionEngine().context.execution.header?.valueOf()).toEqual({
             duration: 0,
             statusText: 'OK',
             status: 200,

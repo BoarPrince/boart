@@ -32,6 +32,7 @@ export class RunDefinition {
                 match: name,
                 qualifier: {
                     value: name,
+                    optional: false,
                     paras: [],
                     stringValue: name
                 }

@@ -108,7 +108,7 @@ export class StoreWrapper extends StoreMap {
 
         try {
             const dataContentValue = DataContentHelper.create(storeValue);
-            const value = SelectorExtractor.getValueBySelector(ast.selectors, dataContentValue);
+            const value = SelectorExtractor.getValueByAst(ast, dataContentValue);
 
             this.logger.trace(
                 () => `get ${ast.selectors.match || ''}`,

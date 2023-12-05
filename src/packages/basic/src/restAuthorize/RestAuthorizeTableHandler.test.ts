@@ -80,7 +80,7 @@ it('default password', async () => {
 
     await sut.handler.process(tableRows);
 
-    expect(sut.handler.executionEngine.context.execution.header.getValue()).toStrictEqual({
+    expect(sut.handler.getExecutionEngine().context.execution.header.getValue()).toStrictEqual({
         duration: 0,
         retries: 1,
         option: {
@@ -140,7 +140,7 @@ it('token must be generated (default name)', async () => {
 
     await sut.handler.process(tableRows);
 
-    expect(sut.handler.executionEngine.context.execution.token).toBe('T.O.K.E.N');
+    expect(sut.handler.getExecutionEngine().context.execution.token).toBe('T.O.K.E.N');
     expect(Store.instance.testStore.get('authorization').valueOf()).toBe('T.O.K.E.N');
 });
 
@@ -164,7 +164,7 @@ it('token must be generated (custom name)', async () => {
 
     await sut.handler.process(tableRows);
 
-    expect(sut.handler.executionEngine.context.execution.token).toBe('T.O.K.E.N');
+    expect(sut.handler.getExecutionEngine().context.execution.token).toBe('T.O.K.E.N');
     expect(Store.instance.testStore.get('authorization')).toBeNull();
     expect(Store.instance.testStore.get('XauthX').valueOf()).toBe('T.O.K.E.N');
 });
@@ -187,7 +187,7 @@ it('default client_credential', async () => {
 
     await sut.handler.process(tableRows);
 
-    expect(sut.handler.executionEngine.context.execution.header.getValue()).toStrictEqual({
+    expect(sut.handler.getExecutionEngine().context.execution.header.getValue()).toStrictEqual({
         duration: 0,
         retries: 1,
         option: {

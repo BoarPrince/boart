@@ -14,9 +14,18 @@ import {
     Store,
     TableHandler,
     TableHandlerBaseImpl,
-    TextContent
+    TextContent,
+    VariableParser
 } from '@boart/core';
 import { DataContext, RowTypeValue } from '@boart/core-impl';
+
+/**
+ *
+ */
+const variableParser = new VariableParser();
+const astVar = variableParser.parseAction('store:var');
+const astA = variableParser.parseAction('store:a');
+const astB = variableParser.parseAction('store:b');
 
 /**
  *
@@ -163,7 +172,8 @@ describe('out store', () => {
 
         await sut.handler.process(tableDef);
         const store = Store.instance.testStore;
-        expect(store.get('var').constructor.name).toBe('NullContent');
+
+        expect(store.get(astVar).constructor.name).toBe('NullContent');
     });
 
     /**
@@ -194,7 +204,8 @@ describe('out store', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+
+        const result = Store.instance.testStore.get(astVar);
         expect(result).toBeInstanceOf(NativeContent);
         expect(result.toString()).toBe('1');
     });
@@ -211,7 +222,7 @@ describe('out store', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"e":1}');
     });
@@ -230,7 +241,7 @@ describe('out store', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"e":1,"f":2}');
     });
@@ -250,7 +261,7 @@ describe('out store', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"e":1,"f":2,"g":3}');
     });
@@ -270,7 +281,7 @@ describe('out store', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"e":{"h":1},"f":2,"g":3}');
     });
@@ -290,7 +301,7 @@ describe('out store', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"e":{"h":1},"f":{"u":5},"g":3}');
     });
@@ -312,7 +323,7 @@ describe('out store from payload', () => {
 
         await sut.handler.process(tableDef);
 
-        expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload).toBeInstanceOf(ObjectContent);
     });
 
     /**
@@ -327,7 +338,8 @@ describe('out store from payload', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = sut.handler.executionEngine.context.preExecution.payload;
+        const context = sut.handler.getExecutionEngine().context;
+        const result = context.preExecution.payload;
         expect(result).toBeInstanceOf(TextContent);
         expect(result?.toString()).toBe('2');
     });
@@ -344,7 +356,7 @@ describe('out store from payload', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = sut.handler.executionEngine.context.preExecution.payload;
+        const result = sut.handler.getExecutionEngine().context.preExecution.payload;
         expect(result?.constructor.name).toBe('ObjectContent');
         expect(result?.getValue()).toBeInstanceOf(Object);
 
@@ -366,7 +378,7 @@ describe('out store from payload', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = sut.handler.executionEngine.context.preExecution.payload;
+        const result = sut.handler.getExecutionEngine().context.preExecution.payload;
         expect(result?.constructor.name).toBe('ObjectContent');
         expect(result?.toString()).toBe('{"a":"1"}');
     });
@@ -383,7 +395,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.constructor.name).toBe('ObjectContent');
         expect(result.toString()).toBe('{"a":1}');
@@ -402,7 +414,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('{"a":1,"b":2}');
     });
@@ -420,9 +432,9 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload).toBeInstanceOf(ObjectContent);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.toString()).toBe('{"a":1,"b":[]}');
     });
 
@@ -439,9 +451,9 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(sut.handler.executionEngine.context.preExecution.payload).toBeInstanceOf(ObjectContent);
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload).toBeInstanceOf(ObjectContent);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.toString()).toBe('{"a":1,"b":[]}');
     });
 
@@ -458,7 +470,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('{"a":1,"b":{}}');
     });
@@ -476,7 +488,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('{"a":1,"b":{}}');
     });
@@ -494,7 +506,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var') as string;
+        const result = Store.instance.testStore.get(astVar) as string;
 
         expect(JSON.parse(result)).toMatchObject({ a: 1, b: ['b', 'c'] });
         expect(result.toString()).toBe('{"a":1,"b":["b","c"]}');
@@ -513,7 +525,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('{"a":1}');
     });
@@ -532,11 +544,11 @@ describe('out store from payload', () => {
 
         await sut.handler.process(tableDef);
 
-        const payload = sut.handler.executionEngine.context.preExecution.payload;
+        const payload = sut.handler.getExecutionEngine().context.preExecution.payload;
         expect(payload).toBeInstanceOf(NativeContent);
         expect(payload.getValue()).toBeUndefined();
 
-        const result = Store.instance.testStore.get('var') as NativeContent;
+        const result = Store.instance.testStore.get(astVar) as NativeContent;
         expect(result).toBeInstanceOf(NativeContent);
         expect(result.getValue()).toBeUndefined();
     });
@@ -555,11 +567,11 @@ describe('out store from payload', () => {
 
         await sut.handler.process(tableDef);
 
-        const payload = sut.handler.executionEngine.context.preExecution.payload;
+        const payload = sut.handler.getExecutionEngine().context.preExecution.payload;
         expect(payload).toBeInstanceOf(TextContent);
         expect(payload?.getValue()).toBe('undefined');
 
-        const result = Store.instance.testStore.get('var') as TextContent;
+        const result = Store.instance.testStore.get(astVar) as TextContent;
         expect(result).toBeInstanceOf(TextContent);
         expect(result.getValue()).toBe('undefined');
     });
@@ -578,7 +590,7 @@ describe('out store from payload', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var') as NativeContent;
+        const result = Store.instance.testStore.get(astVar) as NativeContent;
         expect(result.getValue()).toBe('"undefined"');
     });
 
@@ -595,7 +607,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var') as NullContent;
+        const result = Store.instance.testStore.get(astVar) as NullContent;
 
         expect(result).toBeInstanceOf(NullContent);
         expect(result.getValue()).toBeNull();
@@ -614,7 +626,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var') as TextContent;
+        const result = Store.instance.testStore.get(astVar) as TextContent;
 
         expect(result).toBeInstanceOf(TextContent);
         expect(result.getValue()).toBe('null');
@@ -633,7 +645,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var') as NativeContent;
+        const result = Store.instance.testStore.get(astVar) as NativeContent;
 
         expect(result).toBeInstanceOf(NativeContent);
         expect(result.getValue()).toBe(1);
@@ -652,7 +664,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var') as TextContent;
+        const result = Store.instance.testStore.get(astVar) as TextContent;
 
         expect(result).toBeInstanceOf(TextContent);
         expect(result.getValue()).toBe('1');
@@ -671,7 +683,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result).toBeInstanceOf(NativeContent);
         expect(result).toBeTruthy();
@@ -690,7 +702,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var') as TextContent;
+        const result = Store.instance.testStore.get(astVar) as TextContent;
 
         expect(result).toBeInstanceOf(TextContent);
         expect(result.getValue()).toBe('true');
@@ -709,7 +721,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('{"a":1,"b":null}');
     });
@@ -727,7 +739,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('{"a":1,"b":2}');
     });
@@ -745,7 +757,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('{"a":1,"b":true}');
     });
@@ -763,7 +775,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('{"a":1,"b":"2"}');
     });
@@ -781,7 +793,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('{"a":1,"b":"true"}');
     });
@@ -790,7 +802,7 @@ describe('out store from payload', () => {
      *
      */
     it('add to payload from store', async () => {
-        Store.instance.testStore.put('a', 1);
+        Store.instance.testStore.put(astA, 1);
 
         const tableDef = MarkdownTableReader.convert(
             `|action    | value       |
@@ -800,7 +812,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('1');
     });
@@ -809,8 +821,8 @@ describe('out store from payload', () => {
      *
      */
     it('add to payload from store multiple times', async () => {
-        Store.instance.testStore.put('a', 1);
-        Store.instance.testStore.put('b', 2);
+        Store.instance.testStore.put(astA, 1);
+        Store.instance.testStore.put(astB, 2);
 
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                   |
@@ -820,7 +832,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.toString()).toBe('1-2');
     });
@@ -851,7 +863,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toStrictEqual({ a: 1 });
     });
@@ -860,7 +872,7 @@ describe('out store from payload', () => {
      *
      */
     it('use store default, but store is defined', async () => {
-        Store.instance.testStore.put('a', 1);
+        Store.instance.testStore.put(astA, 1);
         const tableDef = MarkdownTableReader.convert(
             `|action    | value          |
              |----------|----------------|
@@ -869,7 +881,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toStrictEqual({ a: 1 });
     });
@@ -886,7 +898,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toStrictEqual({ a: 1 });
     });
@@ -895,7 +907,7 @@ describe('out store from payload', () => {
      *
      */
     it('use store default - with property, but store is defined', async () => {
-        Store.instance.testStore.put('a', { p: 1 });
+        Store.instance.testStore.put(astA, { p: 1 });
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |
              |----------|------------------|
@@ -904,7 +916,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toStrictEqual({ a: 1 });
     });
@@ -922,7 +934,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toEqual({ a: undefined, b: 2 });
     });
@@ -940,7 +952,7 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toStrictEqual({ a: 'undefined', b: 2 });
     });
@@ -957,11 +969,11 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toBe(1);
-        expect(Store.instance.testStore.get('a')).toBeDefined();
-        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 1 });
+        expect(Store.instance.testStore.get(astA)).toBeDefined();
+        expect(Store.instance.testStore.get(astA).valueOf()).toStrictEqual({ p: 1 });
     });
 
     /**
@@ -973,12 +985,12 @@ describe('out store from payload', () => {
              |------------|-----------------------------------|
              |payload#c.e | 3                                 |
              |payload#c.f | 4                                 |
-             |payload#b   | \${store:a.c:=1} \${store:a.d:=1} |
+             |payload#b   | \${store:a#c:=1} \${store:a#d:=1} |
              |store       | var                               |`
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toStrictEqual({
             b: '1 1',
@@ -987,102 +999,104 @@ describe('out store from payload', () => {
                 f: 4
             }
         });
-        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ c: 1, d: 1 });
+        expect(Store.instance.testStore.get(astA).valueOf()).toStrictEqual({ c: 1, d: 1 });
     });
 
     /**
      *
      */
     it('use store default-assignment - with property, but store is defined', async () => {
-        Store.instance.testStore.put('a', { p: 1 });
+        Store.instance.testStore.put(astA, { p: 1 });
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |
              |----------|------------------|
-             |payload#a | \${store:a.p:=2} |
+             |payload#a | \${store:a#p:=2} |
              |store     | var              |`
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toStrictEqual({ a: 1 });
-        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 1 });
+        expect(Store.instance.testStore.get(astA).valueOf()).toStrictEqual({ p: 1 });
     });
 
     /**
      *
      */
     it('use store default-assignment - recursive usage - simple data - number', async () => {
-        Store.instance.testStore.put('b', 3);
+        Store.instance.testStore.put(astB, 3);
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                      |
              |----------|----------------------------|
-             |payload#a | \${store:a.p:=\${store:b}} |
+             |payload#a | \${store:a#p:=\${store:b}} |
              |store     | var                        |`
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toStrictEqual({ a: 3 });
-        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 3 });
+        expect(Store.instance.testStore.get(astA).valueOf()).toStrictEqual({ p: 3 });
     });
 
     /**
      *
      */
     it('use store default-assignment - recursive usage - simple data - string', async () => {
-        Store.instance.testStore.put('b', '-3-');
+        Store.instance.testStore.put(astB, '-3-');
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                      |
              |----------|----------------------------|
-             |payload#a | \${store:a.p:=\${store:b}} |
+             |payload#a | \${store:a#p:=\${store:b}} |
              |store     | var                        |`
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toStrictEqual({ a: '-3-' });
-        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: '-3-' });
+        expect(Store.instance.testStore.get(astA).valueOf()).toStrictEqual({ p: '-3-' });
     });
 
     /**
      *
      */
     it('use store default-assignment - recursive usage - object', async () => {
-        Store.instance.testStore.put('b', { p: 3 });
+        Store.instance.testStore.put(astB, { p: 3 });
         const tableDef = MarkdownTableReader.convert(
-            `|action    | value                      |
-             |----------|----------------------------|
-             |payload#a | \${store:a.p:=\${store:b}} |
-             |store     | var                        |`
+            `|action    | value                        |
+             |----------|------------------------------|
+             |payload#a | \${store:a#p:='\${store:b}'} |
+             |store     | var                          |`
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
 
-        expect(result.valueOf()).toStrictEqual({ a: { p: 3 } });
-        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: { p: 3 } });
+        const resultVar = Store.instance.testStore.get(astVar);
+        expect(resultVar.valueOf()).toStrictEqual({ a: { p: 3 } });
+
+        const resultA = Store.instance.testStore.get(astA);
+        expect(resultA.valueOf()).toStrictEqual({ p: { p: 3 } });
     });
 
     /**
      *
      */
     it('use store default-assignment - recursive usage - array', async () => {
-        Store.instance.testStore.put('b', [1, 2]);
+        Store.instance.testStore.put(astB, [1, 2]);
         const tableDef = MarkdownTableReader.convert(
-            `|action    | value                      |
-             |----------|----------------------------|
-             |payload#a | \${store:a.p:=\${store:b}} |
-             |store     | var                        |`
+            `|action    | value                        |
+             |----------|------------------------------|
+             |payload#a | \${store:a#p:="\${store:b}"} |
+             |store     | var                          |`
         );
 
         await sut.handler.process(tableDef);
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
 
         expect(result.valueOf()).toStrictEqual({ a: [1, 2] });
-        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: [1, 2] });
+        expect(Store.instance.testStore.get(astA).valueOf()).toStrictEqual({ p: [1, 2] });
     });
 
     /**
@@ -1092,19 +1106,19 @@ describe('out store from payload', () => {
         jest.spyOn(Math, 'random').mockImplementation(() => 0.5);
 
         const tableDef = MarkdownTableReader.convert(
-            `|action  | value                                  |
-             |--------|----------------------------------------|
-             |payload | {                                      |
-             |        |  "a": "\${store:a:=\${generate:hex}}", |
-             |        |  "b": "\${store:a}"                    |
-             |        | }                                      |
-             |store   | var                                    |`
+            `|action  | value                                     |
+             |--------|-------------------------------------------|
+             |payload | {                                         |
+             |        |  "a": "\${store:a:='\${generate:hex}'}",  |
+             |        |  "b": "\${store:a}"                       |
+             |        | }                                         |
+             |store   | var                                       |`
         );
 
         await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get('a').valueOf()).toBe(8);
+        expect(Store.instance.testStore.get(astA).valueOf()).toBe(8);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toStrictEqual({
             a: '8',
             b: '8'
@@ -1127,7 +1141,32 @@ describe('out store from payload', () => {
              |store   | var                                    |`
         );
 
-        await expect(async () => sut.handler.process(tableDef)).rejects.toThrowError(`can't find value of 'store:b'`);
+        await expect(async () => sut.handler.process(tableDef)).rejects.toThrow(`can't find value of '\${store:b}'`);
+    });
+
+    /**
+     *
+     */
+    it('use store default-assignment - recursive usage - multiple assignment - optional', async () => {
+        jest.spyOn(Math, 'random').mockImplementation(() => 0.5);
+
+        const tableDef = MarkdownTableReader.convert(
+            `|action  | value                                  |
+             |--------|----------------------------------------|
+             |payload | {                                      |
+             |        |  "a": "\${store:a:=\${generate:hex}}", |
+             |        |  "b": "\${store?:b}"                    |
+             |        | }                                      |
+             |store   | var                                    |`
+        );
+
+        await sut.handler.process(tableDef);
+
+        const result = Store.instance.testStore.get(astVar);
+        expect(result.valueOf()).toStrictEqual({
+            a: '8',
+            b: null
+        });
     });
 
     /**
@@ -1147,9 +1186,9 @@ describe('out store from payload', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get('a').valueOf()).toBe(8);
+        expect(Store.instance.testStore.get(astA).valueOf()).toBe(8);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toStrictEqual({
             b: 8
         });
@@ -1174,7 +1213,7 @@ describe('generate', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toStrictEqual({ a: 5 });
     });
 
@@ -1197,7 +1236,7 @@ describe('generate', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toStrictEqual({ a: 1, b: 2, c: 1 });
     });
 
@@ -1221,7 +1260,7 @@ describe('generate', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toStrictEqual({ a: 10, b: 11, c: 10, d: 12 });
     });
 
@@ -1241,7 +1280,7 @@ describe('generate', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toStrictEqual({ a: 111 });
         expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 111 });
     });
@@ -1262,7 +1301,7 @@ describe('generate', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toStrictEqual({ a: 22 });
         expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 22 });
     });
@@ -1289,7 +1328,7 @@ describe('generate', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toBe('c');
     });
 
@@ -1316,7 +1355,7 @@ describe('generate', () => {
 
         await sut.handler.process(tableDef);
 
-        const result = Store.instance.testStore.get('var');
+        const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toBe(22);
     });
 
@@ -1367,7 +1406,7 @@ describe('check run:xxx', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get('var').valueOf()).toBe('x');
+        expect(Store.instance.testStore.get(astVar).valueOf()).toBe('x');
     });
 
     /**
@@ -1383,7 +1422,7 @@ describe('check run:xxx', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get('var')).toBeNull();
+        expect(Store.instance.testStore.get(astVar)).toBeNull();
     });
 
     /**
@@ -1399,7 +1438,7 @@ describe('check run:xxx', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get('var')?.valueOf()).toBe('z');
+        expect(Store.instance.testStore.get(astVar)?.valueOf()).toBe('z');
     });
 
     /**
@@ -1415,7 +1454,7 @@ describe('check run:xxx', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get('var')?.valueOf()).toBe('y');
+        expect(Store.instance.testStore.get(astVar)?.valueOf()).toBe('y');
     });
 
     /**
@@ -1431,7 +1470,7 @@ describe('check run:xxx', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get('var')?.valueOf()).toBe('y');
+        expect(Store.instance.testStore.get(astVar)?.valueOf()).toBe('y');
     });
 
     /**
@@ -1447,7 +1486,7 @@ describe('check run:xxx', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get('var')?.valueOf()).toBe('y');
+        expect(Store.instance.testStore.get(astVar)?.valueOf()).toBe('y');
     });
 
     /**
@@ -1463,7 +1502,7 @@ describe('check run:xxx', () => {
         );
 
         await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get('var')?.valueOf()).toBe('y');
+        expect(Store.instance.testStore.get(astVar)?.valueOf()).toBe('y');
     });
 
     /**
@@ -1531,7 +1570,7 @@ describe('check run:xxx', () => {
         await sut.handler.process(tableDef);
 
         expect(Runtime.instance.stepRuntime.current.status).toBe(RuntimeStatus.stopped);
-        expect(Store.instance.testStore.get('var')).toBeNull();
+        expect(Store.instance.testStore.get(astVar)).toBeNull();
     });
 
     /**
@@ -1551,7 +1590,7 @@ describe('check run:xxx', () => {
         await sut.handler.process(tableDef);
 
         expect(Runtime.instance.stepRuntime.current.status).toBe(RuntimeStatus.stopped);
-        expect(Store.instance.testStore.get('var')).toBeNull();
+        expect(Store.instance.testStore.get(astVar)).toBeNull();
     });
 
     /**

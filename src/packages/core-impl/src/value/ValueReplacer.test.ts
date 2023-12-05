@@ -6,7 +6,6 @@ import {
     Store,
     StoreWrapper,
     TextLanguageHandler,
-    ValueReplaceArg,
     ValueReplacer,
     VariableParser
 } from '@boart/core';
@@ -117,6 +116,7 @@ it('check environment replacement', () => {
     sut.replace({
         match: null,
         qualifier: {
+            optional: false,
             stringValue: 'yyyy',
             value: 'yyyy',
             paras: null
@@ -138,6 +138,7 @@ it('check text replacer', () => {
     sut.replace({
         match: null,
         qualifier: {
+            optional: false,
             stringValue: '',
             value: 'xxxx',
             paras: null
@@ -164,6 +165,7 @@ describe('generate', () => {
             {
                 match: null,
                 qualifier: {
+                    optional: false,
                     stringValue: 'xxxx',
                     value: 'xxxx',
                     paras: null
@@ -178,7 +180,12 @@ describe('generate', () => {
         expect(generater).toHaveBeenCalledWith('xxxx');
         expect(store.store.get).toHaveBeenCalledWith({
             match: '#generate#:#test store#:#xxxx#',
-            qualifier: { paras: [], stringValue: '#generate#:#test store#:#xxxx#', value: '#generate#:#test store#:#xxxx#' }
+            qualifier: {
+                optional: false,
+                paras: [],
+                stringValue: '#generate#:#test store#:#xxxx#',
+                value: '#generate#:#test store#:#xxxx#'
+            }
         });
     });
 
@@ -193,6 +200,7 @@ describe('generate', () => {
             {
                 match: null,
                 qualifier: {
+                    optional: false,
                     stringValue: 'xxxx:arg1:arg2',
                     value: 'xxxx',
                     paras: ['arg1', 'arg2']
@@ -208,6 +216,7 @@ describe('generate', () => {
         expect(store.store.get).toHaveBeenCalledWith({
             match: '#generate#:#test store#:#xxxx:arg1:arg2#',
             qualifier: {
+                optional: false,
                 paras: [],
                 stringValue: '#generate#:#test store#:#xxxx:arg1:arg2#',
                 value: '#generate#:#test store#:#xxxx:arg1:arg2#'
@@ -235,6 +244,7 @@ describe('reference', () => {
             {
                 match: null,
                 qualifier: {
+                    optional: false,
                     stringValue: '',
                     value: 'x',
                     paras: ['x-x', '-x-x']
@@ -256,7 +266,7 @@ describe('reference', () => {
         expect(getter).toHaveBeenCalledWith('x/x-x/-x-x', '_y-yyy2');
         expect(store.store.get).toHaveBeenCalledWith({
             match: '#ref#:#x/x-x/-x-x#_y-yyy2#',
-            qualifier: { paras: [], stringValue: '#ref#:#x/x-x/-x-x#_y-yyy2#', value: '#ref#:#x/x-x/-x-x#_y-yyy2#' }
+            qualifier: { optional: false, paras: [], stringValue: '#ref#:#x/x-x/-x-x#_y-yyy2#', value: '#ref#:#x/x-x/-x-x#_y-yyy2#' }
         });
     });
 
@@ -277,6 +287,7 @@ describe('reference', () => {
             {
                 match: null,
                 qualifier: {
+                    optional: false,
                     stringValue: '',
                     value: 'xxxxx',
                     paras: null
@@ -295,7 +306,7 @@ describe('reference', () => {
         expect(value).toBe('anything');
         expect(store.store.get).toHaveBeenCalledWith({
             match: '#ref#:#xxxxx#yyyy#',
-            qualifier: { paras: [], stringValue: '#ref#:#xxxxx#yyyy#', value: '#ref#:#xxxxx#yyyy#' }
+            qualifier: { optional: false, paras: [], stringValue: '#ref#:#xxxxx#yyyy#', value: '#ref#:#xxxxx#yyyy#' }
         });
     });
 });
@@ -319,6 +330,7 @@ describe('store', () => {
             {
                 match: null,
                 qualifier: {
+                    optional: false,
                     stringValue: '',
                     value: 'xxxxx',
                     paras: null
@@ -370,7 +382,7 @@ describe('store', () => {
             errs: null,
             match: 'store:a',
             name: { stringValue: 'store:a', value: 'store' },
-            qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+            qualifier: { optional: false, paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
             scope: null,
             selectors: []
         });
@@ -458,7 +470,7 @@ describe('store', () => {
             errs: null,
             match: 'store:a',
             name: { stringValue: 'store:a', value: 'store' },
-            qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+            qualifier: { optional: false, paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
             scope: null,
             selectors: []
         };
@@ -488,7 +500,7 @@ describe('store', () => {
             errs: null,
             match: 'store:a',
             name: { stringValue: 'store:a', value: 'store' },
-            qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+            qualifier: { optional: false, paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
             scope: null,
             selectors: []
         };
@@ -519,7 +531,7 @@ describe('store', () => {
             errs: null,
             match: 'store:a',
             name: { stringValue: 'store:a', value: 'store' },
-            qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+            qualifier: { optional: false, paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
             scope: null,
             selectors: []
         };
@@ -549,7 +561,7 @@ describe('store', () => {
             errs: null,
             match: 'store:a',
             name: { stringValue: 'store:a', value: 'store' },
-            qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+            qualifier: { optional: false, paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
             scope: null,
             selectors: []
         };
@@ -579,7 +591,7 @@ describe('store', () => {
             errs: null,
             match: 'store:a#b',
             name: { stringValue: 'store:a', value: 'store' },
-            qualifier: { paras: [], selectorMatch: 'a#b', stringValue: 'a', value: 'a' },
+            qualifier: { optional: false, paras: [], selectorMatch: 'a#b', stringValue: 'a', value: 'a' },
             scope: null,
 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

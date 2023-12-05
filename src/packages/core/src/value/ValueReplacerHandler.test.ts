@@ -121,21 +121,18 @@ describe('check common functionality', () => {
 
         sut.add('test', valueReplace);
 
-        let replacedValue = sut.replace('--${test:a}--');
+        const replacedValue = sut.replace('--${test:a}--');
         expect(replacedValue).toBe('--#a#--');
 
         sut.delete('test');
-
-        replacedValue = sut.replace('--${test:a}--');
-        expect(replacedValue).toBe('--${test:a}--');
+        expect(() => sut.replace('--${test:a}--')).toThrow('replacer "test" does not exist');
     });
 
     /**
      *
      */
     it('no replacement', () => {
-        const replacedValue = sut.replace('--${no-replacer:a}--');
-        expect(replacedValue).toBe('--${no-replacer:a}--');
+        expect(() => sut.replace('--${no-replacer:a}--')).toThrow('replacer "no-replacer" does not exist');
     });
 
     /**
@@ -193,7 +190,7 @@ describe('check valueHandler (unscoped)', () => {
                 match: '${test:a}',
                 name: { stringValue: 'test:a', value: 'test' },
                 pipes: [],
-                qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+                qualifier: { optional: false, paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
                 scope: null
             }),
             null
@@ -216,7 +213,7 @@ describe('check valueHandler (unscoped)', () => {
                 match: '${test@g:a}',
                 name: { stringValue: 'test:a', value: 'test' },
                 pipes: [],
-                qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+                qualifier: { optional: false, paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
                 scope: {
                     location: { end: { column: 7, line: 1, offset: 6 }, source: undefined, start: { column: 5, line: 1, offset: 4 } },
                     value: 'g'
@@ -244,7 +241,7 @@ describe('check valueHandler (unscoped)', () => {
                 match: '${test@l:a}',
                 name: { stringValue: 'test:a', value: 'test' },
                 pipes: [],
-                qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+                qualifier: { optional: false, paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
                 scope: {
                     location: { end: { column: 7, line: 1, offset: 6 }, source: undefined, start: { column: 5, line: 1, offset: 4 } },
                     value: 'l'
@@ -272,7 +269,7 @@ describe('check valueHandler (unscoped)', () => {
                 match: '${test@t:a}',
                 name: { stringValue: 'test:a', value: 'test' },
                 pipes: [],
-                qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+                qualifier: { optional: false, paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
                 scope: {
                     location: { end: { column: 7, line: 1, offset: 6 }, source: undefined, start: { column: 5, line: 1, offset: 4 } },
                     value: 't'
@@ -300,7 +297,7 @@ describe('check valueHandler (unscoped)', () => {
                 match: '${test@s:a}',
                 name: { stringValue: 'test:a', value: 'test' },
                 pipes: [],
-                qualifier: { paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
+                qualifier: { optional: false, paras: [], selectorMatch: 'a', stringValue: 'a', value: 'a' },
                 scope: {
                     location: { end: { column: 7, line: 1, offset: 6 }, source: undefined, start: { column: 5, line: 1, offset: 4 } },
                     value: 's'

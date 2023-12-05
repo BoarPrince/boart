@@ -22,7 +22,12 @@ export class DataContentHelper {
         try {
             return JSON.parse(content);
         } catch (error) {
-            return failedContent;
+            try {
+                // try again without comments
+                return JSON.parse(content.replace(/[\n]?\s[^\S]*\/\/.*[\n]?/g, ''));
+            } catch (error) {
+                return failedContent;
+            }
         }
     }
 

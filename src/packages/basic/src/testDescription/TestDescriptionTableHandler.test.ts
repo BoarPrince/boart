@@ -47,10 +47,10 @@ beforeEach(() => {
  *
  */
 afterEach(() => {
-    sut.handler.executionEngine.context.config.failureDescription = '';
-    sut.handler.executionEngine.context.config.description = '';
-    sut.handler.executionEngine.context.config.priority = '';
-    sut.handler.executionEngine.context.config.ticket = '';
+    sut.handler.getExecutionEngine().context.config.failureDescription = '';
+    sut.handler.getExecutionEngine().context.config.description = '';
+    sut.handler.getExecutionEngine().context.config.priority = '';
+    sut.handler.getExecutionEngine().context.config.ticket = '';
 
     TestReport.instance.report();
 });
@@ -77,8 +77,8 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config.description).toEqual('desc');
-        expect(sut.handler.executionEngine.context.config.priority).toEqual('medium');
+        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
     });
 
     /**
@@ -95,9 +95,9 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config.description).toEqual('desc');
-        expect(sut.handler.executionEngine.context.config.priority).toEqual('medium');
-        expect(sut.handler.executionEngine.context.config.ticket).toEqual('t-01');
+        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('t-01');
     });
 
     /**
@@ -114,9 +114,9 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config.description).toEqual('desc');
-        expect(sut.handler.executionEngine.context.config.priority).toEqual('medium');
-        expect(sut.handler.executionEngine.context.config.ticket).toEqual('t-01, t-02');
+        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('t-01, t-02');
     });
 
     /**
@@ -134,9 +134,9 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config.description).toEqual('desc');
-        expect(sut.handler.executionEngine.context.config.priority).toEqual('medium');
-        expect(sut.handler.executionEngine.context.config.ticket).toEqual('t-01,t-02');
+        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('t-01,t-02');
     });
 
     /**
@@ -154,9 +154,9 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config.description).toEqual('desc');
-        expect(sut.handler.executionEngine.context.config.priority).toEqual('medium');
-        expect(sut.handler.executionEngine.context.config.ticket).toEqual('t-01,t-02');
+        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('t-01,t-02');
     });
 
     /**
@@ -173,9 +173,9 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config.description).toEqual('desc');
-        expect(sut.handler.executionEngine.context.config.priority).toEqual('medium');
-        expect(sut.handler.executionEngine.context.config.ticket).toEqual('provider-x:t-01');
+        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('provider-x:t-01');
 
         Runtime.instance.testRuntime.current.id = 'id-id-id';
         TestReport.instance.report();
@@ -211,9 +211,9 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config.description).toEqual('desc');
-        expect(sut.handler.executionEngine.context.config.priority).toEqual('medium');
-        expect(sut.handler.executionEngine.context.config.ticket).toEqual('t-01');
+        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('t-01');
 
         Runtime.instance.testRuntime.current.id = 'id-id-id';
         TestReport.instance.report();
@@ -251,9 +251,9 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.executionEngine.context.config.description).toEqual('desc1\ndesc2\ndesc3\ndesc4');
-        expect(sut.handler.executionEngine.context.config.priority).toEqual('medium');
-        expect(sut.handler.executionEngine.context.config.ticket).toEqual('');
+        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc1\ndesc2\ndesc3\ndesc4');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('');
 
         Runtime.instance.testRuntime.current.id = 'id-id-id';
         TestReport.instance.report();

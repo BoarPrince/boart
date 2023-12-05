@@ -47,8 +47,8 @@ DEFAULT_OPERATOR
 
 /************* QUALIFIER **************/
 QUALIFIER
-        = _ ":" _ name:$TOKEN parameter:(_ ":" _ @PARAMETER )* _
-        { return {'value': name, 'paras': parameter} }
+        = _ start:("?:" /":") _ name:$TOKEN parameter:(_ ":" _ @PARAMETER )* _
+        { return {'value': name, 'paras': parameter, 'optional': start === '?:'} }
 
 /************* PIPE **************/
 PIPES
@@ -158,8 +158,7 @@ EscapeSequence
         = "'"
         / '"'
         / "\\"
-        / "\x01"  { return "\\";   }
-        / "\x02"  { return "$";    }
+        / "$"     { return "$";   }
         / "b"     { return "\b";   }
         / "f"     { return "\f";   }
         / "n"     { return "\n";   }
