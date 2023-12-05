@@ -330,7 +330,7 @@ describe('store', () => {
             {
                 match: null,
                 qualifier: {
-                    optional: false,
+                    optional: true,
                     stringValue: '',
                     value: 'xxxxx',
                     paras: null

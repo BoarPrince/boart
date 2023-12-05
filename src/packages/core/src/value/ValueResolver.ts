@@ -1,3 +1,4 @@
+import { DataContentHelper } from '../data/DataContentHelper';
 import { VariableParser } from '../parser/VariableParser';
 import { ASTVariable } from '../parser/ast/ASTVariable';
 import { PipeResolver } from '../pipe/PipeResolver';
@@ -15,7 +16,6 @@ import { ValueReplacerHandler } from './ValueReplacerHandler';
 export class ValueResolver {
     private readonly parser: VariableParser;
     private readonly pipeResolver: PipeResolver;
-    private readonly singleVarRe: RegExp;
 
     /**
      *
@@ -23,7 +23,6 @@ export class ValueResolver {
     constructor(private handler: ValueReplacerHandler) {
         this.parser = new VariableParser();
         this.pipeResolver = new PipeResolver();
-        this.singleVarRe = /\$\{[^{}]+\}/;
     }
 
     /**
@@ -70,18 +69,20 @@ export class ValueResolver {
     /**
      *
      */
-    private default(ast: ValueReplaceArg, store: StoreWrapper): string {
+    private useDefault(ast: ValueReplaceArg, store: StoreWrapper): string {
         if (!ast.default) {
             return null;
         }
 
+        const defaultValue = ast.default.value;
+
         switch (ast.default.operator) {
             case OperatorType.Default:
-                return ast.default.value;
+                return defaultValue;
 
             case OperatorType.DefaultAssignment: {
-                store.put(ast, ast.default.value);
-                return ast.default.value;
+                store.put(ast, DataContentHelper.create(defaultValue));
+                return defaultValue;
             }
 
             case OperatorType.None:
@@ -139,20 +140,52 @@ export class ValueResolver {
         if (config.selectorsCountMax < ast.selectors?.length) {
             throw Error(`max ${config.selectorsCountMax || 0} selector(s) allowed, but ${ast.selectors?.length ?? 0} found: ${ast.match}`);
         }
+    }
 
-        // check default assignment
-        if (ast.default?.operator === OperatorType.DefaultAssignment && !ast.selectors?.length) {
-            const marker = this.parser.getValueWithStartMarker(ast.default.location, ast.match);
-            throw Error(`selector is required in case of default assignment: ${marker}\n${ast.match}`);
+    /**
+     *
+     */
+    private getInnerMatch(value: string): string {
+        if (value == null) {
+            return;
         }
+        const escapedValue = value //
+            .replace(/\\\\/g, '\x01')
+            .replace(/\\{/g, '\x02')
+            .replace(/\\}/g, '\x03')
+            .replace(/\\"/g, '\x04')
+            .replace(/\\'/g, '\x05');
+
+        const stringMatchList = new Array<string>();
+        const valueWithoutStrings = escapedValue.replace(/"[^"]*"|'[^']*'/gm, (matchedValue: string) => {
+            stringMatchList.push(matchedValue);
+            return `\\${stringMatchList.length - 1}`;
+        });
+
+        const singleVarRe = /\$\{[^{}]+\}/;
+        for (const stringMatch of stringMatchList) {
+            const match = singleVarRe.exec(stringMatch);
+            if (match) {
+                return match[0];
+            }
+        }
+
+        const wholeMatch = singleVarRe.exec(valueWithoutStrings);
+        if (!wholeMatch) {
+            return null;
+        }
+
+        return wholeMatch[0].replace(/\\([0-9]+)/g, (match: string, index: string) => {
+            return stringMatchList[parseInt(index)];
+        });
     }
 
     /**
      *
      */
     private replaceOneMatch(value: string): string {
-        const match = this.singleVarRe.exec(value);
-        const ast = match ? this.parser.parseVariable(match[0]) : null;
+        const match = this.getInnerMatch(value);
+        const ast = !match ? null : this.parser.parseVariable(match);
 
         if (!ast) {
             return value;
@@ -160,15 +193,20 @@ export class ValueResolver {
 
         const replacer = this.handler.get(ast.name.value);
         if (!replacer) {
-            return value;
+            throw new Error(`replacer "${ast.name.value}" does not exist`);
         }
 
         this.checkConfig(ast, replacer.config);
 
         const store = ValueResolver.getStore(ast.scope?.value || replacer.config.defaultScopeType);
 
-        const replacement = replacer.replace(ast, store) ?? this.default(ast, store);
-        const replacedValue = value.replace(ast.match, replacement);
+        const replacement = replacer.replace(ast, store) ?? this.useDefault(ast, store);
+
+        const replacedValue = value //
+            // "$" makes problem for replacing -> $1, $2, ...
+            .replace(ast.match, replacement?.replace(/\$/g, '\x01') ?? null)
+            // eslint-disable-next-line no-control-regex
+            .replace(/\x01/g, '$');
 
         switch (replacedValue) {
             case 'null':

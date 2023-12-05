@@ -23,8 +23,8 @@ export class DataContentHelper {
             return JSON.parse(content);
         } catch (error) {
             try {
-                // try again without comments
-                return JSON.parse(content.replace(/[\n]?\s[^\S]*\/\/.*[\n]?/g, ''));
+                // try again without comments in json
+                return JSON.parse(content?.replace(/[\n]?\s[^\S]*\/\/.*[\n]?/g, ''));
             } catch (error) {
                 return failedContent;
             }

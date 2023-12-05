@@ -305,6 +305,17 @@ describe('default', () => {
     /**
      *
      */
+    it('default assignment can have special characters', () => {
+        const mock = valueReplacerHandlerMock(null, { defaultScopeType: ScopeType.Test });
+        sut = new ValueResolver(mock.handler);
+
+        const replacedValue = sut.replace(`\${replacer:a#b:="$&'$"}`);
+        expect(replacedValue).toBe("$&'$");
+    });
+
+    /**
+     *
+     */
     it('default assignment can contain json objects', () => {
         const mock = valueReplacerHandlerMock(null, { defaultScopeType: ScopeType.Test });
         sut = new ValueResolver(mock.handler);
