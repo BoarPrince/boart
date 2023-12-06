@@ -8,7 +8,7 @@ describe('check IBAN Generator', () => {
     const sut = new IbanGenerator();
 
     it('check generated iban length', () => {
-        const iban = sut.generate();
+        const iban = sut.generate(null);
         expect(iban).not.toBeNull();
         expect(iban).toBeDefined();
         expect(iban.length).toBe(22);
@@ -16,7 +16,7 @@ describe('check IBAN Generator', () => {
 
     it('check generation with iban validator', () => {
         for (let i = 0; i < 100; i++) {
-            const iban = sut.generate();
+            const iban = sut.generate(null);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             expect(IBAN.isValid(iban)).toBeTruthy();
         }
@@ -24,7 +24,7 @@ describe('check IBAN Generator', () => {
 
     it('parameters shall not be defined', () => {
         try {
-            sut.generate('para1');
+            sut.generate(['para1']);
         } catch (error) {
             expect(error.message).toBe(`parameter 'para1' cannot be defined for iban generator`);
             return;

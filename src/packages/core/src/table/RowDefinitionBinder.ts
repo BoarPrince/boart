@@ -2,7 +2,6 @@ import { ExecutionContext } from '../execution/ExecutionContext';
 import { VariableParser } from '../parser/VariableParser';
 import { ASTAction } from '../parser/ast/ASTAction';
 import { ParaType } from '../types/ParaType';
-import { ScopeType } from '../types/ScopeType';
 import { ScopedType } from '../types/ScopedType';
 import { SelectorType } from '../types/SelectorType';
 import { ValueReplacerHandler } from '../value/ValueReplacerHandler';

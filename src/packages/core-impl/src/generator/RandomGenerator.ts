@@ -23,10 +23,8 @@ export class RandomGenerator implements Generator {
     /**
      *
      */
-    generate(para_size: string): string {
-        if (!para_size) {
-            para_size = '4'; // default
-        }
+    generate(paras: string[]): string {
+        const para_size = paras?.[0] ?? '4';
 
         const count = Number.parseInt(para_size);
 

@@ -14,9 +14,9 @@ export class UUIDGenerator implements Generator {
     /**
      *
      */
-    generate(para?: string): string {
-        if (!!para) {
-            throw Error(`paramter '${para}' cannot be defined for uuid generator`);
+    generate(paras: string[]): string {
+        if (paras?.length > 0) {
+            throw Error(`paramter '${paras.join(':')}' cannot be defined for uuid generator`);
         }
         return randomUUID();
     }

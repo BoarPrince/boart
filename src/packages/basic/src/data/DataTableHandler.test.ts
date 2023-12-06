@@ -1,13 +1,21 @@
 import fs from 'fs';
 
 import { DataTableHandler } from '@boart/basic';
-import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, StepContext, Store, TestContext } from '@boart/core';
+import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, StepContext, Store, TestContext, VariableParser } from '@boart/core';
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
 
 // eslint-disable-next-line jest/require-hook
 fetchMock.enableMocks();
 const sut = new DataTableHandler();
+
+const variableParser = new VariableParser();
+const astOut = variableParser.parseAction('store:out');
+const astOut1 = variableParser.parseAction('store:out1');
+const astOut2 = variableParser.parseAction('store:out2');
+const astOut3 = variableParser.parseAction('store:out3');
+const astData = variableParser.parseAction('store:data');
+const astVarx = variableParser.parseAction('store:varX');
 
 /**
  *
@@ -89,7 +97,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toBe('i.n.p.u.t');
     });
 
@@ -106,7 +114,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toStrictEqual({ a: 1 });
     });
 
@@ -124,7 +132,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toStrictEqual({ a: 1, b: 'c' });
     });
 
@@ -142,7 +150,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toBe(1);
     });
 
@@ -161,7 +169,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toBe(1);
     });
 
@@ -182,13 +190,13 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result1 = Store.instance.testStore.get('out1');
+        const result1 = Store.instance.testStore.get(astOut1);
         expect(result1.valueOf()).toStrictEqual({ a: { b: 1 } });
 
-        const result2 = Store.instance.testStore.get('out2');
+        const result2 = Store.instance.testStore.get(astOut2);
         expect(result2.valueOf()).toStrictEqual({ b: 1 });
 
-        const result3 = Store.instance.testStore.get('out3');
+        const result3 = Store.instance.testStore.get(astOut3);
         expect(result3.valueOf()).toBe(1);
     });
 
@@ -209,10 +217,10 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result1 = Store.instance.testStore.get('out1');
+        const result1 = Store.instance.testStore.get(astOut1);
         expect(result1.valueOf()).toStrictEqual({ b: 1 });
 
-        const result2 = Store.instance.testStore.get('out2');
+        const result2 = Store.instance.testStore.get(astOut2);
         expect(result2.valueOf()).toBe(1);
     });
 
@@ -230,7 +238,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toBe(1);
     });
 
@@ -249,10 +257,10 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result1 = Store.instance.testStore.get('out1');
+        const result1 = Store.instance.testStore.get(astOut1);
         expect(result1.valueOf()).toBe(1);
 
-        const result2 = Store.instance.testStore.get('out2');
+        const result2 = Store.instance.testStore.get(astOut2);
         expect(result2.valueOf()).toBe(2);
     });
 
@@ -260,7 +268,7 @@ describe('data:unit', () => {
      *
      */
     it('use store as input', async () => {
-        Store.instance.testStore.put('data', { ab: 5 });
+        Store.instance.testStore.put(astData, { ab: 5 });
 
         const tableRows = MarkdownTableReader.convert(
             `| action | value          |
@@ -271,7 +279,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toStrictEqual({ ab: 5 });
     });
 
@@ -279,7 +287,7 @@ describe('data:unit', () => {
      *
      */
     it('use store as input and extend it', async () => {
-        Store.instance.testStore.put('data', { ab: 5 });
+        Store.instance.testStore.put(astData, { ab: 5 });
 
         const tableRows = MarkdownTableReader.convert(
             `| action | value          |
@@ -291,7 +299,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toStrictEqual({ ab: 5, ac: 3 });
     });
 
@@ -299,7 +307,7 @@ describe('data:unit', () => {
      *
      */
     it('use store as input and use transformation', async () => {
-        Store.instance.testStore.put('data', { ab: 5 });
+        Store.instance.testStore.put(astData, { ab: 5 });
 
         const tableRows = MarkdownTableReader.convert(
             `| action          | value          |
@@ -312,7 +320,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toStrictEqual({ d: 3 });
     });
 
@@ -329,7 +337,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toStrictEqual({ uuid: 'x-x-x' });
     });
 
@@ -348,7 +356,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toStrictEqual({ random: 5555 });
     });
 
@@ -367,7 +375,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toStrictEqual({ random: '-5555-' });
     });
 
@@ -386,7 +394,7 @@ describe('data:unit', () => {
 
         await sut.handler.process(tableRows);
 
-        const result = Store.instance.testStore.get('out');
+        const result = Store.instance.testStore.get(astOut);
         expect(result.valueOf()).toStrictEqual({ random: 5555555555 });
     });
 });
@@ -435,7 +443,7 @@ describe('data:unit repeat', () => {
              | expected     | foo            |`
         );
 
-        Store.instance.testStore.put('varX', 'fo');
+        Store.instance.testStore.put(astVarx, 'fo');
 
         jest.spyOn(global, 'setTimeout').mockImplementation((callback, ms) => {
             expect(ms).toBe(10);
@@ -460,11 +468,11 @@ describe('data:unit repeat', () => {
              | expected        | foo            |`
         );
 
-        Store.instance.testStore.put('varX', 'fo');
+        Store.instance.testStore.put(astVarx, 'fo');
 
         jest.spyOn(global, 'setTimeout').mockImplementation((callback, ms) => {
             expect(ms).toBe(1000);
-            Store.instance.testStore.put('varX', 'foo');
+            Store.instance.testStore.put(astVarx, 'foo');
             callback();
             return null;
         });
@@ -487,10 +495,10 @@ describe('data:unit repeat', () => {
              | expected        | foo                   |`
         );
 
-        Store.instance.testStore.put('varX', 'fo');
+        Store.instance.testStore.put(astVarx, 'fo');
 
         jest.spyOn(global, 'setTimeout').mockImplementation((callback) => {
-            Store.instance.testStore.put('varX', 'foo');
+            Store.instance.testStore.put(astVarx, 'foo');
             callback();
             return null;
         });

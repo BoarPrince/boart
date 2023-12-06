@@ -1,4 +1,4 @@
-import { ExecutionUnit, Runtime, Store } from '@boart/core';
+import { ExecutionUnit, Runtime, Store, StoreMap } from '@boart/core';
 import { RowTypeValue, UUIDGenerator } from '@boart/core-impl';
 import { RabbitQueueHandler, RabbitQueueMessage, RabbitQueueMessageConsumer } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
@@ -33,7 +33,7 @@ export class RabbitListenerExecutionUnit implements ExecutionUnit<RabbitListener
         if (!context.config.queue) {
             // if listening to exchange (no queue), a temporary queue needs to be created
             isTempQueue = true;
-            context.config.queue = 'temp.' + new UUIDGenerator().generate();
+            context.config.queue = 'temp.' + new UUIDGenerator().generate(null);
             await handlerInstance.addQueue(context.config.queue);
         }
 
@@ -76,7 +76,7 @@ export class RabbitListenerExecutionUnit implements ExecutionUnit<RabbitListener
             };
             receivedMessages.push(receivedMessage);
 
-            Store.instance.testStore.put(context.config.storeName, receivedMessages);
+            Store.instance.testStore.put(StoreMap.getStoreIdentifier(context.config.storeName), receivedMessages);
             resultData.add(receivedMessage);
         };
 
@@ -95,7 +95,7 @@ export class RabbitListenerExecutionUnit implements ExecutionUnit<RabbitListener
      */
     private async initConsume(context: RabbitListenerContext): Promise<void> {
         // init store with empty string
-        Store.instance.testStore.put(context.config.storeName, '');
+        Store.instance.testStore.put(StoreMap.getStoreIdentifier(context.config.storeName), '');
 
         const consumer = await this.startConsuming(context);
         consumer.start().catch((error) => {

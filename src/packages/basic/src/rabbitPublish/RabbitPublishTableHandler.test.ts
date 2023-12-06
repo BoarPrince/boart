@@ -92,20 +92,13 @@ beforeEach(() => {
     const item: ValueReplacer = {
         name: '',
         priority: 0,
-        config: null,
+        config: {},
         scoped: ScopedType.False,
         replace: (ast: ValueReplaceArg): string => {
             return ast.qualifier.value === 'rabbitmq_port' ? '0' : ast.qualifier.value;
         }
     };
     ValueReplacerHandler.instance.add('env', item);
-});
-
-/**
- *
- */
-afterEach(() => {
-    StepReport.instance.report();
 });
 
 /**
@@ -126,7 +119,7 @@ describe('default', () => {
         await sut.handler.process(tableRows);
 
         expect(sut.handler.getExecutionEngine().context.preExecution.payload).toBeInstanceOf(ObjectContent);
-        expect(sut.handler.getExecutionEngine().context.preExecution.payload.valueOf()).toEqual({ a: 1 });
+        expect(sut.handler.getExecutionEngine().context.preExecution.payload.valueOf()).toStrictEqual({ a: 1 });
     });
 
     /**

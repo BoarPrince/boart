@@ -26,7 +26,7 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
      */
     newContext = (): RepeatableDataExecutionContext => ({
         repetition: { pause: 0, count: 0 },
-        config: null,
+        config: {},
         preExecution: {
             payload: null
         },

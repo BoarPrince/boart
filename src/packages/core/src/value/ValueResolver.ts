@@ -199,7 +199,6 @@ export class ValueResolver {
         this.checkConfig(ast, replacer.config);
 
         const store = ValueResolver.getStore(ast.scope?.value || replacer.config.defaultScopeType);
-
         const replacement = replacer.replace(ast, store) ?? this.useDefault(ast, store);
 
         const replacedValue = value //

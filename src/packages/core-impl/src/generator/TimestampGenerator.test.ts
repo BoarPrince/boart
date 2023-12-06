@@ -1,12 +1,13 @@
-import assert from 'assert';
-
 import { TimestampGenerator } from './TimestampGenerator';
 
+/**
+ *
+ */
 describe('check timestamp generator', () => {
     const sut = new TimestampGenerator();
 
     it('check generated timestamp length', () => {
-        const timestamp = sut.generate();
+        const timestamp = sut.generate(null);
         expect(timestamp).not.toBeNull();
         expect(timestamp).toBeDefined();
         expect(timestamp.length).toBeGreaterThanOrEqual(17);
@@ -14,6 +15,6 @@ describe('check timestamp generator', () => {
     });
 
     it('parameters shall not be defined', () => {
-        expect(() => sut.generate('para1')).toThrowError(`parameter 'para1' cannot be defined for timestamp generator`);
+        expect(() => sut.generate(['para1'])).toThrow(`parameter 'para1' cannot be defined for timestamp generator`);
     });
 });

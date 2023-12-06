@@ -11,6 +11,7 @@ import {
     ScopedType,
     StepContext,
     Store,
+    StoreMap,
     TestContext,
     TextContent,
     ValueReplaceArg,
@@ -82,7 +83,7 @@ beforeEach(() => {
     const item: ValueReplacer = {
         name: '',
         priority: 0,
-        config: null,
+        config: {},
         scoped: ScopedType.False,
         replace: (ast: ValueReplaceArg): string => {
             return ast.qualifier.value === 'rabbitmq_port' ? '0' : ast.qualifier.value;
@@ -782,6 +783,8 @@ describe('count', () => {
  *
  */
 describe('transform & output', () => {
+    const astTestOut = StoreMap.getStoreIdentifier('testout');
+
     /**
      *
      */
@@ -831,8 +834,8 @@ describe('transform & output', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(Store.instance.testStore.get('testout')).toBeInstanceOf(ObjectContent);
-        expect(Store.instance.testStore.get('testout').toString()).toBe('{"a":"x"}');
+        expect(Store.instance.testStore.get(astTestOut)).toBeInstanceOf(ObjectContent);
+        expect(Store.instance.testStore.get(astTestOut).toString()).toBe('{"a":"x"}');
     });
 
     /**
@@ -859,8 +862,8 @@ describe('transform & output', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(Store.instance.testStore.get('testout')).toBeInstanceOf(TextContent);
-        expect(Store.instance.testStore.get('testout').toString()).toBe('x');
+        expect(Store.instance.testStore.get(astTestOut)).toBeInstanceOf(TextContent);
+        expect(Store.instance.testStore.get(astTestOut).toString()).toBe('x');
     });
 });
 

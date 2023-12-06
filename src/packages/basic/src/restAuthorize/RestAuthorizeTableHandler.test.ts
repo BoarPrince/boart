@@ -2,7 +2,7 @@ import fs from 'fs';
 import { URLSearchParams } from 'url';
 
 import { RestAuthorizeTableHandler } from '@boart/basic';
-import { MarkdownTableReader, Runtime, StepContext, Store } from '@boart/core';
+import { MarkdownTableReader, Runtime, StepContext, Store, StoreMap } from '@boart/core';
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
 
@@ -140,8 +140,9 @@ it('token must be generated (default name)', async () => {
 
     await sut.handler.process(tableRows);
 
+    const astAuthorization = StoreMap.getStoreIdentifier('authorization');
     expect(sut.handler.getExecutionEngine().context.execution.token).toBe('T.O.K.E.N');
-    expect(Store.instance.testStore.get('authorization').valueOf()).toBe('T.O.K.E.N');
+    expect(Store.instance.testStore.get(astAuthorization).valueOf()).toBe('T.O.K.E.N');
 });
 
 /**
@@ -165,8 +166,8 @@ it('token must be generated (custom name)', async () => {
     await sut.handler.process(tableRows);
 
     expect(sut.handler.getExecutionEngine().context.execution.token).toBe('T.O.K.E.N');
-    expect(Store.instance.testStore.get('authorization')).toBeNull();
-    expect(Store.instance.testStore.get('XauthX').valueOf()).toBe('T.O.K.E.N');
+    expect(Store.instance.testStore.get(StoreMap.getStoreIdentifier('authorization'))).toBeNull();
+    expect(Store.instance.testStore.get(StoreMap.getStoreIdentifier('XauthX')).valueOf()).toBe('T.O.K.E.N');
 });
 
 /**

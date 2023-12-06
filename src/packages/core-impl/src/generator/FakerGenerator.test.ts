@@ -32,7 +32,7 @@ describe('faker generator', () => {
      *
      */
     it('result of datatype.number must be a number', () => {
-        const fakerResult = sut.generate('datatype', 'number');
+        const fakerResult = sut.generate(['datatype', 'number']);
         expect(parseInt(fakerResult)).toBeGreaterThanOrEqual(0);
     });
 
@@ -40,7 +40,7 @@ describe('faker generator', () => {
      *
      */
     it('result of datatype.number with parameter 10-99 must have a correct value', () => {
-        const fakerResult = sut.generate('datatype', 'number', 'min=10', 'max=99');
+        const fakerResult = sut.generate(['datatype', 'number', 'min=10', 'max=99']);
         expect(parseInt(fakerResult)).toBeGreaterThanOrEqual(10);
         expect(parseInt(fakerResult)).toBeLessThanOrEqual(99);
     });
@@ -49,7 +49,7 @@ describe('faker generator', () => {
      *
      */
     it('result of datatype.number with parameter 100-999 must have a correct value', () => {
-        const fakerResult = sut.generate('datatype', 'number', 'min=100', 'max=999');
+        const fakerResult = sut.generate(['datatype', 'number', 'min=100', 'max=999']);
         expect(parseInt(fakerResult)).toBeGreaterThanOrEqual(100);
         expect(parseInt(fakerResult)).toBeLessThanOrEqual(999);
     });
@@ -59,7 +59,7 @@ describe('faker generator', () => {
      */
     it('wrong faker call should throw an error', () => {
         try {
-            sut.generate('fake', 'fake');
+            sut.generate(['fake', 'fake']);
         } catch (error) {
             expect(error.message).toBe(
                 `error calling faker namespace 'fake.fake', see: https://fakerjs.dev/, \n\nError: Invalid module method or definition: fake.fake\n- faker.fake.fake is not a function\n- faker.definitions.fake.fake is not an array`

@@ -10,6 +10,7 @@ import {
     ScopedType,
     StepContext,
     Store,
+    StoreMap,
     TestContext,
     ValueReplaceArg,
     ValueReplacer,
@@ -86,7 +87,7 @@ describe('default', () => {
         const item: ValueReplacer = {
             name: '',
             priority: 0,
-            config: null,
+            config: {},
             scoped: ScopedType.False,
             replace: (ast: ValueReplaceArg): string => {
                 return ast.qualifier.value === 'rabbitmq_port' ? '0' : ast.qualifier.value;
@@ -125,7 +126,7 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config).toEqual({
+        expect(sut.handler.getExecutionEngine().context.config).toStrictEqual({
             exchange: '',
             hostname: 'rabbitmq_hostname',
             password: 'rabbitmq_password',
@@ -137,8 +138,9 @@ describe('default', () => {
             vhost: '/'
         });
 
-        const queueData = Store.instance.testStore.get('myStore');
-        expect(queueData.valueOf()).toEqual([
+        const astMyStore = StoreMap.getStoreIdentifier('myStore');
+        const queueData = Store.instance.testStore.get(astMyStore);
+        expect(queueData.valueOf()).toStrictEqual([
             {
                 data: { a: 'x' },
                 header: {
@@ -177,7 +179,7 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config).toEqual({
+        expect(sut.handler.getExecutionEngine().context.config).toStrictEqual({
             exchange: 'myExchange',
             hostname: 'rabbitmq_hostname',
             password: 'rabbitmq_password',
@@ -190,8 +192,9 @@ describe('default', () => {
             vhost: '/'
         });
 
-        const queueData = Store.instance.testStore.get('myStore');
-        expect(queueData.valueOf()).toEqual([
+        const astMyStore = StoreMap.getStoreIdentifier('myStore');
+        const queueData = Store.instance.testStore.get(astMyStore);
+        expect(queueData.valueOf()).toStrictEqual([
             {
                 data: { a: 'x' },
                 header: {
@@ -230,8 +233,9 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        const queueData = Store.instance.testStore.get('myStore');
-        expect(queueData.valueOf()).toEqual([
+        const astMyStore = StoreMap.getStoreIdentifier('myStore');
+        const queueData = Store.instance.testStore.get(astMyStore);
+        expect(queueData.valueOf()).toStrictEqual([
             {
                 data: { a: '1' },
                 header: {

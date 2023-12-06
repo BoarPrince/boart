@@ -1,8 +1,28 @@
-import assert from 'assert';
+import { ValueReplaceArg } from '../value/ValueReplacer';
 
 import { Generator } from './Generator';
 import { GeneratorHandler } from './GeneratorHandler';
 
+/**
+ *
+ */
+const getAst = (paras: string): ValueReplaceArg => {
+    const parasArray = paras.split(':');
+    const generator = parasArray.shift();
+    return {
+        qualifier: {
+            value: generator,
+            paras: parasArray,
+            optional: false,
+            stringValue: generator
+        },
+        match: generator
+    };
+};
+
+/**
+ *
+ */
 describe('check generatorHandler', () => {
     const sut = GeneratorHandler.instance;
 
@@ -28,14 +48,7 @@ describe('check generatorHandler', () => {
         const generator = new GeneratorMock();
 
         sut.add('g1', generator);
-        try {
-            sut.add('g1', generator);
-        } catch (error) {
-            expect(error.message).toBe(`generator 'g1' already exists!`);
-            return;
-        }
-
-        assert.fail('if adding the same generator multiple times, an error must be thrown');
+        expect(() => sut.add('g1', generator)).toThrow(`generator 'g1' already exists!`);
     });
 
     /**
@@ -45,14 +58,7 @@ describe('check generatorHandler', () => {
         const generator = new GeneratorMock();
 
         sut.add('g1', generator);
-        try {
-            sut.generate(':g1');
-        } catch (error) {
-            expect(error.message).toBe(`generator definition ':g1' can't be resolved!`);
-            return;
-        }
-
-        assert.fail('calling generator with a wrong definition must throw an error');
+        expect(() => sut.generate(getAst('xg1'))).toThrow(`generator 'xg1' can't be found!`);
     });
 
     /**
@@ -62,14 +68,7 @@ describe('check generatorHandler', () => {
         const generator = new GeneratorMock();
 
         sut.add('g1', generator);
-        try {
-            sut.generate('g2');
-        } catch (error) {
-            expect(error.message).toBe(`generator 'g2' can't be found!`);
-            return;
-        }
-
-        assert.fail('if generator cant be found, an error must be thrown');
+        expect(() => sut.generate(getAst('g2'))).toThrow(`generator 'g2' can't be found!`);
     });
 
     /**
@@ -79,10 +78,10 @@ describe('check generatorHandler', () => {
         const generator = new GeneratorMock();
 
         sut.add('g1', generator);
-        sut.generate('g1');
+        sut.generate(getAst('g1'));
 
         expect(generator.generate).toHaveBeenCalledTimes(1);
-        expect(generator.generate).toHaveBeenCalledWith('');
+        expect(generator.generate).toHaveBeenCalledWith([]);
     });
 
     /**
@@ -92,10 +91,10 @@ describe('check generatorHandler', () => {
         const generator = new GeneratorMock();
 
         sut.add('g1', generator);
-        sut.generate('g1:para1');
+        sut.generate(getAst('g1:para1'));
 
         expect(generator.generate).toHaveBeenCalledTimes(1);
-        expect(generator.generate).toHaveBeenCalledWith('para1');
+        expect(generator.generate).toHaveBeenCalledWith(['para1']);
     });
 
     /**
@@ -105,10 +104,10 @@ describe('check generatorHandler', () => {
         const generator = new GeneratorMock();
 
         sut.add('g1', generator);
-        sut.generate('g1:para1:para2');
+        sut.generate(getAst('g1:para1:para2'));
 
         expect(generator.generate).toHaveBeenCalledTimes(1);
-        expect(generator.generate).toHaveBeenCalledWith('para1', 'para2');
+        expect(generator.generate).toHaveBeenCalledWith(['para1', 'para2']);
     });
 
     /**
@@ -118,10 +117,10 @@ describe('check generatorHandler', () => {
         const generator = new GeneratorMock();
 
         sut.add('g1', generator);
-        sut.generate('g1:para1:para2:para3');
+        sut.generate(getAst('g1:para1:para2:para3'));
 
         expect(generator.generate).toHaveBeenCalledTimes(1);
-        expect(generator.generate).toHaveBeenCalledWith('para1', 'para2', 'para3');
+        expect(generator.generate).toHaveBeenCalledWith(['para1', 'para2', 'para3']);
     });
 
     /**
@@ -131,10 +130,10 @@ describe('check generatorHandler', () => {
         const generator = new GeneratorMock();
 
         sut.add('faker', generator);
-        sut.generate('faker:random.number:min=10:max=99');
+        sut.generate(getAst('faker:random.number:min=10:max=99'));
 
         expect(generator.generate).toHaveBeenCalledTimes(1);
-        expect(generator.generate).toHaveBeenCalledWith('random.number', 'min=10', 'max=99');
+        expect(generator.generate).toHaveBeenCalledWith(['random.number', 'min=10', 'max=99']);
     });
 
     /**
@@ -152,13 +151,13 @@ describe('check generatorHandler', () => {
             name: 'g1',
             generate: jest.fn()
         };
-        sut.generate = jest.fn();
+        jest.spyOn(sut, 'generate').mockImplementation();
         jest.spyOn(sut, 'add');
 
         sut.addItems([generator]);
-        sut.generate('g1');
+        sut.generate(getAst('g1'));
 
-        expect(sut.add).toBeCalledTimes(1);
+        expect(sut.add).toHaveBeenCalledTimes(1);
         expect(sut.add).toHaveBeenCalledWith('g1', generator);
         expect(sut.generate).toHaveBeenCalledTimes(1);
     });
@@ -171,13 +170,7 @@ describe('check generatorHandler', () => {
 
         sut.add('g1', generator);
         sut.delete('g1');
-        try {
-            sut.generate('g1');
-            return;
-        } catch (error) {
-            expect(error.message).toBe("generator 'g1' can't be found!");
-            return;
-        }
-        assert.fail('error must be thrown if generator cant be found');
+
+        expect(() => sut.generate(getAst('g1'))).toThrow("generator 'g1' can't be found!");
     });
 });

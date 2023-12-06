@@ -2,11 +2,14 @@ import assert from 'assert';
 
 import { UUIDGenerator } from './UUIDGenerator';
 
+/**
+ *
+ */
 describe('check UUIDGenerator', () => {
     const sut = new UUIDGenerator();
 
     it('check correct uuid generation', () => {
-        const uuid = sut.generate();
+        const uuid = sut.generate(null);
         expect(uuid).not.toBeNull();
         expect(uuid).toBeDefined();
         expect(uuid.length).toBe(36);
@@ -15,7 +18,7 @@ describe('check UUIDGenerator', () => {
 
     it('parameters shall not be defined', () => {
         try {
-            sut.generate('para1');
+            sut.generate(['para1']);
         } catch (error) {
             expect(error.message).toBe(`paramter 'para1' cannot be defined for uuid generator`);
             return;

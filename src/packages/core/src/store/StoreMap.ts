@@ -5,8 +5,8 @@ import { ValueReplaceArg } from '../value/ValueReplacer';
  *
  */
 export abstract class StoreMap {
-    abstract put(ast: ValueReplaceArg | any, value: ContentType): void;
-    abstract get(ast: ValueReplaceArg | any | undefined): ContentType;
+    abstract put(ast: ValueReplaceArg, value: ContentType): void;
+    abstract get(ast: ValueReplaceArg): ContentType;
     abstract has(ast: ValueReplaceArg): boolean;
     abstract clear(): void;
 
@@ -16,7 +16,7 @@ export abstract class StoreMap {
     protected getKey(ast: ValueReplaceArg): string {
         const storeName = ast?.qualifier?.value;
         if (!storeName) {
-            throw Error('qualifier must be defined for identifying the store name');
+            throw Error(`qualifier must be defined for identifying the store name -> "${ast?.match}"`);
         }
         return storeName;
     }

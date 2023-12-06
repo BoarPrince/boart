@@ -14,55 +14,55 @@ describe('isodate generator', () => {
     };
 
     it('result of isodate generator must be 19 characters', () => {
-        const isodate = sut.generate('1');
+        const isodate = sut.generate(['1']);
         expect(isodate).toBeDefined();
         expect(isodate.length).toBe(10);
     });
 
     it('isodate generator without a paramter must fit to now', () => {
-        const isodate = sut.generate();
+        const isodate = sut.generate(null);
         const generator_date = new Date(isodate);
         expect(generator_date.toDateString()).toBe(getDateString(0));
     });
 
     it('isodate generator with parameter 1 must have one day offset', () => {
-        const isodate = sut.generate('1');
+        const isodate = sut.generate(['1']);
         const generator_date = new Date(isodate);
         expect(generator_date.toDateString()).toBe(getDateString(1));
     });
 
     it('isodate generator with parameter 1 must have two day offset', () => {
-        const isodate = sut.generate('2');
+        const isodate = sut.generate(['2']);
         const generator_date = new Date(isodate);
         expect(generator_date.toDateString()).toBe(getDateString(2));
     });
 
     it('isodate generator with parameter 1 must have five day offset', () => {
-        const isodate = sut.generate('5');
+        const isodate = sut.generate(['5']);
         const generator_date = new Date(isodate);
         expect(generator_date.toDateString()).toBe(getDateString(5));
     });
 
     it('isodate generator with parameter 1 must have hundred day offset', () => {
-        const isodate = sut.generate('100');
+        const isodate = sut.generate(['100']);
         const generator_date = new Date(isodate);
         expect(generator_date.toDateString()).toBe(getDateString(100));
     });
 
     it('isodate generator with parameter 1 must have one day negative offset', () => {
-        const isodate = sut.generate('-1');
+        const isodate = sut.generate(['-1']);
         const generator_date = new Date(isodate);
         expect(generator_date.toDateString()).toBe(getDateString(-1));
     });
 
     it('isodate generator with parameter 1 must have two day negative offset', () => {
-        const isodate = sut.generate('-2');
+        const isodate = sut.generate(['-2']);
         const generator_date = new Date(isodate);
         expect(generator_date.toDateString()).toBe(getDateString(-2));
     });
 
     it('isodate generator with parameter 1 must have five day negative offset', () => {
-        const isodate = sut.generate('-5');
+        const isodate = sut.generate(['-5']);
         const generator_date = new Date(isodate);
         expect(generator_date.toDateString()).toBe(getDateString(-5));
     });
@@ -75,7 +75,7 @@ describe('isodate generator', () => {
 
     it('parameter must be a number', () => {
         try {
-            sut.generate('not a number');
+            sut.generate(['not a number']);
         } catch (error) {
             expect(error.message).toBe(`iso date generator requires a number parameter. 'not a number' does not fit this requirement.`);
             return;

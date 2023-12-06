@@ -20,7 +20,7 @@ export class ValueReplacerConfig {
 /**
  *
  */
-export interface ValueReplaceArg extends Omit<ASTVariable, 'scope' | 'match' | 'name'> {
+export interface ValueReplaceArg extends Omit<ASTVariable, 'match' | 'name'> {
     match: string;
 }
 

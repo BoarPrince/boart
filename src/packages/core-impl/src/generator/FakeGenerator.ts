@@ -29,13 +29,20 @@ export class FakeGenerator implements Generator {
     /**
      *
      */
-    generate(level1: string, level2: string, ...params: readonly string[]): string {
+    generate(paras: string[]): string {
+        const level1 = paras?.shift();
+        const level2 = paras?.shift();
+
+        if (!level2) {
+            throw Error(`error calling faker, at least one parameter must be defined`);
+        }
+
         try {
-            if (!params || params.length === 0) {
-                return faker.helpers.fake(`{{${level1}.${level2}}}`);
+            if (!level1 || !level2) {
+                return faker.helpers.fake(`{{${level1 ?? ''}.${level2 ?? ''}}}`);
             } else {
                 const paraObject = JSON.stringify(
-                    params
+                    paras
                         .map((p) => {
                             const [name, value] = p.split('=');
                             return { name, value };

@@ -1,4 +1,4 @@
-import { Semaphore, Store } from '@boart/core';
+import { Semaphore, Store, StoreMap } from '@boart/core';
 import { Channel, connect, Connection, ConsumeMessage, Replies } from 'amqplib';
 
 import { RabbitConfiguration } from './RabbitConfiguration';
@@ -63,12 +63,13 @@ export class RabbitQueueHandler {
      */
     public static getInstance(config: RabbitConfiguration): RabbitQueueHandler {
         const instanceKey = RabbitQueueHandler.getInstanceKeyId(config);
+        const astInstanceKey = StoreMap.getStoreIdentifier(instanceKey);
 
-        let instance = Store.instance.testStore.store.get(instanceKey) as RabbitQueueHandler;
+        let instance = Store.instance.testStore.store.get(astInstanceKey) as RabbitQueueHandler;
         if (!instance) {
             instance = new RabbitQueueHandler();
             instance.config = config;
-            Store.instance.testStore.store.put(instanceKey, instance);
+            Store.instance.testStore.store.put(astInstanceKey, instance);
         }
         return instance;
     }

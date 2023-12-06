@@ -1,4 +1,5 @@
 import { Initializer } from '../common/Initializer';
+import { ValueReplaceArg } from '../value/ValueReplacer';
 
 import { Generator } from './Generator';
 
@@ -71,19 +72,12 @@ export class GeneratorHandler implements Initializer<Generator> {
     /**
      *
      */
-    public generate(definition: string): string {
-        const match = definition.match(/^(?<name>[^:]+)(:(?<parameter>.+))?$/);
-
-        if (!match) {
-            throw Error(`generator definition '${definition}' can't be resolved!`);
-        }
-
-        const generator = this.generators.get(match.groups.name);
+    public generate(ast: ValueReplaceArg): string {
+        const generator = this.generators.get(ast.qualifier.value);
         if (!generator) {
-            throw Error(`generator '${match.groups.name}' can't be found!`);
+            throw Error(`generator '${ast.qualifier.value}' can't be found!`);
         }
 
-        const parameters = (match.groups.parameter || '').split(':');
-        return generator.generate(...parameters);
+        return generator.generate(ast.qualifier?.paras ?? []);
     }
 }

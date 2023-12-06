@@ -41,21 +41,22 @@ export class GenerateReplacer implements ValueReplacer {
 
     /**
      *
-     * @param arg parser arguments
+     * @param ast parser arguments
      * @param store store to be used
      */
-    replace(arg: ValueReplaceArg, store?: StoreWrapper): string {
+    replace(ast: ValueReplaceArg, store?: StoreWrapper): string {
         const baseStore = store.store;
 
-        const qualifier = arg.qualifier.stringValue;
+        const qualifier = ast.qualifier.stringValue;
+        const datascope = ast.datascope?.value;
 
-        const storeIdentifier = store
-            ? StoreMap.getStoreIdentifier(`#${this.name}#:#${store.storeName}#:#${qualifier}#`)
+        const storeIdentifier = datascope
+            ? StoreMap.getStoreIdentifier(`#${this.name}#:#${datascope}#:#${qualifier}#`)
             : StoreMap.getStoreIdentifier(`#${this.name}#:#${qualifier}#`);
 
         let content: string = baseStore.get(storeIdentifier)?.toString();
         if (!content) {
-            content = GeneratorHandler.instance.generate(qualifier);
+            content = GeneratorHandler.instance.generate(ast);
             baseStore.put(storeIdentifier, content);
         }
 

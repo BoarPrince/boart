@@ -389,7 +389,7 @@ it('no match', () => {
  */
 it('error can occur', () => {
     expect(() => sut.parseVariable('${var,var}')) //
-        .toThrow('Expected "#", ":", ":-", ":=", "?#", "?:", "@", "|", [ \\t], [a-zA-Z0-9\\-_], or end of input but "," found');
+        .toThrow('Expected "#", ":", ":-", "::", ":=", "?#", "?:", "@", "|", [ \\t], [a-zA-Z0-9\\-_], or end of input but "," found');
 });
 
 /**
@@ -397,7 +397,7 @@ it('error can occur', () => {
  */
 it('error can occur in strings', () => {
     expect(() => sut.parseVariable('${var:aa:"\\n\\n""}')) //
-        .toThrow('Expected "#", ":", ":-", ":=", "?#", "|", [ \\t], or end of input but "\\"" found.\n${var:aa:"\\n\\n" -> " <- }');
+        .toThrow('Expected "#", ":", ":-", "::", ":=", "?#", "|", [ \\t], or end of input but "\\"" found');
 });
 
 /**

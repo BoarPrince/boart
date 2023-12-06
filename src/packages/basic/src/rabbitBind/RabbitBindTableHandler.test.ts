@@ -79,7 +79,7 @@ beforeEach(() => {
     const item: ValueReplacer = {
         name: '',
         priority: 0,
-        config: null,
+        config: {},
         scoped: ScopedType.False,
         replace: (ast: ValueReplaceArg): string => {
             return ast.qualifier.value === 'rabbitmq_port' ? '0' : ast.qualifier.value;

@@ -25,10 +25,8 @@ export class HexGenerator implements Generator {
     /**
      *
      */
-    generate(para_size: string): string {
-        if (!para_size) {
-            para_size = '1'; // default
-        }
+    generate(paras: string[]): string {
+        const para_size = paras?.[0] ?? '1';
 
         const size = Number.parseInt(para_size);
         if (isNaN(size) || size < 1) {

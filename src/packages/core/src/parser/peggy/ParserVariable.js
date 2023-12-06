@@ -244,7 +244,7 @@ function peg$parse(input, options) {
   var peg$e31 = peg$classExpectation([["a", "z"], ["A", "Z"], ["0", "9"], "_"], false, false);
   var peg$e32 = peg$classExpectation([["a", "z"], ["A", "Z"], ["0", "9"], "-", "_"], false, false);
 
-  var peg$f0 = function(name, scope, qualifier, selector, default_Operator, pipes) { return { name: name, scope: scope, qualifier: qualifier, selectors: selector && selector.selectors || [], default: default_Operator, pipes: pipes } };
+  var peg$f0 = function(name, scope, qualifier, datascope, selector, default_Operator, pipes) { return { name: name, scope: scope, qualifier: qualifier, datascope: datascope, selectors: selector && selector.selectors || [], default: default_Operator, pipes: pipes } };
   var peg$f1 = function(name, scope, qualifier, datascope, selector) { return { name: name, scope: scope, qualifier: qualifier, datascope: datascope, selectors: selector && selector.selectors || [] } };
   var peg$f2 = function(scope, name, selector) { return { scope: scope, qualifier: name, selectors: selector && selector.selectors || [] } };
   var peg$f3 = function(name) { return {'value': name} };
@@ -443,7 +443,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseSTART_VARIABLE() {
-    var s0, s1, s2, s3, s4, s5, s6, s7, s8;
+    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
     s0 = peg$currPos;
     s1 = peg$parse_();
@@ -457,18 +457,22 @@ function peg$parse(input, options) {
       if (s4 === peg$FAILED) {
         s4 = null;
       }
-      s5 = peg$parseSELECTOR();
+      s5 = peg$parseDATASCOPE();
       if (s5 === peg$FAILED) {
         s5 = null;
       }
-      s6 = peg$parseDEFAULT();
+      s6 = peg$parseSELECTOR();
       if (s6 === peg$FAILED) {
         s6 = null;
       }
-      s7 = peg$parsePIPES();
-      s8 = peg$parse_();
+      s7 = peg$parseDEFAULT();
+      if (s7 === peg$FAILED) {
+        s7 = null;
+      }
+      s8 = peg$parsePIPES();
+      s9 = peg$parse_();
       peg$savedPos = s0;
-      s0 = peg$f0(s2, s3, s4, s5, s6, s7);
+      s0 = peg$f0(s2, s3, s4, s5, s6, s7, s8);
     } else {
       peg$currPos = s0;
       s0 = peg$FAILED;

@@ -765,7 +765,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add number as string to additional property', async () => {
+    it('add number as string to additional property - 1', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -783,7 +783,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add boolean to additional property', async () => {
+    it('add boolean to additional property - 2', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -936,7 +936,7 @@ describe('out store from payload', () => {
         await sut.handler.process(tableDef);
         const result = Store.instance.testStore.get(astVar);
 
-        expect(result.valueOf()).toEqual({ a: undefined, b: 2 });
+        expect(result.valueOf()).toStrictEqual({ a: undefined, b: 2 });
     });
 
     /**
@@ -1202,7 +1202,7 @@ describe('generate', () => {
      */
     it('default', async () => {
         const hexGenerator = GeneratorHandler.instance.get('hex');
-        jest.spyOn(hexGenerator, 'generate').mockImplementation((size) => size as string);
+        jest.spyOn(hexGenerator, 'generate').mockImplementation((paras) => paras.join(':'));
 
         const tableDef = MarkdownTableReader.convert(
             `|action    | value              |
@@ -1228,9 +1228,9 @@ describe('generate', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                   |
              |----------|-------------------------|
-             |payload#a | \${generate:@nameA:hex} |
-             |payload#b | \${generate:@nameB:hex} |
-             |payload#c | \${generate:@nameA:hex} |
+             |payload#a | \${generate:hex::nameA} |
+             |payload#b | \${generate:hex::nameB} |
+             |payload#c | \${generate:hex::nameA} |
              |store     | var                     |`
         );
 
@@ -1251,10 +1251,10 @@ describe('generate', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                      |
              |----------|---------------------------|
-             |payload#a | \${generate:g:@nameA:hex} |
-             |payload#b | \${generate:g:@nameB:hex} |
-             |payload#c | \${generate:g:@nameA:hex} |
-             |payload#d | \${generate:@nameA:hex}   |
+             |payload#a | \${generate@g:hex::nameA} |
+             |payload#b | \${generate@g:hex::nameB} |
+             |payload#c | \${generate@g:hex::nameA} |
+             |payload#d | \${generate:hex::nameA}   |
              |store     | var                       |`
         );
 
@@ -1269,12 +1269,12 @@ describe('generate', () => {
      */
     it('use with store assignment', async () => {
         const hexGenerator = GeneratorHandler.instance.get('hex');
-        jest.spyOn(hexGenerator, 'generate').mockImplementation((size) => size as string);
+        jest.spyOn(hexGenerator, 'generate').mockImplementation((paras) => paras.join(':'));
 
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                               |
              |----------|-------------------------------------|
-             |payload#a | \${store:a.p:=\${generate:hex:111}} |
+             |payload#a | \${store:a#p:=\${generate:hex:111}} |
              |store     | var                                 |`
         );
 
@@ -1282,7 +1282,7 @@ describe('generate', () => {
 
         const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toStrictEqual({ a: 111 });
-        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 111 });
+        expect(Store.instance.testStore.get(astA).valueOf()).toStrictEqual({ p: 111 });
     });
 
     /**
@@ -1290,12 +1290,12 @@ describe('generate', () => {
      */
     it('use with store assignment and scoped name', async () => {
         const hexGenerator = GeneratorHandler.instance.get('hex');
-        jest.spyOn(hexGenerator, 'generate').mockImplementation((size) => size as string);
+        jest.spyOn(hexGenerator, 'generate').mockImplementation((paras) => paras.join(':'));
 
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                                    |
              |----------|------------------------------------------|
-             |payload#a | \${store:a.p:=\${generate:@name:hex:22}} |
+             |payload#a | \${store:a#p:=\${generate:hex:22::name}} |
              |store     | var                                      |`
         );
 
@@ -1303,7 +1303,7 @@ describe('generate', () => {
 
         const result = Store.instance.testStore.get(astVar);
         expect(result.valueOf()).toStrictEqual({ a: 22 });
-        expect(Store.instance.testStore.get('a').valueOf()).toStrictEqual({ p: 22 });
+        expect(Store.instance.testStore.get(astA).valueOf()).toStrictEqual({ p: 22 });
     });
 
     /**
@@ -1322,7 +1322,7 @@ describe('generate', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action  | value                |
              |--------|----------------------|
-             |payload | \${generate:tpl:a.b} |
+             |payload | \${generate:tpl:a:b} |
              |store   | var                  |`
         );
 
@@ -1335,9 +1335,9 @@ describe('generate', () => {
     /**
      *
      */
-    it('use template generator contains hex generator ', async () => {
+    it('use template generator contains hex generator', async () => {
         const hexGenerator = GeneratorHandler.instance.get('hex');
-        jest.spyOn(hexGenerator, 'generate').mockImplementation((size) => size as string);
+        jest.spyOn(hexGenerator, 'generate').mockImplementation((paras) => paras.join(':'));
 
         delete globalThis._templateHandlerInstance;
         jest.spyOn(EnvLoader, 'getSettings').mockImplementation(() => ({
@@ -1373,9 +1373,7 @@ describe('generate', () => {
              |store   | var                |`
         );
 
-        await expect(async () => sut.handler.process(tableDef)).rejects.toThrowError(
-            `error template generator, template: 'a' does not exist`
-        );
+        await expect(async () => sut.handler.process(tableDef)).rejects.toThrow(`error template generator, template: 'a' does not exist`);
     });
 });
 
@@ -1517,7 +1515,7 @@ describe('check run:xxx', () => {
              |store       | var              |`
         );
 
-        await expect(() => sut.handler.process(tableDef)).rejects.toThrowError("context 'para' not defined");
+        await expect(() => sut.handler.process(tableDef)).rejects.toThrow("context 'para' not defined");
     });
 
     /**
@@ -1532,7 +1530,7 @@ describe('check run:xxx', () => {
              |store       | var            |`
         );
 
-        await expect(() => sut.handler.process(tableDef)).rejects.toThrowError("can't find value of 'store:var1'");
+        await expect(() => sut.handler.process(tableDef)).rejects.toThrow("can't find value of '${store:var1}'");
     });
 
     /**
@@ -1557,7 +1555,8 @@ describe('check run:xxx', () => {
      *
      */
     it('run:not-empty does not execute when value is an empty string', async () => {
-        Store.instance.testStore.put('var1', '');
+        const astVar1 = variableParser.parseAction('store:var1');
+        Store.instance.testStore.put(astVar1, '');
 
         const tableDef = MarkdownTableReader.convert(
             `|action        |value           |
@@ -1605,6 +1604,6 @@ describe('check run:xxx', () => {
              |store         | var            |`
         );
 
-        await expect(async () => await sut.handler.process(tableDef)).rejects.toThrowError("can't find value of 'store:var1'");
+        await expect(async () => await sut.handler.process(tableDef)).rejects.toThrow("can't find value of '${store:var1}'");
     });
 });

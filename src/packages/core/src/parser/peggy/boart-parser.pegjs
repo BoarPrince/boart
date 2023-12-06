@@ -4,8 +4,8 @@
 /************* V A R I A B L E **************/
 /********************************************/
 START_VARIABLE
-        = _ name:NAME scope:SCOPE? qualifier:QUALIFIER? selector:SELECTOR? default_Operator:DEFAULT? pipes:PIPES? _
-        { return { name: name, scope: scope, qualifier: qualifier, selectors: selector && selector.selectors || [], default: default_Operator, pipes: pipes } }
+        = _ name:NAME scope:SCOPE? qualifier:QUALIFIER? datascope:DATASCOPE? selector:SELECTOR? default_Operator:DEFAULT? pipes:PIPES? _
+        { return { name: name, scope: scope, qualifier: qualifier, datascope: datascope, selectors: selector && selector.selectors || [], default: default_Operator, pipes: pipes } }
 
 /********************************************/
 /*************** A C T I O N  ***************/

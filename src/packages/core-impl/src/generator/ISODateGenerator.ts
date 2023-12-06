@@ -22,10 +22,8 @@ export class ISODateGenerator implements Generator {
     /**
      *
      */
-    generate(para_offset?: string): string {
-        if (!para_offset) {
-            para_offset = '0'; // default
-        }
+    generate(paras: string[]): string {
+        const para_offset = paras?.[0] ?? '0';
 
         const offset = Number.parseInt(para_offset);
         if (isNaN(offset)) {

@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { RestCallTableHandler } from '@boart/basic';
-import { DataContent, MarkdownTableReader, Runtime, StepContext, Store } from '@boart/core';
+import { DataContent, MarkdownTableReader, Runtime, StepContext, Store, StoreMap } from '@boart/core';
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
 
@@ -92,7 +92,7 @@ describe('get', () => {
             headers: { 'content-type': 'text/plain;charset=UTF-8' }
         });
 
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 { headers: { 'Content-Type': 'application/json' }, method: 'GET', mode: 'no-cors', referrerPolicy: 'unsafe-url' }
@@ -113,7 +113,7 @@ describe('get', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -130,18 +130,18 @@ describe('get', () => {
      *
      */
     it('default get with bearer from store', async () => {
-        Store.instance.localStore.put('bearer', 'aaa');
+        Store.instance.localStore.put(StoreMap.getStoreIdentifier('bearer'), 'aaa');
         fetchMock.doMock(JSON.stringify({ b: 2 }));
 
         const tableRows = MarkdownTableReader.convert(
             `|action          |value             |
              |----------------|------------------|
              | method:get     | http://xxx       |
-             | authorization  | $\{store:bearer} |`
+             | authorization  | \${store:bearer} |`
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -158,7 +158,7 @@ describe('get', () => {
      *
      */
     it('default get with bearer from default', async () => {
-        Store.instance.localStore.put('authorization', 'bbb');
+        Store.instance.localStore.put(StoreMap.getStoreIdentifier('authorization'), 'bbb');
         fetchMock.doMock(JSON.stringify({ b: 2 }));
         const tableRows = MarkdownTableReader.convert(
             `|action          |value       |
@@ -167,7 +167,7 @@ describe('get', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -187,7 +187,7 @@ describe('get', () => {
      *
      */
     it('get with bearer, when store was initialized', async () => {
-        Store.instance.testStore.put('authorization', 't.o.k.e.n');
+        Store.instance.testStore.put(StoreMap.getStoreIdentifier('authorization'), 't.o.k.e.n');
 
         fetchMock.doMock(JSON.stringify({ b: 2 }));
         const tableRows = MarkdownTableReader.convert(
@@ -199,7 +199,7 @@ describe('get', () => {
         const context = await sut.handler.process(tableRows);
 
         expect(context.preExecution.authorization).toBe('t.o.k.e.n');
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -216,7 +216,7 @@ describe('get', () => {
      *
      */
     it('one query parameter', async () => {
-        Store.instance.testStore.put('authorization', 't.o.k.e.n');
+        Store.instance.testStore.put(StoreMap.getStoreIdentifier('authorization'), 't.o.k.e.n');
 
         fetchMock.doMock(JSON.stringify({ b: 2 }));
         const tableRows = MarkdownTableReader.convert(
@@ -227,7 +227,7 @@ describe('get', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx?search=aaa',
                 {
@@ -244,7 +244,7 @@ describe('get', () => {
      *
      */
     it('two query parameter', async () => {
-        Store.instance.testStore.put('authorization', 't.o.k.e.n');
+        Store.instance.testStore.put(StoreMap.getStoreIdentifier('authorization'), 't.o.k.e.n');
 
         fetchMock.doMock(JSON.stringify({ b: 2 }));
         const tableRows = MarkdownTableReader.convert(
@@ -256,7 +256,7 @@ describe('get', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx?search=aaa&size=5',
                 {
@@ -273,7 +273,7 @@ describe('get', () => {
      *
      */
     it('query parameter with special characater', async () => {
-        Store.instance.testStore.put('authorization', 't.o.k.e.n');
+        Store.instance.testStore.put(StoreMap.getStoreIdentifier('authorization'), 't.o.k.e.n');
 
         fetchMock.doMock(JSON.stringify({ b: 2 }));
         const tableRows = MarkdownTableReader.convert(
@@ -284,7 +284,7 @@ describe('get', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx?search=%3F%26%3D%23',
                 {
@@ -316,8 +316,8 @@ describe('post', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.execution.data?.toJSON()).toEqual('{"b":2}');
-        expect(sut.handler.getExecutionEngine().context.execution.header?.valueOf()).toEqual({
+        expect(sut.handler.getExecutionEngine().context.execution.data?.toJSON()).toBe('{"b":2}');
+        expect(sut.handler.getExecutionEngine().context.execution.header?.valueOf()).toStrictEqual({
             duration: 0,
             statusText: 'OK',
             status: 200,
@@ -338,7 +338,7 @@ describe('post', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -366,7 +366,7 @@ describe('post', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -394,7 +394,7 @@ describe('post', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -449,7 +449,7 @@ describe('put', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -476,7 +476,7 @@ describe('put', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -504,7 +504,7 @@ describe('put', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -531,7 +531,7 @@ describe('put', () => {
         );
 
         await sut.handler.process(tableRows);
-        expect(fetchMock.mock.calls).toEqual([
+        expect(fetchMock.mock.calls).toStrictEqual([
             [
                 'http://xxx',
                 {
@@ -973,7 +973,7 @@ it('default store', async () => {
 
     await sut.handler.process(tableRows);
 
-    const result = Store.instance.testStore.get('resonse') as DataContent;
+    const result = Store.instance.testStore.get(StoreMap.getStoreIdentifier('resonse')) as DataContent;
     expect(result.getValue()).toStrictEqual({ b: 2 });
 });
 
@@ -1029,13 +1029,13 @@ it('use context replace', async () => {
          |-------------|-----------------------|
          | method:post | http://xxx            |
          | payload     | {"a": 1}              |
-         | payload#b   | \${context:payload.a} |`
+         | payload#b   | \${context:payload#a} |`
     );
 
     const context = await sut.handler.process(tableRows);
 
     expect(context.preExecution.payload.valueOf()).toStrictEqual({ a: 1, b: 1 });
-    expect(fetchMock.mock.calls).toEqual([
+    expect(fetchMock.mock.calls).toStrictEqual([
         [
             'http://xxx',
             {

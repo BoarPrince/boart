@@ -177,14 +177,17 @@ describe('generate', () => {
         // eslint-disable-next-line jest/unbound-method
         const generater = GeneratorHandler.instance.generate;
 
-        expect(generater).toHaveBeenCalledWith('xxxx');
+        expect(generater).toHaveBeenCalledWith({
+            match: null,
+            qualifier: { optional: false, paras: null, stringValue: 'xxxx', value: 'xxxx' }
+        });
         expect(store.store.get).toHaveBeenCalledWith({
-            match: '#generate#:#test store#:#xxxx#',
+            match: '#generate#:#xxxx#',
             qualifier: {
                 optional: false,
                 paras: [],
-                stringValue: '#generate#:#test store#:#xxxx#',
-                value: '#generate#:#test store#:#xxxx#'
+                stringValue: '#generate#:#xxxx#',
+                value: '#generate#:#xxxx#'
             }
         });
     });
@@ -212,14 +215,17 @@ describe('generate', () => {
         // eslint-disable-next-line jest/unbound-method
         const generater = GeneratorHandler.instance.generate;
 
-        expect(generater).toHaveBeenCalledWith('xxxx:arg1:arg2');
+        expect(generater).toHaveBeenCalledWith({
+            match: null,
+            qualifier: { optional: false, paras: ['arg1', 'arg2'], stringValue: 'xxxx:arg1:arg2', value: 'xxxx' }
+        });
         expect(store.store.get).toHaveBeenCalledWith({
-            match: '#generate#:#test store#:#xxxx:arg1:arg2#',
+            match: '#generate#:#xxxx:arg1:arg2#',
             qualifier: {
                 optional: false,
                 paras: [],
-                stringValue: '#generate#:#test store#:#xxxx:arg1:arg2#',
-                value: '#generate#:#test store#:#xxxx:arg1:arg2#'
+                stringValue: '#generate#:#xxxx:arg1:arg2#',
+                value: '#generate#:#xxxx:arg1:arg2#'
             }
         });
     });
@@ -386,9 +392,12 @@ describe('store', () => {
             scope: null,
             selectors: []
         });
-        expect(Store.instance.localStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+        // eslint-disable-next-line jest/prefer-called-with
+        expect(Store.instance.localStore.get).toHaveBeenCalled();
+        // eslint-disable-next-line jest/prefer-called-with
+        expect(Store.instance.testStore.get).toHaveBeenCalled();
+        // eslint-disable-next-line jest/prefer-called-with
+        expect(Store.instance.stepStore.get).toHaveBeenCalled();
     });
 
     /**
@@ -407,8 +416,10 @@ describe('store', () => {
         expect(Store.instance.globalStore.get).not.toHaveBeenCalled();
         // eslint-disable-next-line jest/prefer-called-with
         expect(Store.instance.localStore.get).toHaveBeenCalled();
-        expect(Store.instance.testStore.get).not.toHaveBeenCalled();
-        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+        // eslint-disable-next-line jest/prefer-called-with
+        expect(Store.instance.testStore.get).toHaveBeenCalled();
+        // eslint-disable-next-line jest/prefer-called-with
+        expect(Store.instance.stepStore.get).toHaveBeenCalled();
     });
 
     /**
@@ -428,7 +439,8 @@ describe('store', () => {
         expect(Store.instance.localStore.get).not.toHaveBeenCalled();
         // eslint-disable-next-line jest/prefer-called-with
         expect(Store.instance.testStore.get).toHaveBeenCalled();
-        expect(Store.instance.stepStore.get).not.toHaveBeenCalled();
+        // eslint-disable-next-line jest/prefer-called-with
+        expect(Store.instance.stepStore.get).toHaveBeenCalled();
     });
 
     /**

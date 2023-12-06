@@ -1,3 +1,4 @@
+import { DataScope } from './DataScope';
 import { DefaultOperator } from './DefaultOperator';
 import { Name } from './Name';
 import { Pipe } from './Pipe';
@@ -11,6 +12,7 @@ import { SelectorArray } from './SelectorArray';
 export interface ASTVariable {
     name: Name;
     scope?: Scope;
+    datascope?: DataScope;
     qualifier?: Qualifier;
     selectors?: SelectorArray;
     default?: DefaultOperator;

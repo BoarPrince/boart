@@ -14,7 +14,8 @@ export class TemplateGenerator implements Generator {
     /**
      *
      */
-    generate(template: string): string {
+    generate(paras: string[]): string {
+        const template = paras?.join('.');
         const templateValue = TemplateHandler.instance.get(template);
 
         if (!templateValue) {

@@ -208,6 +208,7 @@ describe('check valueHandler (unscoped)', () => {
         expect(replacedValue).toBe('--#a#--');
         expect(valueReplacer.replace).toHaveBeenLastCalledWith(
             {
+                datascope: null,
                 default: null,
                 errs: null,
                 match: '${test@g:a}',
@@ -236,6 +237,7 @@ describe('check valueHandler (unscoped)', () => {
         expect(replacedValue).toBe('--#a#--');
         expect(valueReplacer.replace).toHaveBeenLastCalledWith(
             {
+                datascope: null,
                 default: null,
                 errs: null,
                 match: '${test@l:a}',
@@ -264,6 +266,7 @@ describe('check valueHandler (unscoped)', () => {
         expect(replacedValue).toBe('--#a#--');
         expect(valueReplacer.replace).toHaveBeenLastCalledWith(
             {
+                datascope: null,
                 default: null,
                 errs: null,
                 match: '${test@t:a}',
@@ -292,6 +295,7 @@ describe('check valueHandler (unscoped)', () => {
         expect(replacedValue).toBe('--#a#--');
         expect(valueReplacer.replace).toHaveBeenLastCalledWith(
             {
+                datascope: null,
                 default: null,
                 errs: null,
                 match: '${test@s:a}',
