@@ -76,11 +76,7 @@ export class StoreWrapper extends StoreMap {
     /**
      *
      */
-    put(ast: ValueReplaceArg | string, value: ContentType): void {
-        if (typeof ast === 'string') {
-            throw 'not implemented anymore';
-        }
-
+    put(ast: ValueReplaceArg, value: ContentType): void {
         if (!ast.selectors?.length) {
             const contentValue = DataContentHelper.create(value);
             this.store.put(ast, contentValue);
@@ -96,11 +92,7 @@ export class StoreWrapper extends StoreMap {
     /**
      *
      */
-    get(ast: ValueReplaceArg | string): ContentType {
-        if (typeof ast === 'string') {
-            throw 'not implemented anymore';
-        }
-
+    get(ast: ValueReplaceArg): ContentType {
         const storeValue = this.store.get(ast);
         if (storeValue == null) {
             return null;

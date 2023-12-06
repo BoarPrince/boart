@@ -1575,8 +1575,9 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    xit('run:not-empty does not execute when value is null', async () => {
-        Store.instance.testStore.put('var1', null);
+    it('run:not-empty does not execute when value is null', async () => {
+        const astVar1 = variableParser.parseAction('store:var1');
+        Store.instance.testStore.put(astVar1, null);
 
         const tableDef = MarkdownTableReader.convert(
             `|action        |value           |

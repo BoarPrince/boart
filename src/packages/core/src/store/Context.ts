@@ -45,25 +45,14 @@ export class Context extends StoreMap {
     /**
      *
      */
-    put(ast: ValueReplaceArg | string, value: ContentType): void {
+    put(ast: ValueReplaceArg, value: ContentType): void {
         this.contextMap.put(ast, value);
     }
 
     /**
      *
      */
-    get(ast: ValueReplaceArg | string): ContentType {
-        if (typeof ast === 'string') {
-            throw 'not implemented anymore';
-        } else {
-            return this.getByAst(ast);
-        }
-    }
-
-    /**
-     *
-     */
-    private getByAst(ast: ValueReplaceArg): ContentType {
+    get(ast: ValueReplaceArg): ContentType {
         // try context value...
         const context = DataContentHelper.create(this.context).asDataContentObject();
 

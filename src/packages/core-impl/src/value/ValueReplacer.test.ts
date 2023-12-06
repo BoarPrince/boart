@@ -6,6 +6,7 @@ import {
     Store,
     StoreWrapper,
     TextLanguageHandler,
+    ValueReplaceArg,
     ValueReplacer,
     VariableParser
 } from '@boart/core';
@@ -35,11 +36,11 @@ jest.mock('@boart/core', () => {
     const storeFactory = (orig: StoreWrapper) => ({
         clear: () => orig.store.clear(),
         storeName: orig.storeName,
-        put: jest.fn((key: string, value: string) => orig.put(key, value)),
-        get: jest.fn((key: string) => orig.get(key)),
+        put: jest.fn((ast: ValueReplaceArg, value: string) => orig.put(ast, value)),
+        get: jest.fn((ast: ValueReplaceArg) => orig.get(ast)),
         store: {
-            put: jest.fn((key: string, value: string) => orig.put(key, value)),
-            get: jest.fn((key: string) => orig.get(key))
+            put: jest.fn((ast: ValueReplaceArg, value: string) => orig.put(ast, value)),
+            get: jest.fn((ast: ValueReplaceArg) => orig.get(ast))
         }
     });
 
