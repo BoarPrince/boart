@@ -1,0 +1,11 @@
+identifier: ldpbw1h2p7ra13jc
+appPort: 1864
+staticPort: 1668
+reloadPort: 2667
+hostName: localhost
+projectName: boart-desc
+homeFolder: /Users/developer/Projects/boart.worktrees/v2/src/packages/desc
+distFolder: dist/boart-desc
+outDir: /Users/developer/Projects/boart.worktrees/v2/src/packages/desc/dist/static
+handle404: ''
+allowErrorCollect: false
