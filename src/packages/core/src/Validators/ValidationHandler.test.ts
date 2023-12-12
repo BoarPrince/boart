@@ -25,7 +25,6 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
-                    selector: null,
                     ast: null,
                     values_replaced: {
                         value1: 'a'
@@ -60,7 +59,6 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
-                    selector: null,
                     ast: null,
                     values_replaced: {
                         value1: 'a'
@@ -102,7 +100,6 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
-                    selector: null,
                     ast: null,
                     values_replaced: {
                         value1: 'a'
@@ -141,7 +138,6 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
-                    selector: null,
                     ast: null,
                     values_replaced: {
                         value1: 'a'
@@ -178,7 +174,6 @@ describe('check row validators', () => {
                 data: {
                     key: 'a:a',
                     keyPara: null,
-                    selector: null,
                     ast: null,
                     values_replaced: {
                         value1: 'a'

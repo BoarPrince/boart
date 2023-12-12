@@ -92,12 +92,16 @@ export class RowDefinitionBinder<
         );
 
         return sortedDefinitions.find((def) => {
-            const defKey =
-                (!def.qualifier?.description
-                    ? def.key.description //
-                    : def.key.description + ':' + def.qualifier.description) + ':';
-            const keyStringValue = row.ast.name.stringValue + ':';
-            return keyStringValue.startsWith(defKey);
+            const defKey = def.key.description;
+            const defDataScope = def.dataScope?.description;
+
+            const keyStringValue = row.ast.name.value + ':' + (row.ast.qualifier?.stringValue ?? '');
+            return (
+                // key must match
+                keyStringValue.startsWith(defKey) &&
+                // and dataScope must match
+                (row.ast.datascope?.value == defDataScope || !row.ast.datascope)
+            );
         });
     }
 
@@ -122,7 +126,7 @@ export class RowDefinitionBinder<
                     !!ast.qualifier && !!ast.qualifier.paras?.length,
                     () =>
                         `'${this.tableName}': key '${ast.match}' with definition '${
-                            rowDefinition.key.description
+                            rowDefinition.key.description || ''
                         }' cannot have a parameter: '${ast.qualifier.paras.join(':')}'!`
                 );
                 break;
@@ -189,18 +193,10 @@ export class RowDefinitionBinder<
             // Return definition
             //----------------------------------------------------------------
             let lazyLoad: Record<string, string>;
-            const key = rowDefinition.key.description;
-            const keyPart = key.split(':').slice(1).join(':');
-
-            const keyPara = row.ast.qualifier?.stringValue || '';
-            const selector = row.ast.selectors?.match || null;
 
             return new type({
                 _metaDefinition: rowDefinition,
-                key,
                 ast: row.ast,
-                keyPara: keyPara.replace(new RegExp('^' + keyPart + ':?'), '') || null,
-                selector,
                 get values_replaced() {
                     return !lazyLoad ? (lazyLoad = row.values_replaced) : lazyLoad;
                 }

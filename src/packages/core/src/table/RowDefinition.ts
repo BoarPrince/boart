@@ -28,6 +28,7 @@ interface RowDefinitionPara<
     TRowType extends BaseRowType<TExecutionContext>
 > extends Descriptionable {
     readonly key?: symbol;
+    readonly dataScope?: symbol;
     readonly qualifier?: symbol;
     readonly priority?: number;
     readonly type: TableRowType;
@@ -50,7 +51,7 @@ export class RowDefinition<
 > implements Descriptionable
 {
     public key: symbol;
-    public qualifier: symbol;
+    public dataScope?: symbol;
     public defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
     public defaultValueColumn?: symbol;
     public description?: Description;
@@ -68,7 +69,7 @@ export class RowDefinition<
      */
     constructor(value: RowDefinitionPara<TExecutionContext, TRowType>) {
         this.key = value.key || Symbol(DescriptionHandler.solve(value.executionUnit?.description).title);
-        this.qualifier = value.qualifier;
+        this.dataScope = value.dataScope || Symbol(value.executionUnit?.description?.dataScope || 'data');
         this.type = value.type;
         this.description = value.description;
         this.priority = value.priority || value.executionUnit?.priority || this.priority;

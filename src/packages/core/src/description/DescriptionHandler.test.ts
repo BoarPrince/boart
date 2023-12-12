@@ -49,7 +49,7 @@ beforeEach(() => {
                 id: 'eq0',
                 title: 'expected:operation:initializer',
                 description: 'xxx',
-                examples: undefined
+                examples: null
             },
             operators: []
         },
@@ -65,14 +65,13 @@ it('save basic description', () => {
 
     sut.save();
 
-    expect(writeMock).toHaveBeenCalled();
     expect(writeMock).toHaveBeenCalledWith('desc/description.json', JSON.stringify(basicFullDescription));
 });
 
 /**
  *
  */
-xit('save description with expected operator', () => {
+it('save description with expected operator', () => {
     const sut = DescriptionHandler.instance;
 
     ExpectedOperatorInitializer.instance.addOperator({
@@ -101,12 +100,10 @@ xit('save description with expected operator', () => {
         }
     ];
 
-    expect(writeMock).toHaveBeenCalled();
-
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const content = JSON.parse(writeMock.mock.calls[0][1].toString());
     // check only the first operator
-    content.expected.operators = [content.expected.operators[1]];
+    content.expected.operators = [content.expected.operators[0]];
 
-    expect(JSON.stringify(content)).toEqual(JSON.stringify(basicFullDescription));
+    expect(content).toStrictEqual(basicFullDescription);
 });

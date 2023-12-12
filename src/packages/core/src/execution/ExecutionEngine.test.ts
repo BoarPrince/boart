@@ -1,4 +1,5 @@
 import 'jest-extended';
+import { VariableParser } from '../parser/VariableParser';
 import { Runtime } from '../runtime/Runtime';
 import { RuntimeStatus } from '../runtime/RuntimeStatus';
 import { StepContext } from '../runtime/StepContext';
@@ -59,7 +60,7 @@ class ExecutionUnitMock implements ExecutionUnit<TestExecutionContext, any> {
      *
      */
     execute = jest.fn().mockImplementation((context: TestExecutionContext, row: BaseRowType<TestExecutionContext>) => {
-        context.execution.data.push(row?.data.key || 'main');
+        context.execution.data.push(row?.data.ast.name.stringValue || 'main');
     });
 }
 
@@ -68,10 +69,7 @@ class ExecutionUnitMock implements ExecutionUnit<TestExecutionContext, any> {
  */
 const createBaseRowType = (name: string, type: TableRowType, priority = 0): BaseRowType<TestExecutionContext> => ({
     data: {
-        key: name,
-        keyPara: null,
-        selector: null,
-        ast: null,
+        ast: new VariableParser().parseAction(name),
         values_replaced: {
             value1: null
         },
@@ -145,7 +143,7 @@ describe('default', () => {
      *
      */
     it('runtimeStatus:stopped halt the execution', async () => {
-        const rowDataPreConfig = createBaseRowType('pre config', TableRowType.PreConfiguration);
+        const rowDataPreConfig = createBaseRowType('pre:config', TableRowType.PreConfiguration);
         const rowDataConfig = createBaseRowType('config', TableRowType.Configuration);
         const rowDataPre = createBaseRowType('pre', TableRowType.PreProcessing);
         const rowDataPost = createBaseRowType('post', TableRowType.PostProcessing);
@@ -154,8 +152,8 @@ describe('default', () => {
         const sut = new ExecutionEngine<TestExecutionContext, BaseRowType<TestExecutionContext>>(() => mainExecutionUnit, contextGenerator);
 
         Runtime.instance.stepRuntime.current.status = RuntimeStatus.stopped;
-        const canProceed = await sut.preExecute([rowDataPost, rowDataConfig, rowDataPreConfig, rowDataPre]);
 
+        const canProceed = await sut.preExecute([rowDataPost, rowDataConfig, rowDataPreConfig, rowDataPre]);
         expect(canProceed).toBe(false);
     });
 
@@ -163,7 +161,7 @@ describe('default', () => {
      *
      */
     it('runtimeStatus:not-stopped proceed the execution', async () => {
-        const rowDataPreConfig = createBaseRowType('pre config', TableRowType.PreConfiguration);
+        const rowDataPreConfig = createBaseRowType('pre:config', TableRowType.PreConfiguration);
         const rowDataConfig = createBaseRowType('config', TableRowType.Configuration);
         const rowDataPre = createBaseRowType('pre', TableRowType.PreProcessing);
         const rowDataPost = createBaseRowType('post', TableRowType.PostProcessing);

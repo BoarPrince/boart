@@ -38,6 +38,10 @@ export class GeneratorHandler implements Initializer<Generator> {
      */
     public delete(name: string) {
         this.generators.delete(name);
+
+        if (this.generators.has(name)) {
+            throw Error(`generator '${name}' could not be deleleted!`);
+        }
     }
 
     /**

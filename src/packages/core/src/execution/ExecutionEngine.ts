@@ -96,14 +96,14 @@ export class ExecutionEngine<
         const executer = throwErrors
             ? (row: TRowType) => {
                   this.logger.debug(
-                      () => `execute 'type: ${TableRowType[type]}', key: ${row.data.key}`,
+                      () => `execute 'type: ${TableRowType[type]}', key: ${row.data.ast.match}`,
                       () => row.data.values_replaced
                   );
                   return row.data._metaDefinition.executionUnit.execute(this.context, row);
               }
             : (row: TRowType) => {
                   try {
-                      this.logger.debug(() => `execute, ignore exception 'type: ${TableRowType[type]}', key: ${row.data.key}`);
+                      this.logger.debug(() => `execute, ignore exception 'type: ${TableRowType[type]}', key: ${row.data.ast.match}`);
                       return row.data._metaDefinition.executionUnit.execute(this.context, row);
                   } catch (error) {
                       /* do not throw any errors */

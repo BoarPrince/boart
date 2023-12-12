@@ -45,7 +45,6 @@ describe('default', () => {
     /**
      *
      */
-    // eslint-disable-next-line jest/expect-expect
     it('add row definitions (value)', () => {
         const sut = new TableHandler(null, null);
 
@@ -95,7 +94,7 @@ describe('default', () => {
         expect(callPara).toBeInstanceOf(Array);
         expect(callPara).toHaveLength(1);
 
-        expect(callPara[0].action).toBe('a');
+        expect(callPara[0].data.ast.name.value).toBe('a');
         expect(callPara[0].value).toBe('b');
 
         expect(executionEngineMock.preExecute) //
