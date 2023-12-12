@@ -8,7 +8,7 @@ import { key, value } from './TableRowDecorator';
 class TableTypeTest extends AnyBaseRowType {
     @key()
     get action() {
-        return this.data.key;
+        return this.data.ast.name;
     }
 
     @value()
@@ -38,7 +38,7 @@ class TableTypeNoKeyTest extends AnyBaseRowType {
 class TableTypeNoValueTest extends AnyBaseRowType {
     @key()
     get action() {
-        return this.data.key;
+        return this.data.ast.name.value;
     }
 }
 

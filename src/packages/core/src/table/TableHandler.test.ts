@@ -25,11 +25,11 @@ TableMetaInfo.get = () => {
 class RowWithOneValue extends AnyBaseRowType {
     @key()
     get action() {
-        return this.data.key;
+        return this.data.ast.name.value;
     }
 
     get actionPara() {
-        return this.data.keyPara;
+        return this.data.ast.qualifier?.stringValue;
     }
 
     @value()

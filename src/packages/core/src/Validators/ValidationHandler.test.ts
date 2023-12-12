@@ -23,8 +23,6 @@ describe('check row validators', () => {
             const sut = new ValidationHandler(null);
             const rowData: AnyBaseRowType = {
                 data: {
-                    key: 'a:a',
-                    keyPara: null,
                     ast: null,
                     values_replaced: {
                         value1: 'a'
@@ -57,8 +55,6 @@ describe('check row validators', () => {
             const sut = new ValidationHandler(null);
             const rowData: AnyBaseRowType = {
                 data: {
-                    key: 'a:a',
-                    keyPara: null,
                     ast: null,
                     values_replaced: {
                         value1: 'a'
@@ -98,8 +94,6 @@ describe('check row validators', () => {
             const sut = new ValidationHandler([validator]);
             const rowData: AnyBaseRowType = {
                 data: {
-                    key: 'a:a',
-                    keyPara: null,
                     ast: null,
                     values_replaced: {
                         value1: 'a'
@@ -136,8 +130,6 @@ describe('check row validators', () => {
             const sut = new ValidationHandler(null);
             const rowData: AnyBaseRowType = {
                 data: {
-                    key: 'a:a',
-                    keyPara: null,
                     ast: null,
                     values_replaced: {
                         value1: 'a'
@@ -172,8 +164,6 @@ describe('check row validators', () => {
             const sut = new ValidationHandler(null);
             const rowData: AnyBaseRowType = {
                 data: {
-                    key: 'a:a',
-                    keyPara: null,
                     ast: null,
                     values_replaced: {
                         value1: 'a'
