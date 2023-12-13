@@ -7,6 +7,7 @@ import { RowTypeValue } from '../../RowTypeValue';
 import { ParaValidator } from '../../validators/ParaValidator';
 
 import { WaitExecutionUnit } from './ExecutionUnit.Wait';
+import { before } from 'node:test';
 
 /**
  *
@@ -67,14 +68,19 @@ describe('check wait:before execution units', () => {
 
     const sut = new WaitExecutionUnit();
 
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            key: Symbol('wait:before'),
-            type: TableRowType.PreProcessing,
-            executionUnit: sut,
-            validators: [new ParaValidator([null, 'sec', 'min'])]
-        })
-    );
+    /**
+     *
+     */
+    beforeAll(() => {
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('wait:before'),
+                type: TableRowType.PreProcessing,
+                executionUnit: sut,
+                validators: [new ParaValidator([null, 'sec', 'min'])]
+            })
+        );
+    });
 
     /**
      *
@@ -98,7 +104,7 @@ describe('check wait:before execution units', () => {
                     }
                 ]
             });
-        }).rejects.toThrowError("column 'value' must be a integer (number) value, but is 'a'");
+        }).rejects.toThrow("column 'value' must be a integer (number) value, but is 'a'");
     });
 
     /**
@@ -227,14 +233,19 @@ describe('check wait:after execution units', () => {
 
     const sut = new WaitExecutionUnit();
 
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            key: Symbol('wait:after'),
-            type: TableRowType.PostProcessing,
-            executionUnit: sut,
-            validators: [new ParaValidator([null, 'sec', 'min'])]
-        })
-    );
+    /**
+     *
+     */
+    beforeAll(() => {
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                key: Symbol('wait:after'),
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: [new ParaValidator([null, 'sec', 'min'])]
+            })
+        );
+    });
 
     /**
      *

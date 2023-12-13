@@ -32,7 +32,8 @@ export class WaitExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue
      */
     execute(_: AnyContext, row: RowTypeValue<AnyContext>): Promise<void> {
         const duration = parseInt(row.value.toString());
-        const multiplicator = !row.actionPara || row.actionPara === 'sec' ? 1000 : 1000 * 60;
+        const timeUnit = row.ast.qualifier?.paras?.[0];
+        const multiplicator = !timeUnit || timeUnit === 'sec' ? 1000 : 1000 * 60;
 
         return new Promise((resolve) => {
             setTimeout(() => resolve(), duration * multiplicator);
