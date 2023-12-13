@@ -69,7 +69,7 @@ export class RowDefinition<
      */
     constructor(value: RowDefinitionPara<TExecutionContext, TRowType>) {
         this.key = value.key || Symbol(DescriptionHandler.solve(value.executionUnit?.description).title);
-        this.dataScope = value.dataScope || Symbol(value.executionUnit?.description?.dataScope || 'data');
+        this.dataScope = value.dataScope || Symbol(value.executionUnit?.description?.dataScope);
         this.type = value.type;
         this.description = value.description;
         this.priority = value.priority || value.executionUnit?.priority || this.priority;

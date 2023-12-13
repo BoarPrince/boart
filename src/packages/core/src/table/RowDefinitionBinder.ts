@@ -100,7 +100,7 @@ export class RowDefinitionBinder<
                 // key must match
                 keyStringValue.startsWith(defKey) &&
                 // and dataScope must match
-                (row.ast.datascope?.value == defDataScope || !row.ast.datascope)
+                row.ast.datascope?.value == defDataScope
             );
         });
     }

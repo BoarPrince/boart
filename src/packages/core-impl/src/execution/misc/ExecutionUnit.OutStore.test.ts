@@ -262,15 +262,22 @@ describe('check data, heading and transformed', () => {
      */
     it.each([
         ['1. regular way for data', 'data', new ObjectContent({ a: 'b' }), '::data', '', '{"a":"b"}'], //
-        ['2. deep value can be picked for data', 'data', new ObjectContent({ a: 'b' }), ':data#a', '', 'b'],
-        ['3. deep value can be set for header', 'header', new ObjectContent({ a: 'b' }), ':header', '#c', '{"c":{"a":"b"}}'],
-        ['4. deep value can be picked and set for header', 'header', new ObjectContent({ a: 'b' }), ':header#a', '#b', '{"b":"b"}'],
-        ['5. deep value can be set for transformed', 'transformed', new ObjectContent({ a: 'b' }), ':transformed', '#c', '{"c":{"a":"b"}}'],
+        ['2. deep value can be picked for data', 'data', new ObjectContent({ a: 'b' }), '::data#a', '', 'b'],
+        ['3. deep value can be set for header', 'header', new ObjectContent({ a: 'b' }), '::header', '#c', '{"c":{"a":"b"}}'],
+        ['4. deep value can be picked and set for header', 'header', new ObjectContent({ a: 'b' }), '::header#a', '#b', '{"b":"b"}'],
+        [
+            '5. deep value can be set for transformed',
+            'transformed',
+            new ObjectContent({ a: 'b' }),
+            '::transformed',
+            '#c',
+            '{"c":{"a":"b"}}'
+        ],
         [
             '6. deep value can be picked and set for transformed',
             'transformed',
             new ObjectContent({ a: 'b' }),
-            ':transformed#a',
+            '::transformed#a',
             '#b',
             '{"b":"b"}'
         ]
@@ -336,7 +343,7 @@ describe('check preExecution.payload', () => {
             },
             rows: [
                 {
-                    cells: [`store:payload`, `var`]
+                    cells: [`store::payload`, `var`]
                 }
             ]
         });
@@ -373,7 +380,7 @@ describe('check extended context', () => {
             },
             rows: [
                 {
-                    cells: [`store`, `var`]
+                    cells: [`store::extendedProperty`, `var`]
                 }
             ]
         });
@@ -405,7 +412,7 @@ describe('check extended context', () => {
             },
             rows: [
                 {
-                    cells: [`store`, `var`]
+                    cells: [`store::extendedPropertyWithKey`, `var`]
                 }
             ]
         });
