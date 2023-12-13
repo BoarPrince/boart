@@ -25,7 +25,7 @@ export class TableHandler<
 > implements Descriptionable
 {
     private readonly columnMetaInfo: MetaInfo;
-    private readonly rowDefinitions = new Map<string, RowDefinition<TExecutionContext, TRowType>>();
+    private readonly rowDefinitions = new Map<string, Map<string, RowDefinition<TExecutionContext, TRowType>>>();
     private readonly groupValidations = new Array<TypedGroupValidator<TExecutionContext, TRowType>>();
     private readonly logger = LogProvider.create('core').logger('tableHandler');
     private executionEngine: ExecutionEngine<TExecutionContext, TRowType>;
@@ -60,7 +60,17 @@ export class TableHandler<
      *
      */
     addRowDefinition(definition: RowDefinition<TExecutionContext, TRowType>): this {
-        this.rowDefinitions.set(definition.key.description, definition.clone());
+        const key = definition.key.description || '';
+        const definitionList = this.rowDefinitions.has(key)
+            ? this.rowDefinitions.get(key)
+            : this.rowDefinitions.set(key, new Map()).get(key);
+
+        const dataScope = definition.dataScope?.description || '';
+        if (definitionList.has(dataScope)) {
+            throw Error(`key/action: '${key}' with scope: '${dataScope}' already exists`);
+        }
+
+        definitionList.set(dataScope, definition.clone());
         return this;
     }
 
@@ -86,19 +96,28 @@ export class TableHandler<
     /**
      *
      */
-    getRowDefinition(key: string): RowDefinition<TExecutionContext, TRowType> {
+    getRowDefinition(key: string, dataScope?: string): Array<RowDefinition<TExecutionContext, TRowType>> {
         if (!this.rowDefinitions.has(key)) {
-            throw Error(`key: '{key}' cannot retrieved, because it does not exists`);
+            throw Error(`key: '${key}' cannot retrieved, because it does not exists`);
         }
 
-        return this.rowDefinitions.get(key);
+        const keyDefinitions = this.rowDefinitions.get(key);
+        if (!dataScope) {
+            return Array.from(keyDefinitions.values());
+        } else {
+            if (!keyDefinitions.has(key)) {
+                throw Error(`key: 'key:${key}, datascope: ${dataScope}' cannot retrieved, because it does not exists`);
+            }
+
+            return Array.of(keyDefinitions.get(dataScope));
+        }
     }
 
     /**
      *
      */
     getRowDefinitions(): Array<RowDefinition<TExecutionContext, TRowType>> {
-        return Array.from(this.rowDefinitions.values());
+        return Array.from(this.rowDefinitions.values()).flatMap((def) => Array.from(def.values()));
     }
 
     /**
@@ -187,7 +206,7 @@ export class TableHandler<
         const definitionBinder = new RowDefinitionBinder<TExecutionContext, TRowType>(
             this.columnMetaInfo.tableName,
             this.columnMetaInfo,
-            Array.from(this.rowDefinitions.values()),
+            this.getRowDefinitions(),
             valueRows
         );
         const rows = definitionBinder.bind(this.rowType);
