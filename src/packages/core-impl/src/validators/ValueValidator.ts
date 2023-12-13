@@ -17,7 +17,10 @@ export class ValueValidator implements RowValidator {
     /**
      *
      */
-    constructor(private readonly property: string, allowedValues: ReadonlyArray<string | AllowedValue>) {
+    constructor(
+        private readonly property: string,
+        allowedValues: ReadonlyArray<string | AllowedValue>
+    ) {
         this.allowedValues = allowedValues.map((v) => (typeof v === 'string' ? { value: v } : v));
     }
 
@@ -34,15 +37,17 @@ export class ValueValidator implements RowValidator {
             try {
                 validator.validate(row, rows);
             } catch (error) {
-                throw Error((error.message as string).replace(row.key, `${row.key}:${matchedValue.value}`));
+                throw Error(
+                    (error.message as string).replace(row.ast.name.stringValue, `${row.ast.name.stringValue}:${matchedValue.value}`)
+                );
             }
         });
 
         if (!!value && !matchedValue) {
             throw Error(
-                `Value '${value.toString()}' of key/column: '${row.key}/${this.property}' is not defined. Allowed is ${this.allowedValues
-                    .map((v) => `'${v.value}'`)
-                    .join(' or ')}`
+                `Value '${value.toString()}' of key/column: '${row.ast.name.stringValue}/${
+                    this.property
+                }' is not defined. Allowed is ${this.allowedValues.map((v) => `'${v.value}'`).join(' or ')}`
             );
         }
     }

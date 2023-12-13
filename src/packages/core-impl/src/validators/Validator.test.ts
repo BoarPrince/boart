@@ -1,4 +1,4 @@
-import { BaseRowType, GroupValidator, ParaType, RowDefinition, RowValidator, ValidationHandler } from '@boart/core';
+import { BaseRowType, GroupValidator, ParaType, RowDefinition, RowValidator, ValidationHandler, VariableParser } from '@boart/core';
 
 import { BoolValidator } from './BoolValidator';
 import { DependsOnValidator } from './DependsOnValidator';
@@ -9,7 +9,17 @@ import { UniqueValidator } from './UniqueValidator';
 import { ValueRequiredValidator } from './ValueRequiredValidator';
 import { XORValidator } from './XORValidator';
 
+/**
+ *
+ */
 describe('check row validators', () => {
+    const variableParser = new VariableParser();
+    const astAA = variableParser.parseAction('a:a');
+    const astBB = variableParser.parseAction('b:b');
+    const astA1 = variableParser.parseAction('a:1');
+    const astA2 = variableParser.parseAction('a:2');
+    const astA3 = variableParser.parseAction('a:3');
+
     /**
      *
      */
@@ -33,10 +43,7 @@ describe('check row validators', () => {
 
             const rowData: BaseRowType<null> = {
                 data: {
-                    key: 'a:a',
-                    keyPara: null,
-                    selector: null,
-                    ast: null,
+                    ast: astAA,
                     values_replaced: {
                         value1: 'a'
                     },
@@ -84,10 +91,7 @@ describe('check row validators', () => {
             const sut = new ValidationHandler(null);
             const rowData: BaseRowType<null> = {
                 data: {
-                    key: 'a:a',
-                    keyPara: null,
-                    selector: null,
-                    ast: null,
+                    ast: astAA,
                     values_replaced: {
                         value1: value
                     },
@@ -124,10 +128,7 @@ describe('check row validators', () => {
                 const sut = new ValidationHandler(null);
                 const rowData: BaseRowType<null> = {
                     data: {
-                        key: 'a:a',
-                        keyPara: null,
-                        selector: null,
-                        ast: null,
+                        ast: astAA,
                         values_replaced: {
                             value1: value
                         },
@@ -142,14 +143,7 @@ describe('check row validators', () => {
                     }
                 };
 
-                try {
-                    sut.validate([rowData]);
-                } catch (error) {
-                    expect(error.message).toBe(expectedMessage);
-                    return;
-                }
-
-                throw Error('error must be thrown when any failures occurs during bool valiation');
+                expect(() => sut.validate([rowData])).toThrow(expectedMessage);
             }
         );
     });
@@ -171,10 +165,7 @@ describe('check row validators', () => {
             const sut = new ValidationHandler(null);
             const rowData: BaseRowType<null> = {
                 data: {
-                    key: 'a:a',
-                    keyPara: null,
-                    selector: null,
-                    ast: null,
+                    ast: astAA,
                     values_replaced: {
                         value1: value
                     },
@@ -211,10 +202,7 @@ describe('check row validators', () => {
                 const sut = new ValidationHandler(null);
                 const rowData: BaseRowType<null> = {
                     data: {
-                        key: 'a:a',
-                        keyPara: null,
-                        selector: null,
-                        ast: null,
+                        ast: astAA,
                         values_replaced: {
                             value1: value
                         },
@@ -229,14 +217,7 @@ describe('check row validators', () => {
                     }
                 };
 
-                try {
-                    sut.validate([rowData]);
-                } catch (error) {
-                    expect(error.message).toBe(expectedMessage);
-                    return;
-                }
-
-                throw Error('error must be thrown when any failures occurs during int valiation');
+                expect(() => sut.validate([rowData])).toThrow(expectedMessage);
             }
         );
 
@@ -246,10 +227,7 @@ describe('check row validators', () => {
         it('allow null', () => {
             const sut = new IntValidator('value1', true);
             sut.validate({
-                key: 'a:a',
-                keyPara: null,
-                selector: null,
-                ast: null,
+                ast: astAA,
                 values_replaced: {
                     value1: null
                 },
@@ -276,10 +254,7 @@ describe('check row validators', () => {
             const sut = new ValidationHandler(null);
             const rowData: BaseRowType<null> = {
                 data: {
-                    key: 'a:a',
-                    keyPara: null,
-                    selector: null,
-                    ast: null,
+                    ast: astAA,
                     values_replaced: {
                         value1: null
                     },
@@ -296,10 +271,7 @@ describe('check row validators', () => {
 
             const dependentRow: BaseRowType<null> = {
                 data: {
-                    key: 'b:b',
-                    keyPara: null,
-                    selector: null,
-                    ast: null,
+                    ast: astBB,
                     values_replaced: {
                         value1: null
                     },
@@ -324,10 +296,7 @@ describe('check row validators', () => {
             const sut = new ValidationHandler(null);
             const rowData: BaseRowType<null> = {
                 data: {
-                    key: 'a:a',
-                    keyPara: null,
-                    selector: null,
-                    ast: null,
+                    ast: astAA,
                     values_replaced: {
                         value1: null
                     },
@@ -344,10 +313,7 @@ describe('check row validators', () => {
 
             const dependentRow: BaseRowType<null> = {
                 data: {
-                    key: 'b:b',
-                    keyPara: null,
-                    selector: null,
-                    ast: null,
+                    ast: astBB,
                     values_replaced: {
                         value1: null
                     },
@@ -362,14 +328,7 @@ describe('check row validators', () => {
                 }
             };
 
-            try {
-                sut.validate([rowData, dependentRow]);
-            } catch (error) {
-                expect(error.message).toBe(`key 'a:a' depends on 'c:c', but it does not exist!`);
-                return;
-            }
-
-            throw Error(`error must be thrown if dependOn validate fails`);
+            expect(() => sut.validate([rowData, dependentRow])).toThrow(`key 'a:a' depends on 'c:c', but it does not exist!`);
         });
     });
 
@@ -400,10 +359,7 @@ describe('check row validators', () => {
             const rowData: BaseRowType<null>[] = [
                 {
                     data: {
-                        key: 'a:1',
-                        keyPara: null,
-                        selector: null,
-                        ast: null,
+                        ast: astA1,
                         values_replaced: {
                             value1: null
                         },
@@ -419,10 +375,7 @@ describe('check row validators', () => {
                 },
                 {
                     data: {
-                        key: 'a:2',
-                        keyPara: null,
-                        selector: null,
-                        ast: null,
+                        ast: astA2,
                         values_replaced: {
                             value1: null
                         },
@@ -438,10 +391,7 @@ describe('check row validators', () => {
                 },
                 {
                     data: {
-                        key: 'a:3',
-                        keyPara: null,
-                        selector: null,
-                        ast: null,
+                        ast: astA3,
                         values_replaced: {
                             value1: null
                         },
@@ -457,17 +407,12 @@ describe('check row validators', () => {
                 }
             ];
 
+            // eslint-disable-next-line jest/no-conditional-in-test
             if (!errorMessage) {
                 sut.validate(rowData);
             } else {
-                try {
-                    sut.validate(rowData);
-                } catch (error) {
-                    expect(error.message).toBe(errorMessage);
-                    return;
-                }
-
-                throw Error(`Error must be thrown if XOR validator should detect a problem`);
+                // eslint-disable-next-line jest/no-conditional-expect
+                expect(() => sut.validate(rowData)).toThrow(errorMessage);
             }
         });
     });
@@ -499,10 +444,7 @@ describe('check row validators', () => {
             const rowData: BaseRowType<null>[] = [
                 {
                     data: {
-                        key: 'a:1',
-                        keyPara: null,
-                        selector: null,
-                        ast: null,
+                        ast: astA1,
                         values_replaced: {
                             value1: null
                         },
@@ -518,10 +460,7 @@ describe('check row validators', () => {
                 },
                 {
                     data: {
-                        key: 'a:2',
-                        keyPara: null,
-                        selector: null,
-                        ast: null,
+                        ast: astA2,
                         values_replaced: {
                             value1: null
                         },
@@ -537,10 +476,7 @@ describe('check row validators', () => {
                 },
                 {
                     data: {
-                        key: 'a:3',
-                        keyPara: null,
-                        selector: null,
-                        ast: null,
+                        ast: astA3,
                         values_replaced: {
                             value1: null
                         },
@@ -556,17 +492,12 @@ describe('check row validators', () => {
                 }
             ];
 
+            // eslint-disable-next-line jest/no-conditional-in-test
             if (!errorMessage) {
                 sut.validate(rowData);
             } else {
-                try {
-                    sut.validate(rowData);
-                } catch (error) {
-                    expect(error.message).toBe(errorMessage);
-                    return;
-                }
-
-                throw Error(`Error must be thrown if XOR validator should detect a problem`);
+                // eslint-disable-next-line jest/no-conditional-expect
+                expect(() => sut.validate(rowData)).toThrow(errorMessage);
             }
         });
     });
@@ -586,10 +517,7 @@ describe('check row validators', () => {
             const rowData: BaseRowType<null>[] = [
                 {
                     data: {
-                        key: key1.description,
-                        keyPara: null,
-                        selector: null,
-                        ast: null,
+                        ast: variableParser.parseAction(key1.description),
                         values_replaced: {
                             value1: null
                         },
@@ -605,10 +533,7 @@ describe('check row validators', () => {
                 },
                 {
                     data: {
-                        key: key2.description,
-                        keyPara: null,
-                        selector: null,
-                        ast: null,
+                        ast: variableParser.parseAction(key2.description),
                         values_replaced: {
                             value1: null
                         },
@@ -624,17 +549,12 @@ describe('check row validators', () => {
                 }
             ];
 
+            // eslint-disable-next-line jest/no-conditional-in-test
             if (!errorMessage) {
                 sut.validate(rowData);
             } else {
-                try {
-                    sut.validate(rowData);
-                } catch (error) {
-                    expect(error.message).toBe(errorMessage);
-                    return;
-                }
-
-                throw Error(`Error must be thrown if XOR validator should detect a problem`);
+                // eslint-disable-next-line jest/no-conditional-expect
+                expect(() => sut.validate(rowData)).toThrow(errorMessage);
             }
         });
     });
@@ -643,25 +563,25 @@ describe('check row validators', () => {
      *
      */
     describe('check para validator', () => {
+        /**
+         *
+         */
         it.each([
-            [Symbol('out'), null, [''], null], //
-            [Symbol('out'), '', [''], null], //
-            [Symbol('out'), '', [null], null], //
-            [Symbol('out'), '', ['', 'store'], null],
-            [Symbol('out'), '', [null, '', 'store'], null],
-            [Symbol('out'), 'store', ['', 'store'], null],
-            [Symbol('out'), 'store', ['', 'global'], "Parameter 'store' of key 'out' is not defined. Allowed is ''\n or 'global'"]
+            [Symbol('out'), [''], null], //
+            [Symbol('out'), [''], null], //
+            [Symbol('out'), [null], null], //
+            [Symbol('out'), ['', 'store'], null],
+            [Symbol('out'), [null, '', 'store'], null],
+            [Symbol('out:store'), ['', 'store'], null],
+            [Symbol('out:store'), ['', 'global'], "Parameter 'store' of key 'out' is not defined. Allowed is ''\n or 'global'"]
         ])(
             `check para validation (metaKey: '%s', key: '%s', allowed Paras: '%s', error message: '%s'`,
-            (key: symbol, para: string, allowedParas: string[], errorMessage: string) => {
+            (key: symbol, allowedParas: string[], errorMessage: string) => {
                 const sut = new ValidationHandler(null);
                 const rowData: BaseRowType<null>[] = [
                     {
                         data: {
-                            key: key.description,
-                            keyPara: para,
-                            selector: null,
-                            ast: null,
+                            ast: variableParser.parseAction(key.description),
                             values_replaced: {
                                 value1: null
                             },
@@ -677,17 +597,12 @@ describe('check row validators', () => {
                     }
                 ];
 
+                // eslint-disable-next-line jest/no-conditional-in-test
                 if (!errorMessage) {
                     sut.validate(rowData);
                 } else {
-                    try {
-                        sut.validate(rowData);
-                    } catch (error) {
-                        expect(error.message).toBe(errorMessage);
-                        return;
-                    }
-
-                    throw Error(`Error must be thrown if para validator should detect a problem`);
+                    // eslint-disable-next-line jest/no-conditional-expect
+                    expect(() => sut.validate(rowData)).toThrow(errorMessage);
                 }
             }
         );
@@ -716,10 +631,7 @@ describe('check row validators', () => {
                 const rowData: BaseRowType<null>[] = [
                     {
                         data: {
-                            key: 'xxx',
-                            keyPara: null,
-                            selector: null,
-                            ast: null,
+                            ast: variableParser.parseAction('xxx'),
                             values_replaced: {
                                 value1,
                                 value2
@@ -736,17 +648,12 @@ describe('check row validators', () => {
                     }
                 ];
 
+                // eslint-disable-next-line jest/no-conditional-in-test
                 if (!errorMessage) {
                     sut.validate(rowData);
                 } else {
-                    try {
-                        sut.validate(rowData);
-                    } catch (error) {
-                        expect(error.message).toBe(errorMessage);
-                        return;
-                    }
-
-                    throw Error(`Error must be thrown if ValueRequired validator should detect a problem`);
+                    // eslint-disable-next-line jest/no-conditional-expect
+                    expect(() => sut.validate(rowData)).toThrow(errorMessage);
                 }
             }
         );

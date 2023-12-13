@@ -22,12 +22,15 @@ export class XORValidator implements GroupValidator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validate(rows: readonly BaseRowMetaDefinition<any, any>[]) {
         const keys = this.keys.map((k) => k.description);
+
         const existingKeys = rows.reduce((o, r) => {
-            if (keys.includes(r.key)) {
-                o.push(r.key);
+            const key = r.ast.name.stringValue;
+            if (keys.includes(key)) {
+                o.push(key);
             }
             return o;
         }, []);
+
         if (existingKeys.length === 0) {
             throw Error(`One of the following keys '${keys?.join(', ')}' must exists, but no one exists`);
         } else if (existingKeys.length > 1) {

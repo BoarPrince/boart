@@ -20,7 +20,9 @@ export class DependsOnValidator implements RowValidator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validate(row: BaseRowMetaDefinition<any, any>, rows: readonly BaseRowMetaDefinition<any, any>[]) {
         let count = 0;
-        this.dependOnKey.forEach((key) => rows?.forEach((r) => (count += r.key === key || `${r.key}:${r.keyPara || ''}` === key ? 1 : 0)));
+        this.dependOnKey.forEach(
+            (key) => rows?.forEach((r) => (count += r.ast.name.value === key || r.ast.name.stringValue === key ? 1 : 0))
+        );
 
         if (count === 0) {
             throw Error(

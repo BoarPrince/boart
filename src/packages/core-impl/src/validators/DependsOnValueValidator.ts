@@ -26,7 +26,7 @@ export class DependsOnValueValidator implements RowValidator {
     validate(row: BaseRowMetaDefinition<any, any>, rows: readonly BaseRowMetaDefinition<any, any>[]) {
         let count = 0;
         this.dependOn.forEach((dependOn) => {
-            rows.filter((r) => r.key === dependOn.key)
+            rows.filter((r) => r.ast.name.value === dependOn.key)
                 .filter((r) => r.values_replaced[dependOn.column] === dependOn.value)
                 .forEach(() => count++);
         });

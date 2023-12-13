@@ -11,11 +11,20 @@ export class ParaValidator implements RowValidator {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     validate(row: BaseRowMetaDefinition<any, any>) {
-        if (!!row.keyPara && !this.allowedPara.some((allowedPara) => row.keyPara === allowedPara || (!allowedPara && !row.keyPara))) {
+        if (
+            !!row.ast.qualifier &&
+            !this.allowedPara.some(
+                // (allowedPara) => row.ast.qualifier.paras?.[0] === allowedPara || (!allowedPara && !row.ast.qualifier.paras?.length)
+                (allowedPara) =>
+                    row.ast.qualifier.stringValue === allowedPara ||
+                    row.ast.qualifier.paras?.[0] === allowedPara ||
+                    (!allowedPara && !row.ast.qualifier.paras?.length)
+            )
+        ) {
             throw Error(
-                `Parameter '${row.keyPara}' of key '${row.key}' is not defined. Allowed is ${this.allowedPara
-                    .map((k) => `'${k}'`)
-                    .join('\n or ')}`
+                `Parameter '${row.ast.qualifier?.paras?.join(':')}' of key '${
+                    row.ast.name.stringValue
+                }' is not defined. Allowed is ${this.allowedPara.map((k) => `'${k}'`).join('\n or ')}`
             );
         }
     }
