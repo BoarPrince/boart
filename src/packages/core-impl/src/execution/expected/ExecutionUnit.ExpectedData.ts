@@ -44,7 +44,13 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     get validators(): ReadonlyArray<RowValidator> {
         return [
             {
-                validate: (row) => new ParaValidator(this.operators.map((o) => o.name)).validate(row)
+                validate: (row) =>
+                    new ParaValidator(
+                        this.operators
+                            .map((o) => o.name)
+                            // add default operator
+                            .concat('')
+                    ).validate(row)
             }
         ];
     }
@@ -55,7 +61,8 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     get description(): Description {
         return {
             id: 'expected-unit',
-            title: !this.firstLevelType ? 'expected' : `expected:${this.firstLevelType.toString()}`,
+            title: 'expected',
+            dataScope: this.firstLevelType?.toString(),
             description: null,
             examples: null
         };
@@ -80,11 +87,11 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
         const expected = row.value;
         const baseContent = DataContentHelper.create(this.getDataContent(context));
 
-        const data = !row.selector //
+        const data = !row.ast.selectors?.length //
             ? baseContent
             : SelectorExtractor.getValueBySelector(row.ast.selectors, baseContent);
 
-        const operatorName = row.actionPara || '';
+        const operatorName = row.ast.qualifier?.stringValue || '';
         const operator = this.operators.find((o) => o.name === operatorName);
 
         // validate operator input
@@ -97,9 +104,8 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
         const expectedResult = await operator.check(value, expectedValue);
 
         if (expectedResult.result === false) {
-            const description = (this.description.title ?? '') + (!row.selector ? '' : '#' + row.selector);
             throw Error(
-                `error: ${description}` +
+                `error: ${row.ast.match}` +
                     (!expectedResult.errorMessage
                         ? `\n\t${operatorName}: ${expected?.toString()}\n\tactual: ${data.getText()}`
                         : expectedResult.errorMessage)

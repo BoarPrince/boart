@@ -112,20 +112,25 @@ describe('check expected:data execution units', () => {
     const sut1 = new ExpectedDataExecutinoUnit<DataContext>('data');
     const sut2 = new ExpectedDataExecutinoUnit();
 
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sut1,
-            validators: null
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sut2,
-            validators: null
-        })
-    );
+    /**
+     *
+     */
+    beforeAll(() => {
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut1,
+                validators: null
+            })
+        );
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut2,
+                validators: null
+            })
+        );
+    });
 
     /**
      *
@@ -138,7 +143,7 @@ describe('check expected:data execution units', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data:not', 'y']
+                    cells: ['expected:not::data', 'y']
                 }
             ]
         });
@@ -155,7 +160,7 @@ describe('check expected:data execution units', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data', 'x']
+                    cells: ['expected::data', 'x']
                 }
             ]
         });
@@ -196,7 +201,7 @@ describe('check expected:data execution units', () => {
             ['8. number 1', new NativeContent(1), '1'],
             ['9. object', new ObjectContent({ a: 1, b: 2, c: [3, 4, 5] }), '{"a":1,"b":2,"c":[3,4,5]}'],
             ['10. array', new ObjectContent([1, 2, 3, 4, 5]), '[1,2,3,4,5]']
-        ])(`%s, data: %s -> expected: %s `, async (_: string, data: DataContent, expected: string) => {
+        ])(`%s, data: %s -> expected: %s`, async (_: string, data: DataContent, expected: string) => {
             intialContext.data = data;
             await tableHandler.process({
                 headers: {
@@ -204,7 +209,7 @@ describe('check expected:data execution units', () => {
                 },
                 rows: [
                     {
-                        cells: ['expected:data', expected]
+                        cells: ['expected::data', expected]
                     }
                 ]
             });
@@ -232,7 +237,7 @@ describe('check expected:data execution units', () => {
                 },
                 rows: [
                     {
-                        cells: [`expected:data#${property}`, expected]
+                        cells: [`expected::data#${property}`, expected]
                     }
                 ]
             });
@@ -249,25 +254,20 @@ describe('check expected:data execution units', () => {
         it.each([
             ['string false', new TextContent('false'), '"false"'],
             ['number 0', new TextContent('0'), '1']
-        ])(`%s, data: %s -> not expected: %s `, async (_: string, data: DataContent, expected: string) => {
+        ])(`%s, data: %s -> not expected: %s`, async (_: string, data: DataContent, expected: string) => {
             intialContext.data = data;
-            try {
-                await tableHandler.process({
+            await expect(() =>
+                tableHandler.process({
                     headers: {
                         cells: ['action', 'value']
                     },
                     rows: [
                         {
-                            cells: ['expected:data', expected]
+                            cells: ['expected::data', expected]
                         }
                     ]
-                });
-            } catch (error) {
-                expect(error.message).toStartWith(`error: expected:data`);
-                return;
-            }
-
-            throw Error('error must be thrown, if value is not expected');
+                })
+            ).rejects.toThrow(`error: expected::data`);
         });
     });
 });
@@ -282,13 +282,18 @@ describe('check expected:header execution units', () => {
 
     const sut = new ExpectedDataExecutinoUnit<DataContext>('header');
 
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sut,
-            validators: null
-        })
-    );
+    /**
+     *
+     */
+    beforeAll(() => {
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+    });
 
     /**
      *
@@ -303,7 +308,7 @@ describe('check expected:header execution units', () => {
             ['3, number', 'a.b', new ObjectContent({ a: { b: 10 } }), '10'],
             ['4, boolean (false)', 'a.b', new ObjectContent({ a: { b: false } }), 'false'],
             ['5, boolean (true)', 'a.b', new ObjectContent({ a: { b: true } }), 'true']
-        ])(`%s, property: %s, data: %s -> expected: %s `, async (_: string, property: string, header: DataContent, expected: string) => {
+        ])(`%s, property: %s, data: %s -> expected: %s`, async (_: string, property: string, header: DataContent, expected: string) => {
             intialContext.header = header;
             await tableHandler.process({
                 headers: {
@@ -311,7 +316,7 @@ describe('check expected:header execution units', () => {
                 },
                 rows: [
                     {
-                        cells: [`expected:header#${property}`, expected]
+                        cells: [`expected::header#${property}`, expected]
                     }
                 ]
             });
@@ -328,25 +333,20 @@ describe('check expected:header execution units', () => {
         it.each([
             ['1. string false', 'a', new ObjectContent({ a: 'false' }), '"false"'],
             ['2. number 0', 'a', new ObjectContent({ a: '0' }), '1']
-        ])(`%s, data: %s -> not expected: %s `, async (_: string, property: string, header: DataContent, expected: string) => {
+        ])(`%s, data: %s -> not expected: %s`, async (_: string, property: string, header: DataContent, expected: string) => {
             intialContext.header = header;
-            try {
-                await tableHandler.process({
+            await expect(() =>
+                tableHandler.process({
                     headers: {
                         cells: ['action', 'value']
                     },
                     rows: [
                         {
-                            cells: [`expected:header#${property}`, expected]
+                            cells: [`expected::header#${property}`, expected]
                         }
                     ]
-                });
-            } catch (error) {
-                expect(error.message).toStartWith(`error: expected:header`);
-                return;
-            }
-
-            throw Error('error must be thrown, if value is not expected');
+                })
+            ).rejects.toThrow('error: expected::header');
         });
 
         /**
@@ -354,18 +354,18 @@ describe('check expected:header execution units', () => {
          */
         it('no parameter defined for accessing header', async () => {
             intialContext.header = new ObjectContent({ a: 'b' });
-            await expect(async () => {
-                await tableHandler.process({
+            await expect(() =>
+                tableHandler.process({
                     headers: {
                         cells: ['action', 'value']
                     },
                     rows: [
                         {
-                            cells: ['expected:header', 'b']
+                            cells: ['expected::header', 'b']
                         }
                     ]
-                });
-            }).rejects.toThrowError('error: expected:header\n\texpected: b\n\tactual: {"a":"b"}');
+                })
+            ).rejects.toThrow('error: expected::header\n\texpected: b\n\tactual: {"a":"b"}');
         });
     });
 });
@@ -380,13 +380,18 @@ describe('check expected:transformed execution units', () => {
 
     const sut = new ExpectedDataExecutinoUnit<DataContext>('transformed');
 
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sut,
-            validators: null
-        })
-    );
+    /**
+     *
+     */
+    beforeAll(() => {
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+    });
 
     /**
      *
@@ -400,7 +405,7 @@ describe('check expected:transformed execution units', () => {
             },
             rows: [
                 {
-                    cells: [`expected:transformed`, 'xxx']
+                    cells: [`expected::transformed`, 'xxx']
                 }
             ]
         });
@@ -460,7 +465,7 @@ describe('check expected:data execution units with operators', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data:op1', '']
+                    cells: ['expected:op1::data', '']
                 }
             ]
         });
@@ -487,7 +492,7 @@ describe('check expected:data execution units with operators', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data:op2', '']
+                    cells: ['expected:op2::data', '']
                 }
             ]
         });
@@ -507,7 +512,7 @@ describe('check expected:data execution units with operators', () => {
             })
         );
         const operator = new TestOperator('op3');
-        operator.check = jest.fn().mockReturnValue(false);
+        jest.spyOn(operator, 'check').mockReturnValue(false);
         ExpectedOperatorInitializer.instance.addOperator(operator);
 
         await tableHandler.process({
@@ -516,7 +521,7 @@ describe('check expected:data execution units with operators', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data:op3:not', '']
+                    cells: ['expected:op3:not::data', '']
                 }
             ]
         });
@@ -582,7 +587,7 @@ describe('check expected:data execution units with operators', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data:op1', 'b']
+                    cells: ['expected:op1::data', 'b']
                 }
             ]
         });
@@ -596,7 +601,7 @@ describe('check expected:data execution units with operators', () => {
     /**
      *
      */
-    it('ObjectContent value parameter', async () => {
+    it('check ObjectContent value parameter', async () => {
         const operator = new TestOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
         const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
@@ -617,7 +622,7 @@ describe('check expected:data execution units with operators', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data:op1', 'b']
+                    cells: ['expected:op1::data', 'b']
                 }
             ]
         });
@@ -655,7 +660,7 @@ describe('check expected:data execution units with operators', () => {
      */
     it('operator with error message', async () => {
         const operator = new TestOperator('op1');
-        operator.check = jest.fn().mockReturnValue({
+        jest.spyOn(operator, 'check').mockReturnValue({
             result: false,
             errorMessage: 'operator error message'
         });
@@ -679,11 +684,11 @@ describe('check expected:data execution units with operators', () => {
                 },
                 rows: [
                     {
-                        cells: ['expected:data:op1', '']
+                        cells: ['expected:op1::data', '']
                     }
                 ]
             });
-        }).rejects.toThrowError('operator error message');
+        }).rejects.toThrow('operator error message');
     });
 
     /**
@@ -728,11 +733,11 @@ describe('check expected:data execution units with operators', () => {
                 },
                 rows: [
                     {
-                        cells: ['expected:data:opv', '']
+                        cells: ['expected:opv::data', '']
                     }
                 ]
             });
-        }).rejects.toThrowError('validator error');
+        }).rejects.toThrow('validator error');
     });
 });
 
@@ -812,15 +817,15 @@ describe('check expected:data ci operator', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data:op1:ci', 'UPPER-CASE']
+                    cells: ['expected:op1:ci::data', 'UPPER-CASe']
                 }
             ]
         });
 
-        expect(operator.check).toBeCalledTimes(1);
+        expect(operator.check).toHaveBeenCalledTimes(1);
         expect(operator.check.mock.calls[0][0]).toBeString();
         expect(operator.check.mock.calls[0][1]).toBeString();
-        expect(operator.check).toBeCalledWith(dataToCheck.toString().toLowerCase(), 'upper-case');
+        expect(operator.check).toHaveBeenCalledWith(dataToCheck.toString().toLowerCase(), 'upper-case');
     });
 
     /**
@@ -848,7 +853,7 @@ describe('check expected:data ci operator', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data:ci', 'UPPER-CASE']
+                    cells: ['expected:ci::data', 'UPPER-CASE']
                 }
             ]
         });
@@ -880,11 +885,11 @@ describe('check expected:data ci operator', () => {
                 },
                 rows: [
                     {
-                        cells: ['expected:data:ci:not', 'UPPER-CASE']
+                        cells: ['expected:ci:not::data', 'UPPER-CASE']
                     }
                 ]
             })
-        ).rejects.toThrowError('error: expected:data\n\tci:not: UPPER-CASE\n\tactual: upper-case');
+        ).rejects.toThrow('error: expected:ci:not::data\n\tci:not: UPPER-CASE\n\tactual: upper-case');
     });
 
     /**
@@ -912,7 +917,7 @@ describe('check expected:data ci operator', () => {
             },
             rows: [
                 {
-                    cells: ['expected:data:ci:not', 'UPPER-CASE']
+                    cells: ['expected:ci:not::data', 'UPPER-CASE']
                 }
             ]
         });

@@ -20,7 +20,10 @@ export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext
     /**
      *
      */
-    constructor(private firstLevelType?: keyof DataContext['execution'], private secondLevelType?: string) {}
+    constructor(
+        private firstLevelType?: keyof DataContext['execution'],
+        private secondLevelType?: string
+    ) {}
 
     /**
      *
@@ -28,7 +31,8 @@ export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext
     get description(): Description {
         return {
             id: '67deb7f1-9943-4e58-a335-6e19da22d3eb',
-            title: !this.firstLevelType ? 'expected:jsonLogic' : `expected:jsonLogic:${this.firstLevelType.toString()}`,
+            title: 'expected:jsonLogic',
+            dataScope: this.firstLevelType?.toString(),
             description: null,
             examples: null
         };
@@ -53,7 +57,7 @@ export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext
         const rule = row.value.toString();
         const data = DataContentHelper.create(this.getDataContent(context)).getText();
 
-        if (row.actionPara === 'true') {
+        if (row.ast.qualifier?.paras?.[0] === 'true') {
             JsonLogic.instance.checkTruthy(rule, data);
         } else {
             JsonLogic.instance.checkFalsy(rule, data);

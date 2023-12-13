@@ -1,4 +1,4 @@
-import { ExecutionEngine, ExecutionUnit, NativeContent, NullContent, RowDefinition, TableHandler, TableRowType } from '@boart/core';
+import { ExecutionEngine, ExecutionUnit, NativeContent, RowDefinition, TableHandler, TableRowType } from '@boart/core';
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -88,13 +88,18 @@ describe('check expected:jsonLogic execution units', () => {
 
     const sut = new ExpectedJsonLogicExecutionUnit();
 
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sut,
-            validators: []
-        })
-    );
+    /**
+     *
+     */
+    beforeAll(() => {
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: []
+            })
+        );
+    });
 
     /**
      *
@@ -135,8 +140,8 @@ describe('check expected:jsonLogic execution units', () => {
      */
     it('check wrong property', async () => {
         intialContext.data = new NativeContent(1);
-        try {
-            await tableHandler.process({
+        await expect(() =>
+            tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
                 },
@@ -145,12 +150,7 @@ describe('check expected:jsonLogic execution units', () => {
                         cells: [`expected:jsonLogic:fals`, '{"===": [{"var": ""}, 2]}']
                     }
                 ]
-            });
-        } catch (error) {
-            expect(error.message).toBe("Parameter 'fals' of key 'expected:jsonLogic' is not defined. Allowed is 'true'\n or 'false'");
-            return;
-        }
-
-        throw Error(`error must occur when property is not 'true' or 'false'`);
+            })
+        ).rejects.toThrow("Parameter 'fals' of key 'expected:jsonLogic:fals' is not defined. Allowed is 'true'\n or 'false'");
     });
 });
