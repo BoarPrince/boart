@@ -3,6 +3,7 @@ import { DataContentHelper, ExecutionUnit, ParaType, SelectorExtractor, Selector
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
 import { JsonLogic } from '../../jsonlogic/JsonLogic';
+import { DataScopeValidator } from '../../validators/DataScopeValidator';
 import { ParaValidator } from '../../validators/ParaValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
 
@@ -15,13 +16,15 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
     readonly description = {
         id: '389a6464-7568-4759-a7fd-820ad678794f',
         title: 'transform:jsonLogic',
+        dataScope: '*',
         description: null,
         examples: null
     };
     readonly parameterType = ParaType.Optional;
     readonly selectorType = SelectorType.Optional;
     readonly validators = [
-        new ParaValidator(['data', 'header', 'transformed']), //
+        new DataScopeValidator(['data', 'header', 'transformed', '']), //
+        new ParaValidator(null), // no para is allowed
         new ValueRequiredValidator('value')
     ];
 
@@ -48,7 +51,7 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const rule = row.value.toString();
-        const data = DataContentHelper.create(this.getSourceData(context, row.actionPara)).getText();
+        const data = DataContentHelper.create(this.getSourceData(context, row.ast.datascope?.value)).getText();
 
         const transformedResult = DataContentHelper.create(JsonLogic.instance.transform(rule, data));
 

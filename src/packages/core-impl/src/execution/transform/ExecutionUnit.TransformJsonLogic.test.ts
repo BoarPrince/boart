@@ -95,13 +95,18 @@ describe('check transform:jsonLogic execution units', () => {
 
     const sut = new TransformJsonLogicExecutionUnit();
 
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sut,
-            validators: null
-        })
-    );
+    /**
+     *
+     */
+    beforeAll(() => {
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+    });
 
     /**
      *
@@ -188,8 +193,8 @@ describe('check transform:jsonLogic execution units', () => {
      */
     it('transform (failure - wrong rule)', async () => {
         initialContext.transformed = new ObjectContent({ a: true, b: false });
-        try {
-            const context = await tableHandler.process({
+        await expect(() =>
+            tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
                 },
@@ -198,13 +203,8 @@ describe('check transform:jsonLogic execution units', () => {
                         cells: [`transform:jsonLogic`, '{"va": "b"}']
                     }
                 ]
-            });
-        } catch (error) {
-            expect(error.message).toBe('cannot apply rule {"va": "b"}\nUnrecognized operation va');
-            return;
-        }
-
-        throw Error('error must occur when role is not correct');
+            })
+        ).rejects.toThrow('cannot apply rule {"va": "b"}\nUnrecognized operation va');
     });
 
     /**
@@ -239,7 +239,7 @@ describe('check transform:jsonLogic execution units', () => {
             },
             rows: [
                 {
-                    cells: [`transform:jsonLogic:data`, '{"var": "a"}']
+                    cells: [`transform:jsonLogic::data`, '{"var": "a"}']
                 }
             ]
         });
@@ -260,7 +260,7 @@ describe('check transform:jsonLogic execution units', () => {
             },
             rows: [
                 {
-                    cells: [`transform:jsonLogic:data#c`, '{"var": "a"}']
+                    cells: [`transform:jsonLogic::data#c`, '{"var": "a"}']
                 }
             ]
         });
@@ -281,7 +281,7 @@ describe('check transform:jsonLogic execution units', () => {
             },
             rows: [
                 {
-                    cells: [`transform:jsonLogic:header#c`, '{"var": "a"}']
+                    cells: [`transform:jsonLogic::header#c`, '{"var": "a"}']
                 }
             ]
         });
@@ -301,7 +301,7 @@ describe('check transform:jsonLogic execution units', () => {
             },
             rows: [
                 {
-                    cells: [`transform:jsonLogic:transformed#a`, '{"var": "b"}']
+                    cells: [`transform:jsonLogic::transformed#a`, '{"var": "b"}']
                 }
             ]
         });

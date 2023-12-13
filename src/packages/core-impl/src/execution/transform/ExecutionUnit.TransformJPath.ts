@@ -3,6 +3,7 @@ import JSPath from 'jspath';
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
+import { DataScopeValidator } from '../../validators/DataScopeValidator';
 import { ParaValidator } from '../../validators/ParaValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
 
@@ -15,6 +16,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
     readonly description = {
         id: '0bb11bdd-1628-470d-a7af-d5415d073b3d',
         title: 'transform:jpath',
+        dataScope: '*',
         description: null,
         examples: null
     };
@@ -22,7 +24,8 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
     readonly parameterType = ParaType.Optional;
     readonly selectorType = SelectorType.Optional;
     readonly validators = [
-        new ParaValidator(['data', 'header', 'transformed']), //
+        new DataScopeValidator(['data', 'header', 'transformed', '']), //
+        new ParaValidator(null), // no para is allowed
         new ValueRequiredValidator('value')
     ];
 
@@ -54,7 +57,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
      */
     execute(context: DataContext, row: RowTypeValue<DataContext>): void {
         const rule = row.value.toString();
-        const data = this.getSourceData(context, row.actionPara);
+        const data = this.getSourceData(context, row.ast.datascope?.value);
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const transformedValue = JSPath.apply(rule, data) as ReadonlyArray<object>;

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {
     ExecutionEngine,
     ExecutionUnit,
@@ -96,13 +95,18 @@ describe('check transform:jpath execution units', () => {
 
     const sut = new TransformJPathExecutionUnit();
 
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sut,
-            validators: null
-        })
-    );
+    /**
+     *
+     */
+    beforeAll(() => {
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+        );
+    });
 
     /**
      *
@@ -189,8 +193,8 @@ describe('check transform:jpath execution units', () => {
      */
     it('transform (failure - wrong rule)', async () => {
         initialContext.transformed = new ObjectContent({ a: true, b: false });
-        try {
-            await tableHandler.process({
+        await expect(() =>
+            tableHandler.process({
                 headers: {
                     cells: ['action', 'value']
                 },
@@ -199,13 +203,8 @@ describe('check transform:jpath execution units', () => {
                         cells: [`transform:jpath`, '.xxx']
                     }
                 ]
-            });
-        } catch (error) {
-            expect(error.message).toBe(`cannot evaluate jpath expression, rule: '.xxx', data: {"a":true,"b":false}`);
-            return;
-        }
-
-        throw Error('error must occur when role is not correct');
+            })
+        ).rejects.toThrow(`cannot evaluate jpath expression, rule: '.xxx', data: {"a":true,"b":false}`);
     });
 
     /**
@@ -240,7 +239,7 @@ describe('check transform:jpath execution units', () => {
             },
             rows: [
                 {
-                    cells: [`transform:jpath:data`, '.a']
+                    cells: [`transform:jpath::data`, '.a']
                 }
             ]
         });
@@ -261,7 +260,7 @@ describe('check transform:jpath execution units', () => {
             },
             rows: [
                 {
-                    cells: [`transform:jpath:data#c`, '.a']
+                    cells: [`transform:jpath::data#c`, '.a']
                 }
             ]
         });
@@ -282,13 +281,31 @@ describe('check transform:jpath execution units', () => {
             },
             rows: [
                 {
-                    cells: [`transform:jpath:header#c`, '.a']
+                    cells: [`transform:jpath::header#c`, '.a']
                 }
             ]
         });
         expect(context.execution.transformed).toBeDefined();
         expect(context.execution.transformed).toBeInstanceOf(ObjectContent);
         expect(context.execution.transformed.toString()).toBe('{"c":true}');
+    });
+
+    /**
+     *
+     */
+    it('transform (scope not allowed)', async () => {
+        await expect(() =>
+            tableHandler.process({
+                headers: {
+                    cells: ['action', 'value']
+                },
+                rows: [
+                    {
+                        cells: [`transform:jpath::head`, '.a']
+                    }
+                ]
+            })
+        ).rejects.toThrow(`Datascope 'head' of action 'transform:jpath' is not defined. Allowed is 'data'`);
     });
 
     /**
@@ -302,7 +319,7 @@ describe('check transform:jpath execution units', () => {
             },
             rows: [
                 {
-                    cells: [`transform:jpath:transformed#a`, '.b']
+                    cells: [`transform:jpath::transformed#a`, '.b']
                 }
             ]
         });

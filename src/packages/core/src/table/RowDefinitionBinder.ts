@@ -100,7 +100,7 @@ export class RowDefinitionBinder<
                 // key must match
                 keyStringValue.startsWith(defKey) &&
                 // and dataScope must match
-                row.ast.datascope?.value == defDataScope
+                (row.ast.datascope?.value == defDataScope || defDataScope === '*')
             );
         });
     }
@@ -117,7 +117,7 @@ export class RowDefinitionBinder<
 
         switch (rowDefinition.parameterType) {
             case ParaType.True:
-                throwIf(!ast.qualifier, () => `'${this.tableName}': key '${rowDefinition.key.description}' must have a parameter!`);
+                throwIf(!ast.qualifier, () => `'${this.tableName}': key '${rowDefinition.key.description || ''}' must have a parameter!`);
                 break;
             case ParaType.Optional:
                 break;
