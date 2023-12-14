@@ -1,10 +1,12 @@
 import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
 
 /**
- * allowd paras can also be null if no parameter is possible too.
+ * allowd paras can also be null or empty string if no parameter is possible too.
  */
 export class ParaValidator implements RowValidator {
-    constructor(private readonly allowedPara: readonly string[]) {}
+    constructor(private readonly allowedPara?: readonly string[]) {
+        this.allowedPara = allowedPara ?? [''];
+    }
 
     /**
      *
@@ -14,7 +16,6 @@ export class ParaValidator implements RowValidator {
         if (
             !!row.ast.qualifier &&
             !this.allowedPara.some(
-                // (allowedPara) => row.ast.qualifier.paras?.[0] === allowedPara || (!allowedPara && !row.ast.qualifier.paras?.length)
                 (allowedPara) =>
                     row.ast.qualifier.stringValue === allowedPara ||
                     row.ast.qualifier.paras?.[0] === allowedPara ||
@@ -22,9 +23,9 @@ export class ParaValidator implements RowValidator {
             )
         ) {
             throw Error(
-                `Parameter '${row.ast.qualifier?.paras?.join(':')}' of key '${
-                    row.ast.name.stringValue
-                }' is not defined. Allowed is ${this.allowedPara.map((k) => `'${k}'`).join('\n or ')}`
+                `Parameter '${row.ast.qualifier?.paras?.join(':')}' of action '${row.ast.name.stringValue}' is not defined. Allowed is ${
+                    this.allowedPara?.map((k) => `'${k}'`).join('\n or ') || "''"
+                }`
             );
         }
     }

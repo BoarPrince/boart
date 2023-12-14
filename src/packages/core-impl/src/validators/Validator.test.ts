@@ -3,7 +3,7 @@ import { BaseRowType, GroupValidator, ParaType, RowDefinition, RowValidator, Val
 import { BoolValidator } from './BoolValidator';
 import { DependsOnValidator } from './DependsOnValidator';
 import { IntValidator } from './IntValidator';
-import { ParaValidator } from './ParaValidator';
+import { QualifierValidator, ValidatorDefinition } from './QualifierValidator';
 import { RequiredValidator } from './RequiredValidator';
 import { UniqueValidator } from './UniqueValidator';
 import { ValueRequiredValidator } from './ValueRequiredValidator';
@@ -562,21 +562,67 @@ describe('check row validators', () => {
     /**
      *
      */
-    describe('check para validator', () => {
+    describe('check qualifier validator', () => {
         /**
          *
          */
         it.each([
-            [Symbol('out'), [''], null], //
-            [Symbol('out'), [''], null], //
-            [Symbol('out'), [null], null], //
-            [Symbol('out'), ['', 'store'], null],
-            [Symbol('out'), [null, '', 'store'], null],
-            [Symbol('out:store'), ['', 'store'], null],
-            [Symbol('out:store'), ['', 'global'], "Parameter 'store' of key 'out' is not defined. Allowed is ''\n or 'global'"]
+            [1, Symbol('out'), [''], null], //
+            [2, Symbol('out'), [''], null], //
+            [3, Symbol('out'), [null], null], //
+            [4, Symbol('out'), ['', 'store'], null],
+            [5, Symbol('out'), [null, '', 'store'], null],
+            [6, Symbol('out:store'), ['store'], null],
+            [7, Symbol('out:store'), ['', 'global'], "Qualifier 'store' of action 'out:store' is not defined. Allowed is '' or 'global'"],
+            [8, Symbol('out:store'), [null, 'global'], "Qualifier 'store' of action 'out:store' is not defined. Allowed is '' or 'global'"],
+            [9, Symbol('out:store'), [null], "Qualifier 'store' of action 'out:store' is not defined. Allowed is ''"],
+            [10, Symbol('out:store'), null, "Qualifier 'store' of action 'out:store' is not defined. Allowed is ''"]
         ])(
-            `check para validation (metaKey: '%s', key: '%s', allowed Paras: '%s', error message: '%s'`,
-            (key: symbol, allowedParas: string[], errorMessage: string) => {
+            `%s: check qualifier validation (metaKey: '%s', key: '%s', allowed Paras: '%s', error message: '%s'`,
+            (nr: number, key: symbol, allowedParas: string[], errorMessage: string) => {
+                const sut = new ValidationHandler(null);
+                const qualifierParaDef = allowedParas?.map((para) => ({ qualifier: para, paras: null }));
+                const rowData: BaseRowType<null>[] = [
+                    {
+                        data: {
+                            ast: variableParser.parseAction(key.description),
+                            values_replaced: {
+                                value1: null
+                            },
+                            _metaDefinition: new RowDefinition({
+                                key: null,
+                                type: null,
+                                selectorType: null,
+                                executionUnit: null,
+                                parameterType: null,
+                                validators: [new QualifierValidator(qualifierParaDef)]
+                            })
+                        }
+                    }
+                ];
+
+                // eslint-disable-next-line jest/no-conditional-in-test
+                if (!errorMessage) {
+                    sut.validate(rowData);
+                } else {
+                    // eslint-disable-next-line jest/no-conditional-expect
+                    expect(() => sut.validate(rowData)).toThrow(errorMessage);
+                }
+            }
+        );
+
+        /**
+         *
+         */
+        it.each([
+            [1, Symbol('out'), [{ qualifier: 'store' }, { qualifier: '' }]],
+            [2, Symbol('out:store'), [{ qualifier: 'store', paras: ['para1', ''] }, { qualifier: '' }]],
+            [3, Symbol('out:store:para1'), [{ qualifier: 'store', paras: ['para1'] }]],
+            [4, Symbol('out:store:para1'), [{ qualifier: 'store', paras: ['para1', ''] }]],
+            [5, Symbol('out:store:para1:para2'), [{ qualifier: 'store', paras: ['para1', 'para1:para2'] }]]
+        ])(
+            `%s: check qualifier validation with paras - no error - metaKey: '%s', key: '%s', allowed Paras: '%s', error message: '%s'`,
+            (nr: number, key: symbol, validatorDef: ValidatorDefinition[]) => {
                 const sut = new ValidationHandler(null);
                 const rowData: BaseRowType<null>[] = [
                     {
@@ -591,19 +637,57 @@ describe('check row validators', () => {
                                 selectorType: null,
                                 executionUnit: null,
                                 parameterType: null,
-                                validators: [new ParaValidator(allowedParas)]
+                                validators: [new QualifierValidator(validatorDef)]
                             })
                         }
                     }
                 ];
 
-                // eslint-disable-next-line jest/no-conditional-in-test
-                if (!errorMessage) {
-                    sut.validate(rowData);
-                } else {
-                    // eslint-disable-next-line jest/no-conditional-expect
-                    expect(() => sut.validate(rowData)).toThrow(errorMessage);
-                }
+                sut.validate(rowData);
+            }
+        );
+
+        /**
+         *
+         */
+        it.each([
+            [1, Symbol('out'), [{ qualifier: 'store' }], "Qualifier '' of action 'out' is not defined. Allowed is 'store'"],
+            [
+                2,
+                Symbol('out:store'),
+                [{ qualifier: 'store', paras: ['para1'] }, { qualifier: '' }],
+                "Qualifier 'store' of action 'out:store' is not defined. Allowed is 'store:para1' or ''"
+            ],
+            [
+                3,
+                Symbol('out:store:para1'),
+                [{ qualifier: 'store', paras: ['para1:para2'] }],
+                "Qualifier 'store:para1' of action 'out:store:para1' is not defined. Allowed is 'store:para1:para2'"
+            ]
+        ])(
+            `%s: check qualifier validation with paras - with error - metaKey: '%s', key: '%s', allowed Paras: '%s', error message: '%s'`,
+            (nr: number, key: symbol, validatorDef: ValidatorDefinition[], errorMessage: string) => {
+                const sut = new ValidationHandler(null);
+                const rowData: BaseRowType<null>[] = [
+                    {
+                        data: {
+                            ast: variableParser.parseAction(key.description),
+                            values_replaced: {
+                                value1: null
+                            },
+                            _metaDefinition: new RowDefinition({
+                                key: null,
+                                type: null,
+                                selectorType: null,
+                                executionUnit: null,
+                                parameterType: null,
+                                validators: [new QualifierValidator(validatorDef)]
+                            })
+                        }
+                    }
+                ];
+
+                expect(() => sut.validate(rowData)).toThrow(errorMessage);
             }
         );
     });
