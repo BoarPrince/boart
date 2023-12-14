@@ -4,17 +4,16 @@ import {
     ExecutionUnit,
     ParaType,
     ScopedType,
-    ScopeType,
     SelectorExtractor,
     SelectorType,
     StoreWrapper,
     VariableParser
 } from '@boart/core';
-import { Description } from 'core/src/description/Description';
 
 import { DataContext, DataExecutionContext, DataPreExecutionContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
-import { ParaValidator } from '../../validators/ParaValidator';
+import { Description } from '../../description/Description';
+import { QualifierValidator } from '../../validators/QualifierValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
 
 /**
@@ -49,7 +48,7 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
     readonly parameterType = ParaType.Optional;
     readonly scopedType = ScopedType.Optional;
     readonly validators = [
-        new ParaValidator([ScopeType.Global, ScopeType.Local, ScopeType.Step, ScopeType.Test]),
+        new QualifierValidator([{ qualifier: null, paras: null }]),
         new ValueRequiredValidator('value', 'name is missing')
     ];
 

@@ -4,10 +4,9 @@ import { ExecutionEngine, ExecutionUnit, RowDefinition, TableHandler, TableRowTy
 
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
-import { ParaValidator } from '../../validators/ParaValidator';
+import { QualifierValidator } from '../../validators/QualifierValidator';
 
 import { WaitExecutionUnit } from './ExecutionUnit.Wait';
-import { before } from 'node:test';
 
 /**
  *
@@ -77,7 +76,14 @@ describe('check wait:before execution units', () => {
                 key: Symbol('wait:before'),
                 type: TableRowType.PreProcessing,
                 executionUnit: sut,
-                validators: [new ParaValidator([null, 'sec', 'min'])]
+                validators: [
+                    new QualifierValidator([
+                        { qualifier: null, paras: null },
+                        { qualifier: 'before', paras: ['', 'sec', 'min'] },
+                        { qualifier: 'sec', paras: null },
+                        { qualifier: 'min', paras: null }
+                    ])
+                ]
             })
         );
     });
@@ -242,7 +248,14 @@ describe('check wait:after execution units', () => {
                 key: Symbol('wait:after'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: [new ParaValidator([null, 'sec', 'min'])]
+                validators: [
+                    new QualifierValidator([
+                        { qualifier: null, paras: null },
+                        { qualifier: 'after', paras: ['', 'sec', 'min'] },
+                        { qualifier: 'sec', paras: null },
+                        { qualifier: 'min', paras: null }
+                    ])
+                ]
             })
         );
     });

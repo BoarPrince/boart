@@ -4,7 +4,7 @@ import JSPath from 'jspath';
 import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
 import { DataScopeValidator } from '../../validators/DataScopeValidator';
-import { ParaValidator } from '../../validators/ParaValidator';
+import { QualifierValidator } from '../../validators/QualifierValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
 
 /**
@@ -25,7 +25,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
     readonly selectorType = SelectorType.Optional;
     readonly validators = [
         new DataScopeValidator(['data', 'header', 'transformed', '']), //
-        new ParaValidator(null), // no para is allowed
+        new QualifierValidator([{ qualifier: 'jpath', paras: null }]), // no para is allowed
         new ValueRequiredValidator('value')
     ];
 

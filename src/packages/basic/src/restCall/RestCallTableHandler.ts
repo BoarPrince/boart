@@ -12,8 +12,8 @@ import {
 } from '@boart/core';
 import {
     DependsOnValidator,
-    ParaValidator,
     PropertySetterExecutionUnit,
+    QualifierValidator,
     RequiredValidator,
     RowTypeValue,
     UniqueValidator
@@ -160,7 +160,18 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                         return method;
                     }
                 }),
-                validators: [new UniqueValidator(), new ParaValidator(['post', 'get', 'delete', 'put', 'patch', 'form-data', 'post-param'])]
+                validators: [
+                    new UniqueValidator(),
+                    new QualifierValidator([
+                        { qualifier: 'post', paras: null },
+                        { qualifier: 'get', paras: null },
+                        { qualifier: 'delete', paras: null },
+                        { qualifier: 'put', paras: null },
+                        { qualifier: 'patch', paras: null },
+                        { qualifier: 'form-data', paras: null },
+                        { qualifier: 'post-param', paras: null }
+                    ])
+                ]
             })
         );
     }

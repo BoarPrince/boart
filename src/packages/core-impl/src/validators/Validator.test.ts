@@ -619,7 +619,8 @@ describe('check row validators', () => {
             [2, Symbol('out:store'), [{ qualifier: 'store', paras: ['para1', ''] }, { qualifier: '' }]],
             [3, Symbol('out:store:para1'), [{ qualifier: 'store', paras: ['para1'] }]],
             [4, Symbol('out:store:para1'), [{ qualifier: 'store', paras: ['para1', ''] }]],
-            [5, Symbol('out:store:para1:para2'), [{ qualifier: 'store', paras: ['para1', 'para1:para2'] }]]
+            [5, Symbol('out:store:para1:para2'), [{ qualifier: 'store', paras: ['para1', 'para1:para2'] }]],
+            [6, Symbol('expected:op3:not'), [{ qualifier: 'op3', paras: ['not', ''] }]]
         ])(
             `%s: check qualifier validation with paras - no error - metaKey: '%s', key: '%s', allowed Paras: '%s', error message: '%s'`,
             (nr: number, key: symbol, validatorDef: ValidatorDefinition[]) => {

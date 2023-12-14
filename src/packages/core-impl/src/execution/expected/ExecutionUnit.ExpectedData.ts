@@ -13,7 +13,7 @@ import {
 import { Description } from 'core/src/description/Description';
 
 import { RowTypeValue } from '../../RowTypeValue';
-import { ParaValidator } from '../../validators/ParaValidator';
+import { QualifierValidator } from '../../validators/QualifierValidator';
 
 /**
  * | action            | value |
@@ -44,13 +44,14 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     get validators(): ReadonlyArray<RowValidator> {
         return [
             {
-                validate: (row) =>
-                    new ParaValidator(
-                        this.operators
-                            .map((o) => o.name)
+                validate: (row) => {
+                    new QualifierValidator(
+                        this.operators //
+                            .map((o) => ({ qualifier: o.name, paras: null }))
                             // add default operator
-                            .concat('')
-                    ).validate(row)
+                            .concat([{ qualifier: null, paras: null }])
+                    ).validate(row);
+                }
             }
         ];
     }

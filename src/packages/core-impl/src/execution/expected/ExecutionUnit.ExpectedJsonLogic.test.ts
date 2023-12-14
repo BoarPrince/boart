@@ -151,6 +151,8 @@ describe('check expected:jsonLogic execution units', () => {
                     }
                 ]
             })
-        ).rejects.toThrow("Parameter 'fals' of action 'expected:jsonLogic:fals' is not defined. Allowed is 'true'\n or 'false'");
+        ).rejects.toThrow(
+            "Qualifier 'jsonLogic:fals' of action 'expected:jsonLogic:fals' is not defined. Allowed is 'jsonLogic:true:false'"
+        );
     });
 });

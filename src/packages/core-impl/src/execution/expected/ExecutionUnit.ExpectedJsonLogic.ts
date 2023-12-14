@@ -1,9 +1,8 @@
-import { DataContent, DataContentHelper, ExecutionContext, ExecutionUnit, ParaType } from '@boart/core';
-import { Description } from 'core/src/description/Description';
+import { DataContent, DataContentHelper, Description, ExecutionContext, ExecutionUnit, ParaType } from '@boart/core';
 
 import { RowTypeValue } from '../../RowTypeValue';
 import { JsonLogic } from '../../jsonlogic/JsonLogic';
-import { ParaValidator } from '../../validators/ParaValidator';
+import { QualifierValidator } from '../../validators/QualifierValidator';
 
 /**
  * | action                   | value |
@@ -15,7 +14,7 @@ export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext
     implements ExecutionUnit<DataContext, RowTypeValue<DataContext>>
 {
     readonly parameterType = ParaType.True;
-    readonly validators = [new ParaValidator(['true', 'false'])];
+    readonly validators = [new QualifierValidator([{ qualifier: 'jsonLogic', paras: ['true', 'false'] }])];
 
     /**
      *

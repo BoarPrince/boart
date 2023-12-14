@@ -5,7 +5,7 @@ import {
     DescriptionExecutionUnit,
     GroupExecutionUnit,
     LinkExecutionUnit,
-    ParaValidator,
+    QualifierValidator,
     RowTypeValue,
     RunEnvExecutionUnit,
     RunNotEmptyExecutionUnit,
@@ -54,7 +54,14 @@ if (!GroupRowDefinition.contains('basic-group-definition')) {
             key: Symbol('wait:after'),
             type: TableRowType.PostProcessing,
             executionUnit: new WaitExecutionUnit(),
-            validators: [new ParaValidator([null, 'sec', 'min'])]
+            validators: [
+                new QualifierValidator([
+                    { qualifier: null, paras: null },
+                    { qualifier: 'after', paras: ['', 'sec', 'min'] },
+                    { qualifier: 'sec', paras: null },
+                    { qualifier: 'min', paras: null }
+                ])
+            ]
         })
     );
 
@@ -63,7 +70,14 @@ if (!GroupRowDefinition.contains('basic-group-definition')) {
             key: Symbol('wait:before'),
             type: TableRowType.Configuration,
             executionUnit: new WaitExecutionUnit(),
-            validators: [new ParaValidator([null, 'sec', 'min'])]
+            validators: [
+                new QualifierValidator([
+                    { qualifier: null, paras: null },
+                    { qualifier: 'before', paras: ['', 'sec', 'min'] },
+                    { qualifier: 'sec', paras: null },
+                    { qualifier: 'min', paras: null }
+                ])
+            ]
         })
     );
 

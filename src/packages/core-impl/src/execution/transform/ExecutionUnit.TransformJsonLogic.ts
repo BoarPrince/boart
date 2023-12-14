@@ -4,7 +4,7 @@ import { DataContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
 import { JsonLogic } from '../../jsonlogic/JsonLogic';
 import { DataScopeValidator } from '../../validators/DataScopeValidator';
-import { ParaValidator } from '../../validators/ParaValidator';
+import { QualifierValidator } from '../../validators/QualifierValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
 
 /**
@@ -24,7 +24,7 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
     readonly selectorType = SelectorType.Optional;
     readonly validators = [
         new DataScopeValidator(['data', 'header', 'transformed', '']), //
-        new ParaValidator(null), // no para is allowed
+        new QualifierValidator([{ qualifier: 'jsonLogic', paras: null }]), // no qualifier is allowed
         new ValueRequiredValidator('value')
     ];
 

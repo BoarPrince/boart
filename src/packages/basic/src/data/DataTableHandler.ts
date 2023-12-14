@@ -1,5 +1,5 @@
 import { GroupRowDefinition, ParaType, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
-import { IntValidator, ParaValidator, RowTypeValue } from '@boart/core-impl';
+import { IntValidator, QualifierValidator, RowTypeValue } from '@boart/core-impl';
 
 import { DataExecutionUnit } from './DataExecutionUnit';
 import { RepeatableDataExecutionContext } from './DataTableContext';
@@ -65,8 +65,13 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
                         }
                     }
                 },
-                // validators: [new IntValidator('value'), new ParaValidator([null, 'sec'])]
-                validators: [new IntValidator('value')]
+                validators: [
+                    new IntValidator('value'),
+                    new QualifierValidator([
+                        { qualifier: null, paras: null },
+                        { qualifier: 'sec', paras: null }
+                    ])
+                ]
             })
         );
 

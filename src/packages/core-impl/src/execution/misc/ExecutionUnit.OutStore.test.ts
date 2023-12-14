@@ -179,11 +179,12 @@ describe('check test store', () => {
      *
      */
     it.each([
-        ['regular way', new ObjectContent({ a: 'b' }), '', '', '{"a":"b"}'], //
-        ['deep value can be picked', new ObjectContent({ a: 'b' }), '#a', '', 'b'],
-        ['deep value can be set', new ObjectContent({ a: 'b' }), '', '#c', '{"c":{"a":"b"}}'],
-        ['deep value can be picked and set', new ObjectContent({ a: 'b' }), '#a', '#b', '{"b":"b"}'],
+        [1, 'regular way', new ObjectContent({ a: 'b' }), '', '', '{"a":"b"}'], //
+        [2, 'deep value can be picked', new ObjectContent({ a: 'b' }), '#a', '', 'b'],
+        [3, 'deep value can be set', new ObjectContent({ a: 'b' }), '', '#c', '{"c":{"a":"b"}}'],
+        [4, 'deep value can be picked and set', new ObjectContent({ a: 'b' }), '#a', '#b', '{"b":"b"}'],
         [
+            5,
             'very deep value can be picked and set',
             new ObjectContent({ a: { b: { c: 'l' } } }),
             '#a.b.c',
@@ -191,8 +192,8 @@ describe('check test store', () => {
             '{"e":{"f":{"g":{"h":{"i":{"j":{"k":"l"}}}}}}}'
         ]
     ])(
-        `%s, data: %s, store postfix: %s, var postfix: %s, expected %s`,
-        async (_: string, data: DataContent, storePostfix: string, varPostfix: string, expected: string) => {
+        `%s - %s, data: %s, store postfix: %s, var postfix: %s, expected %s`,
+        async (_: number, __: string, data: DataContent, storePostfix: string, varPostfix: string, expected: string) => {
             initialContext.execution.transformed = data;
             const tableRow = {
                 headers: {

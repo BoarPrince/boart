@@ -32,7 +32,7 @@ import { BoolValidator } from './validators/BoolValidator';
 import { DependsOnValidator } from './validators/DependsOnValidator';
 import { DependsOnValueValidator } from './validators/DependsOnValueValidator';
 import { IntValidator } from './validators/IntValidator';
-import { ParaValidator } from './validators/ParaValidator';
+import { QualifierValidator } from './validators/QualifierValidator';
 import { RequiredValidator } from './validators/RequiredValidator';
 import { UniqueValidator } from './validators/UniqueValidator';
 import { ValueRequiredValidator } from './validators/ValueRequiredValidator';
@@ -74,9 +74,9 @@ export {
     ISODateGenerator,
     OutStoreExecutionUnit,
     LinkExecutionUnit,
-    ParaValidator,
     PDFContent,
     PropertySetterExecutionUnit,
+    QualifierValidator,
     RandomGenerator,
     ReferenceReplacer,
     RequiredValidator,

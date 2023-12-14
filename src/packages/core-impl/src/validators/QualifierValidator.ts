@@ -31,12 +31,14 @@ export class QualifierValidator implements RowValidator {
         }
 
         const qualifier = row.ast.qualifier?.value ?? '';
-        const qualifierParas = row.ast.qualifier?.paras?.join(':') ?? '';
+        const qualifierParas = row.ast.qualifier?.paras?.join(':');
+        const qualifierDef = this.addString(qualifier, ':', qualifierParas);
 
         for (const definition of this.allowedQualifierDefinitions ?? []) {
             const definitionParas = !definition.paras?.length ? [''] : definition.paras;
             for (const definitionPara of definitionParas) {
-                if (qualifier === (definition.qualifier ?? '') && definitionPara === qualifierParas) {
+                const definitionDef = this.addString(definition.qualifier, ':', definitionPara) ?? '';
+                if (qualifierDef == definitionDef) {
                     return;
                 }
             }
