@@ -388,10 +388,10 @@ describe('out store from payload', () => {
      */
     it('simple', async () => {
         const tableDef = MarkdownTableReader.convert(
-            `|action        | value    |
-             |--------------|----------|
-             |payload       | {"a": 1} |
-             |store:payload | var      |`
+            `|action         | value    |
+             |---------------|----------|
+             |payload        | {"a": 1} |
+             |store::payload | var      |`
         );
 
         await sut.handler.process(tableDef);

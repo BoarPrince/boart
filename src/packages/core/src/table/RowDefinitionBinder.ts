@@ -91,11 +91,12 @@ export class RowDefinitionBinder<
             (def1, def2) => def2.key.description.length - def1.key.description.length
         );
 
+        const keyStringValue = row.ast.name.value + ':' + (row.ast.qualifier?.stringValue ?? '');
+
         return sortedDefinitions.find((def) => {
             const defKey = def.key.description;
             const defDataScope = def.dataScope?.description;
 
-            const keyStringValue = row.ast.name.value + ':' + (row.ast.qualifier?.stringValue ?? '');
             return (
                 // key must match
                 keyStringValue.startsWith(defKey) &&

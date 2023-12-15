@@ -77,8 +77,8 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
-        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
+        expect(sut.handler.getExecutionEngine().context.config.description).toBe('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
     });
 
     /**
@@ -95,9 +95,9 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
-        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
-        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('t-01');
+        expect(sut.handler.getExecutionEngine().context.config.description).toBe('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toBe('t-01');
     });
 
     /**
@@ -114,9 +114,9 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
-        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
-        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('t-01, t-02');
+        expect(sut.handler.getExecutionEngine().context.config.description).toBe('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toBe('t-01, t-02');
     });
 
     /**
@@ -134,15 +134,15 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
-        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
-        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('t-01,t-02');
+        expect(sut.handler.getExecutionEngine().context.config.description).toBe('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toBe('t-01,t-02');
     });
 
     /**
      *
      */
-    it('with two tickets - two rows, but one definition, ', async () => {
+    it('with two tickets - two rows, but one definition,', async () => {
         const tableRows = MarkdownTableReader.convert(
             `|action       |value   |
              |-------------|--------|
@@ -154,9 +154,9 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
-        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
-        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('t-01,t-02');
+        expect(sut.handler.getExecutionEngine().context.config.description).toBe('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toBe('t-01,t-02');
     });
 
     /**
@@ -173,13 +173,13 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
-        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
-        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('provider-x:t-01');
+        expect(sut.handler.getExecutionEngine().context.config.description).toBe('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toBe('provider-x:t-01');
 
         Runtime.instance.testRuntime.current.id = 'id-id-id';
         TestReport.instance.report();
-        expect(fs.writeFile).toBeCalledWith(
+        expect(fs.writeFile).toHaveBeenCalledWith(
             'id-id-id.json',
             JSON.stringify({
                 id: 'id-id-id',
@@ -211,13 +211,13 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc');
-        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
-        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('t-01');
+        expect(sut.handler.getExecutionEngine().context.config.description).toBe('desc');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toBe('t-01');
 
         Runtime.instance.testRuntime.current.id = 'id-id-id';
         TestReport.instance.report();
-        expect(fs.writeFile).toBeCalledWith(
+        expect(fs.writeFile).toHaveBeenCalledWith(
             'id-id-id.json',
             JSON.stringify({
                 id: 'id-id-id',
@@ -251,13 +251,13 @@ describe('description', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config.description).toEqual('desc1\ndesc2\ndesc3\ndesc4');
-        expect(sut.handler.getExecutionEngine().context.config.priority).toEqual('medium');
-        expect(sut.handler.getExecutionEngine().context.config.ticket).toEqual('');
+        expect(sut.handler.getExecutionEngine().context.config.description).toBe('desc1\ndesc2\ndesc3\ndesc4');
+        expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
+        expect(sut.handler.getExecutionEngine().context.config.ticket).toBe('');
 
         Runtime.instance.testRuntime.current.id = 'id-id-id';
         TestReport.instance.report();
-        expect(fs.writeFile).toBeCalledWith(
+        expect(fs.writeFile).toHaveBeenCalledWith(
             'id-id-id.json',
             JSON.stringify({
                 id: 'id-id-id',
@@ -290,7 +290,7 @@ describe('error handling', () => {
              | description | desc  |`
         );
 
-        await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError("Key 'priority' is required, but it's missing");
+        await expect(async () => await sut.handler.process(tableRows)).rejects.toThrow("Key 'priority' is required, but it's missing");
     });
 
     /**
@@ -303,9 +303,7 @@ describe('error handling', () => {
              | priority | medium |`
         );
 
-        await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError(
-            "Key 'description' is required, but it's missing"
-        );
+        await expect(async () => await sut.handler.process(tableRows)).rejects.toThrow("Key 'description' is required, but it's missing");
     });
 
     /**
@@ -320,7 +318,7 @@ describe('error handling', () => {
              | priority    | xx2    |`
         );
 
-        await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError(
+        await expect(async () => await sut.handler.process(tableRows)).rejects.toThrow(
             "Validator: 'UniqueValidator' => key 'priority' occurs 2 times"
         );
     });
@@ -336,7 +334,7 @@ describe('error handling', () => {
              | priority    | xxx    |`
         );
 
-        await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError(
+        await expect(async () => await sut.handler.process(tableRows)).rejects.toThrow(
             "Value 'xxx' of key/column: 'priority/value' is not defined. Allowed is 'low' or 'medium' or 'high'"
         );
     });

@@ -39,18 +39,24 @@ describe('run:only', () => {
      *
      */
     it.each([
-        ['match single marker - continue running', 'marker', 'marker', RuntimeStatus.succeed],
-        ['match multiple marker - whitespace - continue running', 'markerX marker', 'marker', RuntimeStatus.succeed],
-        ['match multiple marker - colon - continue running', 'markerX,marker', 'marker', RuntimeStatus.succeed],
-        ['match multiple marker - colon and whitespace - continue running', 'markerX , marker', 'marker', RuntimeStatus.succeed],
-        ['match multiple marker - semicolon - continue running', 'markerX ; marker', 'marker', RuntimeStatus.succeed],
-        ['match multiple marker - | - continue running', 'markerX | marker', 'marker', RuntimeStatus.succeed],
-        ['whitespace', 'markerX \t marker', 'marker', RuntimeStatus.succeed],
-        ['not matching', 'markerX  markerY', 'marker', RuntimeStatus.stopped]
-    ])('%s', (_, value, actionPara, expected) => {
+        [1, 'match single marker - continue running', 'marker', 'run:only:marker', RuntimeStatus.succeed],
+        [2, 'match multiple marker - whitespace - continue running', 'markerX marker', 'run:only:marker', RuntimeStatus.succeed],
+        [3, 'match multiple marker - colon - continue running', 'markerX,marker', 'run:only:marker', RuntimeStatus.succeed],
+        [
+            4,
+            'match multiple marker - colon and whitespace - continue running',
+            'markerX , marker',
+            'run:only:marker',
+            RuntimeStatus.succeed
+        ],
+        [5, 'match multiple marker - semicolon - continue running', 'markerX ; marker', 'run:only:marker', RuntimeStatus.succeed],
+        [6, 'match multiple marker - | - continue running', 'markerX | marker', 'run:only:marker', RuntimeStatus.succeed],
+        [7, 'whitespace', 'markerX \t marker', 'run:only:marker', RuntimeStatus.succeed],
+        [8, 'not matching', 'markerX  markerY', 'run:only:marker', RuntimeStatus.stopped]
+    ])('%s - %s', (_, __, value, actionPara, expected) => {
         sut.execute(null, {
             value,
-            actionPara
+            ast: variableParser.parseAction(actionPara)
         } as RowTypeValue<AnyContext>);
 
         expect(Runtime.instance.stepRuntime.current.status).toBe(expected);
@@ -62,8 +68,7 @@ describe('run:only', () => {
     it('with parameter', () => {
         sut.execute(null, {
             value: 'a:1:2',
-            actionPara: 'a',
-            ast: null
+            ast: variableParser.parseAction('run:only:a')
         } as RowTypeValue<AnyContext>);
 
         const ast1 = variableParser.parseAction('context:arg1');
@@ -79,7 +84,7 @@ describe('run:only', () => {
     it('with parameter, but not matching', () => {
         sut.execute(null, {
             value: 'a:1:2',
-            actionPara: 'b'
+            ast: variableParser.parseAction('run:only:b')
         } as RowTypeValue<AnyContext>);
 
         const ast1 = variableParser.parseAction('context:arg1');

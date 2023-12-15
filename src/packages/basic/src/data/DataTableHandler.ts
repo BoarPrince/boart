@@ -69,7 +69,7 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
                     new IntValidator('value'),
                     new QualifierValidator([
                         { qualifier: null, paras: null },
-                        { qualifier: 'sec', paras: null }
+                        { qualifier: 'wait', paras: ['', 'sec'] }
                     ])
                 ]
             })

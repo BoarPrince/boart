@@ -177,10 +177,10 @@ describe('basic group definition', () => {
          */
         it('expected:data can check value defined by config unit', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action       |value |
-             |-------------|------|
-             |data:config  |xyz   |
-             |expected:data|xyz   |`
+                `|action        |value |
+                 |--------------|------|
+                 |data:config   |xyz   |
+                 |expected::data|xyz   |`
             );
 
             const context = await sut.handler.process(tableDef);
@@ -194,9 +194,9 @@ describe('basic group definition', () => {
             intialContext.data = new TextContent('xxx');
 
             const tableDef = MarkdownTableReader.convert(
-                `|action       |value  |
-                 |-------------|-------|
-                 |expected:data|xxx    |`
+                `|action        |value  |
+                 |--------------|-------|
+                 |expected::data|xxx    |`
             );
 
             await sut.handler.process(tableDef);
@@ -224,14 +224,14 @@ describe('basic group definition', () => {
             intialContext.data = new TextContent('xxx');
 
             const tableDef = MarkdownTableReader.convert(
-                `|action       |value  |
-                 |-------------|-------|
-                 |expected:data|x-x-x  |`
+                `|action        |value  |
+                 |--------------|-------|
+                 |expected::data|x-x-x  |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow(`error: expected:data\n\texpected: x-x-x\n\tactual: xxx`);
+            }).rejects.toThrow(`error: expected::data\n\texpected: x-x-x\n\tactual: xxx`);
         });
 
         /**
@@ -241,9 +241,9 @@ describe('basic group definition', () => {
             sut.handler.getExecutionEngine().context.execution.data = new TextContent('xxx');
 
             const tableDef = MarkdownTableReader.convert(
-                `|action           |value  |
-                 |-----------------|-------|
-                 |expected:data:not|x-x-x  |`
+                `|action            |value  |
+                 |------------------|-------|
+                 |expected:not::data|x-x-x  |`
             );
 
             await sut.handler.process(tableDef);
@@ -256,9 +256,9 @@ describe('basic group definition', () => {
             intialContext.data = new ObjectContent({ a: 'xyz' });
 
             const tableDef = MarkdownTableReader.convert(
-                `|action         |value |
-                 |---------------|------|
-                 |expected:data#a|xyz   |`
+                `|action          |value |
+                 |----------------|------|
+                 |expected::data#a|xyz   |`
             );
 
             await sut.handler.process(tableDef);
@@ -331,14 +331,14 @@ describe('basic group definition', () => {
             intialContext.data = new ObjectContent({ a: 'xy' });
 
             const tableDef = MarkdownTableReader.convert(
-                `|action         |value |
-             |---------------|------|
-             |expected:data#a|xyz   |`
+                `|action          |value |
+                 |----------------|------|
+                 |expected::data#a|xyz   |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow(`error: expected:data#a\n\texpected: xyz\n\tactual: xy`);
+            }).rejects.toThrow(`error: expected::data#a\n\texpected: xyz\n\tactual: xy`);
         });
 
         /**
@@ -348,14 +348,14 @@ describe('basic group definition', () => {
             intialContext.data = new ObjectContent({ a: 'xyz' });
 
             const tableDef = MarkdownTableReader.convert(
-                `|action         |value |
-             |---------------|------|
-             |expected:data  |xyz   |`
+                `|action          |value |
+                 |----------------|------|
+                 |expected::data  |xyz   |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow(`error: expected:data\n\texpected: xyz\n\tactual: {"a":"xyz"}`);
+            }).rejects.toThrow(`error: expected::data\n\texpected: xyz\n\tactual: {"a":"xyz"}`);
         });
 
         /**
@@ -365,9 +365,9 @@ describe('basic group definition', () => {
             intialContext.data = new ObjectContent({ a: 'aabaa' });
 
             const tableDef = MarkdownTableReader.convert(
-                `|action                |value |
-             |----------------------|------|
-             |expected:data:regexp#a|.+b.+ |`
+                `|action                 |value |
+                 |-----------------------|------|
+                 |expected:regexp::data#a|.+b.+ |`
             );
 
             await sut.handler.process(tableDef);
@@ -383,10 +383,10 @@ describe('basic group definition', () => {
          */
         it('expected:header can check value defined by config unit', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action         |value |
-             |---------------|------|
-             |header:config  |xyz   |
-             |expected:header|xyz   |`
+                `|action          |value |
+                 |----------------|------|
+                 |header:config   |xyz   |
+                 |expected::header|xyz   |`
             );
 
             const context = await sut.handler.process(tableDef);
@@ -400,9 +400,9 @@ describe('basic group definition', () => {
             intialContext.header = new TextContent('xxx');
 
             const tableDef = MarkdownTableReader.convert(
-                `|action         |value  |
-             |---------------|-------|
-             |expected:header|xxx    |`
+                `|action          |value |
+                 |----------------|------|
+                 |expected::header|xxx   |`
             );
 
             await sut.handler.process(tableDef);
@@ -415,14 +415,14 @@ describe('basic group definition', () => {
             intialContext.header = new TextContent('xxx');
 
             const tableDef = MarkdownTableReader.convert(
-                `|action         |value  |
-             |---------------|-------|
-             |expected:header|x-x-x  |`
+                `|action          |value |
+                 |----------------|------|
+                 |expected::header|x-x-x |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow(`error: expected:header\n\texpected: x-x-x\n\tactual: xxx`);
+            }).rejects.toThrow(`error: expected::header\n\texpected: x-x-x\n\tactual: xxx`);
         });
 
         /**
@@ -432,9 +432,9 @@ describe('basic group definition', () => {
             intialContext.header = new ObjectContent({ a: 'xyz' });
 
             const tableDef = MarkdownTableReader.convert(
-                `|action           |value |
-             |-----------------|------|
-             |expected:header#a|xyz   |`
+                `|action            |value |
+                 |------------------|------|
+                 |expected::header#a|xyz   |`
             );
 
             await sut.handler.process(tableDef);
@@ -447,14 +447,14 @@ describe('basic group definition', () => {
             intialContext.header = new ObjectContent({ a: 'xy' });
 
             const tableDef = MarkdownTableReader.convert(
-                `|action           |value |
-             |-----------------|------|
-             |expected:header#a|xyz   |`
+                `|action            |value |
+                 |------------------|------|
+                 |expected::header#a|xyz   |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow(`error: expected:header#a\n\texpected: xyz\n\tactual: xy`);
+            }).rejects.toThrow(`error: expected::header#a\n\texpected: xyz\n\tactual: xy`);
         });
 
         /**
@@ -464,14 +464,14 @@ describe('basic group definition', () => {
             intialContext.header = new ObjectContent({ a: 'xyz' });
 
             const tableDef = MarkdownTableReader.convert(
-                `|action           |value |
-             |-----------------|------|
-             |expected:header  |xyz   |`
+                `|action            |value |
+                 |------------------|------|
+                 |expected::header  |xyz   |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow(`error: expected:header\n\texpected: xyz\n\tactual: {"a":"xyz"}`);
+            }).rejects.toThrow(`error: expected::header\n\texpected: xyz\n\tactual: {"a":"xyz"}`);
         });
     });
 
@@ -484,10 +484,10 @@ describe('basic group definition', () => {
          */
         it('expected:header can check value defined by config unit', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action              |value |
-             |--------------------|------|
-             |transformed:config  |xyz   |
-             |expected:transformed|xyz   |`
+                `|action               |value |
+                 |---------------------|------|
+                 |transformed:config   |xyz   |
+                 |expected::transformed|xyz   |`
             );
 
             const context = await sut.handler.process(tableDef);
@@ -501,9 +501,9 @@ describe('basic group definition', () => {
             intialContext.transformed = new TextContent('xxx');
 
             const tableDef = MarkdownTableReader.convert(
-                `|action              |value  |
-             |--------------------|-------|
-             |expected:transformed|xxx    |`
+                `|action               |value |
+                 |---------------------|------|
+                 |expected::transformed|xxx   |`
             );
 
             await sut.handler.process(tableDef);
@@ -520,9 +520,9 @@ describe('basic group definition', () => {
         it('default operator', async () => {
             const tableDef = MarkdownTableReader.convert(
                 `|action       |value |
-             |-------------|------|
-             |data:config  |xyz   |
-             |expected     |xyz   |`
+                 |-------------|------|
+                 |data:config  |xyz   |
+                 |expected     |xyz   |`
             );
 
             await sut.handler.process(tableDef);
@@ -534,9 +534,9 @@ describe('basic group definition', () => {
         it('default negate operator', async () => {
             const tableDef = MarkdownTableReader.convert(
                 `|action       |value |
-             |-------------|------|
-             |data:config  |xyz   |
-             |expected:not |zyx   |`
+                 |-------------|------|
+                 |data:config  |xyz   |
+                 |expected:not |zyx   |`
             );
 
             await sut.handler.process(tableDef);
@@ -548,14 +548,14 @@ describe('basic group definition', () => {
         it('null operator - falure', async () => {
             const tableDef = MarkdownTableReader.convert(
                 `|action        |value |
-             |--------------|------|
-             |data:config   |xyz   |
-             |expected:null |xyz   |`
+                 |--------------|------|
+                 |data:config   |xyz   |
+                 |expected:null |xyz   |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow("error: expected, null: actual: 'xyz'");
+            }).rejects.toThrow("error: expected:null, null: actual: 'xyz'");
         });
 
         /**
@@ -566,8 +566,8 @@ describe('basic group definition', () => {
 
             const tableDef = MarkdownTableReader.convert(
                 `|action         |value |
-             |---------------|------|
-             |expected:count | 3    |`
+                 |---------------|------|
+                 |expected:count | 3    |`
             );
 
             await sut.handler.process(tableDef);
@@ -580,14 +580,14 @@ describe('basic group definition', () => {
             intialContext.header = new ObjectContent({ a: 'a', b: 'a', c: 'a' });
 
             const tableDef = MarkdownTableReader.convert(
-                `|action                    |value |
-             |--------------------------|------|
-             |expected:header:count:not | 3    |`
+                `|action                     |value |
+                 |---------------------------|------|
+                 |expected:count:not::header | 3    |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow('error: expected:header\n\tcount:not: 3');
+            }).rejects.toThrow('error: expected:count:not::header\n\tcount:not: 3');
         });
 
         /**
@@ -598,8 +598,8 @@ describe('basic group definition', () => {
 
             const tableDef = MarkdownTableReader.convert(
                 `|action         |value |
-             |---------------|------|
-             |expected:count | 3    |`
+                 |---------------|------|
+                 |expected:count | 3    |`
             );
 
             await sut.handler.process(tableDef);
@@ -612,14 +612,14 @@ describe('basic group definition', () => {
             intialContext.header = new ObjectContent(['a', 'b', 'c']);
 
             const tableDef = MarkdownTableReader.convert(
-                `|action                    |value |
-             |--------------------------|------|
-             |expected:header:count:not | 3    |`
+                `|action                     |value |
+                 |---------------------------|------|
+                 |expected:count:not::header | 3    |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow('error: expected:header\n\tcount:not: 3');
+            }).rejects.toThrow('error: expected:count:not::header\n\tcount:not: 3');
         });
 
         /**
@@ -630,10 +630,10 @@ describe('basic group definition', () => {
 
             const tableDef = MarkdownTableReader.convert(
                 `|action             |value |
-             |-------------------|------|
-             |expected:int#a     |      |
-             |expected:int#b     |      |
-             |expected:int:not#c |      |`
+                 |-------------------|------|
+                 |expected:int#a     |      |
+                 |expected:int#b     |      |
+                 |expected:int:not#c |      |`
             );
 
             await sut.handler.process(tableDef);
@@ -647,12 +647,12 @@ describe('basic group definition', () => {
 
             const tableDef = MarkdownTableReader.convert(
                 `|action                |value |
-             |----------------------|------|
-             |expected:number#a     |      |
-             |expected:number#b     |      |
-             |expected:number#c     |      |
-             |expected:number#d     |      |
-             |expected:number:not#e |      |`
+                 |----------------------|------|
+                 |expected:number#a     |      |
+                 |expected:number#b     |      |
+                 |expected:number#c     |      |
+                 |expected:number#d     |      |
+                 |expected:number:not#e |      |`
             );
 
             await sut.handler.process(tableDef);
@@ -666,11 +666,11 @@ describe('basic group definition', () => {
 
             const tableDef = MarkdownTableReader.convert(
                 `|action                |value |
-             |----------------------|------|
-             |expected:string:not#a |      |
-             |expected:string#b     |      |
-             |expected:string:not#c |      |
-             |expected:string:not#d |      |`
+                 |----------------------|------|
+                 |expected:string:not#a |      |
+                 |expected:string#b     |      |
+                 |expected:string:not#c |      |
+                 |expected:string:not#d |      |`
             );
 
             await sut.handler.process(tableDef);
@@ -687,8 +687,8 @@ describe('basic group definition', () => {
         it('uninitialized', async () => {
             const tableDef = MarkdownTableReader.convert(
                 `|action                  |value                            |
-             |------------------------|---------------------------------|
-             |expected:jsonLogic:true |{ "===" : [{"var": ""}, "xyz"] } |`
+                 |------------------------|---------------------------------|
+                 |expected:jsonLogic:true |{ "===" : [{"var": ""}, "xyz"] } |`
             );
 
             await expect(async () => {
@@ -705,8 +705,8 @@ describe('basic group definition', () => {
 
             const tableDef = MarkdownTableReader.convert(
                 `|action                  |value                            |
-             |------------------------|---------------------------------|
-             |expected:jsonLogic:true |{ "===" : [{"var": ""}, "xyz"] } |`
+                 |------------------------|---------------------------------|
+                 |expected:jsonLogic:true |{ "===" : [{"var": ""}, "xyz"] } |`
             );
 
             await expect(async () => {
@@ -720,9 +720,9 @@ describe('basic group definition', () => {
         it('default', async () => {
             const tableDef = MarkdownTableReader.convert(
                 `|action                  |value                            |
-             |------------------------|---------------------------------|
-             |data:config             |xyz                              |
-             |expected:jsonLogic:true |{ "===" : [{"var": ""}, "xyz"] } |`
+                 |------------------------|---------------------------------|
+                 |data:config             |xyz                              |
+                 |expected:jsonLogic:true |{ "===" : [{"var": ""}, "xyz"] } |`
             );
 
             await sut.handler.process(tableDef);
@@ -734,9 +734,9 @@ describe('basic group definition', () => {
         it('default false', async () => {
             const tableDef = MarkdownTableReader.convert(
                 `|action                   |value                            |
-             |-------------------------|---------------------------------|
-             |data:config              |xyz                              |
-             |expected:jsonLogic:false |{ "===" : [{"var": ""}, "xyy"] } |`
+                 |-------------------------|---------------------------------|
+                 |data:config              |xyz                              |
+                 |expected:jsonLogic:false |{ "===" : [{"var": ""}, "xyy"] } |`
             );
 
             await sut.handler.process(tableDef);
@@ -748,9 +748,9 @@ describe('basic group definition', () => {
         it('default, object as string', async () => {
             const tableDef = MarkdownTableReader.convert(
                 `|action                  |value                             |
-             |------------------------|----------------------------------|
-             |data:config             |{"a": "bcd"}                      |
-             |expected:jsonLogic:true |{ "===" : [{"var": "a"}, "bcd"] } |`
+                 |------------------------|----------------------------------|
+                 |data:config             |{"a": "bcd"}                      |
+                 |expected:jsonLogic:true |{ "===" : [{"var": "a"}, "bcd"] } |`
             );
 
             await sut.handler.process(tableDef);
@@ -762,9 +762,9 @@ describe('basic group definition', () => {
         it('default, object with selector', async () => {
             const tableDef = MarkdownTableReader.convert(
                 `|action                  |value                             |
-             |------------------------|----------------------------------|
-             |data:config#a           |bcd                               |
-             |expected:jsonLogic:true |{ "===" : [{"var": "a"}, "bcd"] } |`
+                 |------------------------|----------------------------------|
+                 |data:config#a           |bcd                               |
+                 |expected:jsonLogic:true |{ "===" : [{"var": "a"}, "bcd"] } |`
             );
 
             await sut.handler.process(tableDef);
@@ -776,9 +776,9 @@ describe('basic group definition', () => {
         it('default, object with selector, failure', async () => {
             const tableDef = MarkdownTableReader.convert(
                 `|action                  |value                             |
-             |------------------------|----------------------------------|
-             |data:config#a           |bcd                               |
-             |expected:jsonLogic:true |{ "===" : [{"var": "a"}, "bce"] } |`
+                 |------------------------|----------------------------------|
+                 |data:config#a           |bcd                               |
+                 |expected:jsonLogic:true |{ "===" : [{"var": "a"}, "bce"] } |`
             );
 
             await expect(async () => {
@@ -890,11 +890,11 @@ describe('basic group definition', () => {
          */
         it('deep data and expect jsonlogic', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action                              |value                               |
-             |------------------------------------|------------------------------------|
-             |data:config#b.c.d                   | e                                  |
-             |transform:jpath                     | .b                                 |
-             |expected:jsonLogic:transformed:true | { "===" : [ {"var": "c.d"}, "e" ]} |`
+                `|action                               |value                               |
+                 |-------------------------------------|------------------------------------|
+                 |data:config#b.c.d                    | e                                  |
+                 |transform:jpath                      | .b                                 |
+                 |expected:jsonLogic:true::transformed | { "===" : [ {"var": "c.d"}, "e" ]} |`
             );
 
             await sut.handler.process(tableDef);
@@ -905,11 +905,11 @@ describe('basic group definition', () => {
          */
         it('deep data and expected default', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action            |value               |
-             |------------------|--------------------|
-             |data:config#b.c.d | e                  |
-             |transform:jpath   | .b                 |
-             |expected:transformed | {"c":{"d":"e"}} |`
+                `|action                |value               |
+                 |----------------------|--------------------|
+                 |data:config#b.c.d     | e                  |
+                 |transform:jpath       | .b                 |
+                 |expected::transformed | {"c":{"d":"e"}} |`
             );
 
             await sut.handler.process(tableDef);
@@ -920,11 +920,11 @@ describe('basic group definition', () => {
          */
         it('deep data and expected not empty', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action                         |value|
-             |-------------------------------|-----|
-             |data:config#b.c.d              | e   |
-             |transform:jpath                | .b  |
-             |expected:transformed:empty:not |     |`
+                `|action                          |value|
+                 |--------------------------------|-----|
+                 |data:config#b.c.d               | e   |
+                 |transform:jpath                 | .b  |
+                 |expected:empty:not::transformed |     |`
             );
 
             await sut.handler.process(tableDef);
@@ -935,16 +935,16 @@ describe('basic group definition', () => {
          */
         it('deep data and expected empty with failure', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action                     |value|
-             |---------------------------|-----|
-             |data:config#b.c.d          | e   |
-             |transform:jpath            | .b  |
-             |expected:transformed:empty |     |`
+                `|action                      |value|
+                 |----------------------------|-----|
+                 |data:config#b.c.d           | e   |
+                 |transform:jpath             | .b  |
+                 |expected:empty::transformed |     |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow(`error: expected:transformed\n\tempty: \n\tactual: {"c":{"d":"e"}}`);
+            }).rejects.toThrow(`error: expected:empty::transformed\n\tempty: \n\tactual: {"c":{"d":"e"}}`);
         });
 
         /**
@@ -952,13 +952,13 @@ describe('basic group definition', () => {
          */
         it('transforming chain', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action             |value|
-             |---------------------|-----|
-             |data:config#b.c.d    | e   |
-             |transform:jpath      | .b  |
-             |transform:jpath      | .c  |
-             |transform:jpath      | .d  |
-             |expected:transformed | e   |`
+                `|action                |value|
+                 |----------------------|-----|
+                 |data:config#b.c.d     | e   |
+                 |transform:jpath       | .b  |
+                 |transform:jpath       | .c  |
+                 |transform:jpath       | .d  |
+                 |expected::transformed | e   |`
             );
 
             await sut.handler.process(tableDef);
@@ -969,13 +969,13 @@ describe('basic group definition', () => {
          */
         it('reset', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action               |value                  |
-             |---------------------|-----------------------|
-             |data:config#b.c.d    | e                     |
-             |transform:jpath      | .b                    |
-             |expected:transformed | {"c":{"d":"e"}}       |
-             |transform:reset      |                       |
-             |expected:transformed | {"b":{"c":{"d":"e"}}} |`
+                `|action                |value                  |
+                 |----------------------|-----------------------|
+                 |data:config#b.c.d     | e                     |
+                 |transform:jpath       | .b                    |
+                 |expected::transformed | {"c":{"d":"e"}}       |
+                 |transform:reset       |                       |
+                 |expected::transformed | {"b":{"c":{"d":"e"}}} |`
             );
 
             await sut.handler.process(tableDef);
@@ -1094,11 +1094,11 @@ describe('basic group definition', () => {
          */
         it('deep data and expect jsonpath', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action                              |value                               |
-             |------------------------------------|------------------------------------|
-             |data:config#b.c.d                   | e                                  |
-             |transform:jsonLogic                 | {"var": "b"}                       |
-             |expected:jsonLogic:transformed:true | { "===" : [ {"var": "c.d"}, "e" ]} |`
+                `|action                               |value                               |
+                 |-------------------------------------|------------------------------------|
+                 |data:config#b.c.d                    | e                                  |
+                 |transform:jsonLogic                  | {"var": "b"}                       |
+                 |expected:jsonLogic:true::transformed | { "===" : [ {"var": "c.d"}, "e" ]} |`
             );
 
             await sut.handler.process(tableDef);
@@ -1109,11 +1109,11 @@ describe('basic group definition', () => {
          */
         it('deep data and expected default', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action               |value            |
-             |---------------------|-----------------|
-             |data:config#b.c.d    | e               |
-             |transform:jsonLogic  | {"var": "b"}    |
-             |expected:transformed | {"c":{"d":"e"}} |`
+                `|action                |value            |
+                 |----------------------|-----------------|
+                 |data:config#b.c.d     | e               |
+                 |transform:jsonLogic   | {"var": "b"}    |
+                 |expected::transformed | {"c":{"d":"e"}} |`
             );
 
             await sut.handler.process(tableDef);
@@ -1124,11 +1124,11 @@ describe('basic group definition', () => {
          */
         it('deep data and expected not empty', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action                         |value         |
-             |-------------------------------|--------------|
-             |data:config#b.c.d              | e            |
-             |transform:jsonLogic            | {"var": "b"} |
-             |expected:transformed:empty:not |              |`
+                `|action                          |value         |
+                 |--------------------------------|--------------|
+                 |data:config#b.c.d               | e            |
+                 |transform:jsonLogic             | {"var": "b"} |
+                 |expected:empty:not::transformed |              |`
             );
 
             await sut.handler.process(tableDef);
@@ -1139,16 +1139,16 @@ describe('basic group definition', () => {
          */
         it('deep data and expected empty with failure', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action                     |value         |
-             |---------------------------|--------------|
-             |data:config#b.c.d          | e            |
-             |transform:jsonLogic        | {"var": "b"} |
-             |expected:transformed:empty |              |`
+                `|action                      |value         |
+                 |----------------------------|--------------|
+                 |data:config#b.c.d           | e            |
+                 |transform:jsonLogic         | {"var": "b"} |
+                 |expected:empty::transformed |              |`
             );
 
             await expect(async () => {
                 await sut.handler.process(tableDef);
-            }).rejects.toThrow('error: expected:transformed\n\tempty: \n\tactual: {"c":{"d":"e"}}');
+            }).rejects.toThrow('error: expected:empty::transformed\n\tempty: \n\tactual: {"c":{"d":"e"}}');
         });
 
         /**
@@ -1156,13 +1156,13 @@ describe('basic group definition', () => {
          */
         it('transforming chain', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action               |value         |
-             |---------------------|--------------|
-             |data:config#b.c.d    | e            |
-             |transform:jsonLogic  | {"var": "b"} |
-             |transform:jsonLogic  | {"var": "c"} |
-             |transform:jsonLogic  | {"var": "d"} |
-             |expected:transformed | e            |`
+                `|action                |value         |
+                 |----------------------|--------------|
+                 |data:config#b.c.d     | e            |
+                 |transform:jsonLogic   | {"var": "b"} |
+                 |transform:jsonLogic   | {"var": "c"} |
+                 |transform:jsonLogic   | {"var": "d"} |
+                 |expected::transformed | e            |`
             );
 
             await sut.handler.process(tableDef);
@@ -1173,13 +1173,13 @@ describe('basic group definition', () => {
          */
         it('reset', async () => {
             const tableDef = MarkdownTableReader.convert(
-                `|action               |value                  |
-             |---------------------|-----------------------|
-             |data:config#b.c.d    | e                     |
-             |transform:jsonLogic  | {"var": "b"}          |
-             |expected:transformed | {"c":{"d":"e"}}       |
-             |transform:reset      |                       |
-             |expected:transformed | {"b":{"c":{"d":"e"}}} |`
+                `|action                |value                  |
+                 |----------------------|-----------------------|
+                 |data:config#b.c.d     | e                     |
+                 |transform:jsonLogic   | {"var": "b"}          |
+                 |expected::transformed | {"c":{"d":"e"}}       |
+                 |transform:reset       |                       |
+                 |expected::transformed | {"b":{"c":{"d":"e"}}} |`
             );
 
             await sut.handler.process(tableDef);

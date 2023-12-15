@@ -84,8 +84,8 @@ describe('get', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.execution.data?.toJSON()).toEqual('{"b":2}');
-        expect(sut.handler.getExecutionEngine().context.execution.header?.valueOf()).toEqual({
+        expect(sut.handler.getExecutionEngine().context.execution.data?.toJSON()).toBe('{"b":2}');
+        expect(sut.handler.getExecutionEngine().context.execution.header?.valueOf()).toStrictEqual({
             duration: 0,
             statusText: 'OK',
             status: 200,
@@ -989,9 +989,7 @@ it('default expected - wrong', async () => {
          | expected    | xxx        |`
     );
 
-    await expect(async () => await sut.handler.process(tableRows)).rejects.toThrowError(
-        'error: expected\n\texpected: xxx\n\tactual: {"b":2}'
-    );
+    await expect(async () => await sut.handler.process(tableRows)).rejects.toThrow('error: expected\n\texpected: xxx\n\tactual: {"b":2}');
 });
 
 /**
