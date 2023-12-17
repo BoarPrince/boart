@@ -113,10 +113,10 @@ describe('run:not', () => {
         ['match multiple marker - | - stop running', 'markerX | marker', 'marker', RuntimeStatus.stopped],
         ['whitespace', 'markerX \t marker', 'marker', RuntimeStatus.stopped],
         ['not matching', 'markerX  markerY', 'marker', RuntimeStatus.succeed]
-    ])('%s', (_, value, actionPara, expected) => {
+    ])('%s', (_, value, marker, expected) => {
         sut.execute(null, {
             value,
-            actionPara
+            ast: variableParser.parseAction(`run:not:${marker}`)
         } as RowTypeValue<AnyContext>);
 
         expect(Runtime.instance.stepRuntime.current.status).toBe(expected);

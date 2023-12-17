@@ -55,7 +55,7 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
 
         const transformedResult = DataContentHelper.create(JsonLogic.instance.transform(rule, data));
 
-        context.execution.transformed = !row.selector
+        context.execution.transformed = !row.ast.selectors?.match
             ? transformedResult
             : SelectorExtractor.setValueBySelector(row.ast.selectors, transformedResult, context.execution.transformed);
     }

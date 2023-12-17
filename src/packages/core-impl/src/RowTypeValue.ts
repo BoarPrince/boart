@@ -11,12 +11,6 @@ export class RowTypeValue<TExecutionContext extends ExecutionContext<object, obj
     get ast(): ASTAction {
         return this.data.ast;
     }
-    get actionPara(): string {
-        return this.data.ast.qualifier?.stringValue;
-    }
-    get selector(): string {
-        return this.data.ast.selectors?.match;
-    }
     @value()
     get value(): string | number | boolean {
         return this.data.values_replaced['value'];

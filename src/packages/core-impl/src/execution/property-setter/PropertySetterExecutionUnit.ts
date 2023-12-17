@@ -153,7 +153,7 @@ export class PropertySetterExecutionUnit<
         };
         if (!row.data.ast.selectors?.length) {
             result.modifiedValue = this.config.defaultModifier(row.value);
-            result.value = this.config.defaultSetter(accessor.val, result.modifiedValue, row.actionPara);
+            result.value = this.config.defaultSetter(accessor.val, result.modifiedValue, row.ast.qualifier?.stringValue);
         } else {
             result.modifiedValue = this.config.actionSelectorModifier(row.value);
             result.value = this.config.actionSelectorSetter(accessor.val, result.modifiedValue, row.data.ast);

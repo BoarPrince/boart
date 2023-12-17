@@ -71,7 +71,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
                   DataContentHelper.create(transformedValue[0])
                 : DataContentHelper.create(transformedValue);
 
-        context.execution.transformed = !row.selector
+        context.execution.transformed = !row.ast.selectors?.match
             ? transformedResult
             : SelectorExtractor.setValueBySelector(row.ast.selectors, transformedResult, context.execution.transformed);
     }

@@ -23,6 +23,6 @@ export class LinkExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue
      *
      */
     execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
-        StepReport.instance.addLink(row.actionPara, row.value.toString());
+        StepReport.instance.addLink(row.ast.qualifier?.stringValue, row.value.toString());
     }
 }

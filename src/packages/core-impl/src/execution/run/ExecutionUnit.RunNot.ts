@@ -24,7 +24,7 @@ export class RunNotExecutionUnit implements ExecutionUnit<AnyContext, RowTypeVal
      */
     execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
         const runDefinition = RunDefinitionParser.parse(row.value.toString());
-        const name = row.actionPara;
+        const name = row.ast.qualifier?.paras?.join(':');
 
         const matchedDefinition = runDefinition.find((def) => def.name === name);
         if (!!matchedDefinition) {
