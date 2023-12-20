@@ -34,7 +34,7 @@ export class VariableParser {
     /**
      *
      */
-    private addStringValueAccessor<T extends ASTVariable | ASTAction>(ast: T): T {
+    private addStringValueAccessor<T extends ASTVariable | ASTAction | ASTValue>(ast: T): T {
         if (ast.selectors?.match) {
             ast.selectors.match = ast.selectors.match.replace(/^[?]?#/, '');
         }
@@ -88,12 +88,10 @@ export class VariableParser {
             return null;
         }
         try {
-            // const result: ASTVariable = variableParser.parse(match.match);
-            const result: ASTVariable = variableParser.parse(match.match);
+            const result = variableParser.parse(match.match) as ASTVariable;
             return this.addStringValueAccessor({
                 ...result,
                 match: match.input,
-                // match: value,
                 errs: (result as any).errs || null
             });
         } catch (e) {
@@ -109,11 +107,11 @@ export class VariableParser {
      */
     public parseAction(value: string): ASTAction {
         try {
-            const result = actionParser.parse(value);
+            const result = actionParser.parse(value) as ASTAction;
             return this.addStringValueAccessor({
                 ...result,
                 match: value,
-                errs: result.errs || null
+                errs: (result as any).errs || null
             });
         } catch (e) {
             const error = e as ParserException;
@@ -127,11 +125,11 @@ export class VariableParser {
      */
     public parseValue(value: string): ASTValue {
         try {
-            const result = valueParser.parse(value);
+            const result = valueParser.parse(value) as ASTValue;
             return this.addStringValueAccessor({
                 ...result,
                 match: value,
-                errs: result.errs || null
+                errs: (result as any).errs || null
             });
         } catch (e) {
             const error = e as ParserException;

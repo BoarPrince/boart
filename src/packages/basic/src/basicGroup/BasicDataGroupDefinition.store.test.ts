@@ -1,6 +1,5 @@
 import 'jest-extended';
 
-import { BasicDataGroupDefinition, BasicGroupDefinition } from '@boart/basic';
 import {
     EnvLoader,
     GeneratorHandler,
@@ -18,6 +17,8 @@ import {
     VariableParser
 } from '@boart/core';
 import { DataContext, RowTypeValue } from '@boart/core-impl';
+import BasicDataGroupDefinition from './BasicDataGroupDefinition';
+import BasicGroupDefinition from './BasicGroupDefinition';
 
 /**
  *

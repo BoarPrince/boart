@@ -142,10 +142,11 @@ export class StepReport {
             throw new Error(`report input type "${description}" already exists`);
         }
 
+        const dataConverted = StepReport.tryConvertToObject(data?.valueOf());
         this.inputItems.set(description, {
             description,
             type,
-            data: StepReport.tryConvertToObject(data?.valueOf())
+            data: dataConverted
         });
     }
 

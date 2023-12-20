@@ -2,6 +2,7 @@ import {
     DataContent,
     DataContentHelper,
     ExecutionUnit,
+    Description,
     ParaType,
     ScopedType,
     SelectorExtractor,
@@ -12,7 +13,6 @@ import {
 
 import { DataContext, DataExecutionContext, DataPreExecutionContext } from '../../DataExecutionContext';
 import { RowTypeValue } from '../../RowTypeValue';
-import { Description } from '../../description/Description';
 import { QualifierValidator } from '../../validators/QualifierValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
 
@@ -59,10 +59,7 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
     constructor(executionType: 'payload');
     constructor(executionType: keyof StoreContext['execution']);
     constructor(executionType: keyof StoreContext['execution'], executionKey: StoreContext['execution'][keyof StoreContext['execution']]);
-    constructor(
-        private executionType?: string,
-        private executionKey?: string
-    ) {}
+    constructor(private executionType?: string, private executionKey?: string) {}
 
     /**
      *

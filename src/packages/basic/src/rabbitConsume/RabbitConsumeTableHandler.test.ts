@@ -1,6 +1,5 @@
 import fs from 'fs';
 
-import { RabbitConsumeTableHandler } from '@boart/basic';
 import {
     LocalContext,
     MarkdownTableReader,
@@ -18,8 +17,9 @@ import {
     ValueReplacer,
     ValueReplacerHandler
 } from '@boart/core';
-import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
+import { createAmqplibMock, getAmqplibMock } from '@boart/execution/src/index.mock';
 import { StepReport } from '@boart/protocol';
+import RabbitConsumeTableHandler from './RabbitConsumeTableHandler';
 
 const sut = new RabbitConsumeTableHandler();
 
@@ -234,7 +234,7 @@ describe('filter', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toBe({ a: 'x' });
     });
 
     /**
@@ -411,7 +411,7 @@ describe('expected', () => {
              | expected:not#a | x     |`
         );
 
-        await expect(sut.handler.process(tableRows)).rejects.toThrowError('error: expected#a\n\tnot: x\n\tactual: x');
+        await expect(sut.handler.process(tableRows)).rejects.toThrow('error: expected:not#a\n\tnot: x\n\tactual: x');
     });
 
     /**

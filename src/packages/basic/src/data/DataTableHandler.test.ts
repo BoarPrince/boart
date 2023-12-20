@@ -1,9 +1,9 @@
 import fs from 'fs';
 
-import { DataTableHandler } from '@boart/basic';
 import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, StepContext, Store, TestContext, VariableParser } from '@boart/core';
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
+import DataTableHandler from './DataTableHandler';
 
 // eslint-disable-next-line jest/require-hook
 fetchMock.enableMocks();

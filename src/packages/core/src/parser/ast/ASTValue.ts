@@ -1,4 +1,4 @@
-import { Qualifier } from './Qualifier';
+import { Name } from './Name';
 import { Scope } from './Scope';
 import { SelectorArray } from './SelectorArray';
 
@@ -7,7 +7,8 @@ import { SelectorArray } from './SelectorArray';
  */
 export interface ASTValue {
     scope?: Scope;
-    qualifier?: Qualifier;
+    name?: Name;
+    qualifier?: null;
     selectors?: SelectorArray;
     match: string;
 }

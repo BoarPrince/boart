@@ -1,4 +1,4 @@
-import { OperatorType } from 'core/src/value/OperatorType';
+import { OperatorType } from '../../value/OperatorType';
 
 import { Location } from './Location';
 

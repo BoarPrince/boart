@@ -19,7 +19,7 @@ START_ACTION
 /********************************************/
 START_VALUE
         = _ scope:SCOPE? name:NAME selector:SELECTOR?
-        { return { scope: scope, qualifier: name, selectors: selector && selector.selectors || [] } }
+        { return { scope: scope, name: name, selectors: selector && selector.selectors || [] } }
 
 /************* NAME **************/
 NAME

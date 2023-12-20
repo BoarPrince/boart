@@ -1,0 +1,56 @@
+{
+  "folders": [
+    {
+      "name": "✨ root",
+      "path": "../"
+    },
+    {
+      "name": "📦 @boart/core",
+      "path": "../src/packages/core"
+    },
+    {
+      "name": "📦 @boart/core-impl",
+      "path": "../src/packages/core-impl"
+    },
+    {
+      "name": "📦 @boart/execution",
+      "path": "../src/packages/execution"
+    },
+    {
+      "name": "📦 @boart/basic",
+      "path": "../src/packages/basic"
+    },
+    {
+      "name": "📦 @boart/description",
+      "path": "../src/packages/description"
+    },
+    {
+      "name": "📦 @boart/protocol",
+      "path": "../src/packages/protocol"
+    },
+    {
+      "name": "📦 Gauge",
+      "path": "../src/gauge"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "packages/": true
+    },
+    "window.title": "B O A R - T.V 2",
+    "files.associations": {
+      "*.cpt": "gauge",
+      "*.json": "jsonc",
+      "*.spec": "gauge",
+      "*.html": "html"
+    },
+    "files.autoSave": "off",
+    "jest.jestCommandLine": "./node_modules/.bin/jest --coverage --runInBand",
+    "jest.autoRun": {
+      "watch": false
+    },
+    "jest.testExplorer": {
+      "enabled": false
+    }
+  }
+}

@@ -4,13 +4,13 @@ import {
     ExecutionContext,
     ExecutionUnit,
     ExpectedOperator,
+    Description,
     ExpectedOperatorInitializer,
     ParaType,
     RowValidator,
     SelectorExtractor,
     SelectorType
 } from '@boart/core';
-import { Description } from 'core/src/description/Description';
 
 import { RowTypeValue } from '../../RowTypeValue';
 import { QualifierValidator } from '../../validators/QualifierValidator';
@@ -31,10 +31,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     /**
      *
      */
-    constructor(
-        private firstLevelType?: keyof DataContext['execution'],
-        private secondLevelType?: string
-    ) {
+    constructor(private firstLevelType?: keyof DataContext['execution'], private secondLevelType?: string) {
         ExpectedOperatorInitializer.instance.operators$.subscribe((operator) => this.operators.push(operator));
     }
 

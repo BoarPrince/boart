@@ -1,8 +1,6 @@
 import * as fs from 'fs';
 
-import { EnvLoader, ReplaceArg, ScopedType, ValueReplacer } from '@boart/core';
-
-import { ValueReplacerConfig } from './ValueReplacer';
+import { EnvLoader, ReplaceArg, ScopedType, ValueReplacer, ValueReplacerConfig } from '@boart/core';
 
 export class FileReplacer implements ValueReplacer {
     readonly name = 'file';
