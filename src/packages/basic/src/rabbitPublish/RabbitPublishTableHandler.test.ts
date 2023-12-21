@@ -1,6 +1,5 @@
 import fs from 'fs';
 
-import { RabbitPublishTableHandler } from '@boart/basic';
 import {
     LocalContext,
     MarkdownTableReader,
@@ -15,8 +14,10 @@ import {
     ValueReplacer,
     ValueReplacerHandler
 } from '@boart/core';
-import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
+import { createAmqplibMock, getAmqplibMock } from '@boart/execution/src/index.mock';
 import { StepReport } from '@boart/protocol';
+import RabbitPublishTableHandler from './RabbitPublishTableHandler';
+import { basicInitialize } from '..';
 
 const sut = new RabbitPublishTableHandler();
 
@@ -24,13 +25,6 @@ const sut = new RabbitPublishTableHandler();
  *
  */
 jest.mock('fs');
-
-/**
- *
- */
-afterEach(() => {
-    StepReport.instance.report();
-});
 
 /**
  *
@@ -71,6 +65,7 @@ jest.mock('amqplib', () => {
  * mock fs
  */
 beforeAll(() => {
+    basicInitialize();
     (fs.readFileSync as jest.Mock).mockImplementation(() => '{}');
 });
 
@@ -99,6 +94,13 @@ beforeEach(() => {
         }
     };
     ValueReplacerHandler.instance.add('env', item);
+});
+
+/**
+ *
+ */
+afterEach(() => {
+  StepReport.instance.report();
 });
 
 /**
@@ -472,7 +474,7 @@ describe('reporting', () => {
         StepReport.instance.report();
 
         const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
-        // expect(writeFileMockCalls.length).toBe(1);
+
         expect(JSON.parse(writeFileMockCalls[0][1] as string)).toStrictEqual({
             description: 'test desc',
             id: 'id-id-id',

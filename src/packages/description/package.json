@@ -9,30 +9,38 @@
   "homepage": "https://github.com/Kemark/boart#readme",
   "keywords": [],
   "license": "ISC",
-  "files": [
-    "dist/**/*.js",
-    "dist/**/*.d.ts",
-    "dist/**/*.js.map"
-  ],
-  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kemark/boart.git"
   },
+  "main": "src/index.js",
+  "typings": "src/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
-    "compile": "tsc -p tsconfig.pkg.json",
-    "_postcompile": "ts-node ../../../build.ts -p core",
-    "build": "echo \"Error: no build specified\" && exit 0",
+    "build": "tsc",
+    "test": "jest --coverage",
     "desc": "ts-node ./desc.ts"
   },
   "dependencies": {
-    "@boart/core": "*",
     "marked": "^4.2.12",
-    "nunjucks": "^3.2.3"
+    "nunjucks": "^3.2.3",
+    "@boart/core": "workspace:*",
+    "@types/node": "~20.10.5"
   },
   "devDependencies": {
     "@types/nunjucks": "^3.2.2",
-    "@types/marked": "^4.0.8"
+    "typescript": "~5.3.3",
+    "@types/marked": "^4.0.8",
+    "tslib": "~2.6.2",
+    "jest-extended": "~4.0.2",
+    "@types/jest": "~29.5.11",
+    "jest": "~29.7.0",
+    "ts-jest": "~29.1.1",
+    "@jest/types": "~29.6.3",
+    "ts-node": "~10.9.2"
   }
 }

@@ -36,10 +36,10 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
     public notifyStart(context: TContext) {
         this.timer = new Timer();
         this.current = {
+            ...context,
+            ...this.contextGenerator(),
             startTime: this.timer.startTime,
             id: randomUUID(),
-            ...this.contextGenerator(),
-            ...context
         };
         this.start.next(this.current);
     }

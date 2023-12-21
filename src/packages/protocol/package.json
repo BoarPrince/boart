@@ -3,19 +3,15 @@
   "description": "",
   "author": "kem@boarprince.net",
   "version": "1.0.0-298",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "files": [
-    "dist/**/*.js",
-    "dist/**/*.d.ts",
-    "dist/**/*.js.map",
-    "dist/**/*.html"
+    "lib",
+    "src"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
-    "precompile": "ts-node ../../../build.ts -r -p protocol",
-    "compile": "tsc -p tsconfig.pkg.json",
-    "postcompile": "ts-node ../../../build.ts -p protocol && cp src/protocol/protocol-template.html dist/protocol/protocol-template.html",
-    "build": "echo \"Error: no build specified\" && exit 0"
+    "build": "tsc",
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -28,6 +24,17 @@
   },
   "homepage": "https://github.com/Kemark/boart#readme",
   "dependencies": {
-    "@boart/core": "*"
+    "@boart/core": "workspace:*",
+    "@types/node": "~20.10.5"
+  },
+  "devDependencies": {
+    "typescript": "~5.3.3",
+    "tslib": "~2.6.2",
+    "jest-extended": "~4.0.2",
+    "@types/jest": "~29.5.11",
+    "jest": "~29.7.0",
+    "ts-jest": "~29.1.1",
+    "@jest/types": "~29.6.3",
+    "ts-node": "~10.9.2"
   }
 }

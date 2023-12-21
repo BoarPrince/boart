@@ -1,10 +1,12 @@
 import fs from 'fs';
 import { URLSearchParams } from 'url';
 
-import { RestAuthorizeTableHandler } from '@boart/basic';
 import { MarkdownTableReader, Runtime, StepContext, Store, StoreMap } from '@boart/core';
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
+import RestAuthorizeTableHandler from './RestAuthorizeTableHandler';
+import { basicInitialize } from '..';
+
 
 const sut = new RestAuthorizeTableHandler();
 
@@ -43,6 +45,13 @@ jest.mock('@boart/core', () => {
  *
  */
 jest.mock('fs');
+
+/**
+ *
+ */
+beforeAll(() => {
+    basicInitialize();
+});
 
 /**
  *

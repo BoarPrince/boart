@@ -20,6 +20,7 @@ import {
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution/src/index.mock';
 import { StepReport } from '@boart/protocol';
 import RabbitConsumeTableHandler from './RabbitConsumeTableHandler';
+import { basicInitialize } from '..';
 
 const sut = new RabbitConsumeTableHandler();
 
@@ -67,6 +68,7 @@ jest.mock('amqplib', () => {
  * mock fs
  */
 beforeAll(() => {
+    basicInitialize();
     (fs.readFileSync as jest.Mock).mockImplementation(() => '{}');
 });
 

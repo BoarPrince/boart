@@ -1,8 +1,8 @@
 import fs from 'fs';
 
-import { TestDescriptionTableHandler } from '@boart/basic';
 import { MarkdownTableReader, Runtime, TestContext } from '@boart/core';
 import { TestReport } from '@boart/protocol';
+import TestDescriptionTableHandler from './TestDescriptionTableHandler';
 
 const sut = new TestDescriptionTableHandler();
 
@@ -179,6 +179,7 @@ describe('description', () => {
 
         Runtime.instance.testRuntime.current.id = 'id-id-id';
         TestReport.instance.report();
+
         expect(fs.writeFile).toHaveBeenCalledWith(
             'id-id-id.json',
             JSON.stringify({

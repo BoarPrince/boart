@@ -49,7 +49,14 @@ export {
 /**
  *
  */
-function initialize(): void {
+export function basicInitialize(): void {
+    if (globalThis.basicInitialized) {
+      // call initialize only once a time
+        return;
+    } else {
+      globalThis.basicInitialized = true;
+    }
+
     Runtime.instance.stepRuntime.onEnd().subscribe(() => StepReport.instance.report());
     Runtime.instance.stepRuntime.onClear().subscribe(() => StepReport.instance.clear());
     Runtime.instance.testRuntime.onEnd().subscribe(() => TestReport.instance.report());
@@ -86,4 +93,7 @@ function initialize(): void {
     ]);
 }
 
-initialize();
+/**
+ *
+ */
+basicInitialize();

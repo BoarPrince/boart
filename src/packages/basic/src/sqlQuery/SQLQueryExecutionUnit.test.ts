@@ -1,8 +1,9 @@
 import fs from 'fs';
 
-import { SQLQueryTableHandler } from '@boart/basic';
 import { ContentType, MarkdownTableReader, Runtime, StepContext } from '@boart/core';
 import { StepReport } from '@boart/protocol';
+import SQLQueryTableHandler from './SQLQueryTableHandler';
+import { basicInitialize } from '..';
 
 const sut = new SQLQueryTableHandler();
 
@@ -68,6 +69,13 @@ jest.mock('@boart/execution', () => {
  *
  */
 jest.mock('fs');
+
+/**
+ *
+ */
+beforeAll(() => {
+  basicInitialize();
+});
 
 /**
  *

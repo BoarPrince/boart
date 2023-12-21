@@ -19,6 +19,7 @@ import {
 import { DataContext, RowTypeValue } from '@boart/core-impl';
 import BasicDataGroupDefinition from './BasicDataGroupDefinition';
 import BasicGroupDefinition from './BasicGroupDefinition';
+import { basicInitialize } from '..';
 
 /**
  *
@@ -130,6 +131,13 @@ class MockTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<Da
  *
  */
 const sut = new MockTableHandler();
+
+/**
+ *
+ */
+beforeAll(() => {
+  basicInitialize();
+})
 
 /**
  *

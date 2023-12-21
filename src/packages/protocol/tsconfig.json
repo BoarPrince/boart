@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "allowJs": true, // copy js files to outDir  -> parser/peggy/*.js
+    "composite": false,
+    "inlineSourceMap": false,
+    "target": "ESNext",
+    "module": "commonjs",
+    "strict": false,
+    "strictNullChecks": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "inlineSources": true,
+    "useUnknownInCatchVariables": false,
+    "noEmitOnError": false,
+    "allowUnreachableCode": false,
+    "importHelpers": true,
+    "types": ["jest", "node"],
+    "lib": ["ESNext"],
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "lib"]
+}

@@ -4,6 +4,8 @@ import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, StepContext
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
 import DataTableHandler from './DataTableHandler';
+import { basicInitialize } from '..';
+
 
 // eslint-disable-next-line jest/require-hook
 fetchMock.enableMocks();
@@ -62,6 +64,13 @@ jest.mock('crypto', () => {
  *
  */
 jest.mock('fs');
+
+/**
+ *
+ */
+beforeAll(() => {
+    basicInitialize();
+});
 
 /**
  *
@@ -515,10 +524,10 @@ describe('data:unit repeat', () => {
             id: 'id-id-id',
             status: 2,
             type: 'data handling',
-            startTime: '2020-01-01T00:00:00.000Z',
             description: 'this is a description',
             input: { 'Data Handling (input)': { description: 'Data Handling (input)', type: 'json', data: 'foo' } },
             result: {},
+            startTime: "2020-01-01T00:00:00.000Z",
             links: []
         });
     });

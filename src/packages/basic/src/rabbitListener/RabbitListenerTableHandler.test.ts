@@ -1,6 +1,5 @@
 import fs from 'fs';
 
-import { RabbitListenerTableHandler } from '@boart/basic';
 import {
     LocalContext,
     MarkdownTableReader,
@@ -16,8 +15,10 @@ import {
     ValueReplacer,
     ValueReplacerHandler
 } from '@boart/core';
-import { createAmqplibMock, getAmqplibMock } from '@boart/execution.mock';
+import { createAmqplibMock, getAmqplibMock } from '@boart/execution/src/index.mock';
 import { StepReport } from '@boart/protocol';
+import RabbitListenerTableHandler from './RabbitListenerTableHandler';
+import { basicInitialize } from '..';
 
 const sut = new RabbitListenerTableHandler();
 
@@ -60,6 +61,13 @@ jest.mock('amqplib', () => {
     return {
         connect: jest.fn().mockImplementation((config) => createAmqplibMock().connect(config))
     };
+});
+
+/**
+ *
+ */
+beforeAll(() => {
+  basicInitialize();
 });
 
 /**

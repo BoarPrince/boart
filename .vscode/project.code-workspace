@@ -37,6 +37,15 @@
     "files.exclude": {
       "packages/": true
     },
+    "search.exclude": {
+      "**/coverage": true,
+      "**/lib": true,
+      "**/logs": true,
+      "**/node_modules": true,
+      "**/gauge.log": true,
+      "**/gauge/node_modules": true,
+      "**/reports": true
+    },
     "window.title": "B O A R - T.V 2",
     "files.associations": {
       "*.cpt": "gauge",

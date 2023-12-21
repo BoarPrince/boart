@@ -1,7 +1,5 @@
 import { Subject } from 'rxjs';
 
-import { RabbitBindConfigContext } from '../rabbitBind/RabbitBindContext';
-
 /**
  *
  */
@@ -122,7 +120,7 @@ const channel = {
  *
  */
 export interface AmqplibMock {
-    connect(config: RabbitBindConfigContext): Promise<unknown>;
+    connect(config: unknown): Promise<unknown>;
     setMessageGenerator(generatorStarter: MessageGeneratorStarter);
     channel: typeof channel;
     // on: Observe<typeof on>;

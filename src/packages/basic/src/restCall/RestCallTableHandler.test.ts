@@ -1,9 +1,10 @@
 import fs from 'fs';
 
-import { RestCallTableHandler } from '@boart/basic';
 import { DataContent, MarkdownTableReader, Runtime, StepContext, Store, StoreMap } from '@boart/core';
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
+import RestCallTableHandler from './RestCallTableHandler';
+import { basicInitialize } from '..';
 
 fetchMock.enableMocks();
 const sut = new RestCallTableHandler();
@@ -47,15 +48,16 @@ jest.mock('fs');
 /**
  *
  */
-beforeEach(() => {
-    Store.instance.localStore.clear();
-    Store.instance.testStore.clear();
+beforeAll(() => {
+  basicInitialize();
 });
 
 /**
  *
- */
+*/
 beforeEach(() => {
+    Store.instance.localStore.clear();
+    Store.instance.testStore.clear();
     jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
 });
