@@ -77,7 +77,7 @@ export class StepReport {
     public report(): void {
         // after reporting the step, reset singleton instance
         globalThis._stepReportInstance = undefined;
-        const currentStepRuntime = Runtime.instance.stepRuntime.current;
+        const currentStepRuntime = Runtime.instance.stepRuntime.currentContext;
 
         if (currentStepRuntime.descriptions?.length === 0) {
             // do nothing, if no description is defined
@@ -127,9 +127,9 @@ export class StepReport {
      *                    A group is defined, if more than one item has the same group.
      */
     public static report(description: string, group?: string): DataDelegate {
-        Runtime.instance.stepRuntime.current.descriptions.push(description);
+        Runtime.instance.stepRuntime.currentContext.descriptions.push(description);
         if (!!group) {
-            Runtime.instance.stepRuntime.current.group = group;
+            Runtime.instance.stepRuntime.currentContext.group = group;
         }
         return new DataDelegate(StepReport.instance);
     }

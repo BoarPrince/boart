@@ -28,7 +28,7 @@ export class RunEnvExecutionUnit implements ExecutionUnit<AnyContext, RowTypeVal
 
         const actualEnv = EnvLoader.instance.getEnvironment();
         if (!environments.includes(actualEnv)) {
-            Runtime.instance.stepRuntime.current.status = RuntimeStatus.stopped;
+            Runtime.instance.stepRuntime.currentContext.status = RuntimeStatus.stopped;
         }
     }
 }

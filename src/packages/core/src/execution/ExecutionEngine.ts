@@ -42,7 +42,7 @@ export class ExecutionEngine<
     public async preExecute(rows: ReadonlyArray<TRowType>): Promise<boolean> {
         this.logger.info(() => 'preExecute');
         await this.executeByType(rows, TableRowType.PreConfiguration);
-        return Runtime.instance.stepRuntime.current?.status !== RuntimeStatus.stopped;
+        return Runtime.instance.stepRuntime.currentContext?.status !== RuntimeStatus.stopped;
     }
 
     /**

@@ -470,7 +470,7 @@ describe('reporting', () => {
 
         await sut.handler.process(tableRows);
 
-        Runtime.instance.stepRuntime.current.id = 'id-id-id';
+        Runtime.instance.stepRuntime.currentContext.id = 'id-id-id';
         StepReport.instance.report();
 
         const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
@@ -532,7 +532,7 @@ describe('reporting', () => {
 
         await sut.handler.process(tableRows);
 
-        Runtime.instance.stepRuntime.current.id = 'id-id-id';
+        Runtime.instance.stepRuntime.currentContext.id = 'id-id-id';
         StepReport.instance.report();
 
         const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
@@ -594,7 +594,7 @@ describe('reporting', () => {
 
         await sut.handler.process(tableRows);
 
-        Runtime.instance.stepRuntime.current.id = 'id-id-id';
+        Runtime.instance.stepRuntime.currentContext.id = 'id-id-id';
         StepReport.instance.report();
 
         const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
@@ -656,7 +656,7 @@ describe('reporting', () => {
 
         await sut.handler.process(tableRows);
 
-        Runtime.instance.stepRuntime.current.id = 'id-id-id';
+        Runtime.instance.stepRuntime.currentContext.id = 'id-id-id';
         StepReport.instance.report();
 
         const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;

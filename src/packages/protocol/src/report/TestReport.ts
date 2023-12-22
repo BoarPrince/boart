@@ -85,7 +85,7 @@ export class TestReport {
         // after reporting the test, reset singleton instance
         globalThis._testReportInstance = null;
 
-        const currentTestRuntime = Runtime.instance.testRuntime.current;
+        const currentTestRuntime = Runtime.instance.testRuntime.currentContext;
         const id = currentTestRuntime.id;
 
         // data output

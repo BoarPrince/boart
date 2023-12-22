@@ -23,6 +23,6 @@ export class TestDescriptionExecutionUnit implements ExecutionUnit<TestDescripti
         TestReport.instance.setDescription(context.config.description);
         TestReport.instance.setFailureDescription(context.config.failureDescription);
         TestReport.instance.setTicket(context.config.ticket);
-        Runtime.instance.testRuntime.current.priority = RuntimePriority.priority(context.config.priority);
+        Runtime.instance.testRuntime.currentContext.priority = RuntimePriority.priority(context.config.priority);
     }
 }

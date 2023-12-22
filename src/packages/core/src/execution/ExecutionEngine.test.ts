@@ -110,7 +110,7 @@ describe('default', () => {
      *
      */
     beforeEach(() => {
-        Runtime.instance.stepRuntime.current = new StepContext();
+        Runtime.instance.stepRuntime.currentContext = new StepContext();
     });
 
     /**
@@ -151,7 +151,7 @@ describe('default', () => {
         const mainExecutionUnit = new ExecutionUnitMock();
         const sut = new ExecutionEngine<TestExecutionContext, BaseRowType<TestExecutionContext>>(() => mainExecutionUnit, contextGenerator);
 
-        Runtime.instance.stepRuntime.current.status = RuntimeStatus.stopped;
+        Runtime.instance.stepRuntime.currentContext.status = RuntimeStatus.stopped;
 
         const canProceed = await sut.preExecute([rowDataPost, rowDataConfig, rowDataPreConfig, rowDataPre]);
         expect(canProceed).toBe(false);
@@ -169,7 +169,7 @@ describe('default', () => {
         const mainExecutionUnit = new ExecutionUnitMock();
         const sut = new ExecutionEngine<TestExecutionContext, BaseRowType<TestExecutionContext>>(() => mainExecutionUnit, contextGenerator);
 
-        Runtime.instance.stepRuntime.current.status = RuntimeStatus.succeed;
+        Runtime.instance.stepRuntime.currentContext.status = RuntimeStatus.succeed;
         const canProceed = await sut.preExecute([rowDataPost, rowDataConfig, rowDataPreConfig, rowDataPre]);
 
         expect(canProceed).toBe(true);

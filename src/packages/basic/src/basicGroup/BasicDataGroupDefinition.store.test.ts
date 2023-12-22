@@ -1396,8 +1396,8 @@ describe('check run:xxx', () => {
     beforeEach(() => {
         Store.instance.testStore.clear();
         Store.instance.stepStore.clear();
-        Runtime.instance.stepRuntime.current = new StepContext();
-        Runtime.instance.stepRuntime.current.status = RuntimeStatus.notExecuted;
+        Runtime.instance.stepRuntime.currentContext = new StepContext();
+        Runtime.instance.stepRuntime.currentContext.status = RuntimeStatus.notExecuted;
     });
 
     /**
@@ -1557,7 +1557,7 @@ describe('check run:xxx', () => {
         // process runs without problems
         await sut.handler.process(tableDef);
 
-        expect(Runtime.instance.stepRuntime.current.status).toBe(RuntimeStatus.stopped);
+        expect(Runtime.instance.stepRuntime.currentContext.status).toBe(RuntimeStatus.stopped);
     });
 
     /**
@@ -1577,7 +1577,7 @@ describe('check run:xxx', () => {
 
         await sut.handler.process(tableDef);
 
-        expect(Runtime.instance.stepRuntime.current.status).toBe(RuntimeStatus.stopped);
+        expect(Runtime.instance.stepRuntime.currentContext.status).toBe(RuntimeStatus.stopped);
         expect(Store.instance.testStore.get(astVar)).toBeNull();
     });
 
@@ -1598,7 +1598,7 @@ describe('check run:xxx', () => {
 
         await sut.handler.process(tableDef);
 
-        expect(Runtime.instance.stepRuntime.current.status).toBe(RuntimeStatus.stopped);
+        expect(Runtime.instance.stepRuntime.currentContext.status).toBe(RuntimeStatus.stopped);
         expect(Store.instance.testStore.get(astVar)).toBeNull();
     });
 

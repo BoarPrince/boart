@@ -23,7 +23,7 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
     public onStart = (): Observable<TContext> => this.start;
     public onEnd = (): Observable<RuntimeResultContext> => this.end;
     public onClear = (): Observable<void> => this.clear;
-    public current: TContext;
+    public currentContext: TContext;
 
     /**
      *
@@ -34,28 +34,29 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
      *
      */
     public notifyStart(context: TContext) {
+        const generatedContext = this.contextGenerator();
         this.timer = new Timer();
-        this.current = {
+        this.currentContext = {
             ...context,
-            ...this.contextGenerator(),
+            ...generatedContext,
             startTime: this.timer.startTime,
-            id: randomUUID(),
+            id: randomUUID()
         };
-        this.start.next(this.current);
+        this.start.next(this.currentContext);
     }
 
     /**
      *
      */
     public notifyEnd(context: RuntimeResultContext) {
-        this.current.endTime = this.timer.endTime;
-        this.current.duration = this.timer.duration;
-        this.current.status = context.status;
-        this.current.errorMessage = context.errorMessage;
-        this.current.stackTrace = context.stackTrace;
-        this.end.next(this.current);
+        this.currentContext.endTime = this.timer.endTime;
+        this.currentContext.duration = this.timer.duration;
+        this.currentContext.status = context.status;
+        this.currentContext.errorMessage = context.errorMessage;
+        this.currentContext.stackTrace = context.stackTrace;
+        this.end.next(this.currentContext);
         if (!this.preserveCurrent) {
-            this.current = null;
+            this.currentContext = null;
         }
     }
 
@@ -87,9 +88,9 @@ export class Runtime {
      *
      */
     private initialize() {
-        this.localRuntime.onStart().subscribe((context) => this.runtime.current.localContext.push(context));
-        this.testRuntime.onStart().subscribe((context) => this.localRuntime.current.testContext.push(context));
-        this.stepRuntime.onStart().subscribe((context) => this.testRuntime.current.stepContext.push(context));
+        this.localRuntime.onStart().subscribe((context) => this.runtime.currentContext.localContext.push(context));
+        this.testRuntime.onStart().subscribe((context) => this.localRuntime.currentContext.testContext.push(context));
+        this.stepRuntime.onStart().subscribe((context) => this.testRuntime.currentContext.stepContext.push(context));
     }
 
     /**
@@ -108,7 +109,7 @@ export class Runtime {
      *
      */
     save(filename?: string) {
-        const data: string = JSON.stringify(this.runtime.current);
+        const data: string = JSON.stringify(this.runtime.currentContext);
         filename = filename || EnvLoader.instance.mapReportData(`boart-runtime-data.json`);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         fs.writeFileSync(filename, data, 'utf-8');

@@ -196,7 +196,7 @@ describe('with repetition', () => {
      *
      */
     const init = (count: number, pause: number, noErrorFrom = 100): initial => {
-        Runtime.instance.stepRuntime.current = new StepContext();
+        Runtime.instance.stepRuntime.currentContext = new StepContext();
 
         let callCount = 0;
         const executionEngineMock = {

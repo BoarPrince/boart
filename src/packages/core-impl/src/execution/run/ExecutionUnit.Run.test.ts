@@ -15,8 +15,8 @@ const variableParser = new VariableParser();
  *
  */
 beforeEach(() => {
-    Runtime.instance.stepRuntime.current = new StepContext();
-    Runtime.instance.stepRuntime.current.status = RuntimeStatus.succeed;
+    Runtime.instance.stepRuntime.currentContext = new StepContext();
+    Runtime.instance.stepRuntime.currentContext.status = RuntimeStatus.succeed;
 });
 
 /**
@@ -59,7 +59,7 @@ describe('run:only', () => {
             ast: variableParser.parseAction(actionPara)
         } as RowTypeValue<AnyContext>);
 
-        expect(Runtime.instance.stepRuntime.current.status).toBe(expected);
+        expect(Runtime.instance.stepRuntime.currentContext.status).toBe(expected);
     });
 
     /**
@@ -119,6 +119,6 @@ describe('run:not', () => {
             ast: variableParser.parseAction(`run:not:${marker}`)
         } as RowTypeValue<AnyContext>);
 
-        expect(Runtime.instance.stepRuntime.current.status).toBe(expected);
+        expect(Runtime.instance.stepRuntime.currentContext.status).toBe(expected);
     });
 });

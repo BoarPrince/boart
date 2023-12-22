@@ -177,7 +177,7 @@ describe('description', () => {
         expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
         expect(sut.handler.getExecutionEngine().context.config.ticket).toBe('provider-x:t-01');
 
-        Runtime.instance.testRuntime.current.id = 'id-id-id';
+        Runtime.instance.testRuntime.currentContext.id = 'id-id-id';
         TestReport.instance.report();
 
         expect(fs.writeFile).toHaveBeenCalledWith(
@@ -216,7 +216,7 @@ describe('description', () => {
         expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
         expect(sut.handler.getExecutionEngine().context.config.ticket).toBe('t-01');
 
-        Runtime.instance.testRuntime.current.id = 'id-id-id';
+        Runtime.instance.testRuntime.currentContext.id = 'id-id-id';
         TestReport.instance.report();
         expect(fs.writeFile).toHaveBeenCalledWith(
             'id-id-id.json',
@@ -256,7 +256,7 @@ describe('description', () => {
         expect(sut.handler.getExecutionEngine().context.config.priority).toBe('medium');
         expect(sut.handler.getExecutionEngine().context.config.ticket).toBe('');
 
-        Runtime.instance.testRuntime.current.id = 'id-id-id';
+        Runtime.instance.testRuntime.currentContext.id = 'id-id-id';
         TestReport.instance.report();
         expect(fs.writeFile).toHaveBeenCalledWith(
             'id-id-id.json',

@@ -28,7 +28,7 @@ export class RunNotExecutionUnit implements ExecutionUnit<AnyContext, RowTypeVal
 
         const matchedDefinition = runDefinition.find((def) => def.name === name);
         if (!!matchedDefinition) {
-            Runtime.instance.stepRuntime.current.status = RuntimeStatus.stopped;
+            Runtime.instance.stepRuntime.currentContext.status = RuntimeStatus.stopped;
         }
     }
 }

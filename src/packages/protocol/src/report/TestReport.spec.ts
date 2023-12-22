@@ -73,7 +73,7 @@ beforeEach(() => {
     sut = TestReport.instance;
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    Runtime.instance.testRuntime.current = {
+    Runtime.instance.testRuntime.currentContext = {
         id: '-id-'
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any;

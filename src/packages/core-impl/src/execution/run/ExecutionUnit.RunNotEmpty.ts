@@ -24,7 +24,7 @@ export class RunNotEmptyExecutionUnit implements ExecutionUnit<AnyContext, RowTy
         const value = row.value?.valueOf();
 
         if (!value) {
-            Runtime.instance.stepRuntime.current.status = RuntimeStatus.stopped;
+            Runtime.instance.stepRuntime.currentContext.status = RuntimeStatus.stopped;
         }
     }
 }

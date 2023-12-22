@@ -56,7 +56,7 @@ export class LocalReport {
         // after reporting the local, reset singleton instance
         globalThis._localReportInstance = null;
 
-        const currentLocalRuntime = Runtime.instance.localRuntime.current;
+        const currentLocalRuntime = Runtime.instance.localRuntime.currentContext;
         const id = currentLocalRuntime.id;
 
         // data output

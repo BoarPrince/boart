@@ -29,9 +29,9 @@ export class DescriptionExecutionUnit implements ExecutionUnit<AnyContext, RowTy
             .onClear()
             .pipe(first())
             .subscribe(() => {
-                Runtime.instance.stepRuntime.current.descriptions = [];
+                Runtime.instance.stepRuntime.currentContext.descriptions = [];
             });
 
-        Runtime.instance.stepRuntime.current.descriptions.push(row.value.toString());
+        Runtime.instance.stepRuntime.currentContext.descriptions.push(row.value.toString());
     }
 }

@@ -21,6 +21,6 @@ export class GroupExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValu
      *
      */
     execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
-        Runtime.instance.stepRuntime.current.group = row.value.toString();
+        Runtime.instance.stepRuntime.currentContext.group = row.value.toString();
     }
 }
