@@ -384,7 +384,11 @@ export class ProtocolGenerator {
     public static cleanReportPath(): void {
         const dir = EnvLoader.ReportDataPath;
         fs.readdir(dir, (err, files) => {
-            if (err) throw err;
+            if (err) {
+              fs.mkdirSync (dir, {
+                recursive: true
+            });
+            }
             for (const file of files) {
                 fs.unlinkSync(path.join(dir, file));
             }
