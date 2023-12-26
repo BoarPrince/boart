@@ -14,15 +14,6 @@
     <!-- <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet" /> -->
     <link rel="stylesheet" href="styles.css"/>
 
-    <style>
-      :root {
-        --bs-primary-rgb: 249, 200, 0;
-        --bs-link-color: rgb(189, 28, 31);
-        --bs-secondary-rgb: rgb(189, 28, 31);
-        --bs-link-hover-color: rgb(232, 37, 29);
-      }
-    </style>
-
     <title>
       {% block title %}{% endblock %}
     </title>
@@ -98,34 +89,7 @@
         </div>
       {% endif %}
     {% endmacro %}
-
-    <header class="container-fluid">
-      {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-      {# left and right navigation #}
-      {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-      <div class="row">
-        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        {#  L E F T  #}
-        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        <nav class="fixed-top col-2 pe-5 vh-100 mt-5 bg-primary">
-          <div class="nav flex-column mt-2">
-            <a class="nav-link active" aria-current="page" href="#">Expected</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link" href="#">Link</a>
-            <a class="nav-link disabled">Disabled</a>
-          </div>
-        </nav>
-
-        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        {#  R I G H T  #}
-        {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-        <nav id="nav-sub-menu" class="fixed-top offset-10 col-2 vh-100 mt-5 bg-primary" style="font-size: smaller !important">
-          <div class="nav flex-column mt-2">
-            {% block subnav %}{% endblock %}
-          </div>
-        </nav>
-      </div>
-
+    <header>
       {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
       {# top navigation #}
       {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
@@ -160,11 +124,32 @@
     </header>
 
     {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+    {#  L E F T  #}
+    {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+    <nav id="nav-menu" class="bg-primary">
+      <div class="nav flex-column mt-2">
+        <a class="nav-link active" aria-current="page" href="#">Expected</a>
+        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link disabled">Disabled</a>
+      </div>
+    </nav>
+
+    {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+    {#  R I G H T  #}
+    {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+    <nav id="nav-sub-menu" class="bg-primary">
+      <div class="nav flex-column mt-2">
+        {% block subnav %}{% endblock %}
+      </div>
+    </nav>
+
+    {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
     {# main are #}
     {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
-    <main class="container-fluid mt-5 pt-4" data-bs-spy="scroll" data-bs-target="#nav-sub-menu">
+    <main data-bs-spy="scroll" data-bs-target="#nav-sub-menu">
       <div class="row">
-        <div class="offset-2 col-8">
+        <div class="offset-1 col-10">
           {% block main %}{% endblock %}
         </div>
       </div>

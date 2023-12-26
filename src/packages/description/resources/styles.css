@@ -1,13 +1,61 @@
-main {
-    height: calc(100vh - 3.5rem);
-    overflow-y: scroll;
+:root {
+  --bs-primary-rgb: 249, 200, 0;
+  --bs-link-color: rgb(189, 28, 31);
+  --bs-secondary-rgb: rgb(189, 28, 31);
+  --bs-link-hover-color: rgb(232, 37, 29);
+  --header-height: 4em;
+  --left-nav-width: 12em;
+  --right-nav-width: 18em;
 }
 
 #nav-top {
-    height: 3.5rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height)
 }
 
-/* 
+#nav-menu {
+  position:fixed;
+  top: var(--header-height);
+  bottom: 0;
+  width: var(--left-nav-width)
+}
+
+#nav-sub-menu {
+  position:fixed;
+  top: var(--header-height);
+  right: 0;
+  bottom: 0;
+  width: var(--right-nav-width);
+}
+
+h1, h5 {
+  color: rgb(var(--bs-primary-rgb));
+}
+
+main {
+	position: relative;
+	top: var(--header-height);
+	left: var(--left-nav-width);
+	background-color: black;
+	width: calc(100vW - var(--right-nav-width) - var(--left-nav-width));
+}
+
+.card {
+  background-color: black;
+  border: solid 2px rgb(var(--bs-primary-rgb));
+}
+
+.card-body {
+  color: white;
+  opacity: .7;
+  background-color: black;
+}
+
+
+/*
     @``````@`@````@`@````@````@@@@@```@@```@@@@@```@@@@``@@@@@@`@@@@@`
     @``````@`@@```@`@```@```````@````@``@``@````@`@````@`@````````@```
     @``````@`@`@``@`@@@@````````@```@````@`@````@`@``````@@@@@````@```
@@ -30,13 +78,13 @@ main {
     scroll-margin-top: 10rem;
 }
 
-/* 
+/*
     @@@@@@`@````@```@@```@````@`@@@@@``@``````@@@@@@`
     @```````@``@```@``@``@@``@@`@````@`@``````@``````
     @@@@@````@@```@````@`@`@@`@`@````@`@``````@@@@@``
     @````````@@```@@@@@@`@````@`@@@@@``@``````@``````
     @```````@``@``@````@`@````@`@``````@``````@``````
-    @@@@@@`@````@`@````@`@````@`@``````@@@@@@`@@@@@@` 
+    @@@@@@`@````@`@````@`@````@`@``````@@@@@@`@@@@@@`
 */
 
 .example {
@@ -46,6 +94,7 @@ main {
 
 .example ul {
     list-style: none;
+    padding-left: 0;
 }
 
 .example ul li::before {
@@ -86,23 +135,31 @@ main {
     `@@@@```@@@@``@@@@@`````@````@`@@@@@@`@````@``@@@@``
 */
 
-.tree{
+.tree {
     --spacing : 1.5rem;
     --radius  : 8px;
   }
 
-  .tree li{
+  .tree li {
     display      : block;
     position     : relative;
     padding-left : calc(2 * var(--spacing) - var(--radius));
     padding-top: calc(var(--spacing) / 2);
   }
-  
-  .tree ul{
+
+  .tree ul {
     margin-left  : calc(var(--radius) - var(--spacing));
     padding-left : 0;
   }
-  
+
+  ul.tree {
+    padding-left : 1em;
+  }
+
+  .tree a {
+    font-size: smaller;
+  }
+
 
 .tree li::after {
   content       : '';
@@ -121,7 +178,7 @@ main {
 .tree ul li{
     border-left : 2px solid black;
   }
-  
+
   .tree ul li:last-child{
     border-color : transparent;
   }
