@@ -15,8 +15,8 @@
 {% macro createMain(parentDocs, child = false) %}
   {% for doc in parentDocs | sort(attribute='title')%}
 
-    <div id="{{doc.id}}" class="card mb-4">
-      <h5 class="card-header bg-primary text-secondary">{{doc.title}}</h5>
+    <div id="{{doc.id}}" class="card border-0 mb-4">
+      <h5 class="card-header text-primary border-bottom border-primary">{{doc.title}}</h5>
       <div class="card-body">
         <p class="card-text">{{doc.description | brtMarkdown}}</p>
       </div>
