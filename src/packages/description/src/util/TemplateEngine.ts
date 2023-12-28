@@ -32,6 +32,7 @@ export class TemplateEngine {
     private addDefaultFilter () {
         this.addMarkdownFilter()
         this.addParentFilter()
+        this.addWorkBreakFilter();
     }
 
     /**
@@ -90,6 +91,15 @@ export class TemplateEngine {
     public addRefFilter (linkReferenceMap: Map<string, DescriptionLinkReference>): void {
         this._env.addFilter('brtRef', (document: Description) => {
             return linkReferenceMap.get(document.id)?.marker
+        })
+    }
+
+    /**
+     *
+     */
+    public addWorkBreakFilter (): void {
+        this._env.addFilter('brtWbr', (text: string) => {
+            return text.replace(/:/g, ':<wbr/>');
         })
     }
 }

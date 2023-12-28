@@ -35,7 +35,7 @@
             {# <details open>
               <summary> #}
             <a href="{{operator | brtRef}}">
-              {{operator.title}}
+              {{operator.title | brtWbr}}
             </a>
             {# </summary> #}
             {% if operator | brtChilds %}
@@ -60,7 +60,7 @@
         <div class="{{navClass}} text-nowrap">
           <a class="nav-link" href="{{operator | brtRef}}">
             {{childIcon}}
-            {{operator.title}}
+            {{operator.title | brtWbr}}
           </a>
           {% if operator | brtChilds %}
             {{ createSubnav(operator | brtChilds, true) }}
@@ -77,7 +77,7 @@
           {% for operator in parentDocs | sort(attribute='title')%}
             <li>
               <a class="nav-link" href="{{operator | brtRef}}">
-                {{operator.title}}
+                {{operator.title | brtWbr}}
               </a>
               {% if operator | brtChilds %}
                 {{ createSubnav(operator | brtChilds, true) }}
