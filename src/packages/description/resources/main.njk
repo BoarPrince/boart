@@ -13,6 +13,7 @@
 
     <!-- <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet" /> -->
     <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="highlight.css"/>
 
     <title>
       {% block title %}{% endblock %}
@@ -47,48 +48,17 @@
       </ul>
     {% endmacro %}
 
-    {% macro createSubnav2(parentDocs, child = false) %}
-      {% for operator in parentDocs | sort(attribute='title')%}
-        {% if child %}
-          {% set navClass = "ms-3" %}
-          {% set childIcon = '<i class="bi bi-chevron-right"></i>' %}
-        {% else %}
-          {% set navClass = "" %}
-          {% set childIcon = "" %}
-        {% endif %}
-
-        <div class="{{navClass}} text-nowrap">
-          <a class="nav-link" href="{{operator | brtRef}}">
-            {{childIcon}}
-            {{operator.title | brtWbr}}
-          </a>
-          {% if operator | brtChilds %}
-            {{ createSubnav(operator | brtChilds, true) }}
+    {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+    {# Add Example #}
+    {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
+    {% macro addExample(example, type) %}
+        {% for code in example.code %}
+          {% if code.position === type %}
+            <pre class="example-code"><code class="hljs"><p>{{code.title}}</p>{{code.code | brtUnIndent | brtLang}}</code></pre>
           {% endif %}
-        </div>
-      {% endfor %}
+        {% endfor %}
     {% endmacro %}
 
-    {% macro createSubnav1(parentDocs, child = false) %}
-      {% if not child %}
-        <div class="sub-menu">
-        {% endif %}
-        <ul>
-          {% for operator in parentDocs | sort(attribute='title')%}
-            <li>
-              <a class="nav-link" href="{{operator | brtRef}}">
-                {{operator.title | brtWbr}}
-              </a>
-              {% if operator | brtChilds %}
-                {{ createSubnav(operator | brtChilds, true) }}
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-        {% if not child %}
-        </div>
-      {% endif %}
-    {% endmacro %}
     <header>
       {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
       {# top navigation #}

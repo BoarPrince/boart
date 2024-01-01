@@ -114,6 +114,6 @@ export class DescriptionGenerator {
         })
 
         // copy resources
-        this.copyResources(['styles.css', 'table-examples.js'])
+        this.copyResources(['styles.css', 'table-examples.js', 'highlight.css'])
     }
 }

@@ -29,7 +29,8 @@
     "marked": "^4.2.12",
     "nunjucks": "^3.2.3",
     "@boart/core": "workspace:*",
-    "@types/node": "~20.10.5"
+    "@types/node": "~20.10.5",
+    "highlight.js": "~11.9.0"
   },
   "devDependencies": {
     "@types/nunjucks": "^3.2.2",

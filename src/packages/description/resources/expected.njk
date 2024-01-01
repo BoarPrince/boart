@@ -29,12 +29,23 @@
       {% for example in doc.examples %}
         <div class="card border border-0 text-bg-secondary m-3">
           <div class="card-body">
+
+            {# Title #}
             <h6 class="card-title">{{example.title}}</h6>
+
+            {# Code before #}
+            {{ addExample(example, 'before') }}
+
+            {# Example #}
             <p class="card-text">
               <div class="example">
                 {{example.example | brtMarkdown}}
               </div>
             </p>
+
+            {# Code after #}
+            {{ addExample(example, 'after') }}
+
           </div>
         </div>
       {% endfor %}

@@ -127,6 +127,19 @@ main {
     margin-top: 1em;
 }
 
+pre.example-code {
+  font-size: x-small;
+}
+
+pre.example-code code.hljs {
+  padding: 1em 3em;
+}
+
+pre.example-code code.hljs p {
+  margin-left: -2em;
+  margin-bottom: .5em;
+}
+
 /*
     `@@@@``@````@`@@@@@`````@````@`@@@@@@`@````@`@````@`
     @``````@````@`@````@````@@``@@`@``````@@```@`@````@`
