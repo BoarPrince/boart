@@ -92,6 +92,32 @@ export class ExpectedOperatorImplementation {
     static get regexp(): ExpectedOperator {
         return {
             name: 'regexp',
+            description: {
+              id: 'expected:regexp',
+              description: `* Checks the value by using a regexp`,
+              examples: [{
+                title: 'test',
+                code: [
+                  {
+                    type: 'json',
+                    position: 'before',
+                    title: 'Response Body',
+                    code: `{
+                      "a": 5,
+                      "b": {
+                        "a": false
+                      }
+                    }`
+                  }
+                ],
+                example: `* Rest call
+                  | action                 |value               |
+                  |------------------------|--------------------|
+                  | method:post            |/rest-url           |
+                  | payload                |<file:payload.json> |
+                  | **expected:header#status** |200             |`
+              }]
+            },
             caseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const valueAsString = ExpectedOperatorImplementation.valueToString(value);
