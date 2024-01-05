@@ -96,12 +96,13 @@ export class RowDefinitionBinder<
         return sortedDefinitions.find((def) => {
             const defKey = def.key.description;
             const defDataScope = def.dataScope?.description;
+            const rowDataScope = row.ast.datascope?.value;
 
             return (
                 // key must match
                 keyStringValue.startsWith(defKey) &&
                 // and dataScope must match
-                (row.ast.datascope?.value == defDataScope || defDataScope === '*')
+                (rowDataScope == defDataScope || (!rowDataScope && defDataScope === '*'))
             );
         });
     }

@@ -6,6 +6,7 @@ import { Description } from '../description/Description';
 import { Descriptionable } from '../description/Descriptionable';
 
 import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
+import { DescriptionHandler } from '../description/DescriptionHandler';
 
 /**
  *
@@ -69,30 +70,33 @@ export class ExpectedOperatorInitializer implements Descriptionable {
             throw new Error(`expected operator '${operator.name}' already exists`);
         }
 
-        // define title if description is not defined, but the title is missing
-        if (!!operator.description && !operator.description.title) {
-            operator.description.title = `expected:${operator.name}`;
-        }
-
         // 1. add ci and not operators
         this.addNotAndCiOperator(operator);
 
         // 2. add default implementation
         if (!!operator.default) {
-            const description = !operator.description
-                ? null
-                : {
-                      id: `${operator.description.id}:default`,
-                      parentId: operator.description.id,
-                      title: 'expected',
-                      description: `The '<ref:${operator.description.id}>' operator it's the default
-                            operator and it's used when no operator is defined`,
-                      examples: null
-                  };
-
             const defaultOperator: ExpectedOperator = {
                 name: '',
-                description,
+                description: () => {
+                    const operatorDescription = DescriptionHandler.solve(operator.description);
+
+                    // define title if description is not defined, but the title is missing
+                    if (!!operatorDescription && !operatorDescription.title) {
+                        operatorDescription.title = `expected:${operator.name}`;
+                    }
+
+                    return !operatorDescription
+                        ? null
+                        : {
+                            id: `${operatorDescription.id}:default`,
+                            parentId: operatorDescription.id,
+                            title: 'expected',
+                            description: `The '<ref:${operatorDescription.id}>' operator it's the default
+                                operator and it's used when no operator is defined`,
+                            examples: null
+                        };
+
+                },
                 caseInsesitive: operator.caseInsesitive,
                 check: (value, expectedValue) => operator.check(value, expectedValue)
             };
@@ -135,20 +139,21 @@ export class ExpectedOperatorInitializer implements Descriptionable {
      *
      */
     private generateNotOperator(operator: ExpectedOperator): ExpectedOperator {
-        const description = !operator.description
-            ? null
-            : {
-                  id: `${operator.description.id}:not`,
-                  parentId: operator.description.id,
-                  dataScope: operator.description.dataScope,
-                  title: `${operator.description.title || ''}:not`,
-                  description: `It's the not extension of the '<ref:${operator.description.id}>' operator`,
-                  examples: null
-              };
-
         return {
             name: operator.name + (!!operator.name ? ':' : '') + 'not',
-            description,
+            description: () => {
+              const operatorNotDescription = DescriptionHandler.solve(operator.description);
+              return !operatorNotDescription
+                  ? null
+                  : {
+                      id: `${operatorNotDescription.id}:not`,
+                      parentId: operatorNotDescription.id,
+                      dataScope: operatorNotDescription.dataScope,
+                      title: `${operatorNotDescription.title || ''}:not`,
+                      description: `It's the not extension of the '<ref:${operatorNotDescription.id}>' operator`,
+                      examples: null
+                  };
+            },
             caseInsesitive: operator.caseInsesitive,
             check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
                 const result = await operator.check(value, expectedValue);
@@ -164,21 +169,24 @@ export class ExpectedOperatorInitializer implements Descriptionable {
      */
     private generateCIOperator(operator: ExpectedOperator): ExpectedOperator {
         const lowercase = (value: NativeType): string => value?.toString()?.toLowerCase() || '';
-        const description = !operator.description
-            ? null
-            : {
-                  id: `${operator.description.id}:ci`,
-                  parentId: operator.description.id,
-                  dataScope: operator.description.dataScope,
-                  title: `${operator.description.title || ''}:ci`,
-                  description: `It's the ci (case insensitive) extension of the '<ref:${operator.description.id}>' operator`,
-                  examples: null
-              };
 
         return {
             name: operator.name + (!!operator.name ? ':' : '') + 'ci',
             caseInsesitive: true,
-            description,
+            description: () => {
+                const operatorCIDescription = DescriptionHandler.solve(operator.description);
+
+                return !operatorCIDescription
+                    ? null
+                    : {
+                        id: `${operatorCIDescription.id}:ci`,
+                        parentId: operatorCIDescription.id,
+                        dataScope: operatorCIDescription.dataScope,
+                        title: `${operatorCIDescription.title || ''}:ci`,
+                        description: `It's the ci (case insensitive) extension of the '<ref:${operatorCIDescription.id}>' operator`,
+                        examples: null
+                    };
+            },
             check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
                 const result = await operator.check(lowercase(value), lowercase(expectedValue));
                 return {

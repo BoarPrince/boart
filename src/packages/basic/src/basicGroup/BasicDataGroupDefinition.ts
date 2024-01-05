@@ -37,28 +37,32 @@ if (!GroupRowDefinition.contains('basic-data')) {
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new ExpectedDataExecutinoUnit(),
-            validators: null
+            validators: null,
+            dataScope: Symbol('*')
         })
     );
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new ExpectedDataExecutinoUnit('data'),
-            validators: null
+            validators: null,
+            dataScope: Symbol('data')
         })
     );
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new ExpectedDataExecutinoUnit('header'),
-            validators: null
+            validators: null,
+            dataScope: Symbol('header')
         })
     );
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new ExpectedDataExecutinoUnit('transformed'),
-            validators: null
+            validators: null,
+            dataScope: Symbol('transformed')
         })
     );
     //-------------------------------------------------------------------------
@@ -68,28 +72,32 @@ if (!GroupRowDefinition.contains('basic-data')) {
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new ExpectedJsonLogicExecutionUnit(),
-            validators: null
+            validators: null,
+            dataScope: Symbol('*')
         })
     );
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new ExpectedJsonLogicExecutionUnit('data'),
-            validators: null
+            validators: null,
+            dataScope: Symbol('data')
         })
     );
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new ExpectedJsonLogicExecutionUnit('header'),
-            validators: null
+            validators: null,
+            dataScope: Symbol('header')
         })
     );
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new ExpectedJsonLogicExecutionUnit('transformed'),
-            validators: null
+            validators: null,
+            dataScope: Symbol('transformed')
         })
     );
     //-------------------------------------------------------------------------
@@ -123,35 +131,40 @@ if (!GroupRowDefinition.contains('basic-data')) {
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new OutStoreExecutionUnit(),
-            validators: null
+            validators: null,
+            dataScope: Symbol('*')
         })
     );
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new OutStoreExecutionUnit('data'),
-            validators: null
+            validators: null,
+            dataScope: Symbol('data')
         })
     );
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new OutStoreExecutionUnit('header'),
-            validators: null
+            validators: null,
+            dataScope: Symbol('header')
         })
     );
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new OutStoreExecutionUnit('transformed'),
-            validators: null
+            validators: null,
+            dataScope: Symbol('transformed')
         })
     );
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new OutStoreExecutionUnit('payload'),
-            validators: null
+            validators: null,
+            dataScope: Symbol('payload')
         })
     );
 }

@@ -51,7 +51,7 @@ export class TableHandler<
     /**
      *
      */
-    public get description(): Description {
+    public get description(): (() => Description) {
         const executionEngine = this.executionEngineCreator();
         return executionEngine.mainExecutionUnit().description;
     }
@@ -175,7 +175,7 @@ export class TableHandler<
             error = null;
             await new Promise((resolve) => setTimeout(() => resolve(null), pause));
             Runtime.instance.stepRuntime.notifyClear();
-            Runtime.instance.stepRuntime.current.reputations++;
+            Runtime.instance.stepRuntime.currentContext.reputations++;
 
             try {
                 context = await this.processInternal(executionEngine, tableDefinition);
@@ -209,10 +209,14 @@ export class TableHandler<
             this.getRowDefinitions(),
             valueRows
         );
+
         const rows = definitionBinder.bind(this.rowType);
 
         this.executionEngine = executionEngine;
-        this.logger.info(() => `process internal ### ${executionEngine.mainExecutionUnit().description.id} ###`, null, true);
+        this.logger.info(() => {
+          const description = executionEngine.mainExecutionUnit().description();
+          return `process internal ### ${description?.id} ###`;
+        }, null, true);
 
         const validator = new ValidationHandler<TExecutionContext, TRowType>(this.groupValidations);
         validator.preValidate(rows);

@@ -89,9 +89,6 @@ export class ExecutionEngine<
      *
      */
     private async executeByType(rows: ReadonlyArray<TRowType>, type: TableRowType, throwErrors = true): Promise<void> {
-        const rowsByType = rows //
-            .filter((row) => row.data._metaDefinition.type === type)
-            .sort((row1, row2) => row2.data._metaDefinition.priority - row1.data._metaDefinition.priority);
 
         const executer = throwErrors
             ? (row: TRowType) => {
@@ -110,8 +107,12 @@ export class ExecutionEngine<
                   }
               };
 
-        for (const row of rowsByType) {
+          const rowsByType = rows //
+              .filter((row) => row.data._metaDefinition.type === type)
+              .sort((row1, row2) => row2.data._metaDefinition.priority - row1.data._metaDefinition.priority);
+
+          for (const row of rowsByType) {
             await executer(row);
-        }
+          }
     }
 }
