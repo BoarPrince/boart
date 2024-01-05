@@ -1,41 +1,85 @@
 {
   "folders": [
     {
-      "name": "✨ root",
+      "name": "✨ root ######################",
       "path": "../"
     },
     {
-      "name": "📦 @boart/core",
+      "name": "📦 @boart/core ################",
       "path": "../src/packages/core"
     },
     {
-      "name": "📦 @boart/core-impl",
+      "name": "📦 @boart/core-impl ############",
       "path": "../src/packages/core-impl"
     },
     {
-      "name": "📦 @boart/execution",
+      "name": "📦 @boart/execution ############",
       "path": "../src/packages/execution"
     },
     {
-      "name": "📦 @boart/basic",
+      "name": "📦 @boart/basic ###############",
       "path": "../src/packages/basic"
     },
     {
-      "name": "📦 @boart/description",
+      "name": "📦 @boart/description ###########",
       "path": "../src/packages/description"
     },
+    // {
+    //   "name": "📦 @boart/desc",
+    //   "path": "../src/packages/desc"
+    // },
     {
-      "name": "📦 @boart/protocol",
+      "name": "📦 @boart/protocol #############",
       "path": "../src/packages/protocol"
     },
     {
-      "name": "📦 Gauge",
+      "name": "##########  gauge  ##########",
       "path": "../src/gauge"
     }
   ],
   "settings": {
+    "[*.cpt]": {
+      "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
+    },
+    "[*.spec]": {
+      "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
+    },
+    "[html]": {
+      "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[*.html]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "html.suggest.html5": true,
+    "emmet.includeLanguages": {
+      "njk": "html5",
+      "nunjucks": "html5"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[markdown]": {
+      "editor.defaultFormatter": "darkriszty.markdown-table-prettify",
+      "editor.unicodeHighlight.includeComments": true
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "custom-language-properties": {
+      "Markdown.comments.lineComment": "comment *",
+      "markdown.comments.lineComment": "comment *",
+      "gauge.comments.lineComment": "comment *"
+    },
+    "coverage-gutters.showGutterCoverage": true,
+    "coverage-gutters.showLineCoverage": true,
+    "coverage-gutters.showRulerCoverage": false,
+    "editor.formatOnSave": true,
     "files.exclude": {
-      "packages/": true
+      ".rush/": true,
+      "core.*": true
     },
     "search.exclude": {
       "**/coverage": true,
@@ -59,7 +103,10 @@
       "watch": false
     },
     "jest.testExplorer": {
-      "enabled": false
-    }
+      "enabled": false,
+      "autoRun": false
+    },
+    "liveServer.settings.multiRootWorkspaceName": "✨ root ######################",
+    "testing.autoRun.delay": 1000000
   }
 }
