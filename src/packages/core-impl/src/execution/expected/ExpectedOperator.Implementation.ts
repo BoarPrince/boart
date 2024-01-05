@@ -1,4 +1,4 @@
-import { ExpectedOperator, ExpectedOperatorInitializer, ExpectedOperatorResult, NativeType } from '@boart/core';
+import { DescriptionHandler, ExpectedOperator, ExpectedOperatorInitializer, ExpectedOperatorResult, NativeType } from '@boart/core';
 
 import { IntValidator } from '../../validators/IntValidator';
 
@@ -48,7 +48,7 @@ export class ExpectedOperatorImplementation {
     static get equals(): ExpectedOperator {
         return {
             name: 'equals',
-            description: {
+            description: () => ({
                 id: 'expected:equals',
                 description: `* Checks a value for equality
                               * It's default operator, in case of no defined operator`,
@@ -74,7 +74,7 @@ export class ExpectedOperatorImplementation {
                           | **expected:header#status** |200                 |`
                     }
                 ]
-            },
+            }),
             default: true,
             caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => ({
@@ -92,7 +92,7 @@ export class ExpectedOperatorImplementation {
     static get regexp(): ExpectedOperator {
         return {
             name: 'regexp',
-            description: {
+            description: () => ({
               id: 'expected:regexp',
               description: `* Checks the value by using a regexp`,
               examples: [{
@@ -117,7 +117,7 @@ export class ExpectedOperatorImplementation {
                   | payload                |<file:payload.json> |
                   | **expected:header#status** |200             |`
               }]
-            },
+            }),
             caseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const valueAsString = ExpectedOperatorImplementation.valueToString(value);
@@ -140,7 +140,7 @@ export class ExpectedOperatorImplementation {
 
 
 
-            description: {
+            description: () => ({
                 id: 'expected:startsWith',
                 title: null,
                 description: `* Checks a value for equality
@@ -156,11 +156,7 @@ export class ExpectedOperatorImplementation {
                           | **expected:startsWith#detail** |abc                 |`
                     }
                 ]
-            },
-
-
-
-
+            }),
             caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 return {
@@ -176,6 +172,7 @@ export class ExpectedOperatorImplementation {
     static get contains(): ExpectedOperator {
         return {
             name: 'contains',
+            description: () => DescriptionHandler.parse('contains.desc'),
             caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const negativeResult = {

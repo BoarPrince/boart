@@ -64,14 +64,14 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
     /**
      *
      */
-    get description(): Description {
-        return {
+    get description(): () => Description {
+        return () => ({
             id: '149e81d9-d334-44c6-b690-212f5e25bf80',
             dataScope: this.executionType,
             title: this._key || 'store',
             description: null,
             examples: null
-        };
+        });
     }
 
     /**

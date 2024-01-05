@@ -52,12 +52,12 @@ export class PropertySetterExecutionUnit<
     /**
      *
      */
-    readonly description = {
+    readonly description = () => ({
         id: 'propertySetter:unit',
         title: 'Generic Property Setter',
         description: '',
         examples: null
-    };
+    });
 
     /**
      * allow :null to set null

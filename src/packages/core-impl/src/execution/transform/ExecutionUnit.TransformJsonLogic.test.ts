@@ -21,12 +21,12 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
     /**
      *
      */
-    description = {
+    description = () => ({
         id: '7cc3939a-8c7d-468d-aa30-88ecca51c0ba',
         title: 'desc',
         description: '',
         examples: null
-    };
+    });
 
     /**
      *

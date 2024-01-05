@@ -27,14 +27,14 @@ export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext
     /**
      *
      */
-    get description(): Description {
-        return {
+    get description(): () => Description {
+        return () => ({
             id: '67deb7f1-9943-4e58-a335-6e19da22d3eb',
             title: 'expected:jsonLogic',
             dataScope: this.firstLevelType?.toString(),
             description: null,
             examples: null
-        };
+        });
     }
 
     /**

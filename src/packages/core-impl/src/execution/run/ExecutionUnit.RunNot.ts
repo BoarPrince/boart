@@ -10,12 +10,12 @@ import { RunDefinitionParser } from './RunDefinitionParser';
  *
  */
 export class RunNotExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
-    readonly description = {
+    readonly description = () => ({
         id: '74239545-52a2-433f-b735-7e60646181f8',
         title: 'run:not',
         description: null,
         examples: null
-    };
+    });
     readonly parameterType = ParaType.True;
     readonly validators = [new UniqueValidator()];
 

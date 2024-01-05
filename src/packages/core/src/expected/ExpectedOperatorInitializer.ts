@@ -34,12 +34,12 @@ export class ExpectedOperatorInitializer implements Descriptionable {
     /**
      *
      */
-    public description: Description = {
+    public description = () => ({
         id: '07c83a77-e3b1-400f-9966-2b7460f4c86a',
         title: 'expected:operation:initializer',
         description: 'this is the description of Expected Operator Initializer',
         examples: null
-    };
+    });
 
     /**
      *

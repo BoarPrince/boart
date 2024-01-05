@@ -9,12 +9,12 @@ import { RestCallContext } from './RestCallContext';
  *
  */
 export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>> {
-    public description = {
+    public description = () => ({
         id: '8db1cbdc-8c32-4487-a3a8-0fe7777cd1d8',
         title: 'rest call - main',
         description: '',
         examples: null
-    };
+    });
 
     /**
      *

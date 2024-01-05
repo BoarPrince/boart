@@ -8,12 +8,12 @@ import { UniqueValidator } from '../../validators/UniqueValidator';
  *
  */
 export class RunEnvExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
-    readonly description = {
+    readonly description = () => ({
         id: '53d3ce49-f88d-40a2-99d5-06553535136c',
         title: 'run:env',
         description: null,
         examples: null
-    };
+    });
     readonly parameterType = ParaType.False;
     readonly validators = [new UniqueValidator()];
 

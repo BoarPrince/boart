@@ -21,12 +21,12 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
     /**
      *
      */
-    description = {
+    description = () => ({
         id: '6ce17ea6-e616-47fb-bd3e-42d5f56ecd27',
         title: 'desc',
         description: '',
         examples: null
-    };
+    });
 
     /**
      *
@@ -103,7 +103,8 @@ describe('check transform:jpath execution units', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
     });

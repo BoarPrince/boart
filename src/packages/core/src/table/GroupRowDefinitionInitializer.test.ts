@@ -60,12 +60,12 @@ describe('check GroupRowDefinition Initializer', () => {
          */
         @GroupRowDefinitionInitializer('group-xxx', TableRowType.PostProcessing)
         class ExecutionUnitMock implements ExecutionUnit<TestExecutionContext1, RowTypeValue<TestExecutionContext1>> {
-            description = {
+            description = () => ({
                 id: null,
                 title: 'mock-xxx',
                 description: '',
                 examples: null
-            };
+            });
 
             execute = jest.fn();
         }

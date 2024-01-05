@@ -9,12 +9,12 @@ import { RowTypeValue } from '../../RowTypeValue';
  * | transform:reset |       |
  */
 export class TransformResetExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
-    readonly description = {
+    readonly description = () => ({
         id: '612c7ecb-3e3c-422a-a881-ce37d576873c',
         title: 'transform:reset',
         description: null,
         examples: null
-    };
+    });
     readonly parameterType = ParaType.False;
 
     /**

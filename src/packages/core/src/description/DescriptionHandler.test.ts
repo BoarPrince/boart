@@ -35,12 +35,12 @@ beforeEach(() => {
     delete globalThis._descriptionHandlerInstance;
     delete globalThis._expectedOperatorInitializer;
 
-    ExpectedOperatorInitializer.instance.description = {
+    ExpectedOperatorInitializer.instance.description = () => ({
         id: 'eq0',
         title: 'expected:operation:initializer',
         description: 'xxx',
         examples: null
-    };
+    });
 
     basicFullDescription = {
         tableHandlers: [],
@@ -76,13 +76,13 @@ it('save description with expected operator', () => {
 
     ExpectedOperatorInitializer.instance.addOperator({
         name: 'equals',
-        description: {
+        description: () => ({
             id: 'eq1',
             title: 'expected:equals',
             description: `* item 1
                           * item 2`,
             examples: []
-        },
+        }),
         caseInsesitive: true,
         check: (): ExpectedOperatorResult => ({
             result: true
@@ -95,7 +95,7 @@ it('save description with expected operator', () => {
         {
             id: 'eq1',
             title: 'expected:equals',
-            description: '* item 1\n* item 2',
+            description: '* item 1\n                          * item 2',
             examples: []
         }
     ];

@@ -9,12 +9,12 @@ import { SQLQueryContext } from './SQLQueryContext';
  *
  */
 export class SQLQueryExecutionUnit implements ExecutionUnit<SQLQueryContext, RowTypeValue<SQLQueryContext>> {
-    public description = {
+    public description = () => ({
         id: '77bc07bf-4a06-453e-8367-e8009cfa8fe7',
         title: 'rest call - main',
         description: '',
         examples: null
-    };
+    });
 
     /**
      *

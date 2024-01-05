@@ -54,7 +54,7 @@ export class RowDefinition<
     public dataScope?: symbol;
     public defaultValue?: string | number | boolean | ((rows: ReadonlyArray<RowValue>) => string | number | boolean);
     public defaultValueColumn?: symbol;
-    public description?: Description;
+    public description?: () => Description;
     public readonly priority: number = 0;
     public readonly type: TableRowType;
     public readonly executionUnit: ExecutionUnit<TExecutionContext, TRowType>;
@@ -69,7 +69,7 @@ export class RowDefinition<
      */
     constructor(value: RowDefinitionPara<TExecutionContext, TRowType>) {
         this.key = value.key || Symbol(DescriptionHandler.solve(value.executionUnit?.description).title);
-        this.dataScope = value.dataScope || Symbol(value.executionUnit?.description?.dataScope);
+        this.dataScope = value.dataScope;
         this.type = value.type;
         this.description = value.description;
         this.priority = value.priority || value.executionUnit?.priority || this.priority;

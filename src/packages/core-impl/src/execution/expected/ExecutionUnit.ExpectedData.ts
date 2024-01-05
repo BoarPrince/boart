@@ -56,14 +56,14 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     /**
      *
      */
-    get description(): Description {
-        return {
+    get description(): () => Description {
+        return () => ({
             id: 'expected-unit',
             title: 'expected',
             dataScope: this.firstLevelType?.toString(),
             description: null,
             examples: null
-        };
+        });
     }
 
     /**

@@ -9,12 +9,12 @@ import { RabbitListenerContext } from './RabbitListenerContext';
  *
  */
 export class RabbitListenerExecutionUnit implements ExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>> {
-    public description = {
+    public description = () => ({
         id: 'rabbit:listener:unit',
         title: 'listening on rabbit queues/exchanges',
         description: null,
         examples: null
-    };
+    });
 
     /**
      * Binds a queue to the defined exchange and creates an temporary queue

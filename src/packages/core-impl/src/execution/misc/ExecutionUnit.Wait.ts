@@ -15,12 +15,12 @@ import { UniqueValidator } from '../../validators/UniqueValidator';
  * | wait:before:min | 20   |
  */
 export class WaitExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
-    readonly description = {
+    readonly description = () => ({
         id: 'd4900e8f-7247-41e6-aa45-fe8967ad45c9',
         title: 'wait',
         description: null,
         examples: null
-    };
+    });
     readonly parameterType = ParaType.Optional;
     readonly validators = [
         new IntValidator('value'), //

@@ -11,12 +11,12 @@ import { UniqueValidator } from '../../validators/UniqueValidator';
  * | description | this is a test |
  */
 export class DescriptionExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
-    readonly description = {
+    readonly description = () => ({
         id: 'description:unit',
         title: 'description',
         description: null,
         examples: null
-    };
+    });
     readonly priority = 100;
     readonly parameterType = ParaType.False;
     readonly validators = [new UniqueValidator()];

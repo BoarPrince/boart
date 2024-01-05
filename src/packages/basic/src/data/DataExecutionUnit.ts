@@ -9,7 +9,7 @@ export class DataExecutionUnit implements ExecutionUnit<DataContext, RowTypeValu
     /**
      *
      */
-    public description = {
+    public description = () => ({
         id: 'data:unit',
         title: 'data',
         description: '',
@@ -42,7 +42,7 @@ export class DataExecutionUnit implements ExecutionUnit<DataContext, RowTypeValu
                 | store  | out       |`
             }
         ]
-    };
+    });
 
     /**
      *

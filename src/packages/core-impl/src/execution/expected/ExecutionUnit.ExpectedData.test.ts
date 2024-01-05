@@ -28,12 +28,12 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
     /**
      *
      */
-    description = {
+    description = () => ({
         id: 'b3edad18-8281-4cda-9977-84f27036bbf7',
         title: 'desc',
         description: '',
         examples: null
-    };
+    });
 
     /**
      *
@@ -120,14 +120,16 @@ describe('check expected:data execution units', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut1,
-                validators: null
+                validators: null,
+                dataScope: Symbol('data')
             })
         );
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut2,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
     });
@@ -290,7 +292,8 @@ describe('check expected:header execution units', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
     });
@@ -388,7 +391,8 @@ describe('check expected:transformed execution units', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
     });
@@ -455,7 +459,8 @@ describe('check expected:data execution units with operators', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
 
@@ -481,7 +486,8 @@ describe('check expected:data execution units with operators', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
         ExpectedOperatorInitializer.instance.addOperator(new TestOperator('op2'));
@@ -508,7 +514,8 @@ describe('check expected:data execution units with operators', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
         const operator = new TestOperator('op3');
@@ -577,7 +584,8 @@ describe('check expected:data execution units with operators', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
 
@@ -612,7 +620,8 @@ describe('check expected:data execution units with operators', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
 
@@ -673,7 +682,8 @@ describe('check expected:data execution units with operators', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
 
@@ -722,7 +732,8 @@ describe('check expected:data execution units with operators', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
 
@@ -807,7 +818,8 @@ describe('check expected:data ci operator', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
 
@@ -843,7 +855,8 @@ describe('check expected:data ci operator', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
 
@@ -874,7 +887,8 @@ describe('check expected:data ci operator', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
 
@@ -907,7 +921,8 @@ describe('check expected:data ci operator', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null
+                validators: null,
+                dataScope: Symbol('*')
             })
         );
 

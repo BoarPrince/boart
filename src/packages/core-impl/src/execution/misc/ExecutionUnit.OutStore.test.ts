@@ -28,12 +28,12 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
     /**
      *
      */
-    description = {
+    description = () => ({
         id: '7a421d98-e54b-457c-bf2e-696a946d9241',
         title: 'mock',
         description: '',
         examples: null
-    };
+    });
 
     /**
      *
@@ -121,21 +121,24 @@ beforeEach(() => {
         new RowDefinition({
             type: TableRowType.PostProcessing,
             executionUnit: sut,
-            validators: null
+            validators: null,
+            dataScope: Symbol('*')
         })
     );
     tableHandler.addRowDefinition(
         new RowDefinition({
             type: TableRowType.PostProcessing,
             executionUnit: sutData,
-            validators: null
+            validators: null,
+            dataScope: Symbol('data')
         })
     );
     tableHandler.addRowDefinition(
         new RowDefinition({
             type: TableRowType.PostProcessing,
             executionUnit: sutHeader,
-            validators: null
+            validators: null,
+            dataScope: Symbol('header')
         })
     );
     tableHandler.addRowDefinition(

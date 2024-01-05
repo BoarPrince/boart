@@ -8,12 +8,12 @@ import { TestDescriptionContext } from './TestDescriptionContext';
  *
  */
 export class TestDescriptionExecutionUnit implements ExecutionUnit<TestDescriptionContext, RowTypeValue<TestDescriptionContext>> {
-    public description = {
+    public description = () => ({
         id: 'description:unit',
         title: 'test description',
         description: '',
         examples: null
-    };
+    });
 
     /**
      *
