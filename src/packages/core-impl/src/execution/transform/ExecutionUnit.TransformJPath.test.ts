@@ -103,8 +103,7 @@ describe('check transform:jpath execution units', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
     });

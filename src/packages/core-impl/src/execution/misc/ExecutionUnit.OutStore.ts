@@ -15,6 +15,7 @@ import { DataContext, DataExecutionContext, DataPreExecutionContext } from '../.
 import { RowTypeValue } from '../../RowTypeValue';
 import { QualifierValidator } from '../../validators/QualifierValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
+import { DataScope } from '@boart/core/lib/parser/ast/DataScope';
 
 /**
  * |action     |value |
@@ -52,14 +53,6 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
         new ValueRequiredValidator('value', 'name is missing')
     ];
 
-    /**
-     *
-     */
-    constructor();
-    constructor(executionType: 'payload');
-    constructor(executionType: keyof StoreContext['execution']);
-    constructor(executionType: keyof StoreContext['execution'], executionKey: StoreContext['execution'][keyof StoreContext['execution']]);
-    constructor(private executionType?: string, private executionKey?: string) {}
 
     /**
      *
@@ -67,7 +60,6 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
     get description(): () => Description {
         return () => ({
             id: '149e81d9-d334-44c6-b690-212f5e25bf80',
-            dataScope: this.executionType,
             title: this._key || 'store',
             description: null,
             examples: null
@@ -84,35 +76,35 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
     /**
      *
      */
-    private getDataContent(context: StoreContext): DataContent {
+    private getDataContent(context: StoreContext, dataScope: DataScope): DataContent {
         const nonNullValue = (value: DataContent, nullValue?: DataContent) =>
             DataContentHelper.isNullOrUndefined(value) && nullValue !== undefined ? nullValue : value;
 
-        if (this.executionType === 'payload') {
+        const scope = dataScope?.value;
+        if (scope === 'payload') {
             return context.preExecution.payload;
         }
 
         const executionContext = context.execution || ({} as DataExecutionContext);
-        const preExecutionContext = context.preExecution || ({} as DataPreExecutionContext);
 
-        if (this.executionType) {
-            return !this.executionKey
-                ? executionContext[this.executionType] //
-                : executionContext[this.executionType][this.executionKey];
+        if (scope) {
+          return executionContext[scope];
+        } else {
+          const preExecutionContext = context.preExecution || ({} as DataPreExecutionContext);
+          return (
+              nonNullValue(executionContext.transformed, null) ||
+              nonNullValue(executionContext.data, null) ||
+              nonNullValue(preExecutionContext.payload)
+        );
         }
 
-        return (
-            nonNullValue(executionContext.transformed, null) ||
-            nonNullValue(executionContext.data, null) ||
-            nonNullValue(preExecutionContext.payload)
-        );
     }
 
     /**
      *
      */
     execute(context: StoreContext, row: RowTypeValue<DataContext>): void {
-        const value = this.getDataContent(context);
+        const value = this.getDataContent(context, row.ast.datascope);
         const data = SelectorExtractor.getValueBySelector(row.ast.selectors, value);
 
         const store = StoreWrapper.getWrapperByScope(row.ast.scope?.value);

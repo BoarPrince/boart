@@ -196,27 +196,8 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
         tableHandler.addRowDefinition(
             new RowDefinition({
                 key: Symbol('filter:expected'),
-                dataScope: Symbol('*'),
                 type: TableRowType.InProcessing,
-                executionUnit: new ExpectedDataExecutinoUnit('filter', 'data'),
-                validators: null
-            })
-        );
-        tableHandler.addRowDefinition(
-            new RowDefinition({
-                key: Symbol('filter:expected'),
-                dataScope: Symbol('data'),
-                type: TableRowType.InProcessing,
-                executionUnit: new ExpectedDataExecutinoUnit('filter', 'data'),
-                validators: null
-            })
-        );
-        tableHandler.addRowDefinition(
-            new RowDefinition({
-                key: Symbol('filter:expected'),
-                dataScope: Symbol('header'),
-                type: TableRowType.InProcessing,
-                executionUnit: new ExpectedDataExecutinoUnit('filter', 'header'),
+                executionUnit: new ExpectedDataExecutinoUnit(),
                 validators: null
             })
         );
@@ -227,27 +208,8 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
         tableHandler.addRowDefinition(
             new RowDefinition({
                 key: Symbol('filter:jsonLogic'),
-                dataScope: Symbol('*'),
                 type: TableRowType.InProcessing,
-                executionUnit: new ExpectedJsonLogicExecutionUnit('filter', 'data'),
-                validators: null
-            })
-        );
-        tableHandler.addRowDefinition(
-            new RowDefinition({
-                key: Symbol('filter:jsonLogic'),
-                dataScope: Symbol('data'),
-                type: TableRowType.InProcessing,
-                executionUnit: new ExpectedJsonLogicExecutionUnit('filter', 'data'),
-                validators: null
-            })
-        );
-        tableHandler.addRowDefinition(
-            new RowDefinition({
-                key: Symbol('filter:jsonLogic'),
-                dataScope: Symbol('header'),
-                type: TableRowType.InProcessing,
-                executionUnit: new ExpectedJsonLogicExecutionUnit('filter', 'header'),
+                executionUnit: new ExpectedJsonLogicExecutionUnit(),
                 validators: null
             })
         );

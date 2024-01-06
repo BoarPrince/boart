@@ -53,9 +53,6 @@ type ExtendedDataContext = ExecutionContext<
     DataPreExecutionContext,
     DataExecutionContext & {
         extendedProperty: string;
-        extendedPropertyWithKey: {
-            key: string;
-        };
     }
 >;
 
@@ -106,10 +103,6 @@ class ExecutionEngineMock<MockContext extends DataContext> extends ExecutionEngi
  */
 let tableHandler: TableHandler<any, any>;
 const sut = new OutStoreExecutionUnit();
-const sutData = new OutStoreExecutionUnit('data');
-const sutHeader = new OutStoreExecutionUnit('header');
-const sutTransformed = new OutStoreExecutionUnit('transformed');
-const sutPayload = new OutStoreExecutionUnit('payload');
 const variableParser = new VariableParser();
 
 /**
@@ -121,37 +114,6 @@ beforeEach(() => {
         new RowDefinition({
             type: TableRowType.PostProcessing,
             executionUnit: sut,
-            validators: null,
-            dataScope: Symbol('*')
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sutData,
-            validators: null,
-            dataScope: Symbol('data')
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sutHeader,
-            validators: null,
-            dataScope: Symbol('header')
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sutTransformed,
-            validators: null
-        })
-    );
-    tableHandler.addRowDefinition(
-        new RowDefinition({
-            type: TableRowType.PostProcessing,
-            executionUnit: sutPayload,
             validators: null
         })
     );
@@ -367,16 +329,8 @@ describe('check extended context', () => {
     it('use other property with extended data context', async () => {
         (tableHandler.getExecutionEngine().context as ExtendedDataContext).execution.extendedProperty = 'xxx';
 
-        const sut = new OutStoreExecutionUnit<ExtendedDataContext>('extendedProperty');
+        const sut = new OutStoreExecutionUnit<ExtendedDataContext>();
         sut.key = 'store';
-
-        tableHandler.addRowDefinition(
-            new RowDefinition({
-                type: TableRowType.PostProcessing,
-                executionUnit: sut,
-                validators: null
-            })
-        );
 
         await tableHandler.process({
             headers: {

@@ -109,8 +109,7 @@ beforeEach(() => {
 describe('check expected:data execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
 
-    const sut1 = new ExpectedDataExecutinoUnit<DataContext>('data');
-    const sut2 = new ExpectedDataExecutinoUnit();
+    const sut1 = new ExpectedDataExecutinoUnit();
 
     /**
      *
@@ -121,15 +120,6 @@ describe('check expected:data execution units', () => {
                 type: TableRowType.PostProcessing,
                 executionUnit: sut1,
                 validators: null,
-                dataScope: Symbol('data')
-            })
-        );
-        tableHandler.addRowDefinition(
-            new RowDefinition({
-                type: TableRowType.PostProcessing,
-                executionUnit: sut2,
-                validators: null,
-                dataScope: Symbol('*')
             })
         );
     });
@@ -282,7 +272,7 @@ describe('check expected:data execution units', () => {
 describe('check expected:header execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
 
-    const sut = new ExpectedDataExecutinoUnit<DataContext>('header');
+    const sut = new ExpectedDataExecutinoUnit<DataContext>();
 
     /**
      *
@@ -292,8 +282,7 @@ describe('check expected:header execution units', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
     });
@@ -381,7 +370,7 @@ describe('check expected:header execution units', () => {
 describe('check expected:transformed execution units', () => {
     const tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
 
-    const sut = new ExpectedDataExecutinoUnit<DataContext>('transformed');
+    const sut = new ExpectedDataExecutinoUnit<DataContext>();
 
     /**
      *
@@ -391,8 +380,7 @@ describe('check expected:transformed execution units', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
     });
@@ -453,14 +441,13 @@ describe('check expected:data execution units with operators', () => {
      */
     it('add operator before', async () => {
         ExpectedOperatorInitializer.instance.addOperator(new TestOperator('op1'));
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>();
 
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
 
@@ -480,14 +467,13 @@ describe('check expected:data execution units with operators', () => {
      *
      */
     it('add operator after', async () => {
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit();
 
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
         ExpectedOperatorInitializer.instance.addOperator(new TestOperator('op2'));
@@ -508,14 +494,13 @@ describe('check expected:data execution units with operators', () => {
      *
      */
     it('add operator and use negate', async () => {
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit();
 
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
         const operator = new TestOperator('op3');
@@ -538,13 +523,6 @@ describe('check expected:data execution units with operators', () => {
      *
      */
     it('use operator without data, header, or specification', async () => {
-        tableHandler.addRowDefinition(
-            new RowDefinition({
-                type: TableRowType.PostProcessing,
-                executionUnit: new ExpectedDataExecutinoUnit('data'),
-                validators: null
-            })
-        );
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,
@@ -576,7 +554,7 @@ describe('check expected:data execution units with operators', () => {
 
         const operator = new TestOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit();
 
         const dataToCheck = new NativeContent(1);
         intialContext.data = dataToCheck;
@@ -584,8 +562,7 @@ describe('check expected:data execution units with operators', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
 
@@ -612,7 +589,7 @@ describe('check expected:data execution units with operators', () => {
     it('check ObjectContent value parameter', async () => {
         const operator = new TestOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>();
 
         const dataToCheck = new ObjectContent({ a: 'b' });
         intialContext.data = dataToCheck;
@@ -620,8 +597,7 @@ describe('check expected:data execution units with operators', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
 
@@ -675,15 +651,14 @@ describe('check expected:data execution units with operators', () => {
         });
 
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>();
 
         intialContext.data = new NullContent();
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
 
@@ -725,15 +700,14 @@ describe('check expected:data execution units with operators', () => {
         };
 
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>();
 
         intialContext.data = new NullContent();
         tableHandler.addRowDefinition(
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
 
@@ -810,7 +784,7 @@ describe('check expected:data ci operator', () => {
     it('with ci the string values are transformed to lowercase values', async () => {
         const operator = new TestOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>();
 
         const dataToCheck = new TextContent('UPPER-CASE');
         intialContext.data = dataToCheck;
@@ -818,8 +792,7 @@ describe('check expected:data ci operator', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
 
@@ -847,7 +820,7 @@ describe('check expected:data ci operator', () => {
         const operator = new TestDefaultOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
 
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>();
 
         const dataToCheck = new TextContent('upper-case');
         intialContext.data = dataToCheck;
@@ -855,8 +828,7 @@ describe('check expected:data ci operator', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
 
@@ -879,7 +851,7 @@ describe('check expected:data ci operator', () => {
         const operator = new TestDefaultOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
 
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>();
 
         const dataToCheck = new TextContent('upper-case');
         intialContext.data = dataToCheck;
@@ -887,8 +859,7 @@ describe('check expected:data ci operator', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
 
@@ -913,7 +884,7 @@ describe('check expected:data ci operator', () => {
         const operator = new TestDefaultOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
 
-        const sut = new ExpectedDataExecutinoUnit<DataContext>('data');
+        const sut = new ExpectedDataExecutinoUnit<DataContext>();
 
         const dataToCheck = new TextContent('upper-cas');
         intialContext.data = dataToCheck;
@@ -921,8 +892,7 @@ describe('check expected:data ci operator', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
-                validators: null,
-                dataScope: Symbol('*')
+                validators: null
             })
         );
 

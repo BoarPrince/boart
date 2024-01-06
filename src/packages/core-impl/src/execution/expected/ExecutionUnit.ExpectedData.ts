@@ -14,6 +14,7 @@ import {
 
 import { RowTypeValue } from '../../RowTypeValue';
 import { QualifierValidator } from '../../validators/QualifierValidator';
+import { DataScope } from '@boart/core/lib/parser/ast/DataScope';
 
 /**
  * | action            | value |
@@ -31,7 +32,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     /**
      *
      */
-    constructor(private firstLevelType?: keyof DataContext['execution'], private secondLevelType?: string) {
+    constructor() {
         ExpectedOperatorInitializer.instance.operators$.subscribe((operator) => this.operators.push(operator));
     }
 
@@ -60,7 +61,6 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
         return () => ({
             id: 'expected-unit',
             title: 'expected',
-            dataScope: this.firstLevelType?.toString(),
             description: null,
             examples: null
         });
@@ -69,13 +69,8 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     /**
      *
      */
-    private getDataContent(context: DataContext): DataContent {
-        const firstLevelType = this.firstLevelType?.toString() || 'data';
-        const secondLevelType = this.secondLevelType?.toString();
-
-        return !secondLevelType //
-            ? context.execution[firstLevelType]
-            : context.execution[firstLevelType][secondLevelType];
+    private getDataContent(context: DataContext, dataScope: DataScope): DataContent {
+        return context.execution[dataScope?.value ?? 'data']
     }
 
     /**
@@ -83,7 +78,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
      */
     async execute(context: DataContext, row: RowTypeValue<DataContext>): Promise<void> {
         const expected = row.value;
-        const baseContent = DataContentHelper.create(this.getDataContent(context));
+        const baseContent = DataContentHelper.create(this.getDataContent(context, row.ast.datascope));
 
         const data = !row.ast.selectors?.length //
             ? baseContent
