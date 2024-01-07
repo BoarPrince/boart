@@ -15,6 +15,7 @@ import {
 import { RowTypeValue } from '../../RowTypeValue';
 import { QualifierValidator } from '../../validators/QualifierValidator';
 import { DataScope } from '@boart/core/lib/parser/ast/DataScope';
+import { DataScopeValidator } from '../../validators/DataScopeValidator';
 
 /**
  * | action            | value |
@@ -41,6 +42,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
      */
     get validators(): ReadonlyArray<RowValidator> {
         return [
+            new DataScopeValidator(['data', 'header', 'transformed', '']),
             {
                 validate: (row) => {
                     new QualifierValidator(

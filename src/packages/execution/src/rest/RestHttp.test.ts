@@ -134,7 +134,7 @@ describe('check rest http', () => {
             const sut = new RestHttp('http://url');
             const bearer = await sut.bearer('', '', '', '', '', '');
 
-            expect(bearer.decoded).toBe('-- decoding not possible --');
+            expect(bearer.decoded).toBe('xxxx');
         });
 
         /**

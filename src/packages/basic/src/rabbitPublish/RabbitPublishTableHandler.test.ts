@@ -682,7 +682,7 @@ describe('error handling', () => {
         );
 
         await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
-            "Only one of the keys 'queue, exchange' must exists, but 'queue, exchange' exists"
+            "Only one of the keys 'queue or exchange' must exists, but 'queue and exchange' exists"
         );
     });
 
@@ -699,7 +699,7 @@ describe('error handling', () => {
         );
 
         await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
-            "key 'queue' depends on key: 'type -> value:queue', but it does not exist!"
+            "key 'queue' depends on key: 'type -> action:queue', but it does not exist!"
         );
     });
 
@@ -729,7 +729,7 @@ describe('error handling', () => {
         );
 
         await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
-            "key 'routing' depends on key: 'type -> value:exchange', but it does not exist!"
+            "key 'routing' depends on key: 'type -> action:exchange', but it does not exist!"
         );
     });
 

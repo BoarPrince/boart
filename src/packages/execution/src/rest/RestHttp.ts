@@ -157,7 +157,7 @@ export class RestHttp {
                 try {
                     return JSON.stringify(jwt_decode(accessToken));
                 } catch (error) {
-                    return '-- decoding not possible --';
+                    return accessToken;
                 }
             }
         };

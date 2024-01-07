@@ -18,6 +18,7 @@ import { DataContext, DataExecutionContext, DataPreExecutionContext } from '../.
 import { RowTypeValue } from '../../RowTypeValue';
 
 import { OutStoreExecutionUnit } from './ExecutionUnit.OutStore';
+import { DataScopeValidator } from '../../validators/DataScopeValidator';
 
 /**
  *
@@ -329,8 +330,18 @@ describe('check extended context', () => {
     it('use other property with extended data context', async () => {
         (tableHandler.getExecutionEngine().context as ExtendedDataContext).execution.extendedProperty = 'xxx';
 
-        const sut = new OutStoreExecutionUnit<ExtendedDataContext>();
-        sut.key = 'store';
+          const sut = new OutStoreExecutionUnit();
+          sut.key = 'store-new';
+          (sut as any).validators = [new DataScopeValidator(['extendedProperty'])];
+
+          tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: null
+            })
+          );
+
 
         await tableHandler.process({
             headers: {
@@ -338,7 +349,7 @@ describe('check extended context', () => {
             },
             rows: [
                 {
-                    cells: [`store::extendedProperty`, `var`]
+                    cells: [`store-new::extendedProperty`, `var`]
                 }
             ]
         });
@@ -350,35 +361,32 @@ describe('check extended context', () => {
     /**
      *
      */
-    it('use other property with extended data context and key', async () => {
-        (tableHandler.getExecutionEngine().context as ExtendedDataContext).execution.extendedPropertyWithKey = { key: 'xxx' };
+    it('check wrong dataScope', async () => {
 
-        const sut = new OutStoreExecutionUnit<ExtendedDataContext>('extendedPropertyWithKey', 'key');
-        sut.key = 'store';
+      const sut = new OutStoreExecutionUnit();
+      sut.key = 'store-new';
 
-        tableHandler.addRowDefinition(
-            new RowDefinition({
-                type: TableRowType.PostProcessing,
-                executionUnit: sut,
-                validators: null
-            })
-        );
+      tableHandler.addRowDefinition(
+          new RowDefinition({
+              type: TableRowType.PostProcessing,
+              executionUnit: sut,
+              validators: [new DataScopeValidator(['data', 'header', 'transformed', ''])]
+          })
+      );
 
-        await tableHandler.process({
-            headers: {
-                cells: ['action', 'value']
-            },
-            rows: [
-                {
-                    cells: [`store::extendedPropertyWithKey`, `var`]
-                }
-            ]
-        });
-
-        const ast = variableParser.parseAction('store:var');
-        expect(Store.instance.testStore.get(ast).toString()).toBe('xxx');
+     await expect(() => tableHandler.process({
+          headers: {
+              cells: ['action', 'value']
+          },
+          rows: [
+              {
+                  cells: [`store-new::wrongKey`, `var`]
+              }
+          ]
+      })).rejects.toThrow(`Datascope 'wrongKey' of action 'store-new' is not defined. Allowed is`);
     });
-});
+  });
+
 
 /**
  *

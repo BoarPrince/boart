@@ -16,6 +16,7 @@ import { RowTypeValue } from '../../RowTypeValue';
 import { QualifierValidator } from '../../validators/QualifierValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
 import { DataScope } from '@boart/core/lib/parser/ast/DataScope';
+import { DataScopeValidator } from '../../validators/DataScopeValidator';
 
 /**
  * |action     |value |
@@ -49,10 +50,10 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
     readonly parameterType = ParaType.Optional;
     readonly scopedType = ScopedType.Optional;
     readonly validators = [
+        new DataScopeValidator(['data', 'header', 'transformed', 'payload', '']),
         new QualifierValidator([{ qualifier: null, paras: null }]),
         new ValueRequiredValidator('value', 'name is missing')
     ];
-
 
     /**
      *

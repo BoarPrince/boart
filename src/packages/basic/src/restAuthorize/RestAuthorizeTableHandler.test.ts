@@ -325,7 +325,7 @@ it('reporting', async () => {
                 type: 'text'
             },
             'Rest authorize (data - token)': {
-                data: '-- decoding not possible --',
+                data: 'T.O.K.E.N',
                 description: 'Rest authorize (data - token)',
                 type: 'json'
             },

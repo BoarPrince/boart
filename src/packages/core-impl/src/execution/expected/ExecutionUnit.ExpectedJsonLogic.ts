@@ -4,6 +4,7 @@ import { RowTypeValue } from '../../RowTypeValue';
 import { JsonLogic } from '../../jsonlogic/JsonLogic';
 import { QualifierValidator } from '../../validators/QualifierValidator';
 import { DataScope } from '@boart/core/lib/parser/ast/DataScope';
+import { DataScopeValidator } from '../../validators/DataScopeValidator';
 
 /**
  * | action                   | value |
@@ -15,7 +16,10 @@ export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext
     implements ExecutionUnit<DataContext, RowTypeValue<DataContext>>
 {
     readonly parameterType = ParaType.True;
-    readonly validators = [new QualifierValidator([{ qualifier: 'jsonLogic', paras: ['true', 'false'] }])];
+    readonly validators = [
+        new DataScopeValidator(['data', 'header', 'transformed', '']),
+        new QualifierValidator([{ qualifier: 'jsonLogic', paras: ['true', 'false'] }])
+    ];
 
     /**
      *

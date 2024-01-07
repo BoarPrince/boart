@@ -34,7 +34,7 @@ export class DependsOnValueValidator implements RowValidator {
         if (count === 0) {
             throw Error(
                 `key '${row._metaDefinition.key.description || ''}' depends on key: ${this.dependOn
-                    .map((d) => `'${d.key} -> value:${d.value}'`)
+                    .map((d) => `'${d.key} -> action:${d.value}'`)
                     .join(' or ')}, but it does not exist!`
             );
         }

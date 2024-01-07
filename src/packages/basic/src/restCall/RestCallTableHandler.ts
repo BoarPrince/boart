@@ -105,8 +105,9 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'header'),
                 validators: null
             })
-        );
+            );
 
+        tableHandler.removeRowDefinition('payload');
         tableHandler.addRowDefinition(
             new RowDefinition({
                 key: Symbol('payload'),

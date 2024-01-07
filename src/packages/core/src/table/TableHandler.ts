@@ -63,7 +63,7 @@ export class TableHandler<
         const key = definition.key.description || '';
 
         if (this.rowDefinitions.has(key)) {
-          throw Error(`key/action: '${key}' is already exists`);
+          throw Error(`key/action: '${key}' does already exist`);
         }
 
         this.rowDefinitions.set(key, definition);
@@ -76,7 +76,7 @@ export class TableHandler<
      */
     removeRowDefinition(key: string): this {
         if (!this.rowDefinitions.has(key)) {
-            throw Error(`key: '{key}' cannot removed, because it does not exists`);
+            throw Error(`key: '${key}' cannot removed, because it does not exists`);
         }
         this.rowDefinitions.delete(key);
         return this;

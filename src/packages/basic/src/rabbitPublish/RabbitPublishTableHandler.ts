@@ -226,6 +226,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             })
         );
 
+        tableHandler.removeRowDefinition('payload');
         tableHandler.addRowDefinition(
             new RowDefinition({
                 key: Symbol('payload'),

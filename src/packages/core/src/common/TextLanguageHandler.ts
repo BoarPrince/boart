@@ -134,12 +134,11 @@ export class TextLanguageHandler {
     private readSettings(filename: string): TextMappingSettings {
         try {
             console.info(`language handler: load env file ${filename}`);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
             const fileData: string = fs.readFileSync(filename, 'utf8');
             const settings = JSON.parse(fileData) as EnvironmentSettings;
             return settings.text_mapping;
         } catch (error) {
-            console.error(error);
+            // console.error(error);
             throw Error(`can't read language settings from env [${filename}]: ${JSON.stringify(error)}`);
         }
     }
