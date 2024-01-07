@@ -40,8 +40,8 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
 
         this.timer = new Timer();
         this.currentContext = {
-            ...context,
             ...generatedContext,
+            ...context,
             startTime: this.timer.startTime,
             id: randomUUID()
         };
