@@ -5,6 +5,6 @@ import { DescriptionCodeExample } from "./DescriptionCodeExample";
  */
 export interface DescriptionExample {
     readonly title: string;
-    code?: ReadonlyArray<DescriptionCodeExample>;
+    codes?: ReadonlyArray<DescriptionCodeExample>;
     example: string;
 }

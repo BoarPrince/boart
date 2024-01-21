@@ -148,7 +148,6 @@ export class ExpectedOperatorInitializer implements Descriptionable {
                   : {
                       id: `${operatorNotDescription.id}:not`,
                       parentId: operatorNotDescription.id,
-                      dataScope: operatorNotDescription.dataScope,
                       title: `${operatorNotDescription.title || ''}:not`,
                       description: `It's the not extension of the '<ref:${operatorNotDescription.id}>' operator`,
                       examples: null
@@ -181,7 +180,6 @@ export class ExpectedOperatorInitializer implements Descriptionable {
                     : {
                         id: `${operatorCIDescription.id}:ci`,
                         parentId: operatorCIDescription.id,
-                        dataScope: operatorCIDescription.dataScope,
                         title: `${operatorCIDescription.title || ''}:ci`,
                         description: `It's the ci (case insensitive) extension of the '<ref:${operatorCIDescription.id}>' operator`,
                         examples: null

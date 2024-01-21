@@ -127,7 +127,7 @@ export class DescriptionHandler {
     /**
      *
      */
-    public static parse (fileName: string): Description {
-        return new DescriptionFileReader().parseFile(fileName)
+    public static readDescription (fileName: string, pathName?: string): Description {
+        return new DescriptionFileReader().readDescription(fileName, pathName)
     }
 }

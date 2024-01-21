@@ -9,9 +9,6 @@ import { FullDescription } from './FullDescription';
 /**
  *
  */
-/**
- *
- */
 jest.mock('fs');
 jest.spyOn(fs, 'readFileSync').mockImplementation(() =>
     JSON.stringify({
