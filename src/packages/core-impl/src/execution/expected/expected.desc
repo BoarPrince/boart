@@ -1,0 +1,96 @@
+# expected
+
+------------------------------------------------------------------------
+
+## expected:equals
+
+------------------------------------------------------------------------
+
+* Checks a value for equality
+
+* It's default operator, in case of no defined operator
+
+### example: Checks the response status of an rest call
+
+* Rest call
+
+  | action                            | value               |
+  |-----------------------------------|---------------------|
+  | method:post                       | /rest-url           |
+  | payload                           | <file:payload.json> |
+  | **expected:header:equals#status** | 200                 |
+
+### example: Usage as default operator
+
+* Rest call
+
+    | action                     | value               |
+    |----------------------------|---------------------|
+    | method:post                | /rest-url           |
+    | payload                    | <file:payload.json> |
+    | **expected:header#status** | 200                 |
+
+------------------------------------------------------------------------
+
+## expected:regexp
+
+------------------------------------------------------------------------
+
+* Checks the value by using a regexp
+
+### example: test
+
+* Rest call
+
+    | action                     | value               |
+    |----------------------------|---------------------|
+    | method:post                | /rest-url           |
+    | payload                    | <file:payload.json> |
+    | **expected:header#status** | 200                 |
+
+#### code: Response Body
+
+{
+  "a": 5,
+  "b": {
+    "a": false
+  }
+}
+
+------------------------------------------------------------------------
+
+## expected:startsWith
+
+------------------------------------------------------------------------
+
+* Checks a value for equality
+
+* It's default operator, in case of no defined operator
+
+### example: Usage as default operator
+
+* Rest call
+
+    | action                         | value     |
+    |--------------------------------|-----------|
+    | method:get                     | /rest-url |
+    | **expected:startsWith#detail** | abc       |
+
+------------------------------------------------------------------------
+
+## expected:contains
+
+------------------------------------------------------------------------
+
+* Checks a value for equality
+
+* It's default operator, in case of no defined operator
+
+### example: Usage as default operator
+
+* Rest call
+
+    | action                         | value     |
+    |--------------------------------|-----------|
+    | method:get                     | /rest-url |
+    | **expected:startsWith#detail** | abc       |

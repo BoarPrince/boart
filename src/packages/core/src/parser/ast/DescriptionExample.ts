@@ -6,7 +6,7 @@ import { Location } from "./Location";
  */
 export interface DescriptionExample {
     title: string;
-    codes?: ReadonlyArray<DescriptionCodeExample>;
-    text: ReadonlyArray<string>;
+    codes?: Array<DescriptionCodeExample>;
+    text: Array<string>;
     location: Location;
 }

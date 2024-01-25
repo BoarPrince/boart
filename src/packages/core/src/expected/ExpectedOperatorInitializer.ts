@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 
 import { ArraySubject } from '../common/ArraySubject';
 import { NativeType } from '../data/NativeType';
-import { Description } from '../description/Description';
 import { Descriptionable } from '../description/Descriptionable';
 
 import { ExpectedOperator, ExpectedOperatorResult } from './ExpectedOperator';
@@ -174,7 +173,6 @@ export class ExpectedOperatorInitializer implements Descriptionable {
             caseInsesitive: true,
             description: () => {
                 const operatorCIDescription = DescriptionHandler.solve(operator.description);
-
                 return !operatorCIDescription
                     ? null
                     : {

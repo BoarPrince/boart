@@ -4,7 +4,7 @@ export interface Description {
     readonly id: string;
     readonly parentId?: string;
     title?: string;
-    readonly dataScope?: string;
+    readonly dataScopes?: ReadonlyArray<string>;
     readonly description: string;
     readonly examples: ReadonlyArray<DescriptionExample>;
 }

@@ -1,12 +1,26 @@
-// insert tr to example tbody for horizontal dash line
-const nodeList = document.querySelectorAll('.example tbody');
+/**
+ *
+ */
+function scrollNavSubMenu() {
+    // initial scroll to the top when starting or refreshin
+    window.scroll(0, 0);
 
-for (const tbodyNode of nodeList) {
-    const tdNodes = tbodyNode.querySelectorAll('tr:first-child td');
-    const trNode = document.createElement('tr');
-    tbodyNode.prepend(trNode);
+    // get intitial values, based on scroll(0, 0)
+    const navSubMenuElement = document.getElementById('nav-sub-menu');
+    const rect = navSubMenuElement.getBoundingClientRect();
+    const origTop = rect.top;
+    const origHeight = navSubMenuElement.clientHeight;
+    const origScrollHeight = navSubMenuElement.scrollHeight;
 
-    for (const n of tdNodes) {
-        trNode.append(document.createElement('td'));
-    }
+    document.onscroll = () => {
+        const scrollY = window.scrollY ?? 0;
+        if (origHeight + scrollY > origScrollHeight) {
+            // do nothing, if the nav menu is at the bottom
+            return;
+        }
+
+        navSubMenuElement.style.top = origTop - scrollY + 'px';
+    };
 }
+
+scrollNavSubMenu();

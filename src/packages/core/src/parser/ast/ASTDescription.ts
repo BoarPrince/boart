@@ -8,9 +8,9 @@ import { Location } from "./Location";
 export interface ASTDescription {
   id: string;
   // readonly parentId?: string;
-  title?: string;
-  desc: ReadonlyArray<string>;
-  examples: ReadonlyArray<DescriptionExample>;
+  title: string;
+  desc: Array<string>;
+  examples: Array<DescriptionExample>;
   location: Location;
 }
 

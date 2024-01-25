@@ -24,7 +24,6 @@
     "parser:generate-value": "peggy src/parser/peggy/boart-parser.pegjs --output src/parser/peggy/ParserValue.js --start-rule START_VALUE",
     "parser:generate-variable": "peggy src/parser/peggy/boart-parser.pegjs --output src/parser/peggy/ParserVariable.js --start-rule START_VARIABLE",
     "parser:generate-action": "peggy src/parser/peggy/boart-parser.pegjs --output src/parser/peggy/ParserAction.js --start-rule START_ACTION",
-    "parser:generate-doc": "peggy src/parser/peggy/boart-description-parser.pegjs --output src/parser/peggy/ParserDescription.js",
     "parser:generate": "npm-run-all parser:generate-*"
   },
   "dependencies": {

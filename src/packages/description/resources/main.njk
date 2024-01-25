@@ -52,11 +52,11 @@
     {# Add Example #}
     {# * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * #}
     {% macro addExample(example, type) %}
-        {% for code in example.code %}
-          {% if code.position === type %}
-            <pre class="example-code"><code class="hljs"><p>{{code.title}}</p>{{code.code | brtUnIndent | brtLang}}</code></pre>
-          {% endif %}
-        {% endfor %}
+      {% for code in example.codes %}
+        {% if code.position === type %}
+          <pre class="example-code"><code class="hljs"><p>{{code.title}}</p>{{code.code | brtUnIndent | brtLang}}</code></pre>
+        {% endif %}
+      {% endfor %}
     {% endmacro %}
 
     <header>

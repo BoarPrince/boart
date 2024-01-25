@@ -48,33 +48,7 @@ export class ExpectedOperatorImplementation {
     static get equals(): ExpectedOperator {
         return {
             name: 'equals',
-            description: () => ({
-                id: 'expected:equals',
-                description: `* Checks a value for equality
-                              * It's default operator, in case of no defined operator`,
-                examples: [
-                    {
-                        title: 'Checks the response status of an rest call',
-                        example: `* Rest call
-
-                            | action                        |value               |
-                            |-------------------------------|--------------------|
-                            | method:post                   |/rest-url           |
-                            | payload                       |<file:payload.json> |
-                            | **expected:header:equals#status** |200             |`
-                    },
-                    {
-                        title: 'Usage as default operator',
-                        example: `* Rest call
-
-                          | action                 |value               |
-                          |------------------------|--------------------|
-                          | method:post            |/rest-url           |
-                          | payload                |<file:payload.json> |
-                          | **expected:header#status** |200                 |`
-                    }
-                ]
-            }),
+            description: () => DescriptionHandler.readDescription('expected.desc', 'expected:equals'),
             default: true,
             caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => ({
@@ -92,32 +66,7 @@ export class ExpectedOperatorImplementation {
     static get regexp(): ExpectedOperator {
         return {
             name: 'regexp',
-            description: () => ({
-              id: 'expected:regexp',
-              description: `* Checks the value by using a regexp`,
-              examples: [{
-                title: 'test',
-                code: [
-                  {
-                    type: 'json',
-                    position: 'before',
-                    title: 'Response Body',
-                    code: `{
-                      "a": 5,
-                      "b": {
-                        "a": false
-                      }
-                    }`
-                  }
-                ],
-                example: `* Rest call
-                  | action                 |value               |
-                  |------------------------|--------------------|
-                  | method:post            |/rest-url           |
-                  | payload                |<file:payload.json> |
-                  | **expected:header#status** |200             |`
-              }]
-            }),
+            description: () => DescriptionHandler.readDescription('expected.desc', 'expected:regexp'),
             caseInsesitive: false,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const valueAsString = ExpectedOperatorImplementation.valueToString(value);
@@ -136,27 +85,7 @@ export class ExpectedOperatorImplementation {
     static get startsWith(): ExpectedOperator {
         return {
             name: 'startsWith',
-
-
-
-
-            description: () => ({
-                id: 'expected:startsWith',
-                title: null,
-                description: `* Checks a value for equality
-                              * It's default operator, in case of no defined operator`,
-                examples: [
-                    {
-                        title: 'Usage as default operator',
-                        example: `* Rest call
-
-                          | action                 |value               |
-                          |------------------------|--------------------|
-                          | method:get            |/rest-url           |
-                          | **expected:startsWith#detail** |abc                 |`
-                    }
-                ]
-            }),
+            description: () => DescriptionHandler.readDescription('expected.desc', 'expected:startsWith'),
             caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 return {
@@ -172,7 +101,7 @@ export class ExpectedOperatorImplementation {
     static get contains(): ExpectedOperator {
         return {
             name: 'contains',
-            description: () => DescriptionHandler.parse('contains.desc'),
+            description: () => DescriptionHandler.readDescription('expected.desc', 'expected:contains'),
             caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const negativeResult = {
@@ -207,7 +136,6 @@ export class ExpectedOperatorImplementation {
         return {
             name: 'containsKey',
             caseInsesitive: true,
-
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 const negativeResult = {
                     result: false

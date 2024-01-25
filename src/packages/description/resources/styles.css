@@ -1,59 +1,59 @@
 :root {
-  --bs-primary-rgb: 249, 200, 0;
-  --bs-link-color: rgb(189, 28, 31);
-  --bs-secondary-rgb: rgb(189, 28, 31);
-  --bs-link-hover-color: rgb(232, 37, 29);
-  --header-height: 4em;
-  --left-nav-width: 12em;
-  --right-nav-width: 16em;
+    --bs-primary-rgb: 249, 200, 0;
+    --bs-link-color: rgb(189, 28, 31);
+    --bs-secondary-rgb: rgb(189, 28, 31);
+    --bs-link-hover-color: rgb(232, 37, 29);
+    --header-height: 4em;
+    --left-nav-width: 12em;
+    --right-nav-width: 16em;
 }
 
 #nav-top {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--header-height)
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
 }
 
 #nav-menu {
-  position:fixed;
-  top: var(--header-height);
-  bottom: 0;
-  width: var(--left-nav-width)
+    position: fixed;
+    top: var(--header-height);
+    bottom: 0;
+    width: var(--left-nav-width);
 }
 
 #nav-sub-menu {
-  position:fixed;
-  top: var(--header-height);
-  right: 0;
-  bottom: 0;
-  width: var(--right-nav-width);
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+    bottom: 0;
+    width: var(--right-nav-width);
 }
 
-h1, h5 {
-  color: rgb(var(--bs-primary-rgb));
+h1,
+h5 {
+    color: rgb(var(--bs-primary-rgb));
 }
 
 main {
-	position: relative;
-	top: var(--header-height);
-	left: var(--left-nav-width);
-	background-color: black;
-	width: calc(100vW - var(--right-nav-width) - var(--left-nav-width));
+    position: relative;
+    top: var(--header-height);
+    left: var(--left-nav-width);
+    background-color: black;
+    width: calc(100vw - var(--right-nav-width) - var(--left-nav-width));
 }
 
 .card {
-  background-color: black;
-  border: solid 2px rgb(var(--bs-primary-rgb));
+    background-color: black;
+    border: solid 2px rgb(var(--bs-primary-rgb));
 }
 
 .card-body {
-  color: white;
-  opacity: .7;
-  background-color: black;
+    color: white;
+    opacity: 0.7;
+    background-color: black;
 }
-
 
 /*
     @``````@`@````@`@````@````@@@@@```@@```@@@@@```@@@@``@@@@@@`@@@@@`
@@ -66,7 +66,7 @@ main {
 
 @keyframes fadeIt {
     0% {
-        background-color: rgb(var(--bs-primary-rgb), .5);
+        background-color: rgb(var(--bs-primary-rgb), 0.5);
     }
     100% {
         background-color: inherit;
@@ -98,46 +98,56 @@ main {
     padding-left: 0;
 }
 
+.example ul li p {
+    display: inline-block;
+}
+
 .example ul li::before {
     content: '* ';
 }
 
-.example th {
-    text-align: left;
-}
-
-.example th,
-.example td {
-    border-left: black solid 1px;
-    padding: 0.05em 0.5em;
-}
-
-.example th:last-child,
-.example td:last-child {
-    border-right: black solid 1px;
-}
-
-.example tbody tr:nth-child(1) td {
-    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3cline x1='2' y1='50%25' x2='98%25' y2='50%25' stroke='%23333' stroke-width='1' stroke-dasharray='20%2c 2' stroke-dashoffset='2' /%3e%3c/svg%3e");
-    height: 1em;
-}
-
+/* - - - - - - - - - - - - - - - - - - - - - - - */
+/* T a b l e */
+/* - - - - - - - - - - - - - - - - - - - - - - - */
 .example table {
     margin-left: 2em;
     margin-top: 1em;
 }
 
+.example table th {
+    text-align: left;
+}
+
+.example table th,
+.example table td {
+    /* border-left: black solid 1px; */
+    padding: 0.05em 0.5em;
+}
+
+.example table thead {
+    border-bottom: white solid 1px;
+}
+
+.example thead tr th:nth-child(1),
+.example tbody tr td:nth-child(1) {
+    border-right: white solid 1px;
+    height: 1em;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - - - */
+/* C o d e */
+/* - - - - - - - - - - - - - - - - - - - - - - - */
 pre.example-code {
-  font-size: x-small;
+    font-size: x-small;
 }
 
 pre.example-code code.hljs {
-  padding: 1em 3em;
+    padding: 1em 3em;
 }
 
 pre.example-code code.hljs p {
-  margin-left: -2em;
-  margin-bottom: .5em;
+    margin-left: -2em;
+    margin-bottom: 0.5em;
 }
 
 /*
@@ -150,63 +160,62 @@ pre.example-code code.hljs p {
 */
 
 .tree {
-    --spacing : 1.5rem;
-    --radius  : 6px;
+    --spacing: 1.5rem;
+    --radius: 6px;
 }
 
 .tree li {
-  display      : block;
-  position     : relative;
-  padding-left : calc(2 * var(--spacing) - var(--radius));
-  padding-top: calc(var(--spacing) / 2);
+    display: block;
+    position: relative;
+    padding-left: calc(2 * var(--spacing) - var(--radius));
+    padding-top: calc(var(--spacing) / 2);
 }
 
 .tree ul {
-  margin-left  : calc(var(--radius) - var(--spacing));
-  padding-left : 0;
+    margin-left: calc(var(--radius) - var(--spacing));
+    padding-left: 0;
 }
 
 ul.tree {
-  padding-left : 1em;
-  width: calc(var(--right-nav-width) - 1em);
+    padding-left: 1em;
+    width: calc(var(--right-nav-width) - 1em);
 }
 
 .tree a {
-  font-size: smaller;
+    font-size: smaller;
 }
 
-
 .tree li::after {
-  content       : '';
-  display       : block;
-  position      : absolute;
-  top           : calc(var(--spacing) - var(--radius));
-  left          : calc(var(--spacing) - var(--radius));
-  width         : calc(2 * var(--radius));
-  height        : calc(2 * var(--radius));
-  border-radius : 50%;
-  background    : var(--bs-link-color);
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) - var(--radius));
+    left: calc(var(--spacing) - var(--radius));
+    width: calc(2 * var(--radius));
+    height: calc(2 * var(--radius));
+    border-radius: 50%;
+    background: var(--bs-link-color);
 }
 
 /* lines  */
 /* vertical */
-.tree ul li{
-    border-left : 2px solid black;
+.tree ul li {
+    border-left: 2px solid black;
 }
 
-.tree ul li:last-child{
-    border-color : transparent;
+.tree ul li:last-child {
+    border-color: transparent;
 }
 
 /* horizontal */
-.tree ul li::before{
-  content      : '';
-  display      : block;
-  position     : absolute;
-  top          : calc(var(--spacing) / -2);
-  left         : -2px;
-  width        : calc(var(--spacing) + 2px);
-  height       : calc(var(--spacing) * 1.5);
-  border       : solid black;
-  border-width : 0 0 2px 2px;
+.tree ul li::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / -2);
+    left: -2px;
+    width: calc(var(--spacing) + 2px);
+    height: calc(var(--spacing) * 1.5);
+    border: solid black;
+    border-width: 0 0 2px 2px;
 }
