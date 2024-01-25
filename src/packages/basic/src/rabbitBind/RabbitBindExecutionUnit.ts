@@ -9,9 +9,9 @@ import { RabbitBindContext } from './RabbitBindContext';
  *
  */
 export class RabbitBindExecutionUnit implements ExecutionUnit<RabbitBindContext, RowTypeValue<RabbitBindContext>> {
+    readonly key = Symbol('rabbit queue binding');
     public description = () => ({
         id: '78af1ceb-1bed-4c3f-8e2a-39fc3c321829',
-        title: 'rabbit queue binding',
         description: null,
         examples: null
     });

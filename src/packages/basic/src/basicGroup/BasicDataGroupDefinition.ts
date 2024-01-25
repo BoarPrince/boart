@@ -61,19 +61,19 @@ if (!GroupRowDefinition.contains('basic-data')) {
         })
     );
     basicGroup.addRowDefinition(
-      new RowDefinition<DataContext, RowTypeValue<DataContext>>({
-          type: TableRowType.PostProcessing,
-          executionUnit: new TransformJsonLogicExecutionUnit(),
-          validators: null
-      })
-  );
-  basicGroup.addRowDefinition(
-      new RowDefinition<DataContext, RowTypeValue<DataContext>>({
-          type: TableRowType.PostProcessing,
-          executionUnit: new TransformResetExecutionUnit(),
-          validators: null
-      })
-  );
+        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+            type: TableRowType.PostProcessing,
+            executionUnit: new TransformJsonLogicExecutionUnit(),
+            validators: null
+        })
+    );
+    basicGroup.addRowDefinition(
+        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+            type: TableRowType.PostProcessing,
+            executionUnit: new TransformResetExecutionUnit(),
+            validators: null
+        })
+    );
 
     //-------------------------------------------------------------------------
     // OutStore
@@ -81,7 +81,7 @@ if (!GroupRowDefinition.contains('basic-data')) {
     basicGroup.addRowDefinition(
         new RowDefinition<DataContext, RowTypeValue<DataContext>>({
             type: TableRowType.PostProcessing,
-            executionUnit: new OutStoreExecutionUnit(),
+            executionUnit: new OutStoreExecutionUnit('store'),
             validators: null
         })
     );

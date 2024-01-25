@@ -53,10 +53,10 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
 
         tableHandler.addRowDefinition(
             new RowDefinition({
-                key: Symbol('repeat:wait'),
                 parameterType: ParaType.Optional,
                 type: TableRowType.Configuration,
                 executionUnit: {
+                    key: Symbol('repeat:wait'),
                     execute: (context: RepeatableDataExecutionContext, row: RowTypeValue<RepeatableDataExecutionContext>): void => {
                         if (row.ast.qualifier.stringValue === 'wait:sec') {
                             context.repetition.pause = (row.value as number) * 1000;
@@ -77,9 +77,9 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
 
         tableHandler.addRowDefinition(
             new RowDefinition({
-                key: Symbol('repeat:count'),
                 type: TableRowType.Configuration,
                 executionUnit: {
+                    key: Symbol('repeat:count'),
                     execute: (context: RepeatableDataExecutionContext, row: RowTypeValue<RepeatableDataExecutionContext>): void => {
                         context.repetition.count = row.value as number;
                     }

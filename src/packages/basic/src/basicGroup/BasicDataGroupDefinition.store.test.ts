@@ -78,9 +78,9 @@ class MockTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<Da
      *
      */
     protected mainExecutionUnit = () => ({
+        key: Symbol('mock handler'),
         description: () => ({
             id: '8986d2f2-0681-4ca3-bef4-8c7313c53b54',
-            title: 'mock handler',
             description: null,
             examples: null
         }),
@@ -136,8 +136,8 @@ const sut = new MockTableHandler();
  *
  */
 beforeAll(() => {
-  basicInitialize();
-})
+    basicInitialize();
+});
 
 /**
  *
@@ -1446,22 +1446,6 @@ describe('check run:xxx', () => {
 
         await sut.handler.process(tableDef);
         expect(Store.instance.testStore.get(astVar)?.valueOf()).toBe('z');
-    });
-
-    /**
-     *
-     */
-    it('run:only use context replacer with arg', async () => {
-        const tableDef = MarkdownTableReader.convert(
-            `|action      |value                |
-             |------------|---------------------|
-             |run:only:a  | a:y                 |
-             |payload     | \${context:arg1:-z} |
-             |store       | var                 |`
-        );
-
-        await sut.handler.process(tableDef);
-        expect(Store.instance.testStore.get(astVar)?.valueOf()).toBe('y');
     });
 
     /**

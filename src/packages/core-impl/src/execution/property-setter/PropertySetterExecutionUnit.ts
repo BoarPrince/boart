@@ -38,7 +38,11 @@ export class PropertySetterExecutionUnit<
     constructor(propertyLevel1: 'config', propertyLevel2?: keyof TExecutionContext['config'], config?: Config);
     constructor(propertyLevel1: 'execution', propertyLevel2?: keyof TExecutionContext['execution'], config?: Config);
     constructor(propertyLevel1: 'preExecution', propertyLevel2?: keyof TExecutionContext['preExecution'], config?: Config);
-    constructor(private readonly propertyLevel1: string, private readonly propertyLevel2?: string, private readonly config?: Config) {
+    constructor(
+        private readonly propertyLevel1: string,
+        private readonly propertyLevel2?: string,
+        private readonly config?: Config
+    ) {
         this.config = config || {};
         this.config.concat = this.config.concat || false;
         this.config.delimiter = this.config.delimiter || '\n';
@@ -59,9 +63,7 @@ export class PropertySetterExecutionUnit<
         examples: null
     });
 
-    /**
-     * allow :null to set null
-     */
+    readonly key = Symbol('Generic Property Setter');
     readonly parameterType = ParaType.Optional;
     readonly validators = [];
 

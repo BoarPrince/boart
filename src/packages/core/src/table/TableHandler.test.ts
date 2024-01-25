@@ -218,9 +218,9 @@ describe('with repetition', () => {
 
         sut.addRowDefinition(
             new RowDefinition({
-                key: Symbol('action1'),
                 type: TableRowType.PreProcessing,
                 executionUnit: {
+                    key: Symbol('action1'),
                     execute: null
                 },
                 validators: null

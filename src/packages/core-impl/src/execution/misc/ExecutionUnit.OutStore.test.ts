@@ -24,14 +24,14 @@ import { DataScopeValidator } from '../../validators/DataScopeValidator';
  *
  */
 class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
-    selectorType = SelectorType.Optional;
+    readonly key = Symbol('mock');
+    readonly selectorType = SelectorType.Optional;
 
     /**
      *
      */
     description = () => ({
         id: '7a421d98-e54b-457c-bf2e-696a946d9241',
-        title: 'mock',
         description: '',
         examples: null
     });
@@ -103,7 +103,7 @@ class ExecutionEngineMock<MockContext extends DataContext> extends ExecutionEngi
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 let tableHandler: TableHandler<any, any>;
-const sut = new OutStoreExecutionUnit();
+const sut = new OutStoreExecutionUnit('store');
 const variableParser = new VariableParser();
 
 /**
@@ -330,18 +330,17 @@ describe('check extended context', () => {
     it('use other property with extended data context', async () => {
         (tableHandler.getExecutionEngine().context as ExtendedDataContext).execution.extendedProperty = 'xxx';
 
-          const sut = new OutStoreExecutionUnit();
-          sut.key = 'store-new';
-          (sut as any).validators = [new DataScopeValidator(['extendedProperty'])];
+        const sut = new OutStoreExecutionUnit('store-new');
+        (sut as any).validators = [new DataScopeValidator(['extendedProperty'])];
 
-          tableHandler.addRowDefinition(
+        tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('store-new'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
             })
-          );
-
+        );
 
         await tableHandler.process({
             headers: {
@@ -362,31 +361,30 @@ describe('check extended context', () => {
      *
      */
     it('check wrong dataScope', async () => {
+        const sut = new OutStoreExecutionUnit('store-new');
 
-      const sut = new OutStoreExecutionUnit();
-      sut.key = 'store-new';
+        tableHandler.addRowDefinition(
+            new RowDefinition({
+                type: TableRowType.PostProcessing,
+                executionUnit: sut,
+                validators: [new DataScopeValidator(['data', 'header', 'transformed', ''])]
+            })
+        );
 
-      tableHandler.addRowDefinition(
-          new RowDefinition({
-              type: TableRowType.PostProcessing,
-              executionUnit: sut,
-              validators: [new DataScopeValidator(['data', 'header', 'transformed', ''])]
-          })
-      );
-
-     await expect(() => tableHandler.process({
-          headers: {
-              cells: ['action', 'value']
-          },
-          rows: [
-              {
-                  cells: [`store-new::wrongKey`, `var`]
-              }
-          ]
-      })).rejects.toThrow(`Datascope 'wrongKey' of action 'store-new' is not defined. Allowed is`);
+        await expect(() =>
+            tableHandler.process({
+                headers: {
+                    cells: ['action', 'value']
+                },
+                rows: [
+                    {
+                        cells: [`store-new::wrongKey`, `var`]
+                    }
+                ]
+            })
+        ).rejects.toThrow(`Datascope 'wrongKey' of action 'store-new' is not defined. Allowed is`);
     });
-  });
-
+});
 
 /**
  *

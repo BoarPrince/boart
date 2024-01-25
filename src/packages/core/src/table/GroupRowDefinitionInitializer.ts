@@ -16,10 +16,11 @@ export function GroupRowDefinitionInitializer<
     /**
      *
      */
-    return function<T extends { new (): ExecutionUnit<TExecutionContext, TRowType> }>(constructor: T) {
+    return function <T extends { new (): ExecutionUnit<TExecutionContext, TRowType> }>(constructor: T) {
         const executionUnit = new constructor();
 
         const rowDefinition = new RowDefinition<TExecutionContext, TRowType>({
+            key: null,
             type,
             executionUnit,
             validators: null

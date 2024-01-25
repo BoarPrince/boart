@@ -95,11 +95,9 @@ export class RowDefinitionBinder<
 
         return sortedDefinitions.find((def) => {
             const defKey = def.key.description;
-            const rowDataScope = row.ast.datascope?.value;
 
             // key must match
             return keyStringValue.startsWith(defKey);
-            ;
         });
     }
 
@@ -179,7 +177,8 @@ export class RowDefinitionBinder<
             //----------------------------------------------------------------
             const rowDefinition = this.findDefinition(row);
             if (!rowDefinition) {
-                throw Error(`'${this.tableName}': key '${row.key}' is not valid`);
+                const availableDefs = this.rowDefinitions.map((def) => def.key.description).join(',\n');
+                throw Error(`'${this.tableName}': key '${row.key}' is not valid\nvalid definitions are:\n${availableDefs}`);
             }
 
             //----------------------------------------------------------------

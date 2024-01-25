@@ -10,9 +10,9 @@ import { RunDefinitionParser } from './RunDefinitionParser';
  *
  */
 export class RunNotExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
+    readonly key = Symbol('run:not');
     readonly description = () => ({
         id: '74239545-52a2-433f-b735-7e60646181f8',
-        title: 'run:not',
         description: null,
         examples: null
     });

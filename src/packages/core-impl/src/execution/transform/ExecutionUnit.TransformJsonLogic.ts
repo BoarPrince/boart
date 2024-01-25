@@ -13,9 +13,9 @@ import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator'
  * | transform:jsonLogic  | xxxx  |
  */
 export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+    readonly key = Symbol('transform:jsonLogic');
     readonly description = () => ({
         id: '389a6464-7568-4759-a7fd-820ad678794f',
-        title: 'transform:jsonLogic',
         dataScope: '*',
         description: null,
         examples: null

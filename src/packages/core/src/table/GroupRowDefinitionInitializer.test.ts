@@ -60,6 +60,8 @@ describe('check GroupRowDefinition Initializer', () => {
          */
         @GroupRowDefinitionInitializer('group-xxx', TableRowType.PostProcessing)
         class ExecutionUnitMock implements ExecutionUnit<TestExecutionContext1, RowTypeValue<TestExecutionContext1>> {
+            readonly key = Symbol('mock-xxx');
+
             description = () => ({
                 id: null,
                 title: 'mock-xxx',

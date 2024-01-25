@@ -83,7 +83,6 @@ if (!GroupRowDefinition.contains('basic-group-definition')) {
 
     basicGroup.addRowDefinition(
         new RowDefinition({
-            key: Symbol('description'),
             type: TableRowType.Configuration,
             executionUnit: new DescriptionExecutionUnit(),
             validators: null
@@ -92,7 +91,6 @@ if (!GroupRowDefinition.contains('basic-group-definition')) {
 
     basicGroup.addRowDefinition(
         new RowDefinition({
-            key: Symbol('link'),
             type: TableRowType.PostProcessingForced,
             executionUnit: new LinkExecutionUnit(),
             validators: null
@@ -101,7 +99,6 @@ if (!GroupRowDefinition.contains('basic-group-definition')) {
 
     basicGroup.addRowDefinition(
         new RowDefinition({
-            key: Symbol('group'),
             type: TableRowType.Configuration,
             executionUnit: new GroupExecutionUnit(),
             validators: null

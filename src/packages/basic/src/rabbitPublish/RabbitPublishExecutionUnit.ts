@@ -10,9 +10,9 @@ import { PublishType } from './RabbitPublishType';
  *
  */
 export class RabbitPublishExecutionUnit implements ExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>> {
-    public description = () => ({
+    readonly key = Symbol('rabbit sent message - main');
+    readonly description = () => ({
         id: 'rabbit:publish:unit',
-        title: 'rabbit sent message - main',
         description: '',
         examples: null
     });

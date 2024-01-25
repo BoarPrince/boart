@@ -51,7 +51,7 @@ export class TableHandler<
     /**
      *
      */
-    public get description(): (() => Description) {
+    public get description(): () => Description {
         const executionEngine = this.executionEngineCreator();
         return executionEngine.mainExecutionUnit().description;
     }
@@ -60,10 +60,10 @@ export class TableHandler<
      *
      */
     addRowDefinition(definition: RowDefinition<TExecutionContext, TRowType>): this {
-        const key = definition.key.description || '';
+        const key = definition.key?.description ?? '';
 
         if (this.rowDefinitions.has(key)) {
-          throw Error(`key/action: '${key}' does already exist`);
+            throw Error(`key/action: '${key}' does already exist`);
         }
 
         this.rowDefinitions.set(key, definition);
@@ -202,10 +202,14 @@ export class TableHandler<
         const rows = definitionBinder.bind(this.rowType);
 
         this.executionEngine = executionEngine;
-        this.logger.info(() => {
-          const description = executionEngine.mainExecutionUnit().description();
-          return `process internal ### ${description?.id} ###`;
-        }, null, true);
+        this.logger.info(
+            () => {
+                const description = executionEngine.mainExecutionUnit().description();
+                return `process internal ### ${description?.id} ###`;
+            },
+            null,
+            true
+        );
 
         const validator = new ValidationHandler<TExecutionContext, TRowType>(this.groupValidations);
         validator.preValidate(rows);

@@ -46,6 +46,8 @@ class TestExecutionContext implements ExecutionContext<TestConfig, TestContextPr
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 class ExecutionUnitMock implements ExecutionUnit<TestExecutionContext, any> {
+    readonly key = Symbol('mock');
+
     /**
      *
      */

@@ -1,5 +1,4 @@
 import { Description } from '../description/Description';
-import { DescriptionHandler } from '../description/DescriptionHandler';
 import { Descriptionable } from '../description/Descriptionable';
 import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
@@ -66,7 +65,7 @@ export class RowDefinition<
      *
      */
     constructor(value: RowDefinitionPara<TExecutionContext, TRowType>) {
-        this.key = value.key || Symbol(DescriptionHandler.solve(value.executionUnit?.description).title);
+        this.key = value.key || value.executionUnit?.key;
         this.type = value.type;
         this.description = value.description;
         this.priority = value.priority || value.executionUnit?.priority || this.priority;

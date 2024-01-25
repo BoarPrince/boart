@@ -9,9 +9,9 @@ import { RestAuthorizeContext } from './RestAuthorizeContext';
  *
  */
 export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeContext, RowTypeValue<RestAuthorizeContext>> {
+    readonly key = Symbol('rest call - main');
     public description = () => ({
         id: '0aaf6ec3-b2e8-46ed-8362-19fba9c71771',
-        title: 'rest call - main',
         description: '',
         examples: null
     });

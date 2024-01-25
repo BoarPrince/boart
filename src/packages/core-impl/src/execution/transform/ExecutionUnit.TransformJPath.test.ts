@@ -18,12 +18,12 @@ import { TransformJPathExecutionUnit } from './ExecutionUnit.TransformJPath';
  *
  */
 class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+    readonly key = Symbol('desc');
     /**
      *
      */
     description = () => ({
         id: '6ce17ea6-e616-47fb-bd3e-42d5f56ecd27',
-        title: 'desc',
         description: '',
         examples: null
     });
@@ -101,6 +101,7 @@ describe('check transform:jpath execution units', () => {
     beforeAll(() => {
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('transform'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null

@@ -25,12 +25,13 @@ import { ExpectedOperatorImplementation } from './ExpectedOperator.Implementatio
  *
  */
 class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+    readonly key = Symbol('desc');
+
     /**
      *
      */
-    description = () => ({
+    readonly description = () => ({
         id: 'b3edad18-8281-4cda-9977-84f27036bbf7',
-        title: 'desc',
         description: '',
         examples: null
     });
@@ -119,7 +120,7 @@ describe('check expected:data execution units', () => {
             new RowDefinition({
                 type: TableRowType.PostProcessing,
                 executionUnit: sut1,
-                validators: null,
+                validators: null
             })
         );
     });
@@ -280,6 +281,7 @@ describe('check expected:header execution units', () => {
     beforeAll(() => {
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -378,6 +380,7 @@ describe('check expected:transformed execution units', () => {
     beforeAll(() => {
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -445,6 +448,7 @@ describe('check expected:data execution units with operators', () => {
 
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -471,6 +475,7 @@ describe('check expected:data execution units with operators', () => {
 
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -498,6 +503,7 @@ describe('check expected:data execution units with operators', () => {
 
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -525,6 +531,7 @@ describe('check expected:data execution units with operators', () => {
     it('use operator without data, header, or specification', async () => {
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: new ExpectedDataExecutinoUnit(),
                 validators: null
@@ -560,6 +567,7 @@ describe('check expected:data execution units with operators', () => {
         intialContext.data = dataToCheck;
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -595,6 +603,7 @@ describe('check expected:data execution units with operators', () => {
         intialContext.data = dataToCheck;
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -656,6 +665,7 @@ describe('check expected:data execution units with operators', () => {
         intialContext.data = new NullContent();
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -705,6 +715,7 @@ describe('check expected:data execution units with operators', () => {
         intialContext.data = new NullContent();
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -790,6 +801,7 @@ describe('check expected:data ci operator', () => {
         intialContext.data = dataToCheck;
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -826,6 +838,7 @@ describe('check expected:data ci operator', () => {
         intialContext.data = dataToCheck;
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -857,6 +870,7 @@ describe('check expected:data ci operator', () => {
         intialContext.data = dataToCheck;
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null
@@ -890,6 +904,7 @@ describe('check expected:data ci operator', () => {
         intialContext.data = dataToCheck;
         tableHandler.addRowDefinition(
             new RowDefinition({
+                key: Symbol('expected'),
                 type: TableRowType.PostProcessing,
                 executionUnit: sut,
                 validators: null

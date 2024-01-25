@@ -15,6 +15,7 @@ import { DataScopeValidator } from '../../validators/DataScopeValidator';
 export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext<object, object, object>>
     implements ExecutionUnit<DataContext, RowTypeValue<DataContext>>
 {
+    readonly key = Symbol('expected:jsonLogic');
     readonly parameterType = ParaType.True;
     readonly validators = [
         new DataScopeValidator(['data', 'header', 'transformed', '']),
@@ -32,7 +33,6 @@ export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext
     get description(): () => Description {
         return () => ({
             id: '67deb7f1-9943-4e58-a335-6e19da22d3eb',
-            title: 'expected:jsonLogic',
             description: null,
             examples: null
         });
@@ -42,7 +42,7 @@ export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext
      *
      */
     private getDataContent(context: DataContext, dataScope: DataScope): DataContent {
-      return context.execution[dataScope?.value ?? 'data']
+        return context.execution[dataScope?.value ?? 'data'];
     }
 
     /**

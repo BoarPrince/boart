@@ -11,9 +11,9 @@ import { RabbitConsumeContext } from './RabbitConsumeContext';
 export class RabbitConsumeExecutionUnit
     implements ExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>, ExecutionUnitValidation<RabbitConsumeContext>
 {
-    public description = () => ({
+    readonly key = Symbol('rabbit message queue - main');
+    readonly description = () => ({
         id: '5536aa8e-0441-4580-8b0b-442a072e7a8a',
-        title: 'rabbit message queue - main',
         description: null,
         examples: null
     });

@@ -26,6 +26,7 @@ import { DataScopeValidator } from '../../validators/DataScopeValidator';
 export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<object, object, object>>
     implements ExecutionUnit<DataContext, RowTypeValue<DataContext>>
 {
+    readonly key = Symbol('expected');
     readonly parameterType = ParaType.Optional;
     readonly selectorType = SelectorType.Optional;
     readonly operators = new Array<ExpectedOperator>();
@@ -62,7 +63,6 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     get description(): () => Description {
         return () => ({
             id: 'expected-unit',
-            title: 'expected',
             description: null,
             examples: null
         });
@@ -72,7 +72,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
      *
      */
     private getDataContent(context: DataContext, dataScope: DataScope): DataContent {
-        return context.execution[dataScope?.value ?? 'data']
+        return context.execution[dataScope?.value ?? 'data'];
     }
 
     /**

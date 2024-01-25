@@ -13,9 +13,9 @@ import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator'
  * | transform:jpath | xxxx  |
  */
 export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+    readonly key = Symbol('transform:jpath');
     readonly description = () => ({
         id: '0bb11bdd-1628-470d-a7af-d5415d073b3d',
-        title: 'transform:jpath',
         dataScope: '*',
         description: null,
         examples: null

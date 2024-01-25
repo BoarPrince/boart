@@ -6,12 +6,12 @@ import { StepReport } from '@boart/protocol';
  *
  */
 export class DataExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+    readonly key = Symbol('data');
     /**
      *
      */
     public description = () => ({
         id: 'data:unit',
-        title: 'data',
         description: '',
         examples: [
             {

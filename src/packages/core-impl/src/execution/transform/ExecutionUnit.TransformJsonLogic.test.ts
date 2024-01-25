@@ -18,12 +18,12 @@ import { TransformJsonLogicExecutionUnit } from './ExecutionUnit.TransformJsonLo
  *
  */
 class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+    readonly key = Symbol('desc');
     /**
      *
      */
-    description = () => ({
+    readonly description = () => ({
         id: '7cc3939a-8c7d-468d-aa30-88ecca51c0ba',
-        title: 'desc',
         description: '',
         examples: null
     });

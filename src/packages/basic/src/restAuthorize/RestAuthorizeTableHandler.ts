@@ -207,9 +207,8 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
 
         tableHandler.addRowDefinition(
             new RowDefinition({
-                key: Symbol('store'),
                 type: TableRowType.PostProcessing,
-                executionUnit: new OutStoreExecutionUnit(),
+                executionUnit: new OutStoreExecutionUnit('store'),
                 default: {
                     column: 'value',
                     value: 'authorization'

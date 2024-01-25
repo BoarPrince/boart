@@ -9,9 +9,9 @@ import { RabbitListenerContext } from './RabbitListenerContext';
  *
  */
 export class RabbitListenerExecutionUnit implements ExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>> {
-    public description = () => ({
+    readonly key = Symbol('listening on rabbit queues/exchanges');
+    readonly description = () => ({
         id: 'rabbit:listener:unit',
-        title: 'listening on rabbit queues/exchanges',
         description: null,
         examples: null
     });

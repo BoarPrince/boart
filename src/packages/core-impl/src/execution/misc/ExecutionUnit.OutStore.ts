@@ -44,7 +44,9 @@ import { DataScopeValidator } from '../../validators/DataScopeValidator';
  * | out:store:header:l | xxx  |
  */
 export class OutStoreExecutionUnit<StoreContext extends DataContext> implements ExecutionUnit<StoreContext, RowTypeValue<StoreContext>> {
-    private _key: string;
+    get key() {
+        return Symbol(this._key);
+    }
     readonly valueParser = new VariableParser();
     readonly selectorType = SelectorType.Optional;
     readonly parameterType = ParaType.Optional;
@@ -58,20 +60,17 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
     /**
      *
      */
-    get description(): () => Description {
-        return () => ({
-            id: '149e81d9-d334-44c6-b690-212f5e25bf80',
-            title: this._key || 'store',
-            description: null,
-            examples: null
-        });
-    }
+    constructor(private _key: string) {}
 
     /**
      *
      */
-    set key(key: string) {
-        this._key = key;
+    get description(): () => Description {
+        return () => ({
+            id: '149e81d9-d334-44c6-b690-212f5e25bf80',
+            description: null,
+            examples: null
+        });
     }
 
     /**
@@ -89,16 +88,15 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
         const executionContext = context.execution || ({} as DataExecutionContext);
 
         if (scope) {
-          return executionContext[scope];
+            return executionContext[scope];
         } else {
-          const preExecutionContext = context.preExecution || ({} as DataPreExecutionContext);
-          return (
-              nonNullValue(executionContext.transformed, null) ||
-              nonNullValue(executionContext.data, null) ||
-              nonNullValue(preExecutionContext.payload)
-        );
+            const preExecutionContext = context.preExecution || ({} as DataPreExecutionContext);
+            return (
+                nonNullValue(executionContext.transformed, null) ||
+                nonNullValue(executionContext.data, null) ||
+                nonNullValue(preExecutionContext.payload)
+            );
         }
-
     }
 
     /**

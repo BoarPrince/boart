@@ -228,7 +228,10 @@ describe('check binding with multiple definitions', () => {
             execute(_context, _row): void {
                 // do noting in mock
             }
-            description = null;
+            readonly description = null;
+            get key() {
+                return Symbol(this.description.title);
+            }
         }
 
         const rowDefinitions = [

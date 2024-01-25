@@ -22,6 +22,11 @@ export interface ExecutionUnit<
     /**
      *
      */
+    readonly key: symbol;
+
+    /**
+     *
+     */
     readonly priority?: number;
 
     /**

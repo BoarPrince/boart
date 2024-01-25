@@ -11,9 +11,9 @@ import { UniqueValidator } from '../../validators/UniqueValidator';
  * | description | this is a test |
  */
 export class DescriptionExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
+    readonly key = Symbol('description');
     readonly description = () => ({
         id: 'description:unit',
-        title: 'description',
         description: null,
         examples: null
     });

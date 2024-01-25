@@ -12,12 +12,12 @@ import { WaitExecutionUnit } from './ExecutionUnit.Wait';
  *
  */
 class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+    readonly key = Symbol('desc');
     /**
      *
      */
-    description = () => ({
+    readonly description = () => ({
         id: '4b708e03-8faa-47e3-b6cd-e23a937b7cd1',
-        title: 'desc',
         description: '',
         examples: null
     });
@@ -73,7 +73,6 @@ describe('check wait:before execution units', () => {
     beforeAll(() => {
         tableHandler.addRowDefinition(
             new RowDefinition({
-                key: Symbol('wait:before'),
                 type: TableRowType.PreProcessing,
                 executionUnit: sut,
                 validators: [
