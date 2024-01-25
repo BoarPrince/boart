@@ -65,7 +65,7 @@ describe('extended operation generation', () => {
     /**
      *
      */
-    it.only('not and others generation with description', () => {
+    it('not and others generation with description', () => {
         const sut = ExpectedOperatorInitializer.instance;
 
         sut.addOperator({

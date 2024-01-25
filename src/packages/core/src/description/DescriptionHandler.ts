@@ -122,7 +122,7 @@ export class DescriptionHandler {
                   parentId: description.parentId,
                   description: this.adjustIndent(description.description || ''),
                   examples:
-                      description.examples.map((example) => {
+                      description.examples?.map((example) => {
                           example.example = this.adjustIndent(example.example);
                           return example;
                       }) ?? null
