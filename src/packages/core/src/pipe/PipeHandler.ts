@@ -1,8 +1,8 @@
-import { Initializer } from "../common/Initializer";
-import { Pipe } from "./Pipe";
+import { Initializer } from '../common/Initializer';
+import { Pipe } from './Pipe';
 
 /**
- * 
+ *
  */
 export class PipeHandler implements Initializer<Pipe> {
     private pipes: Array<Pipe>;
@@ -26,7 +26,7 @@ export class PipeHandler implements Initializer<Pipe> {
     }
 
     /**
-     * 
+     *
      */
     public get list(): ReadonlyArray<Pipe> {
         return this.pipes;
@@ -47,12 +47,12 @@ export class PipeHandler implements Initializer<Pipe> {
     }
 
     /**
-     * 
+     *
      */
     public get(name: string): Pipe {
         return this.pipes.find((r) => r.name === name);
     }
-    
+
     /**
      *
      */
@@ -60,7 +60,6 @@ export class PipeHandler implements Initializer<Pipe> {
         if (this.pipes.find((r) => r.name === name)) {
             throw Error(`pipe '${name}' already exists!`);
         }
-        
 
         this.pipes.push(item);
         return this;

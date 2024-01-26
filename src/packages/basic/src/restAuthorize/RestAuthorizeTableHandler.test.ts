@@ -7,7 +7,6 @@ import fetchMock from 'jest-fetch-mock';
 import RestAuthorizeTableHandler from './RestAuthorizeTableHandler';
 import { basicInitialize } from '..';
 
-
 const sut = new RestAuthorizeTableHandler();
 
 /**

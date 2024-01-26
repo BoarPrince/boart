@@ -51,10 +51,10 @@ export {
  */
 export function basicInitialize(): void {
     if (globalThis.basicInitialized) {
-      // call initialize only once a time
+        // call initialize only once a time
         return;
     } else {
-      globalThis.basicInitialized = true;
+        globalThis.basicInitialized = true;
     }
 
     Runtime.instance.stepRuntime.onEnd().subscribe(() => StepReport.instance.report());

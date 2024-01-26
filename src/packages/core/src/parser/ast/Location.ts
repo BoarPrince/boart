@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 export interface Location {
     start: {

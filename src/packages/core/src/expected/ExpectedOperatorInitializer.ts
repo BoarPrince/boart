@@ -87,14 +87,13 @@ export class ExpectedOperatorInitializer implements Descriptionable {
                     return !operatorDescription
                         ? null
                         : {
-                            id: `${operatorDescription.id}:default`,
-                            parentId: operatorDescription.id,
-                            title: 'expected',
-                            description: `The '<ref:${operatorDescription.id}>' operator it's the default
+                              id: `${operatorDescription.id}:default`,
+                              parentId: operatorDescription.id,
+                              title: 'expected',
+                              description: `The '<ref:${operatorDescription.id}>' operator it's the default
                                 operator and it's used when no operator is defined`,
-                            examples: null
-                        };
-
+                              examples: null
+                          };
                 },
                 caseInsesitive: operator.caseInsesitive,
                 check: (value, expectedValue) => operator.check(value, expectedValue)
@@ -141,16 +140,16 @@ export class ExpectedOperatorInitializer implements Descriptionable {
         return {
             name: operator.name + (!!operator.name ? ':' : '') + 'not',
             description: () => {
-              const operatorNotDescription = DescriptionHandler.solve(operator.description);
-              return !operatorNotDescription
-                  ? null
-                  : {
-                      id: `${operatorNotDescription.id}:not`,
-                      parentId: operatorNotDescription.id,
-                      title: `${operatorNotDescription.title || ''}:not`,
-                      description: `It's the not extension of the '<ref:${operatorNotDescription.id}>' operator`,
-                      examples: null
-                  };
+                const operatorNotDescription = DescriptionHandler.solve(operator.description);
+                return !operatorNotDescription
+                    ? null
+                    : {
+                          id: `${operatorNotDescription.id}:not`,
+                          parentId: operatorNotDescription.id,
+                          title: `${operatorNotDescription.title || ''}:not`,
+                          description: `It's the not extension of the '<ref:${operatorNotDescription.id}>' operator`,
+                          examples: null
+                      };
             },
             caseInsesitive: operator.caseInsesitive,
             check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
@@ -176,12 +175,12 @@ export class ExpectedOperatorInitializer implements Descriptionable {
                 return !operatorCIDescription
                     ? null
                     : {
-                        id: `${operatorCIDescription.id}:ci`,
-                        parentId: operatorCIDescription.id,
-                        title: `${operatorCIDescription.title || ''}:ci`,
-                        description: `It's the ci (case insensitive) extension of the '<ref:${operatorCIDescription.id}>' operator`,
-                        examples: null
-                    };
+                          id: `${operatorCIDescription.id}:ci`,
+                          parentId: operatorCIDescription.id,
+                          title: `${operatorCIDescription.title || ''}:ci`,
+                          description: `It's the ci (case insensitive) extension of the '<ref:${operatorCIDescription.id}>' operator`,
+                          examples: null
+                      };
             },
             check: async (value, expectedValue): Promise<ExpectedOperatorResult> => {
                 const result = await operator.check(lowercase(value), lowercase(expectedValue));

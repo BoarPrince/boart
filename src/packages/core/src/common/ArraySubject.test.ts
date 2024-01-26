@@ -7,13 +7,13 @@ describe('check array subject', () => {
     /**
      *
      */
-    it('one subscribers before', done => {
+    it('one subscribers before', (done) => {
         let iterator = 0;
 
         const sut = new ArraySubject<string>();
         const expectedValues = ['a', 'b', 'c'];
 
-        sut.asObservable().subscribe(item => {
+        sut.asObservable().subscribe((item) => {
             expect(item).toBe(expectedValues[iterator++]);
             if (iterator >= expectedValues.length) {
                 done();
@@ -29,7 +29,7 @@ describe('check array subject', () => {
     /**
      *
      */
-    it('one subscribers after', done => {
+    it('one subscribers after', (done) => {
         let iterator = 0;
 
         const sut = new ArraySubject<string>();
@@ -40,7 +40,7 @@ describe('check array subject', () => {
         sut.next('c');
         sut.complete();
 
-        sut.subscribe(item => {
+        sut.subscribe((item) => {
             expect(item).toBe(expectedValues[iterator++]);
             if (iterator >= expectedValues.length) {
                 done();
@@ -51,7 +51,7 @@ describe('check array subject', () => {
     /**
      *
      */
-    it('one subscribers in the middle', done => {
+    it('one subscribers in the middle', (done) => {
         let iterator = 0;
 
         const sut = new ArraySubject<string>();
@@ -59,7 +59,7 @@ describe('check array subject', () => {
 
         sut.next('a');
         sut.next('b');
-        sut.subscribe(item => {
+        sut.subscribe((item) => {
             expect(item).toBe(expectedValues[iterator++]);
             if (iterator >= expectedValues.length) {
                 done();
@@ -73,7 +73,7 @@ describe('check array subject', () => {
     /**
      *
      */
-    it('one subscribers in the middle (object subscriber)', done => {
+    it('one subscribers in the middle (object subscriber)', (done) => {
         let iterator = 0;
 
         const sut = new ArraySubject<string>();
@@ -82,7 +82,7 @@ describe('check array subject', () => {
         sut.next('a');
         sut.next('b');
         sut.subscribe({
-            next: item => expect(item).toBe(expectedValues[iterator++]),
+            next: (item) => expect(item).toBe(expectedValues[iterator++]),
             error: () => done(),
             complete: () => done()
         });
@@ -94,7 +94,7 @@ describe('check array subject', () => {
     /**
      *
      */
-    it('two subscribers', done => {
+    it('two subscribers', (done) => {
         const checkDone = (count1: number, count2: number) => {
             if (count1 === 2 && count2 === 2) {
                 done();
@@ -108,13 +108,13 @@ describe('check array subject', () => {
         const expectedValues = ['a', 'b'];
 
         sut.next('a');
-        sut.asObservable().subscribe(item => {
+        sut.asObservable().subscribe((item) => {
             expect(item).toBe(expectedValues[firstSubscriberIterator++]);
             checkDone(firstSubscriberIterator, secondSubscriberIterator);
         });
         sut.next('b');
 
-        sut.asObservable().subscribe(item => {
+        sut.asObservable().subscribe((item) => {
             expect(item).toBe(expectedValues[secondSubscriberIterator++]);
             checkDone(firstSubscriberIterator, secondSubscriberIterator);
         });

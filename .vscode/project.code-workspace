@@ -38,6 +38,8 @@
     }
   ],
   "settings": {
+
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[*.cpt]": {
       "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
     },
@@ -67,6 +69,7 @@
     },
     "[typescript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
+      // "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
     },
     "custom-language-properties": {
       "Markdown.comments.lineComment": "comment *",

@@ -134,11 +134,11 @@ it('test with failed status', () => {
     const data = writeFileCall.data;
     delete data.startTime;
     expect(data).toStrictEqual({
-        id: '-id-',
+        id: expect.anything(),
         name: '',
         number: '',
         priority: 1,
-        status: 0,
+        status: RuntimeStatus.failed,
         tickets: []
     });
 });

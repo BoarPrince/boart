@@ -100,7 +100,7 @@ beforeEach(() => {
  *
  */
 afterEach(() => {
-  StepReport.instance.report();
+    StepReport.instance.report();
 });
 
 /**

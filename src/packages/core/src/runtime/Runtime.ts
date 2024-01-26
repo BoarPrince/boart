@@ -28,7 +28,10 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
     /**
      *
      */
-    constructor(private contextGenerator: () => TContext, private preserveCurrent = true) {}
+    constructor(
+        private contextGenerator: () => TContext,
+        private preserveCurrent = true
+    ) {}
 
     /**
      *
@@ -36,7 +39,7 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
     public notifyStart(context: TContext) {
         const generatedContext = this.contextGenerator();
         // remove all undefined properties to prevent overriding with the spread operator
-        Object.keys(generatedContext).forEach(key => generatedContext[key] === undefined && delete generatedContext[key]);
+        Object.keys(generatedContext).forEach((key) => generatedContext[key] === undefined && delete generatedContext[key]);
 
         this.timer = new Timer();
         this.currentContext = {

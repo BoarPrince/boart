@@ -74,7 +74,7 @@ jest.mock('fs');
  *
  */
 beforeAll(() => {
-  basicInitialize();
+    basicInitialize();
 });
 
 /**

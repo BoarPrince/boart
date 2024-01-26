@@ -1,7 +1,7 @@
-import { ParaDescription } from "./ParaDescription";
+import { ParaDescription } from './ParaDescription';
 
 /**
- * 
+ *
  */
 export interface Pipe {
     name: string;

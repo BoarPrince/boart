@@ -1,5 +1,5 @@
-import { DescriptionCodeExample } from "./DescriptionCodeExample";
-import { Location } from "./Location";
+import { DescriptionCodeExample } from './DescriptionCodeExample';
+import { Location } from './Location';
 
 /**
  *

@@ -9,7 +9,10 @@ export class PropertyIterable implements IterableIterator<Property> {
     /**
      *
      */
-    constructor(private keys: string[], path?: string) {
+    constructor(
+        private keys: string[],
+        path?: string
+    ) {
         this.completePath = path || keys.join('.');
     }
 

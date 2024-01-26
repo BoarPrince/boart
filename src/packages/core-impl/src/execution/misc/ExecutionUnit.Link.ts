@@ -1,5 +1,5 @@
 import { ExecutionUnit, ParaType } from '@boart/core';
-import { StepReport } from '@boart/protocol';
+// import { StepReport } from '@boart/protocol';
 
 import { AnyContext } from '../../AnyContext';
 import { RowTypeValue } from '../../RowTypeValue';
@@ -23,6 +23,6 @@ export class LinkExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue
      *
      */
     execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
-        StepReport.instance.addLink(row.ast.qualifier?.stringValue, row.value.toString());
+        // StepReport.instance.addLink(row.ast.qualifier?.stringValue, row.value.toString());
     }
 }

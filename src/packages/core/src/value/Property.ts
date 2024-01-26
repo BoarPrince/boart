@@ -10,7 +10,10 @@ export class Property {
     /**
      *
      */
-    constructor(key: string, public readonly path: string) {
+    constructor(
+        key: string,
+        public readonly path: string
+    ) {
         if (key?.endsWith('?')) {
             this.isOptional = true;
             this.key = key.slice(0, -1);

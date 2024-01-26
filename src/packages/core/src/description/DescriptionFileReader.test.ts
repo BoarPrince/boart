@@ -16,35 +16,37 @@ jest.spyOn(fs, 'existsSync').mockReturnValue(true);
 const astDesc: ASTUnitDescription = {
     unit: '--unit--',
     desc: {
-            id: '--id--',
-            title: '--title--',
-            desc: ['desc1','desc2'],
-            examples: [{
+        id: '--id--',
+        title: '--title--',
+        desc: ['desc1', 'desc2'],
+        examples: [
+            {
                 title: '--example1--',
                 codes: [
                     {
-                      title: '--code--',
-                      type: 'json',
-                      position: 'before',
-                      code: ['code1', 'code2'],
-                      location: null
+                        title: '--code--',
+                        type: 'json',
+                        position: 'before',
+                        code: ['code1', 'code2'],
+                        location: null
                     }
                 ],
                 text: ['example1', 'example2'],
                 location: null
-            }],
-            location: null
-          }
-    };
+            }
+        ],
+        location: null
+    }
+};
 
-    /**
+/**
  *
  */
 jest.mock('../parser/DescriptionParser', () => ({
     DescriptionParser: class {
-      parse = jest.fn().mockImplementation((fileName: string) => {
-        return fileName === 'path/desc.desc' ? astDesc.desc : [astDesc];
-      })
+        parse = jest.fn().mockImplementation((fileName: string) => {
+            return fileName === 'path/desc.desc' ? astDesc.desc : [astDesc];
+        });
     }
 }));
 
@@ -62,29 +64,27 @@ describe('ast to desc', () => {
      */
     it('simple desc', () => {
         const result = sut.readDescription('path/desc');
-        expect(result).toStrictEqual(
-          {
-               "dataScopes": null,
-               "description": "desc1\ndesc2",
-               "examples": [
-                 {
-                   "codes": [
-                     {
-                       "code": "code1\ncode2",
-                       "position": "before",
-                       "title": "--code--",
-                       "type": "--code--",
-                     },
-                   ],
-                   "example": "example1\nexample2",
-                   "title": "--example1--",
-                 },
-               ],
-               "id": "--id--",
-               "parentId": null,
-               "title": "--title--",
-             }
-        );
+        expect(result).toStrictEqual({
+            dataScopes: null,
+            description: 'desc1\ndesc2',
+            examples: [
+                {
+                    codes: [
+                        {
+                            code: 'code1\ncode2',
+                            position: 'before',
+                            title: '--code--',
+                            type: '--code--'
+                        }
+                    ],
+                    example: 'example1\nexample2',
+                    title: '--example1--'
+                }
+            ],
+            id: '--id--',
+            parentId: null,
+            title: '--title--'
+        });
     });
 
     /**
@@ -92,36 +92,36 @@ describe('ast to desc', () => {
      */
     it('unit', () => {
         const result = sut.readDescription('path/unit-file', '--unit--');
-        expect(result).toStrictEqual(
-          {
-               "dataScopes": null,
-               "description": "desc1\ndesc2",
-               "examples": [
-                 {
-                   "codes": [
-                     {
-                       "code": "code1\ncode2",
-                       "position": "before",
-                       "title": "--code--",
-                       "type": "--code--",
-                     },
-                   ],
-                   "example": "example1\nexample2",
-                   "title": "--example1--",
-                 },
-               ],
-               "id": "--id--",
-               "parentId": null,
-               "title": "--title--",
-             }
-        );
+        expect(result).toStrictEqual({
+            dataScopes: null,
+            description: 'desc1\ndesc2',
+            examples: [
+                {
+                    codes: [
+                        {
+                            code: 'code1\ncode2',
+                            position: 'before',
+                            title: '--code--',
+                            type: '--code--'
+                        }
+                    ],
+                    example: 'example1\nexample2',
+                    title: '--example1--'
+                }
+            ],
+            id: '--id--',
+            parentId: null,
+            title: '--title--'
+        });
     });
 
     /**
      *
      */
     it('unit but no definition', () => {
-        expect(() => sut.readDescription('path/unit')).toThrow("description of file 'path/unit.desc' is a unit description, but unit definition is missing");
+        expect(() => sut.readDescription('path/unit')).toThrow(
+            "description of file 'path/unit.desc' is a unit description, but unit definition is missing"
+        );
     });
 
     /**
@@ -157,4 +157,3 @@ describe('ast to desc', () => {
         expect(existsMock.mock.lastCall[0]).toEndWith('Documentation.desc');
     });
 });
-

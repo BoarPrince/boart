@@ -67,7 +67,7 @@ jest.mock('amqplib', () => {
  *
  */
 beforeAll(() => {
-  basicInitialize();
+    basicInitialize();
 });
 
 /**

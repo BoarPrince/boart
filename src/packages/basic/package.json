@@ -1,45 +1,45 @@
 {
-  "name": "@boart/basic",
-  "version": "1.0.0-300",
-  "author": "kem@boarprince.net",
-  "description": "",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
-  "files": [
-    "lib",
-    "src"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Kemark/boart.git"
-  },
-  "scripts": {
-    "build": "tsc",
-    "test": "jest --coverage"
-  },
-  "keywords": [],
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Kemark/boart/issues"
-  },
-  "homepage": "https://github.com/Kemark/boart#readme",
-  "dependencies": {
-    "@boart/core": "workspace:*",
-    "@boart/core-impl": "workspace:*",
-    "@boart/protocol": "workspace:*",
-    "@boart/execution": "workspace:*",
-    "@types/node": "~20.10.5"
-  },
-  "devDependencies": {
-    "jest-fetch-mock": "~3.0.3",
-    "typescript": "~5.3.3",
-    "tslib": "~2.6.2",
-    "jest-extended": "~4.0.2",
-    "@types/jest": "~29.5.11",
-    "jest": "~29.7.0",
-    "ts-jest": "~29.1.1",
-    "@jest/types": "~29.6.3",
-    "ts-node": "~10.9.2",
-    "prettier": "~3.1.1"
-  }
+    "name": "@boart/basic",
+    "version": "1.0.0-300",
+    "author": "kem@boarprince.net",
+    "description": "",
+    "main": "lib/index.js",
+    "typings": "lib/index.d.ts",
+    "files": [
+        "lib",
+        "src"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Kemark/boart.git"
+    },
+    "scripts": {
+        "build": "tsc",
+        "test": "jest --coverage"
+    },
+    "keywords": [],
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Kemark/boart/issues"
+    },
+    "homepage": "https://github.com/Kemark/boart#readme",
+    "dependencies": {
+        "@boart/core": "workspace:*",
+        "@boart/core-impl": "workspace:*",
+        "@boart/protocol": "workspace:*",
+        "@boart/execution": "workspace:*",
+        "@types/node": "~20.10.5"
+    },
+    "devDependencies": {
+        "jest-fetch-mock": "~3.0.3",
+        "typescript": "~5.3.3",
+        "tslib": "~2.6.2",
+        "jest-extended": "~4.0.2",
+        "@types/jest": "~29.5.11",
+        "jest": "~29.7.0",
+        "ts-jest": "~29.1.1",
+        "@jest/types": "~29.6.3",
+        "ts-node": "~10.9.2",
+        "prettier": "~3.1.1"
+    }
 }

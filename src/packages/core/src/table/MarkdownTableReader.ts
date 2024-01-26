@@ -38,7 +38,7 @@ export class MarkdownTableReader {
                 .replace(reExpPipeMarker, '\x01')
                 .split('|')
                 // eslint-disable-next-line no-control-regex
-                .map(p => p.replace(/\x01/g, '|').trim());
+                .map((p) => p.replace(/\x01/g, '|').trim());
 
             // check content rows
             if (matchCount > 1) {

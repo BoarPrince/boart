@@ -49,12 +49,12 @@ jest.mock('fs');
  *
  */
 beforeAll(() => {
-  basicInitialize();
+    basicInitialize();
 });
 
 /**
  *
-*/
+ */
 beforeEach(() => {
     Store.instance.localStore.clear();
     Store.instance.testStore.clear();

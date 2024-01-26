@@ -1,6 +1,6 @@
-import { DescriptionGenerator } from './basic/DescriptionGenerator'
+import { DescriptionGenerator } from './basic/DescriptionGenerator';
 
 /**
  *
  */
-export { DescriptionGenerator }
+export { DescriptionGenerator };

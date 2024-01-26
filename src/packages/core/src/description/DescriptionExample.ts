@@ -1,4 +1,4 @@
-import { DescriptionCodeExample } from "./DescriptionCodeExample";
+import { DescriptionCodeExample } from './DescriptionCodeExample';
 
 /**
  *

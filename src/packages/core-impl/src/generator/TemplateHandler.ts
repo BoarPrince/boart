@@ -67,15 +67,18 @@ export class TemplateHandler {
      *
      */
     private parseSettings(settings: TemplateValueType): Record<string, string> {
-        return Object.entries(settings || {}).reduce((obj, [key, value]) => {
-            if (typeof value === 'string') {
-                obj[key] = value;
-            } else {
-                Object.entries(this.parseSettings(value as unknown as TemplateValueType)).forEach(([k, v]) => {
-                    obj[`${key}.${k}`] = v;
-                });
-            }
-            return obj;
-        }, {} as Record<string, string>);
+        return Object.entries(settings || {}).reduce(
+            (obj, [key, value]) => {
+                if (typeof value === 'string') {
+                    obj[key] = value;
+                } else {
+                    Object.entries(this.parseSettings(value as unknown as TemplateValueType)).forEach(([k, v]) => {
+                        obj[`${key}.${k}`] = v;
+                    });
+                }
+                return obj;
+            },
+            {} as Record<string, string>
+        );
     }
 }
