@@ -58,12 +58,14 @@
     "jest/max-expects": "off",
     "jest/require-top-level-describe": "off",
     "jest/no-untyped-mock-factory": "off",
+    "jest/no-focused-tests": "off",
     // old
     "no-extra-boolean-cast": "off",
     "@typescript-eslint/rule-name": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-unsafe-return": 0,
     // new
+    "@typescript-config/is-valid": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "eslint-comments/disable-enable-pair": [
       "error",

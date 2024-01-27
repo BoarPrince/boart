@@ -1,5 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import fetch, { Blob, blobFrom, blobFromSync, File, fileFrom, fileFromSync, FormData, Headers, Request, Response } from 'node-fetch';
+import fetch, {
+    Blob,
+    blobFrom,
+    blobFromSync,
+    File,
+    fileFrom,
+    fileFromSync,
+    FormData,
+    Headers,
+    Request,
+    Response,
+    RequestMode,
+    ReferrerPolicy
+} from 'node-fetch';
 
 // fetch-polyfill.js
 if (globalThis.fetch !== fetch) {
@@ -14,4 +27,6 @@ if (globalThis.fetch !== fetch) {
     globalThis.blobFromSync = blobFromSync;
     globalThis.fileFrom = fileFrom;
     globalThis.fileFromSync = fileFromSync;
+    globalThis.RequestMode = RequestMode;
+    globalThis.ReferrerPolicy = ReferrerPolicy;
 }

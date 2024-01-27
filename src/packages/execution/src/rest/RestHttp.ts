@@ -2,6 +2,7 @@ import { DataContent, EnvLoader, JsonHelper } from '@boart/core';
 import { default as Form_Data } from 'form-data';
 import jwt_decode from 'jwt-decode';
 import { Subject } from 'rxjs';
+import { RequestMode, ReferrerPolicy, BodyInit } from 'node-fetch';
 
 import { CurlGenerator } from './CurlGenerator';
 import { ExecutionInfo } from './ExecutionInfo';

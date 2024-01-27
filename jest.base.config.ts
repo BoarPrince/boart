@@ -19,7 +19,7 @@ const config = {
     modulePathIgnorePatterns: ['./lib/'],
     coveragePathIgnorePatterns: ['node_modules'],
     moduleFileExtensions: ['ts', 'js', 'json'],
-    collectCoverageFrom: ['./src/*/**/*.ts', '!./src/*/**/*.enum.ts', '!./src/*/**/*.d.ts'],
+    collectCoverageFrom: ['./src/**/*.ts', '!./src/**/*.enum.ts', '!./src/**/*.d.ts'],
     coverageReporters: ['json', 'lcov', 'text', 'clover']
 };
 export default config;
