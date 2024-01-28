@@ -1,0 +1,22 @@
+{
+  "extends": [
+    "eslint:recommended", //
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:import/typescript",
+    "plugin:jest/all"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "eslint-comments",
+    "jest"
+  ],
+  "parserOptions": {
+    "project": [
+      "./tsconfig.eslint.json"
+    ]
+  },
+  "root": true
+}

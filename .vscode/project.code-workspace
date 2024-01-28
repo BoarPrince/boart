@@ -108,6 +108,10 @@
       "enabled": false,
       "autoRun": false
     },
-    "testing.autoRun.delay": 1000000
+    "testing.autoRun.delay": 1000000,
+    "eslint.workingDirectories": [
+      ".eslintrc.js",
+      ".eslintignore"
+    ]
   }
 }
