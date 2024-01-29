@@ -1,4 +1,3 @@
-import { NativeType } from '../data/NativeType';
 import { ExpectedOperatorResult } from './ExpectedOperator';
 import { ExpectedOperatorInitializer } from './ExpectedOperatorInitializer';
 
@@ -65,7 +64,7 @@ describe('extended operation generation', () => {
     /**
      *
      */
-    it('not and others generation with description', () => {
+    it('not and others generation with description titles', () => {
         const sut = ExpectedOperatorInitializer.instance;
 
         sut.addOperator({
@@ -80,10 +79,36 @@ describe('extended operation generation', () => {
             })
         });
 
-        const descriptions = sut.operators //
+        const descriptionTitles = sut.operators //
             .map((operator) => operator.description())
             .map((desc) => desc.title);
 
-        expect(descriptions).toStrictEqual(['-title-', '-title-:not', '-title-:ci', '-title-:ci:not']);
+        expect(descriptionTitles).toStrictEqual(['-title-', '-title-:not', '-title-:ci', '-title-:ci:not']);
+    });
+
+    /**
+     *
+     */
+    it('not and others generation with description short titles', () => {
+        const sut = ExpectedOperatorInitializer.instance;
+
+        sut.addOperator({
+            name: 'test-op',
+            caseInsesitive: true,
+            check: (): ExpectedOperatorResult => null,
+            description: () => ({
+                id: '-id-',
+                title: '-title-',
+                titleShort: '-title-short-',
+                description: '--desc--',
+                examples: null
+            })
+        });
+
+        const descriptionTitles = sut.operators //
+            .map((operator) => operator.description())
+            .map((desc) => desc.titleShort);
+
+        expect(descriptionTitles).toStrictEqual(['-title-short-', 'not', 'ci', 'ci:not']);
     });
 });

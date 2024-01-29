@@ -27,7 +27,29 @@ describe('only one description', () => {
             examples: [],
             id: 'id.1',
             location: undefined,
-            title: 'id.1'
+            title: 'id.1',
+            titleShort: 'id.1'
+        });
+    });
+
+    /*
+     *
+     */
+    it('small with short title', () => {
+        const description = `
+        # expected
+        ## id.1 (id.short)
+        desc1`;
+
+        const ast = sut.parse(description);
+
+        expect(ast).toStrictEqual({
+            desc: ['        desc1'],
+            examples: [],
+            id: 'id.1',
+            location: undefined,
+            title: 'id.1',
+            titleShort: 'id.short'
         });
     });
 
@@ -51,7 +73,8 @@ describe('only one description', () => {
             examples: [],
             id: '-id-',
             location: undefined,
-            title: '-id-'
+            title: '-id-',
+            titleShort: '-id-'
         });
     });
 
@@ -82,7 +105,8 @@ describe('only one description', () => {
             ],
             id: 'id.1',
             location: undefined,
-            title: 'id.1'
+            title: 'id.1',
+            titleShort: 'id.1'
         });
     });
 

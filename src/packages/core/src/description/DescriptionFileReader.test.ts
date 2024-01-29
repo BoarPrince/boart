@@ -18,6 +18,7 @@ const astDesc: ASTUnitDescription = {
     desc: {
         id: '--id--',
         title: '--title--',
+        titleShort: '--title--',
         desc: ['desc1', 'desc2'],
         examples: [
             {
@@ -42,6 +43,7 @@ const astDesc: ASTUnitDescription = {
 /**
  *
  */
+// eslint-disable-next-line jest/no-untyped-mock-factory
 jest.mock('../parser/DescriptionParser', () => ({
     DescriptionParser: class {
         parse = jest.fn().mockImplementation((fileName: string) => {
@@ -74,7 +76,8 @@ describe('ast to desc', () => {
                             code: 'code1\ncode2',
                             position: 'before',
                             title: '--code--',
-                            type: '--code--'
+                            titleShort: '--code--',
+                            type: 'json'
                         }
                     ],
                     example: 'example1\nexample2',
@@ -83,7 +86,8 @@ describe('ast to desc', () => {
             ],
             id: '--id--',
             parentId: null,
-            title: '--title--'
+            title: '--title--',
+            titleShort: '--title--'
         });
     });
 
@@ -102,7 +106,8 @@ describe('ast to desc', () => {
                             code: 'code1\ncode2',
                             position: 'before',
                             title: '--code--',
-                            type: '--code--'
+                            titleShort: '--code--',
+                            type: 'json'
                         }
                     ],
                     example: 'example1\nexample2',
@@ -111,7 +116,8 @@ describe('ast to desc', () => {
             ],
             id: '--id--',
             parentId: null,
-            title: '--title--'
+            title: '--title--',
+            titleShort: '--title--'
         });
     });
 
@@ -139,7 +145,7 @@ describe('ast to desc', () => {
      *
      */
     it('take default path', () => {
-        var existsMock = jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+        const existsMock = jest.spyOn(fs, 'existsSync').mockReturnValue(true);
 
         sut.readDescription('Documentation', '--unit--');
 
@@ -150,7 +156,7 @@ describe('ast to desc', () => {
      *
      */
     it('use .desc ending', () => {
-        var existsMock = jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+        const existsMock = jest.spyOn(fs, 'existsSync').mockReturnValue(true);
 
         sut.readDescription('Documentation.desc', '--unit--');
 

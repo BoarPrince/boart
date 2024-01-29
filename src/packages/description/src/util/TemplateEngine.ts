@@ -40,6 +40,7 @@ export class TemplateEngine {
         this.addMarkdownFilter();
         this.addParentFilter();
         this.addWordBreakFilter();
+        this.addTitleFilter();
         this.addLanguageFilter();
         this.addUnindentFilter();
     }
@@ -115,9 +116,22 @@ export class TemplateEngine {
     /**
      *
      */
+    public addTitleFilter(): void {
+        this._env.addFilter('brtTitleShort', (desciption: Description) => {
+          if (!Object.hasOwn(desciption, 'title'))
+          {
+            throw new Error(`${JSON.stringify(desciption)} is not a description object`)
+          }
+          return desciption?.titleShort || desciption?.title;
+        });
+    }
+
+    /**
+     *
+     */
     public addWordBreakFilter(): void {
         this._env.addFilter('brtWbr', (text: string) => {
-            return text.replace(/:/g, ':<wbr/>');
+            return text?.replace(/:/g, ':<wbr/>');
         });
     }
 

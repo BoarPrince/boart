@@ -8,6 +8,7 @@ export interface ASTDescription {
     id: string;
     // readonly parentId?: string;
     title: string;
+    titleShort: string;
     desc: Array<string>;
     examples: Array<DescriptionExample>;
     location: Location;

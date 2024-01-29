@@ -1,10 +1,17 @@
+
+/**
+ *
+ */
+export type DescriptionCodeExampleType = 'json' | 'javascript';
+export type DescriptionCodeExamplePosition = 'before' | 'after';
+
 /**
  *
  */
 
 export interface DescriptionCodeExample {
     title: string;
-    type: 'json' | 'javascript';
-    position: 'before' | 'after';
+    type: DescriptionCodeExampleType;
+    position: DescriptionCodeExamplePosition;
     code: string;
 }

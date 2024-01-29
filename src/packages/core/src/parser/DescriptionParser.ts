@@ -1,15 +1,7 @@
+import { DescriptionCodeExamplePosition, DescriptionCodeExampleType } from '../description/DescriptionCodeExample';
 import { ASTDescription, ASTUnitDescription } from './ast/ASTDescription';
 import { DescriptionCodeExample } from './ast/DescriptionCodeExample';
 import { DescriptionExample } from './ast/DescriptionExample';
-import { Location } from './ast/Location';
-
-/**
- *
- */
-class ParserException {
-    message: string;
-    location: Location;
-}
 
 /**
  *
@@ -29,6 +21,7 @@ export interface DescriptionTokenResult {
     type: DescriptionToken;
     meta: Map<string, string>;
     text: string;
+    textShort?: string;
 }
 
 /**
@@ -49,12 +42,13 @@ class DescriptionHeaderTokenizer implements DescriptionTokenizer {
      *
      */
     public parse(line: string): DescriptionTokenResult {
-        const match = line.match(/^\s*##\s*([^#]+)$/);
+        const match = line.match(/^\s*##\s*([^#()]+)(\s*\(\s*([^)(]+)\s*\))?\s*$/);
         return match
             ? {
                   type: DescriptionToken.DescriptionHeader,
                   meta: null,
-                  text: match[1].trim()
+                  text: match[1].trim(),
+                  textShort: match[3]?.trim()
               }
             : null;
     }
@@ -192,7 +186,7 @@ export class DescriptionParser {
     private getToken(line: string): DescriptionTokenResult {
         for (const tokenizer of this.tokenizers) {
             const token = tokenizer.parse(line);
-            if (!!token) {
+            if (token) {
                 return token;
             }
         }
@@ -225,6 +219,7 @@ export class DescriptionParser {
                         desc: {
                             id: token.text,
                             title: token.text,
+                            titleShort: token.textShort ?? token.text,
                             desc: currentLines,
                             examples: new Array<DescriptionExample>(),
                             location: undefined
@@ -256,8 +251,8 @@ export class DescriptionParser {
                     currentLines = new Array<string>();
                     currentExample?.codes.push({
                         title: token.text,
-                        type: token.meta?.get('type') ?? 'json',
-                        position: token.meta?.get('position') ?? 'after',
+                        type: <DescriptionCodeExampleType>token.meta?.get('type') ?? 'json',
+                        position: <DescriptionCodeExamplePosition>token.meta?.get('position') ?? 'after',
                         code: currentLines,
                         location: undefined
                     });

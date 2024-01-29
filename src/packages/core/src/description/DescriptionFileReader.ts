@@ -58,9 +58,9 @@ export class DescriptionFileReader {
      *
      */
     public readDescription(fileName: string, unit?: string): Description {
-        var file = path.parse(fileName);
-        var pathName = !file.dir ? this.getCallerPath() : file.dir;
-        var name = file.name;
+        const file = path.parse(fileName);
+        const pathName = !file.dir ? this.getCallerPath() : file.dir;
+        const name = file.name;
 
         const fileAndPath = path.join(pathName, name) + '.desc';
 
@@ -84,6 +84,7 @@ export class DescriptionFileReader {
             id: desc.id,
             parentId: null,
             title: desc.title,
+            titleShort: desc.titleShort ?? desc.title,
             dataScopes: null,
             description: desc.desc?.join('\n'),
             examples: desc.examples?.map((example) => ({
@@ -91,8 +92,9 @@ export class DescriptionFileReader {
                 example: example.text?.join('\n'),
                 codes: example.codes.map((code) => ({
                     title: code.title,
-                    type: code.title as any,
-                    position: code.position as any,
+                    titleShort: code.title,
+                    type: code.type,
+                    position: code.position,
                     code: code.code?.join('\n')
                 }))
             }))

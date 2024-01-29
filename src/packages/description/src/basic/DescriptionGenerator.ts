@@ -55,7 +55,7 @@ export class DescriptionGenerator {
     private read(): FullDescription {
         const fileName = EnvLoader.instance.mapDescriptionData('description.json');
         const description: string = fs.readFileSync(fileName, { encoding: 'utf-8' });
-        return JSON.parse(description);
+        return JSON.parse(description) as FullDescription;
     }
 
     /**

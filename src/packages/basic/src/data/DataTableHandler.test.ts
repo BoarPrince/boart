@@ -25,6 +25,7 @@ jest.mock<typeof import('@boart/core')>('@boart/core', () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const originalModule = jest.requireActual('@boart/core');
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return {
         __esModule: true,
         ...originalModule,
@@ -53,6 +54,7 @@ jest.mock<typeof import('@boart/core')>('@boart/core', () => {
 /**
  *
  */
+// eslint-disable-next-line jest/no-untyped-mock-factory
 jest.mock('crypto', () => {
     return {
         randomUUID: () => 'x-x-x'

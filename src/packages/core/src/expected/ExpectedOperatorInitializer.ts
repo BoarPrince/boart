@@ -73,7 +73,7 @@ export class ExpectedOperatorInitializer implements Descriptionable {
         this.addNotAndCiOperator(operator);
 
         // 2. add default implementation
-        if (!!operator.default) {
+        if (operator.default) {
             const defaultOperator: ExpectedOperator = {
                 name: '',
                 description: () => {
@@ -82,6 +82,7 @@ export class ExpectedOperatorInitializer implements Descriptionable {
                     // define title if description is not defined, but the title is missing
                     if (!!operatorDescription && !operatorDescription.title) {
                         operatorDescription.title = `expected:${operator.name}`;
+                        operatorDescription.titleShort = `expected:${operator.name}`;
                     }
 
                     return !operatorDescription
@@ -90,6 +91,7 @@ export class ExpectedOperatorInitializer implements Descriptionable {
                               id: `${operatorDescription.id}:default`,
                               parentId: operatorDescription.id,
                               title: 'expected',
+                              titleShort: 'expected',
                               description: `The '<ref:${operatorDescription.id}>' operator it's the default
                                 operator and it's used when no operator is defined`,
                               examples: null
@@ -138,7 +140,7 @@ export class ExpectedOperatorInitializer implements Descriptionable {
      */
     private generateNotOperator(operator: ExpectedOperator): ExpectedOperator {
         return {
-            name: operator.name + (!!operator.name ? ':' : '') + 'not',
+            name: operator.name + (operator.name ? ':' : '') + 'not',
             description: () => {
                 const operatorNotDescription = DescriptionHandler.solve(operator.description);
                 return !operatorNotDescription
@@ -147,6 +149,7 @@ export class ExpectedOperatorInitializer implements Descriptionable {
                           id: `${operatorNotDescription.id}:not`,
                           parentId: operatorNotDescription.id,
                           title: `${operatorNotDescription.title || ''}:not`,
+                          titleShort: `${operatorNotDescription.titleShort !== 'ci' ? '' : 'ci:'}not`,
                           description: `It's the not extension of the '<ref:${operatorNotDescription.id}>' operator`,
                           examples: null
                       };
@@ -165,10 +168,11 @@ export class ExpectedOperatorInitializer implements Descriptionable {
      *
      */
     private generateCIOperator(operator: ExpectedOperator): ExpectedOperator {
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         const lowercase = (value: NativeType): string => value?.toString()?.toLowerCase() || '';
 
         return {
-            name: operator.name + (!!operator.name ? ':' : '') + 'ci',
+            name: operator.name + (operator.name ? ':' : '') + 'ci',
             caseInsesitive: true,
             description: () => {
                 const operatorCIDescription = DescriptionHandler.solve(operator.description);
@@ -178,6 +182,7 @@ export class ExpectedOperatorInitializer implements Descriptionable {
                           id: `${operatorCIDescription.id}:ci`,
                           parentId: operatorCIDescription.id,
                           title: `${operatorCIDescription.title || ''}:ci`,
+                          titleShort: 'ci',
                           description: `It's the ci (case insensitive) extension of the '<ref:${operatorCIDescription.id}>' operator`,
                           examples: null
                       };
