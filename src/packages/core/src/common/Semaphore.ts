@@ -49,7 +49,7 @@ export class Semaphore {
             return;
         }
 
-        const fn = this.fns.shift();
+        const fn = this.fns.shift() as (unknown) => void;
         this._active += 1;
 
         if (fn) {

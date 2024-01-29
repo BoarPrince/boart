@@ -1,6 +1,3 @@
-/* eslint-disable jest/no-conditional-in-test */
-/* eslint-disable jest/no-conditional-expect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'jest-extended';
 import { DescriptionHandler } from '../description/DescriptionHandler';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
@@ -13,6 +10,7 @@ import { RowDefinitionBinder } from './RowDefinitionBinder';
 import { MetaInfo } from './TableMetaInfo';
 import { key, value } from './TableRowDecorator';
 import { TableRowType } from './TableRowType';
+import { Description } from '../description/Description';
 
 /**
  *
@@ -64,7 +62,7 @@ it('check simple binding', () => {
     ];
     const rawRows = [{ key: 'aa', ast: null, values_replaced: { value1: 'b' } }];
 
-    const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
+    const sut = new RowDefinitionBinder<never, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
     const rows: RowWithOneValue[] = sut.bind(RowWithOneValue);
 
     expect(rows).toBeDefined();
@@ -123,7 +121,7 @@ describe('check binding', () => {
 
             const rawRows = [{ key: rowKey, ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
 
-            const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
+            const sut = new RowDefinitionBinder<never, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
             const rows = sut.bind(RowWithOneValue);
 
             expect(rows).toBeDefined();
@@ -163,10 +161,10 @@ describe('check binding', () => {
             ];
             const rawRows = [{ key: rowKey, ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
 
-            const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
-            if (!!expectedErrorMessage) {
+            const sut = new RowDefinitionBinder<never, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
+            if (expectedErrorMessage) {
                 expect(() => sut.bind(RowWithOneValue)).toThrow(expectedErrorMessage);
-            } else {
+              } else {
                 const rows = sut.bind(RowWithOneValue);
                 expect(rows).toBeDefined();
                 expect(rows).toHaveLength(1);
@@ -197,7 +195,7 @@ describe('check binding', () => {
             ];
 
             const rawRows = [{ key: rowKey, ast: null, values: { value1: 'b' }, values_replaced: { value1: 'b' } }];
-            const sut = new RowDefinitionBinder<any, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
+            const sut = new RowDefinitionBinder<never, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
 
             expect(() => sut.bind(RowWithOneValue)).toThrow(expectedErrorMessage);
         }
@@ -215,22 +213,23 @@ describe('check binding with multiple definitions', () => {
         /**
          *
          */
-        class MockExecutionUnit implements ExecutionUnit<any, any> {
+        class MockExecutionUnit implements ExecutionUnit<never, never> {
             constructor(description: string) {
-                this.description = {
+                this.description = () => ({
                     id: null,
                     title: description,
                     description,
                     examples: null
-                };
+                });
             }
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             execute(_context, _row): void {
                 // do noting in mock
             }
-            readonly description = null;
+
+            readonly description: () =>  Description;
             get key() {
-                return Symbol(this.description.title);
+                return Symbol(this.description().title);
             }
         }
 

@@ -87,7 +87,7 @@ export class TextLanguageHandler {
      *
      */
     add(identifier: string) {
-        if (!!this.mappings[identifier]) {
+        if (this.mappings[identifier]) {
             throw Error(`language mapping for '${identifier}' is already defined!`);
         }
         const entry = new MappingEntry(identifier);

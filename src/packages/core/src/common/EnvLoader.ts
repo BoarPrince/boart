@@ -89,11 +89,9 @@ export class EnvLoader {
      */
     public static get projectRoot(): string {
         const path = process.env.environment_project_root || '.';
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         if (fsPath.isAbsolute(path)) {
             return path;
         } else {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             return fsPath.resolve(path);
         }
     }
@@ -137,21 +135,18 @@ export class EnvLoader {
      *
      */
     private static readSettings(filename: string): object {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
         const fileData: string = fs.readFileSync(filename, { encoding: 'utf-8' });
-        return JSON.parse(fileData);
+        return JSON.parse(fileData) as object;
     }
 
     /**
      *
      */
     public static getSettings<T>(): T {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
         const defaultSettings = EnvLoader.readSettings(fsPath.join(EnvLoader.projectRoot, EnvLoader.defaultLocation));
 
         // add or override project specific settings
-        if (!!EnvLoader.projectLocation) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+        if (EnvLoader.projectLocation) {
             const projectSettings = EnvLoader.readSettings(fsPath.join(EnvLoader.projectRoot, EnvLoader.projectLocation));
             return EnvLoader.mergeDeep(defaultSettings, projectSettings) as unknown as T;
         } else {
@@ -210,8 +205,10 @@ export class EnvLoader {
         const valueIndex = this.getValueIndex();
 
         Object.entries(settings)
-            .map(([key, value]) => [key, Array.isArray(value) ? value[valueIndex] || value[0] : value])
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            .map(([key, value]) => {
+                const v = Array.isArray(value) ? ((value[valueIndex] ?? value[0]) as string) : (value as string);
+                return [key, v];
+            })
             .forEach(([key, value]) => (process.env[key] = value));
     }
 
@@ -227,13 +224,10 @@ export class EnvLoader {
             throw new Error(`cannot map environment "${dirVar}"`);
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         if (!fs.existsSync(dataDir)) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             fs.mkdirSync(dataDir, { recursive: true });
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         return fsPath.join(dataDir, filename);
     }
 
