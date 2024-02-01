@@ -12,9 +12,9 @@ export default abstract class DataContentBase implements DataContent {
     /**
      *
      */
-    tryParse(content: string, failedContent): object {
+    protected tryParse(content: string, failedContent: ContentType): object | ContentType {
         try {
-            return JSON.parse(content);
+            return JSON.parse(content) as object;
         } catch (error) {
             return failedContent;
         }
@@ -49,7 +49,11 @@ export default abstract class DataContentBase implements DataContent {
      *
      */
     toJSON(): string {
-        return JSON.stringify(this.tryParse(this.getText(), this.getText()));
+      try {
+        return JSON.stringify(JSON.parse(this.getText()));
+      } catch (error) {
+          return this.getText();
+      }
     }
 
     /**

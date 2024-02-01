@@ -1,8 +1,8 @@
 import { ContentInstance } from './ContentInstance';
 import { ContentType } from './ContentType';
 import { DataContent } from './DataContent';
-import DataContentBase from './DataContentBase';
 import { DataContentHelper } from './DataContentHelper';
+import DataContentBase from './DataContentBase';
 import { DataContentObject } from './DataContentObject';
 
 /**
@@ -25,6 +25,7 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
         super();
 
         // check native null and NullContent
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         value = value == null || value.toString() == null ? {} : value;
         this.value = this.deepDeconstruct(value);
     }
@@ -64,6 +65,7 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
         if (typeof this.getValue() === 'object') {
             return this.toJSON();
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
             return this.getValue().toString();
         }
     }
@@ -74,7 +76,7 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
     private transformToArray(value: ContentType): ContentType {
         if (!!value && typeof value === 'object') {
             if (Array.isArray(value)) {
-                return value.map((v) => this.transformToArray(v));
+                return value.map((v: ContentType) => this.transformToArray(v));
             } else {
                 const maxIndex: number = Object.keys(value)
                     .map((k) => Number.parseInt(k))
@@ -87,7 +89,7 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
                     });
                     return value;
                 } else {
-                    const array = new Array(maxIndex + 1);
+                    const array = new Array<ContentType>(maxIndex + 1);
                     Object.keys(value).forEach((k) => {
                         array[Number.parseInt(k)] = this.transformToArray(value[k] as object);
                     });
@@ -149,7 +151,7 @@ export class ObjectContent extends DataContentBase implements DataContentObject 
      *
      */
     get(key: string | number): ContentType {
-        return this.value[key];
+        return this.value[key] as ContentType;
     }
 
     /**
