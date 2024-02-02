@@ -71,6 +71,9 @@ import { OperatorType } from './value/OperatorType';
 import { ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from './value/ValueReplacer';
 import { ValueReplacerHandler } from './value/ValueReplacerHandler';
 import { ObjectValidator } from './validators/object/ObjectValidator';
+import { DefaultRowType } from './default/DefaultRowType';
+import { DefaultPropertySetterExecutionUnit } from './default/DefaultPropertySetterExecutionUnit';
+import { DefaultContext, DefaultExecutionContext, DefaultPreExecutionContext } from './default/DefaultExecutionContext';
 
 /**
  *
@@ -91,6 +94,11 @@ export {
     DataContentHelper,
     DataType,
     Description,
+    DefaultContext,
+    DefaultRowType,
+    DefaultPropertySetterExecutionUnit,
+    DefaultPreExecutionContext,
+    DefaultExecutionContext,
     DescriptionHandler,
     EnvLoader,
     ExecutionContext,

@@ -1,12 +1,13 @@
-import { GroupRowDefinition, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
 import {
-    DependsOnValidator,
-    PropertySetterExecutionUnit,
-    RequiredValidator,
-    RowTypeValue,
-    UniqueValidator,
-    XORValidator
-} from '@boart/core-impl';
+    DefaultPropertySetterExecutionUnit,
+    DefaultRowType,
+    GroupRowDefinition,
+    RowDefinition,
+    TableHandler,
+    TableHandlerBaseImpl,
+    TableRowType
+} from '@boart/core';
+import { DependsOnValidator, RequiredValidator, UniqueValidator, XORValidator } from '@boart/core-impl';
 import { IntValidator } from '@boart/core-impl';
 
 import { RabbitListenerContext } from './RabbitListenerContext';
@@ -15,11 +16,11 @@ import { RabbitListenerExecutionUnit } from './RabbitListenerExecutionUnit';
 /**
  *
  */
-export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<RabbitListenerContext, RowTypeValue<RabbitListenerContext>> {
+export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<RabbitListenerContext, DefaultRowType<RabbitListenerContext>> {
     /**
      *
      */
-    rowType = () => RowTypeValue;
+    rowType = () => DefaultRowType;
 
     /**
      *
@@ -48,7 +49,7 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
     /**
      * rabbit consumer definitions (name, timeout, count, ...)
      */
-    addRowDefinition(tableHandler: TableHandler<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>) {
+    addRowDefinition(tableHandler: TableHandler<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>) {
         /**
          * Credentials
          */
@@ -56,7 +57,7 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
             new RowDefinition({
                 key: Symbol('username'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>(
                     'config',
                     'username'
                 ),
@@ -70,7 +71,7 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
             new RowDefinition({
                 key: Symbol('password'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>(
                     'config',
                     'password'
                 ),
@@ -84,7 +85,7 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
             new RowDefinition({
                 key: Symbol('hostname'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>(
                     'config',
                     'hostname'
                 ),
@@ -98,7 +99,7 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
             new RowDefinition({
                 key: Symbol('vhost'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>(
                     'config',
                     'vhost'
                 ),
@@ -110,7 +111,7 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
             new RowDefinition({
                 key: Symbol('port'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>(
                     'config',
                     'port'
                 ),
@@ -127,7 +128,7 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
             new RowDefinition({
                 key: Symbol('queue'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>(
                     'config',
                     'queue'
                 ),
@@ -139,7 +140,7 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
             new RowDefinition({
                 key: Symbol('exchange'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>(
                     'config',
                     'exchange'
                 ),
@@ -151,7 +152,7 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
             new RowDefinition({
                 key: Symbol('routing'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>(
                     'config',
                     'routing'
                 ),
@@ -163,7 +164,7 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
             new RowDefinition({
                 key: Symbol('store:name'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>(
                     'config',
                     'storeName'
                 ),
@@ -175,14 +176,14 @@ export default class RabbitListenerTableHandler extends TableHandlerBaseImpl<Rab
     /**
      *
      */
-    addGroupRowDefinition(tableHandler: TableHandler<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>) {
+    addGroupRowDefinition(tableHandler: TableHandler<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>) {
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
     }
 
     /**
      *
      */
-    addGroupValidation(tableHandler: TableHandler<RabbitListenerContext, RowTypeValue<RabbitListenerContext>>) {
+    addGroupValidation(tableHandler: TableHandler<RabbitListenerContext, DefaultRowType<RabbitListenerContext>>) {
         tableHandler.addGroupValidator(new XORValidator([Symbol('queue'), Symbol('exchange')]));
         tableHandler.addGroupValidator(new RequiredValidator([Symbol('store:name')]));
     }

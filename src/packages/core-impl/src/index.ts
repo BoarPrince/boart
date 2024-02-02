@@ -1,6 +1,4 @@
 import { AnyContext } from './AnyContext';
-import { DataContext, DataExecutionContext, DataPreExecutionContext } from './DataExecutionContext';
-import { RowTypeValue } from './RowTypeValue';
 import { PDFContent } from './data/PDFContent';
 import { ExpectedDataExecutinoUnit } from './execution/expected/ExecutionUnit.ExpectedData';
 import { ExpectedJsonLogicExecutionUnit } from './execution/expected/ExecutionUnit.ExpectedJsonLogic';
@@ -10,7 +8,6 @@ import { GroupExecutionUnit } from './execution/misc/ExecutionUnit.Group';
 import { LinkExecutionUnit } from './execution/misc/ExecutionUnit.Link';
 import { OutStoreExecutionUnit } from './execution/misc/ExecutionUnit.OutStore';
 import { WaitExecutionUnit } from './execution/misc/ExecutionUnit.Wait';
-import { PropertySetterExecutionUnit } from './execution/property-setter/PropertySetterExecutionUnit';
 import { RunEnvExecutionUnit } from './execution/run/ExecutionUnit.RunEnv';
 import { RunNotExecutionUnit } from './execution/run/ExecutionUnit.RunNot';
 import { RunNotEmptyExecutionUnit } from './execution/run/ExecutionUnit.RunNotEmpty';
@@ -54,9 +51,6 @@ export {
     BoolValidator,
     ContextReplacer,
     CharGenerator,
-    DataContext,
-    DataExecutionContext,
-    DataPreExecutionContext,
     DateTimeGenerator,
     DependsOnValidator,
     DependsOnValueValidator,
@@ -75,12 +69,10 @@ export {
     OutStoreExecutionUnit,
     LinkExecutionUnit,
     PDFContent,
-    PropertySetterExecutionUnit,
     QualifierValidator,
     RandomGenerator,
     ReferenceReplacer,
     RequiredValidator,
-    RowTypeValue,
     RunOnlyExecutionUnit,
     RunEnvExecutionUnit,
     RunNotExecutionUnit,

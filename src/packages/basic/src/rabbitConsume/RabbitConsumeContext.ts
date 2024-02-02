@@ -1,5 +1,4 @@
-import { DataContent, ExecutionContext } from '@boart/core';
-import { DataExecutionContext } from '@boart/core-impl';
+import { DataContent, DefaultExecutionContext, ExecutionContext } from '@boart/core';
 
 /**
  *
@@ -19,7 +18,7 @@ export interface RabbitConsumeConfigContext {
 /**
  *
  */
-export interface RabbitConsumeDataExecutionContext extends DataExecutionContext {
+export interface RabbitConsumeDataExecutionContext extends DefaultExecutionContext {
     filter: {
         data: DataContent | null;
         header: DataContent | null;

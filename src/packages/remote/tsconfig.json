@@ -1,0 +1,11 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "allowJs": true, // copy js files to outDir  -> parser/peggy/*.js
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

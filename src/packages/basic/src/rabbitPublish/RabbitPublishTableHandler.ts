@@ -1,4 +1,6 @@
 import {
+    DefaultPropertySetterExecutionUnit,
+    DefaultRowType,
     GroupRowDefinition,
     ObjectContent,
     ParaType,
@@ -8,14 +10,7 @@ import {
     TableHandlerBaseImpl,
     TableRowType
 } from '@boart/core';
-import {
-    DependsOnValueValidator,
-    IntValidator,
-    PropertySetterExecutionUnit,
-    RequiredValidator,
-    RowTypeValue,
-    XORValidator
-} from '@boart/core-impl';
+import { DependsOnValueValidator, IntValidator, RequiredValidator, XORValidator } from '@boart/core-impl';
 
 import { RabbitPublishContext } from './RabbitPublishContext';
 import { RabbitPublishExecutionUnit } from './RabbitPublishExecutionUnit';
@@ -24,11 +19,11 @@ import { PublishType } from './RabbitPublishType';
 /**
  *
  */
-export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<RabbitPublishContext, RowTypeValue<RabbitPublishContext>> {
+export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<RabbitPublishContext, DefaultRowType<RabbitPublishContext>> {
     /**
      *
      */
-    rowType = () => RowTypeValue;
+    rowType = () => DefaultRowType;
 
     mainExecutionUnit = () => new RabbitPublishExecutionUnit();
 
@@ -58,7 +53,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
     /**
      *
      */
-    addGroupRowDefinition(tableHandler: TableHandler<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>) {
+    addGroupRowDefinition(tableHandler: TableHandler<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>) {
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
@@ -66,7 +61,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
     /**
      * rabbit consumer definitions (name, timeout, count, ...)
      */
-    addRowDefinition(tableHandler: TableHandler<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>) {
+    addRowDefinition(tableHandler: TableHandler<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>) {
         /**
          * Credentials
          */
@@ -74,7 +69,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('username'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
                     'config',
                     'username'
                 ),
@@ -88,7 +83,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('password'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
                     'config',
                     'password'
                 ),
@@ -102,7 +97,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('hostname'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
                     'config',
                     'hostname'
                 ),
@@ -116,7 +111,10 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('vhost'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>('config', 'vhost'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
+                    'config',
+                    'vhost'
+                ),
                 validators: null
             })
         );
@@ -125,7 +123,10 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('port'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>('config', 'port'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
+                    'config',
+                    'port'
+                ),
                 defaultValue: '${env?:rabbitmq_port}',
                 defaultValueColumn: Symbol('value'),
                 validators: [new IntValidator('value')]
@@ -139,7 +140,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('queue'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
                     'config',
                     'queue_or_exhange'
                 ),
@@ -151,7 +152,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('exchange'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
                     'config',
                     'queue_or_exhange'
                 ),
@@ -163,9 +164,12 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('type'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>('config', 'type'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
+                    'config',
+                    'type'
+                ),
                 defaultValueColumn: Symbol('value'),
-                defaultValue: (rows) => (!!rows.find((r) => r.key === 'queue') ? PublishType.Queue : PublishType.Exchange),
+                defaultValue: (rows) => (rows.find((r) => r.key === 'queue') ? PublishType.Queue : PublishType.Exchange),
                 validators: null
             })
         );
@@ -174,7 +178,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('routing'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
                     'preExecution',
                     'routing'
                 ),
@@ -192,7 +196,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('correlationId'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
                     'preExecution',
                     'correlationId'
                 ),
@@ -204,7 +208,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('messageId'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
                     'preExecution',
                     'messageId'
                 ),
@@ -218,7 +222,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
                 selectorType: SelectorType.Optional,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
                     'preExecution',
                     'header'
                 ),
@@ -233,7 +237,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
                 selectorType: SelectorType.Optional,
-                executionUnit: new PropertySetterExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>(
                     'preExecution',
                     'payload'
                 ),
@@ -245,7 +249,7 @@ export default class RabbitPublishTableHandler extends TableHandlerBaseImpl<Rabb
     /**
      *
      */
-    addGroupValidation(tableHandler: TableHandler<RabbitPublishContext, RowTypeValue<RabbitPublishContext>>) {
+    addGroupValidation(tableHandler: TableHandler<RabbitPublishContext, DefaultRowType<RabbitPublishContext>>) {
         tableHandler.addGroupValidator(new RequiredValidator([Symbol('type'), Symbol('payload')]));
         tableHandler.addGroupValidator(new XORValidator([Symbol('queue'), Symbol('exchange')]));
     }

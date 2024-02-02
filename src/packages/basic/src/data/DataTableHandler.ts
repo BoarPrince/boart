@@ -1,5 +1,5 @@
-import { GroupRowDefinition, ParaType, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
-import { IntValidator, QualifierValidator, RowTypeValue } from '@boart/core-impl';
+import { DefaultRowType, GroupRowDefinition, ParaType, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
+import { IntValidator, QualifierValidator } from '@boart/core-impl';
 
 import { DataExecutionUnit } from './DataExecutionUnit';
 import { RepeatableDataExecutionContext } from './DataTableContext';
@@ -9,12 +9,12 @@ import { RepeatableDataExecutionContext } from './DataTableContext';
  */
 export default class DataTableHandler extends TableHandlerBaseImpl<
     RepeatableDataExecutionContext,
-    RowTypeValue<RepeatableDataExecutionContext>
+    DefaultRowType<RepeatableDataExecutionContext>
 > {
     /**
      *
      */
-    rowType = () => RowTypeValue;
+    rowType = () => DefaultRowType;
 
     /**
      *
@@ -40,7 +40,9 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
     /**
      *
      */
-    addGroupRowDefinition(tableHandler: TableHandler<RepeatableDataExecutionContext, RowTypeValue<RepeatableDataExecutionContext>>): void {
+    addGroupRowDefinition(
+        tableHandler: TableHandler<RepeatableDataExecutionContext, DefaultRowType<RepeatableDataExecutionContext>>
+    ): void {
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
@@ -48,7 +50,7 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
     /**
      *
      */
-    addRowDefinition(tableHandler: TableHandler<RepeatableDataExecutionContext, RowTypeValue<RepeatableDataExecutionContext>>): void {
+    addRowDefinition(tableHandler: TableHandler<RepeatableDataExecutionContext, DefaultRowType<RepeatableDataExecutionContext>>): void {
         tableHandler.getRowDefinition('payload').forEach((def) => (def.key = Symbol('in')));
 
         tableHandler.addRowDefinition(
@@ -57,7 +59,7 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
                 type: TableRowType.Configuration,
                 executionUnit: {
                     key: Symbol('repeat:wait'),
-                    execute: (context: RepeatableDataExecutionContext, row: RowTypeValue<RepeatableDataExecutionContext>): void => {
+                    execute: (context: RepeatableDataExecutionContext, row: DefaultRowType<RepeatableDataExecutionContext>): void => {
                         if (row.ast.qualifier.stringValue === 'wait:sec') {
                             context.repetition.pause = (row.value as number) * 1000;
                         } else {
@@ -80,7 +82,7 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
                 type: TableRowType.Configuration,
                 executionUnit: {
                     key: Symbol('repeat:count'),
-                    execute: (context: RepeatableDataExecutionContext, row: RowTypeValue<RepeatableDataExecutionContext>): void => {
+                    execute: (context: RepeatableDataExecutionContext, row: DefaultRowType<RepeatableDataExecutionContext>): void => {
                         context.repetition.count = row.value as number;
                     }
                 },
@@ -93,7 +95,7 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    addGroupValidation(_: TableHandler<RepeatableDataExecutionContext, RowTypeValue<RepeatableDataExecutionContext>>) {
+    addGroupValidation(_: TableHandler<RepeatableDataExecutionContext, DefaultRowType<RepeatableDataExecutionContext>>) {
         // no group validation needed
     }
 }

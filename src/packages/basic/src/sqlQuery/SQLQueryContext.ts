@@ -1,5 +1,4 @@
-import { ExecutionContext } from '@boart/core';
-import { DataExecutionContext } from '@boart/core-impl';
+import { DefaultExecutionContext, ExecutionContext } from '@boart/core';
 
 /**
  *
@@ -22,4 +21,4 @@ export interface SQLQueryPreExecutionContext {
 /**
  *
  */
-export type SQLQueryContext = ExecutionContext<SQLQueryConfigContext, SQLQueryPreExecutionContext, DataExecutionContext>;
+export type SQLQueryContext = ExecutionContext<SQLQueryConfigContext, SQLQueryPreExecutionContext, DefaultExecutionContext>;

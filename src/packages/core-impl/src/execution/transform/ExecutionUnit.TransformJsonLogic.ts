@@ -1,7 +1,5 @@
-import { DataContentHelper, ExecutionUnit, ParaType, SelectorExtractor, SelectorType } from '@boart/core';
+import { DataContentHelper, DefaultContext, DefaultRowType, ExecutionUnit, ParaType, SelectorExtractor, SelectorType } from '@boart/core';
 
-import { DataContext } from '../../DataExecutionContext';
-import { RowTypeValue } from '../../RowTypeValue';
 import { JsonLogic } from '../../jsonlogic/JsonLogic';
 import { DataScopeValidator } from '../../validators/DataScopeValidator';
 import { QualifierValidator } from '../../validators/QualifierValidator';
@@ -12,7 +10,7 @@ import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator'
  * |----------------------|-------|
  * | transform:jsonLogic  | xxxx  |
  */
-export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
     readonly key = Symbol('transform:jsonLogic');
     readonly description = () => ({
         id: '389a6464-7568-4759-a7fd-820ad678794f',
@@ -31,7 +29,7 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
     /**
      *
      */
-    private getSourceData(context: DataContext, executionType: string): object {
+    private getSourceData(context: DefaultContext, executionType: string): object {
         switch (executionType) {
             case 'data':
                 return context.execution.data;
@@ -49,7 +47,7 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DataContex
     /**
      *
      */
-    execute(context: DataContext, row: RowTypeValue<DataContext>): void {
+    execute(context: DefaultContext, row: DefaultRowType<DefaultContext>): void {
         const rule = row.value.toString();
         const data = DataContentHelper.create(this.getSourceData(context, row.ast.datascope?.value)).getText();
 

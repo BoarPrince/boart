@@ -1,5 +1,13 @@
-import { GroupRowDefinition, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
-import { PropertySetterExecutionUnit, RequiredValidator, RowTypeValue, UniqueValidator } from '@boart/core-impl';
+import {
+    DefaultPropertySetterExecutionUnit,
+    DefaultRowType,
+    GroupRowDefinition,
+    RowDefinition,
+    TableHandler,
+    TableHandlerBaseImpl,
+    TableRowType
+} from '@boart/core';
+import { RequiredValidator, UniqueValidator } from '@boart/core-impl';
 
 import { SQLQueryContext } from './SQLQueryContext';
 import { SQLQueryExecutionUnit } from './SQLQueryExecutionUnit';
@@ -7,11 +15,11 @@ import { SQLQueryExecutionUnit } from './SQLQueryExecutionUnit';
 /**
  *
  */
-export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryContext, RowTypeValue<SQLQueryContext>> {
+export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryContext, DefaultRowType<SQLQueryContext>> {
     /**
      *
      */
-    rowType = () => RowTypeValue;
+    rowType = () => DefaultRowType;
 
     /**
      *
@@ -42,7 +50,7 @@ export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryC
     /**
      *
      */
-    addGroupRowDefinition(tableHandler: TableHandler<SQLQueryContext, RowTypeValue<SQLQueryContext>>) {
+    addGroupRowDefinition(tableHandler: TableHandler<SQLQueryContext, DefaultRowType<SQLQueryContext>>) {
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
@@ -50,7 +58,7 @@ export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryC
     /**
      *
      */
-    addRowDefinition(tableHandler: TableHandler<SQLQueryContext, RowTypeValue<SQLQueryContext>>) {
+    addRowDefinition(tableHandler: TableHandler<SQLQueryContext, DefaultRowType<SQLQueryContext>>) {
         /**
          * Credentials
          */
@@ -58,7 +66,7 @@ export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryC
             new RowDefinition({
                 key: Symbol('username'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'username'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'username'),
                 defaultValue: '${env?:mssql_username}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
@@ -69,7 +77,7 @@ export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryC
             new RowDefinition({
                 key: Symbol('password'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'password'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'password'),
                 defaultValue: '${env?:mssql_password}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
@@ -80,7 +88,7 @@ export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryC
             new RowDefinition({
                 key: Symbol('hostname'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'hostname'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'hostname'),
                 defaultValue: '${env?:mssql_hostname}',
                 defaultValueColumn: Symbol('value'),
                 validators: null
@@ -94,7 +102,7 @@ export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryC
             new RowDefinition({
                 key: Symbol('database'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit('preExecution', 'database'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('preExecution', 'database'),
                 validators: [new UniqueValidator()]
             })
         );
@@ -102,7 +110,7 @@ export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryC
             new RowDefinition({
                 key: Symbol('query'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit('preExecution', 'query'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('preExecution', 'query'),
                 validators: [new UniqueValidator()]
             })
         );
@@ -111,7 +119,7 @@ export default class SQLQueryTableHandler extends TableHandlerBaseImpl<SQLQueryC
     /**
      *
      */
-    addGroupValidation(tableHandler: TableHandler<SQLQueryContext, RowTypeValue<SQLQueryContext>>) {
+    addGroupValidation(tableHandler: TableHandler<SQLQueryContext, DefaultRowType<SQLQueryContext>>) {
         tableHandler.addGroupValidator(new RequiredValidator([Symbol('database')]));
         tableHandler.addGroupValidator(new RequiredValidator([Symbol('query')]));
     }

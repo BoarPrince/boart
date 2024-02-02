@@ -1,6 +1,10 @@
 import 'jest-extended';
 
 import {
+    DefaultExecutionContext,
+    DefaultPreExecutionContext,
+    DefaultPropertySetterExecutionUnit,
+    DefaultRowType,
     ExecutionContext,
     MarkdownTableReader,
     NullContent,
@@ -13,7 +17,6 @@ import {
     TableRowType,
     TextContent
 } from '@boart/core';
-import { DataExecutionContext, DataPreExecutionContext, PropertySetterExecutionUnit, RowTypeValue } from '@boart/core-impl';
 
 import BasicGroupDefinition from './BasicDataGroupDefinition';
 
@@ -24,10 +27,10 @@ type MockContext = ExecutionContext<
     {
         confValue: string;
     },
-    DataPreExecutionContext & {
+    DefaultPreExecutionContext & {
         preValue: string;
     },
-    DataExecutionContext
+    DefaultExecutionContext
 >;
 
 /**
@@ -42,11 +45,11 @@ const intialContext = {
 /**
  *
  */
-class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<MockContext>> {
+class MockTableHandler extends TableHandlerBaseImpl<MockContext, DefaultRowType<MockContext>> {
     /**
      *
      */
-    protected rowType = () => RowTypeValue;
+    protected rowType = () => DefaultRowType;
 
     /**
      *
@@ -82,20 +85,20 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
     /**
      *
      */
-    protected addGroupRowDefinition(tableHandler: TableHandler<MockContext, RowTypeValue<MockContext>>) {
+    protected addGroupRowDefinition(tableHandler: TableHandler<MockContext, DefaultRowType<MockContext>>) {
         tableHandler.addGroupRowDefinition(BasicGroupDefinition);
     }
 
     /**
      *
      */
-    protected addRowDefinition(tableHandler: TableHandler<MockContext, RowTypeValue<MockContext>>) {
+    protected addRowDefinition(tableHandler: TableHandler<MockContext, DefaultRowType<MockContext>>) {
         tableHandler.addRowDefinition(
             new RowDefinition({
                 key: Symbol('pre:exec'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.Optional,
-                executionUnit: new PropertySetterExecutionUnit<MockContext, RowTypeValue<MockContext>>('preExecution', 'preValue'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<MockContext, DefaultRowType<MockContext>>('preExecution', 'preValue'),
                 validators: null
             })
         );
@@ -105,7 +108,7 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
                 type: TableRowType.PreProcessing,
                 selectorType: SelectorType.Optional,
                 parameterType: ParaType.False,
-                executionUnit: new PropertySetterExecutionUnit<MockContext, RowTypeValue<MockContext>>('execution', 'data'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<MockContext, DefaultRowType<MockContext>>('execution', 'data'),
                 validators: null
             })
         );
@@ -114,7 +117,7 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
                 key: Symbol('header:config'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
-                executionUnit: new PropertySetterExecutionUnit<MockContext, RowTypeValue<MockContext>>('execution', 'header'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<MockContext, DefaultRowType<MockContext>>('execution', 'header'),
                 validators: null
             })
         );
@@ -123,7 +126,7 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
                 key: Symbol('transformed:config'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
-                executionUnit: new PropertySetterExecutionUnit<MockContext, RowTypeValue<MockContext>>('execution', 'transformed'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<MockContext, DefaultRowType<MockContext>>('execution', 'transformed'),
                 validators: null
             })
         );
@@ -133,7 +136,7 @@ class MockTableHandler extends TableHandlerBaseImpl<MockContext, RowTypeValue<Mo
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected addGroupValidation(_tableHandler: TableHandler<MockContext, RowTypeValue<MockContext>>) {
+    protected addGroupValidation(_tableHandler: TableHandler<MockContext, DefaultRowType<MockContext>>) {
         // no validation needed for test purposes
     }
 }

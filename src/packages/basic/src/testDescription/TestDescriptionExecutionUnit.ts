@@ -1,5 +1,4 @@
-import { ExecutionUnit, Runtime, RuntimePriority } from '@boart/core';
-import { RowTypeValue } from '@boart/core-impl';
+import { DefaultRowType, ExecutionUnit, Runtime, RuntimePriority } from '@boart/core';
 import { TestReport } from '@boart/protocol';
 
 import { TestDescriptionContext } from './TestDescriptionContext';
@@ -7,7 +6,7 @@ import { TestDescriptionContext } from './TestDescriptionContext';
 /**
  *
  */
-export class TestDescriptionExecutionUnit implements ExecutionUnit<TestDescriptionContext, RowTypeValue<TestDescriptionContext>> {
+export class TestDescriptionExecutionUnit implements ExecutionUnit<TestDescriptionContext, DefaultRowType<TestDescriptionContext>> {
     readonly key = Symbol('test description');
     readonly description = () => ({
         id: 'description:unit',
@@ -19,7 +18,7 @@ export class TestDescriptionExecutionUnit implements ExecutionUnit<TestDescripti
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    execute(context: TestDescriptionContext, _row: RowTypeValue<TestDescriptionContext>): void {
+    execute(context: TestDescriptionContext, _row: DefaultRowType<TestDescriptionContext>): void {
         TestReport.instance.setDescription(context.config.description);
         TestReport.instance.setFailureDescription(context.config.failureDescription);
         TestReport.instance.setTicket(context.config.ticket);

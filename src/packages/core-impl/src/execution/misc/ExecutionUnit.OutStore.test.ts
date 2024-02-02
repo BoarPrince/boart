@@ -1,5 +1,9 @@
 import {
     DataContent,
+    DefaultContext,
+    DefaultExecutionContext,
+    DefaultPreExecutionContext,
+    DefaultRowType,
     ExecutionContext,
     ExecutionEngine,
     ExecutionUnit,
@@ -14,16 +18,13 @@ import {
     VariableParser
 } from '@boart/core';
 
-import { DataContext, DataExecutionContext, DataPreExecutionContext } from '../../DataExecutionContext';
-import { RowTypeValue } from '../../RowTypeValue';
-
 import { OutStoreExecutionUnit } from './ExecutionUnit.OutStore';
 import { DataScopeValidator } from '../../validators/DataScopeValidator';
 
 /**
  *
  */
-class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+class ExecutionUnitMock implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
     readonly key = Symbol('mock');
     readonly selectorType = SelectorType.Optional;
 
@@ -40,7 +41,7 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    execute = jest.fn((context: DataContext, row: RowTypeValue<DataContext>): Promise<void> => {
+    execute = jest.fn((context: DefaultContext, row: DefaultRowType<DefaultContext>): Promise<void> => {
         // do noting
         return;
     });
@@ -49,10 +50,10 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
 /**
  *
  */
-type ExtendedDataContext = ExecutionContext<
+type ExtendedDefaultContext = ExecutionContext<
     object,
-    DataPreExecutionContext,
-    DataExecutionContext & {
+    DefaultPreExecutionContext,
+    DefaultExecutionContext & {
         extendedProperty: string;
     }
 >;
@@ -74,7 +75,7 @@ const initialContext = {
 /**
  *
  */
-class ExecutionEngineMock<MockContext extends DataContext> extends ExecutionEngine<MockContext, RowTypeValue<MockContext>> {
+class ExecutionEngineMock<MockContext extends DefaultContext> extends ExecutionEngine<MockContext, DefaultRowType<MockContext>> {
     /**
      *
      */
@@ -87,7 +88,7 @@ class ExecutionEngineMock<MockContext extends DataContext> extends ExecutionEngi
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static initializer(): () => any {
-        return (): DataContext => ({
+        return (): DefaultContext => ({
             config: {
                 value: ''
             },
@@ -110,7 +111,7 @@ const variableParser = new VariableParser();
  *
  */
 beforeEach(() => {
-    tableHandler = new TableHandler(RowTypeValue, () => new ExecutionEngineMock());
+    tableHandler = new TableHandler(DefaultRowType, () => new ExecutionEngineMock());
     tableHandler.addRowDefinition(
         new RowDefinition({
             type: TableRowType.PostProcessing,
@@ -328,7 +329,7 @@ describe('check extended context', () => {
      *
      */
     it('use other property with extended data context', async () => {
-        (tableHandler.getExecutionEngine().context as ExtendedDataContext).execution.extendedProperty = 'xxx';
+        (tableHandler.getExecutionEngine().context as ExtendedDefaultContext).execution.extendedProperty = 'xxx';
 
         const sut = new OutStoreExecutionUnit('store-new');
         (sut as any).validators = [new DataScopeValidator(['extendedProperty'])];

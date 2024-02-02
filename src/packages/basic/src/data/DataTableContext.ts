@@ -1,16 +1,15 @@
-import { ExecutionContext, RepeatableExecutionContext } from '@boart/core';
-import { DataExecutionContext, DataPreExecutionContext } from '@boart/core-impl';
+import { DefaultExecutionContext, DefaultPreExecutionContext, ExecutionContext, RepeatableExecutionContext } from '@boart/core';
 
 /**
  *
  */
 export class RepeatableDataExecutionContext
     implements
-        ExecutionContext<object, DataPreExecutionContext, DataExecutionContext>,
-        RepeatableExecutionContext<object, DataPreExecutionContext, DataExecutionContext>
+        ExecutionContext<object, DefaultPreExecutionContext, DefaultExecutionContext>,
+        RepeatableExecutionContext<object, DefaultPreExecutionContext, DefaultExecutionContext>
 {
     config: object;
     repetition: { pause: number; count: number };
-    preExecution: DataPreExecutionContext;
-    execution: DataExecutionContext;
+    preExecution: DefaultPreExecutionContext;
+    execution: DefaultExecutionContext;
 }

@@ -1,5 +1,4 @@
-import { DataContentHelper, ExecutionUnit } from '@boart/core';
-import { RowTypeValue } from '@boart/core-impl';
+import { DataContentHelper, DefaultRowType, ExecutionUnit } from '@boart/core';
 import { RabbitQueueHandler } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
 
@@ -9,7 +8,7 @@ import { PublishType } from './RabbitPublishType';
 /**
  *
  */
-export class RabbitPublishExecutionUnit implements ExecutionUnit<RabbitPublishContext, RowTypeValue<RabbitPublishContext>> {
+export class RabbitPublishExecutionUnit implements ExecutionUnit<RabbitPublishContext, DefaultRowType<RabbitPublishContext>> {
     readonly key = Symbol('rabbit sent message - main');
     readonly description = () => ({
         id: 'rabbit:publish:unit',

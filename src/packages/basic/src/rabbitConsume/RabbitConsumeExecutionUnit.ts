@@ -1,5 +1,4 @@
-import { DataContent, DataContentHelper, ExecutionUnit, ExecutionUnitValidation, ObjectContent } from '@boart/core';
-import { RowTypeValue } from '@boart/core-impl';
+import { DataContent, DataContentHelper, DefaultRowType, ExecutionUnit, ExecutionUnitValidation, ObjectContent } from '@boart/core';
 import { RabbitQueueHandler, RabbitQueueMessage, RabbitQueueMessageConsumer } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
 
@@ -9,7 +8,7 @@ import { RabbitConsumeContext } from './RabbitConsumeContext';
  *
  */
 export class RabbitConsumeExecutionUnit
-    implements ExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>, ExecutionUnitValidation<RabbitConsumeContext>
+    implements ExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>, ExecutionUnitValidation<RabbitConsumeContext>
 {
     readonly key = Symbol('rabbit message queue - main');
     readonly description = () => ({
@@ -128,7 +127,7 @@ export class RabbitConsumeExecutionUnit
     /**
      *
      */
-    async execute(context: RabbitConsumeContext, _row: RowTypeValue<RabbitConsumeContext>, executor: () => Promise<void>): Promise<void> {
+    async execute(context: RabbitConsumeContext, _row: DefaultRowType<RabbitConsumeContext>, executor: () => Promise<void>): Promise<void> {
         //#region start consuming
         StepReport.instance.type = 'rabbitConsume';
 

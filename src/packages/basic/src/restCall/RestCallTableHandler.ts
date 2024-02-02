@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-base-to-string */
 import {
     ASTVariable,
     ContentType,
+    DefaultPropertySetterExecutionUnit,
+    DefaultRowType,
     GroupRowDefinition,
     ObjectContent,
     ParaType,
@@ -10,14 +13,7 @@ import {
     TableHandlerBaseImpl,
     TableRowType
 } from '@boart/core';
-import {
-    DependsOnValidator,
-    PropertySetterExecutionUnit,
-    QualifierValidator,
-    RequiredValidator,
-    RowTypeValue,
-    UniqueValidator
-} from '@boart/core-impl';
+import { DependsOnValidator, QualifierValidator, RequiredValidator, UniqueValidator } from '@boart/core-impl';
 
 import { ContextMethod, RestCallContext } from './RestCallContext';
 import { RestCallExecutionUnit } from './RestCallExecutionUnit';
@@ -25,11 +21,11 @@ import { RestCallExecutionUnit } from './RestCallExecutionUnit';
 /**
  *
  */
-export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallContext, RowTypeValue<RestCallContext>> {
+export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallContext, DefaultRowType<RestCallContext>> {
     /**
      *
      */
-    rowType = () => RowTypeValue;
+    rowType = () => DefaultRowType;
 
     /**
      *
@@ -65,7 +61,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
     /**
      *
      */
-    addGroupRowDefinition(tableHandler: TableHandler<RestCallContext, RowTypeValue<RestCallContext>>) {
+    addGroupRowDefinition(tableHandler: TableHandler<RestCallContext, DefaultRowType<RestCallContext>>) {
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
@@ -73,14 +69,17 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
     /**
      *
      */
-    addRowDefinition(tableHandler: TableHandler<RestCallContext, RowTypeValue<RestCallContext>>) {
+    addRowDefinition(tableHandler: TableHandler<RestCallContext, DefaultRowType<RestCallContext>>) {
         tableHandler.addRowDefinition(
             new RowDefinition({
                 key: Symbol('form-data'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
                 selectorType: SelectorType.True,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'formData'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RestCallContext, DefaultRowType<RestCallContext>>(
+                    'preExecution',
+                    'formData'
+                ),
                 validators: [new DependsOnValidator(['method:form-data'])]
             })
         );
@@ -91,7 +90,10 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
                 selectorType: SelectorType.True,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'param'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RestCallContext, DefaultRowType<RestCallContext>>(
+                    'preExecution',
+                    'param'
+                ),
                 validators: [new DependsOnValidator(['method:post-param'])]
             })
         );
@@ -102,7 +104,10 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
                 selectorType: SelectorType.Optional,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'header'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RestCallContext, DefaultRowType<RestCallContext>>(
+                    'preExecution',
+                    'header'
+                ),
                 validators: null
             })
         );
@@ -114,7 +119,10 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.Optional,
                 selectorType: SelectorType.Optional,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'payload'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RestCallContext, DefaultRowType<RestCallContext>>(
+                    'preExecution',
+                    'payload'
+                ),
                 validators: [new DependsOnValidator(['method:post', 'method:put', 'method:patch', 'method:post-param', 'method:form-data'])]
             })
         );
@@ -125,11 +133,15 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
                 selectorType: SelectorType.True,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'query', {
-                    actionSelectorSetter: (value: ContentType, rowValue: ContentType, ast: ASTVariable): ContentType =>
-                        `${!value ? '' : value?.toString() + '&'}${ast.selectors?.match ?? ''}=${rowValue?.toString() || ''}`,
-                    actionSelectorModifier: (rowValue: ContentType): ContentType => encodeURIComponent(rowValue.toString())
-                }),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RestCallContext, DefaultRowType<RestCallContext>>(
+                    'preExecution',
+                    'query',
+                    {
+                        actionSelectorSetter: (value: ContentType, rowValue: ContentType, ast: ASTVariable): ContentType =>
+                            `${!value ? '' : value?.toString() + '&'}${ast.selectors?.match ?? ''}=${rowValue?.toString() || ''}`,
+                        actionSelectorModifier: (rowValue: ContentType): ContentType => encodeURIComponent(rowValue.toString())
+                    }
+                ),
                 validators: null
             })
         );
@@ -139,7 +151,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 key: Symbol('authorization'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.False,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RestCallContext, DefaultRowType<RestCallContext>>(
                     'preExecution',
                     'authorization'
                 ),
@@ -154,13 +166,17 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
                 key: Symbol('method'),
                 type: TableRowType.PreProcessing,
                 parameterType: ParaType.True,
-                executionUnit: new PropertySetterExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>>('preExecution', 'method', {
-                    defaultSetter: (method: ContextMethod, rowValue: ContentType, para: string): ContextMethod => {
-                        method.url = rowValue.toString();
-                        method.type = para;
-                        return method;
+                executionUnit: new DefaultPropertySetterExecutionUnit<RestCallContext, DefaultRowType<RestCallContext>>(
+                    'preExecution',
+                    'method',
+                    {
+                        defaultSetter: (method: ContextMethod, rowValue: ContentType, para: string): ContextMethod => {
+                            method.url = rowValue.toString();
+                            method.type = para;
+                            return method;
+                        }
                     }
-                }),
+                ),
                 validators: [
                     new UniqueValidator(),
                     new QualifierValidator([
@@ -180,7 +196,7 @@ export default class RestCallTableHandler extends TableHandlerBaseImpl<RestCallC
     /**
      *
      */
-    addGroupValidation(tableHandler: TableHandler<RestCallContext, RowTypeValue<RestCallContext>>) {
+    addGroupValidation(tableHandler: TableHandler<RestCallContext, DefaultRowType<RestCallContext>>) {
         tableHandler.addGroupValidator(new RequiredValidator([Symbol('method')]));
     }
 }

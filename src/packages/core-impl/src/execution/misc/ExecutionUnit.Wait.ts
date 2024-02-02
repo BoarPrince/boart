@@ -1,7 +1,6 @@
-import { ExecutionUnit, ParaType } from '@boart/core';
+import { DefaultRowType, ExecutionUnit, ParaType } from '@boart/core';
 
 import { AnyContext } from '../../AnyContext';
-import { RowTypeValue } from '../../RowTypeValue';
 import { IntValidator } from '../../validators/IntValidator';
 import { UniqueValidator } from '../../validators/UniqueValidator';
 
@@ -14,7 +13,7 @@ import { UniqueValidator } from '../../validators/UniqueValidator';
  * |-----------------|------|
  * | wait:before:min | 20   |
  */
-export class WaitExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
+export class WaitExecutionUnit implements ExecutionUnit<AnyContext, DefaultRowType<AnyContext>> {
     readonly key = Symbol('wait');
     readonly description = () => ({
         id: 'd4900e8f-7247-41e6-aa45-fe8967ad45c9',
@@ -30,7 +29,7 @@ export class WaitExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue
     /**
      *
      */
-    execute(_: AnyContext, row: RowTypeValue<AnyContext>): Promise<void> {
+    execute(_: AnyContext, row: DefaultRowType<AnyContext>): Promise<void> {
         const duration = parseInt(row.value.toString());
         const timeUnit = row.ast.qualifier?.paras?.[0];
         const multiplicator = !timeUnit || timeUnit === 'sec' ? 1000 : 1000 * 60;

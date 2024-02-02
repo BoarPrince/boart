@@ -1,8 +1,6 @@
-import { DataContentHelper, ExecutionUnit, ParaType, SelectorExtractor, SelectorType } from '@boart/core';
+import { DataContentHelper, DefaultContext, DefaultRowType, ExecutionUnit, ParaType, SelectorExtractor, SelectorType } from '@boart/core';
 import JSPath from 'jspath';
 
-import { DataContext } from '../../DataExecutionContext';
-import { RowTypeValue } from '../../RowTypeValue';
 import { DataScopeValidator } from '../../validators/DataScopeValidator';
 import { QualifierValidator } from '../../validators/QualifierValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
@@ -12,7 +10,7 @@ import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator'
  * |-----------------|-------|
  * | transform:jpath | xxxx  |
  */
-export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+export class TransformJPathExecutionUnit implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
     readonly key = Symbol('transform:jpath');
     readonly description = () => ({
         id: '0bb11bdd-1628-470d-a7af-d5415d073b3d',
@@ -32,7 +30,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
     /**
      *
      */
-    private getSourceData(context: DataContext, executionType: string): object {
+    private getSourceData(context: DefaultContext, executionType: string): object {
         const sourceData = () => {
             switch (executionType) {
                 case 'data':
@@ -55,7 +53,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DataContext, R
     /**
      *
      */
-    execute(context: DataContext, row: RowTypeValue<DataContext>): void {
+    execute(context: DefaultContext, row: DefaultRowType<DefaultContext>): void {
         const rule = row.value.toString();
         const data = this.getSourceData(context, row.ast.datascope?.value);
 

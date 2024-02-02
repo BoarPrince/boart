@@ -1,31 +1,42 @@
-import { DataContentHelper, GroupRowDefinition, ParaType, RowDefinition, SelectorType, TableRowType } from '@boart/core';
 import {
-    DataContext,
+    DefaultContext,
+    DefaultPropertySetterExecutionUnit,
+    DefaultRowType,
+    DataContentHelper,
+    GroupRowDefinition,
+    ParaType,
+    RowDefinition,
+    SelectorType,
+    TableRowType
+} from '@boart/core';
+import {
     ExpectedDataExecutinoUnit,
     ExpectedJsonLogicExecutionUnit,
     OutStoreExecutionUnit,
-    PropertySetterExecutionUnit,
-    RowTypeValue,
     TransformJPathExecutionUnit,
     TransformJsonLogicExecutionUnit,
     TransformResetExecutionUnit
 } from '@boart/core-impl';
 
 if (!GroupRowDefinition.contains('basic-data')) {
-    const basicGroup = GroupRowDefinition.getInstance<DataContext, RowTypeValue<DataContext>>('basic-data');
+    const basicGroup = GroupRowDefinition.getInstance<DefaultContext, DefaultRowType<DefaultContext>>('basic-data');
 
     //-------------------------------------------------------------------------
     // Set Payload
     //-------------------------------------------------------------------------
     basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+        new RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
             key: Symbol('payload'),
             type: TableRowType.PreProcessing,
             parameterType: ParaType.False,
             selectorType: SelectorType.Optional,
-            executionUnit: new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('preExecution', 'payload', {
-                defaultTypeConverter: (value) => DataContentHelper.create(value)
-            }),
+            executionUnit: new DefaultPropertySetterExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>(
+                'preExecution',
+                'payload',
+                {
+                    defaultTypeConverter: (value) => DataContentHelper.create(value)
+                }
+            ),
             validators: null
         })
     );
@@ -34,7 +45,7 @@ if (!GroupRowDefinition.contains('basic-data')) {
     // Expected
     //-------------------------------------------------------------------------
     basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+        new RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new ExpectedDataExecutinoUnit(),
             validators: null
@@ -44,7 +55,7 @@ if (!GroupRowDefinition.contains('basic-data')) {
     // Expected:JsonLogic
     //-------------------------------------------------------------------------
     basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+        new RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new ExpectedJsonLogicExecutionUnit(),
             validators: null
@@ -54,21 +65,21 @@ if (!GroupRowDefinition.contains('basic-data')) {
     // Transform
     //-------------------------------------------------------------------------
     basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+        new RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new TransformJPathExecutionUnit(),
             validators: null
         })
     );
     basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+        new RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new TransformJsonLogicExecutionUnit(),
             validators: null
         })
     );
     basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+        new RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new TransformResetExecutionUnit(),
             validators: null
@@ -79,7 +90,7 @@ if (!GroupRowDefinition.contains('basic-data')) {
     // OutStore
     //-------------------------------------------------------------------------
     basicGroup.addRowDefinition(
-        new RowDefinition<DataContext, RowTypeValue<DataContext>>({
+        new RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
             type: TableRowType.PostProcessing,
             executionUnit: new OutStoreExecutionUnit('store'),
             validators: null
@@ -87,4 +98,4 @@ if (!GroupRowDefinition.contains('basic-data')) {
     );
 }
 
-export default GroupRowDefinition.getInstance<DataContext, RowTypeValue<DataContext>>('basic-data');
+export default GroupRowDefinition.getInstance<DefaultContext, DefaultRowType<DefaultContext>>('basic-data');

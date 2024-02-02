@@ -1,13 +1,12 @@
-import { EnvLoader, ExecutionUnit, ParaType, Runtime, RuntimeStatus } from '@boart/core';
+import { DefaultRowType, EnvLoader, ExecutionUnit, ParaType, Runtime, RuntimeStatus } from '@boart/core';
 
 import { AnyContext } from '../../AnyContext';
-import { RowTypeValue } from '../../RowTypeValue';
 import { UniqueValidator } from '../../validators/UniqueValidator';
 
 /**
  *
  */
-export class RunEnvExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
+export class RunEnvExecutionUnit implements ExecutionUnit<AnyContext, DefaultRowType<AnyContext>> {
     readonly key = Symbol('run:env');
     readonly description = () => ({
         id: '53d3ce49-f88d-40a2-99d5-06553535136c',
@@ -20,7 +19,7 @@ export class RunEnvExecutionUnit implements ExecutionUnit<AnyContext, RowTypeVal
     /**
      *
      */
-    execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
+    execute(_: AnyContext, row: DefaultRowType<AnyContext>): void {
         const environments = (row.value.toString() || '')
             .toString()
             .split(/[,\s]/)

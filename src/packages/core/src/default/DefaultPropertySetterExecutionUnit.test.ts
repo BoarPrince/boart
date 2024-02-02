@@ -1,15 +1,28 @@
-import { ASTVariable, ContentType, ExecutionContext, NullContent, ObjectContent, VariableParser } from '@boart/core';
-
-import { DataExecutionContext } from '../../DataExecutionContext';
-import { RowTypePropValue } from '../../RowTypePropValue';
-import { RowTypeValue } from '../../RowTypeValue';
-
-import { PropertySetterExecutionUnit } from './PropertySetterExecutionUnit';
+/* eslint-disable eslint-comments/disable-enable-pair */
+/* eslint-disable @typescript-eslint/no-base-to-string */
+import { ContentType } from '../data/ContentType';
+import { VariableParser } from '../parser/VariableParser';
+import { ASTVariable } from '../parser/ast/ASTVariable';
+import { DefaultPropertySetterExecutionUnit } from './DefaultPropertySetterExecutionUnit';
+import { ExecutionContext } from '../execution/ExecutionContext';
+import { DefaultExecutionContext } from './DefaultExecutionContext';
+import { DefaultRowType } from './DefaultRowType';
+import { value } from '../table/TableRowDecorator';
+import { NullContent } from '../data/NullContent';
+import { ObjectContent } from '../data/ObjectContent';
 
 /**
  *
  */
 const variableParser = new VariableParser();
+
+/**
+ *
+ */
+class RowTypePropValue<TExecutionContext extends ExecutionContext<object, object, object>> extends DefaultRowType<TExecutionContext> {
+    @value()
+    readonly property = () => this.data.values_replaced['property'];
+}
 
 /**
  *
@@ -53,7 +66,7 @@ type DataContext = ExecutionContext<
         restCall?: RestCallContext;
     },
     null,
-    DataExecutionContext
+    DefaultExecutionContext
 >;
 
 /**
@@ -78,7 +91,7 @@ beforeEach(() => {
  *
  */
 it('check (2 levels)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value');
 
     const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
@@ -97,7 +110,7 @@ it('check (2 levels)', () => {
  *
  */
 it('check (1 level)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config');
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config');
 
     const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
@@ -116,7 +129,7 @@ it('check (1 level)', () => {
  *
  */
 it('check with concating (but not using)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: true });
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', { concat: true });
 
     context.config.value = '';
     const ast = variableParser.parseAction('a:a');
@@ -136,7 +149,7 @@ it('check with concating (but not using)', () => {
  *
  */
 it('check null initialized', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value');
 
     const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
@@ -155,7 +168,7 @@ it('check null initialized', () => {
  *
  */
 it('check null initialized and selector', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value');
 
     const ast = variableParser.parseAction('a:a#a');
     const row = new RowTypePropValue<DataContext>({
@@ -174,7 +187,7 @@ it('check null initialized and selector', () => {
  *
  */
 it('check NullContent initialized', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value');
     context.config.value = new NullContent();
 
     const ast = variableParser.parseAction('a:a');
@@ -194,7 +207,7 @@ it('check NullContent initialized', () => {
  *
  */
 it('check NullContent initialized and selector', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value');
     context.config.value = new NullContent();
 
     const ast = variableParser.parseAction('a:a#a');
@@ -214,7 +227,7 @@ it('check NullContent initialized and selector', () => {
  *
  */
 it('check with concating', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: true });
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', { concat: true });
 
     const ast = variableParser.parseAction('a:a');
     const row = new RowTypePropValue<DataContext>({
@@ -242,7 +255,7 @@ it('check with concating', () => {
  *
  */
 it('check with selector', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: false });
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', { concat: false });
     context.config.value = JSON.stringify({
         a: 'b',
         c: 'd',
@@ -266,7 +279,7 @@ it('check with selector', () => {
  *
  */
 it('check with selector - two changes', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: false });
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', { concat: false });
     context.config.value = JSON.stringify({
         a: 'b',
         c: 'd',
@@ -300,7 +313,7 @@ it('check with selector - two changes', () => {
  *
  */
 it('check with selector - use object in context', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value');
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value');
     context.config.value = new ObjectContent();
 
     const ast = variableParser.parseAction('param#c');
@@ -320,7 +333,7 @@ it('check with selector - use object in context', () => {
  *
  */
 it('check with actionPara (deep)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: false });
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', { concat: false });
 
     context.config.value = JSON.stringify({
         a: {
@@ -347,7 +360,7 @@ it('check with actionPara (deep)', () => {
  *
  */
 it('check with actionPara (null init)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', { concat: false });
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', { concat: false });
 
     const ast = variableParser.parseAction('a:a#a.f');
     const row = new RowTypePropValue<DataContext>({
@@ -366,7 +379,7 @@ it('check with actionPara (null init)', () => {
  *
  */
 it('check with actionPara (use actionParaModifier)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         concat: false,
         actionSelectorModifier: (rowValue) => `-${String(rowValue?.toString())}-`
     });
@@ -388,7 +401,7 @@ it('check with actionPara (use actionParaModifier)', () => {
  *
  */
 it('check without actionPara (use defaultModifier)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         concat: false,
         defaultModifier: (rowValue) => `-${String(rowValue?.toString())}-`
     });
@@ -410,7 +423,7 @@ it('check without actionPara (use defaultModifier)', () => {
  *
  */
 it('check query style (actionParaSetter), one para', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         concat: false,
         actionSelectorSetter: (_value: ContentType, rowValue: ContentType, ast: ASTVariable): ContentType => {
             const selector: string = ast.selectors.match;
@@ -435,7 +448,7 @@ it('check query style (actionParaSetter), one para', () => {
  *
  */
 it('check query style (actionParaSetter), three paras', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         concat: false,
         actionSelectorSetter: defaultActionSelectorSetter
     });
@@ -477,7 +490,7 @@ it('check query style (actionParaSetter), three paras', () => {
  *
  */
 it('check query style (actionParaSetter and modifier)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         concat: false,
         actionSelectorSetter: defaultActionSelectorSetter,
         actionSelectorModifier: defaultActionSelectorModifier
@@ -500,7 +513,7 @@ it('check query style (actionParaSetter and modifier)', () => {
  *
  */
 it('check query style (default and modifier)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         concat: true,
         delimiter: '&',
         defaultModifier: (rowValue: ContentType): ContentType => {
@@ -538,7 +551,7 @@ it('check query style (default and modifier)', () => {
  *
  */
 it('check query style (default, para and modifier)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         concat: true,
         delimiter: '&',
         actionSelectorSetter: defaultActionSelectorSetter,
@@ -588,7 +601,7 @@ it('check query style (default, para and modifier)', () => {
  *
  */
 it('check query style - default, para and modifier', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         concat: true,
         delimiter: '&',
         actionSelectorSetter: defaultActionSelectorSetter,
@@ -638,7 +651,7 @@ it('check query style - default, para and modifier', () => {
  *
  */
 it('check query style (default, para, default and modifier)', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         concat: true,
         delimiter: '&',
         actionSelectorSetter: defaultActionSelectorSetter,
@@ -688,7 +701,7 @@ it('check query style (default, para, default and modifier)', () => {
  *
  */
 it('check method/url style', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'restCall', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'restCall', {
         defaultSetter: (value: ContentType, rowValue: ContentType, para: string): RestCallContext => ({
             method: para,
             url: String(rowValue?.toString())
@@ -717,7 +730,7 @@ it('check method/url style', () => {
  *
  */
 it('check param definition (actionParaSetter), three paras', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         defaultSetter: (value: ContentType, rowValue: ContentType, para: string): ContentType => {
             (value as object)[para] = rowValue;
             return value;
@@ -766,7 +779,7 @@ it('check param definition (actionParaSetter), three paras', () => {
  *
  */
 it('use default type converter', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'value', {
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'value', {
         defaultTypeConverter: (value: ContentType) => new ObjectContent(value)
     });
 
@@ -788,7 +801,7 @@ it('use default type converter', () => {
  *
  */
 it('use enum value', () => {
-    const sut = new PropertySetterExecutionUnit<DataContext, RowTypeValue<DataContext>>('config', 'type');
+    const sut = new DefaultPropertySetterExecutionUnit<DataContext, DefaultRowType<DataContext>>('config', 'type');
 
     const ast = variableParser.parseAction('method');
     const row = new RowTypePropValue<DataContext>({

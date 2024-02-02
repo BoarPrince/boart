@@ -1,15 +1,14 @@
-import { ExecutionUnit, ParaType } from '@boart/core';
+import { DefaultRowType, ExecutionUnit, ParaType } from '@boart/core';
 // import { StepReport } from '@boart/protocol';
 
 import { AnyContext } from '../../AnyContext';
-import { RowTypeValue } from '../../RowTypeValue';
 
 /**
  * | action    |value        |
  * |-----------|-------------|
  * | link:name | http://xxxx |
  */
-export class LinkExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
+export class LinkExecutionUnit implements ExecutionUnit<AnyContext, DefaultRowType<AnyContext>> {
     readonly key = Symbol('link');
     readonly description = () => ({
         id: 'a3a32499-1aad-458c-97ac-badbebf4107b',
@@ -22,7 +21,7 @@ export class LinkExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue
     /**
      *
      */
-    execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
+    execute(_: AnyContext, row: DefaultRowType<AnyContext>): void {
         // StepReport.instance.addLink(row.ast.qualifier?.stringValue, row.value.toString());
     }
 }

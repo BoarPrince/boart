@@ -1,8 +1,7 @@
-import { ExecutionUnit, ParaType, Runtime } from '@boart/core';
+import { DefaultRowType, ExecutionUnit, ParaType, Runtime } from '@boart/core';
 import { first } from 'rxjs/operators';
 
 import { AnyContext } from '../../AnyContext';
-import { RowTypeValue } from '../../RowTypeValue';
 import { UniqueValidator } from '../../validators/UniqueValidator';
 
 /**
@@ -10,7 +9,7 @@ import { UniqueValidator } from '../../validators/UniqueValidator';
  * |-------------|----------------|
  * | description | this is a test |
  */
-export class DescriptionExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
+export class DescriptionExecutionUnit implements ExecutionUnit<AnyContext, DefaultRowType<AnyContext>> {
     readonly key = Symbol('description');
     readonly description = () => ({
         id: 'description:unit',
@@ -24,7 +23,7 @@ export class DescriptionExecutionUnit implements ExecutionUnit<AnyContext, RowTy
     /**
      *
      */
-    execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
+    execute(_: AnyContext, row: DefaultRowType<AnyContext>): void {
         Runtime.instance.stepRuntime
             .onClear()
             .pipe(first())

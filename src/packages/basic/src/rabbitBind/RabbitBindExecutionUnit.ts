@@ -1,5 +1,4 @@
-import { ExecutionUnit, Runtime } from '@boart/core';
-import { RowTypeValue } from '@boart/core-impl';
+import { DefaultRowType, ExecutionUnit, Runtime } from '@boart/core';
 import { RabbitQueueHandler } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
 
@@ -8,7 +7,7 @@ import { RabbitBindContext } from './RabbitBindContext';
 /**
  *
  */
-export class RabbitBindExecutionUnit implements ExecutionUnit<RabbitBindContext, RowTypeValue<RabbitBindContext>> {
+export class RabbitBindExecutionUnit implements ExecutionUnit<RabbitBindContext, DefaultRowType<RabbitBindContext>> {
     readonly key = Symbol('rabbit queue binding');
     public description = () => ({
         id: '78af1ceb-1bed-4c3f-8e2a-39fc3c321829',

@@ -1,11 +1,17 @@
-import { GroupRowDefinition, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
+import {
+    DefaultPropertySetterExecutionUnit,
+    DefaultRowType,
+    GroupRowDefinition,
+    RowDefinition,
+    TableHandler,
+    TableHandlerBaseImpl,
+    TableRowType
+} from '@boart/core';
 import {
     DependsOnValidator,
     DependsOnValueValidator,
     OutStoreExecutionUnit,
-    PropertySetterExecutionUnit,
     RequiredValidator,
-    RowTypeValue,
     UniqueValidator,
     ValueValidator
 } from '@boart/core-impl';
@@ -17,11 +23,11 @@ import { RestAuthorizeExecutionUnit } from './RestAuthorizeExecutionUnit';
 /**
  *
  */
-export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<RestAuthorizeContext, RowTypeValue<RestAuthorizeContext>> {
+export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<RestAuthorizeContext, DefaultRowType<RestAuthorizeContext>> {
     /**
      *
      */
-    rowType = () => RowTypeValue;
+    rowType = () => DefaultRowType;
 
     /**
      *
@@ -55,7 +61,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
     /**
      *
      */
-    addGroupRowDefinition(tableHandler: TableHandler<RestAuthorizeContext, RowTypeValue<RestAuthorizeContext>>) {
+    addGroupRowDefinition(tableHandler: TableHandler<RestAuthorizeContext, DefaultRowType<RestAuthorizeContext>>) {
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
 
@@ -66,12 +72,12 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
     /**
      *
      */
-    addRowDefinition(tableHandler: TableHandler<RestAuthorizeContext, RowTypeValue<RestAuthorizeContext>>) {
+    addRowDefinition(tableHandler: TableHandler<RestAuthorizeContext, DefaultRowType<RestAuthorizeContext>>) {
         tableHandler.addRowDefinition(
             new RowDefinition({
                 key: Symbol('url'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'url'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'url'),
                 validators: [new UniqueValidator()]
             })
         );
@@ -80,7 +86,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
             new RowDefinition({
                 key: Symbol('retry:count'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'retryCount'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'retryCount'),
                 validators: [new UniqueValidator()]
             })
         );
@@ -89,7 +95,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
             new RowDefinition({
                 key: Symbol('retry:pause'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'retryPause'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'retryPause'),
                 validators: [new UniqueValidator()]
             })
         );
@@ -98,7 +104,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
             new RowDefinition({
                 key: Symbol('grantType'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'grantType'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'grantType'),
                 validators: [
                     new UniqueValidator(),
                     new ValueValidator('value', [
@@ -129,7 +135,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
             new RowDefinition({
                 key: Symbol('clientId'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'clientId'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'clientId'),
                 validators: [
                     new UniqueValidator(),
                     new DependsOnValueValidator([
@@ -152,7 +158,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
             new RowDefinition({
                 key: Symbol('clientSecret'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'clientSecret'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'clientSecret'),
                 validators: [
                     new UniqueValidator(),
                     new DependsOnValueValidator({
@@ -168,7 +174,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
             new RowDefinition({
                 key: Symbol('scope'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'scope'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'scope'),
                 validators: [new UniqueValidator()]
             })
         );
@@ -177,7 +183,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
             new RowDefinition({
                 key: Symbol('username'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'username'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'username'),
                 validators: [
                     new UniqueValidator(),
                     new DependsOnValueValidator({
@@ -193,7 +199,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
             new RowDefinition({
                 key: Symbol('password'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit('config', 'password'),
+                executionUnit: new DefaultPropertySetterExecutionUnit('config', 'password'),
                 validators: [
                     new UniqueValidator(),
                     new DependsOnValueValidator({
@@ -221,7 +227,7 @@ export default class RestAuthorizeTableHandler extends TableHandlerBaseImpl<Rest
     /**
      *
      */
-    addGroupValidation(tableHandler: TableHandler<RestAuthorizeContext, RowTypeValue<RestAuthorizeContext>>) {
+    addGroupValidation(tableHandler: TableHandler<RestAuthorizeContext, DefaultRowType<RestAuthorizeContext>>) {
         tableHandler.addGroupValidator(new RequiredValidator([Symbol('url'), Symbol('grantType')]));
     }
 }

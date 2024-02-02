@@ -1,5 +1,12 @@
-import { RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
-import { PropertySetterExecutionUnit, RequiredValidator, RowTypeValue, UniqueValidator, ValueValidator } from '@boart/core-impl';
+import {
+    DefaultPropertySetterExecutionUnit,
+    DefaultRowType,
+    RowDefinition,
+    TableHandler,
+    TableHandlerBaseImpl,
+    TableRowType
+} from '@boart/core';
+import { RequiredValidator, UniqueValidator, ValueValidator } from '@boart/core-impl';
 
 import { TestDescriptionContext } from './TestDescriptionContext';
 import { TestDescriptionExecutionUnit } from './TestDescriptionExecutionUnit';
@@ -9,12 +16,12 @@ import { TestDescriptionExecutionUnit } from './TestDescriptionExecutionUnit';
  */
 export default class TestDescriptionTableHandler extends TableHandlerBaseImpl<
     TestDescriptionContext,
-    RowTypeValue<TestDescriptionContext>
+    DefaultRowType<TestDescriptionContext>
 > {
     /**
      *
      */
-    rowType = () => RowTypeValue;
+    rowType = () => DefaultRowType;
 
     /**
      *
@@ -45,12 +52,12 @@ export default class TestDescriptionTableHandler extends TableHandlerBaseImpl<
     /**
      *
      */
-    addRowDefinition(tableHandler: TableHandler<TestDescriptionContext, RowTypeValue<TestDescriptionContext>>) {
+    addRowDefinition(tableHandler: TableHandler<TestDescriptionContext, DefaultRowType<TestDescriptionContext>>) {
         tableHandler.addRowDefinition(
             new RowDefinition({
                 key: Symbol('priority'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<TestDescriptionContext, RowTypeValue<TestDescriptionContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<TestDescriptionContext, DefaultRowType<TestDescriptionContext>>(
                     'config',
                     'priority'
                 ),
@@ -62,7 +69,7 @@ export default class TestDescriptionTableHandler extends TableHandlerBaseImpl<
             new RowDefinition({
                 key: Symbol('description'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<TestDescriptionContext, RowTypeValue<TestDescriptionContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<TestDescriptionContext, DefaultRowType<TestDescriptionContext>>(
                     'config',
                     'description',
                     {
@@ -77,7 +84,7 @@ export default class TestDescriptionTableHandler extends TableHandlerBaseImpl<
             new RowDefinition({
                 key: Symbol('failureDescription'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<TestDescriptionContext, RowTypeValue<TestDescriptionContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<TestDescriptionContext, DefaultRowType<TestDescriptionContext>>(
                     'config',
                     'failureDescription',
                     {
@@ -92,7 +99,7 @@ export default class TestDescriptionTableHandler extends TableHandlerBaseImpl<
             new RowDefinition({
                 key: Symbol('ticket'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<TestDescriptionContext, RowTypeValue<TestDescriptionContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<TestDescriptionContext, DefaultRowType<TestDescriptionContext>>(
                     'config',
                     'ticket',
                     {
@@ -109,7 +116,7 @@ export default class TestDescriptionTableHandler extends TableHandlerBaseImpl<
     /**
      *
      */
-    addGroupValidation(tableHandler: TableHandler<TestDescriptionContext, RowTypeValue<TestDescriptionContext>>) {
+    addGroupValidation(tableHandler: TableHandler<TestDescriptionContext, DefaultRowType<TestDescriptionContext>>) {
         tableHandler.addGroupValidator(new RequiredValidator([Symbol('description'), Symbol('priority')]));
     }
 }

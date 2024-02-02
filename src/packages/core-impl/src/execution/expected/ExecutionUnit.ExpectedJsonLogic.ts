@@ -1,6 +1,5 @@
-import { DataContent, DataContentHelper, Description, ExecutionContext, ExecutionUnit, ParaType } from '@boart/core';
+import { DataContent, DataContentHelper, DefaultRowType, Description, ExecutionContext, ExecutionUnit, ParaType } from '@boart/core';
 
-import { RowTypeValue } from '../../RowTypeValue';
 import { JsonLogic } from '../../jsonlogic/JsonLogic';
 import { QualifierValidator } from '../../validators/QualifierValidator';
 import { DataScope } from '@boart/core/lib/parser/ast/DataScope';
@@ -13,7 +12,7 @@ import { DataScopeValidator } from '../../validators/DataScopeValidator';
  * | expected:jsonLogic:false | xxxx  |
  */
 export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext<object, object, object>>
-    implements ExecutionUnit<DataContext, RowTypeValue<DataContext>>
+    implements ExecutionUnit<DataContext, DefaultRowType<DataContext>>
 {
     readonly key = Symbol('expected:jsonLogic');
     readonly parameterType = ParaType.True;
@@ -48,7 +47,7 @@ export class ExpectedJsonLogicExecutionUnit<DataContext extends ExecutionContext
     /**
      *
      */
-    execute(context: DataContext, row: RowTypeValue<DataContext>): void {
+    execute(context: DataContext, row: DefaultRowType<DataContext>): void {
         const rule = row.value.toString();
         const data = DataContentHelper.create(this.getDataContent(context, row.ast.datascope)).getText();
 

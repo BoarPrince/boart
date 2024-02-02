@@ -1,7 +1,6 @@
-import { ExecutionUnit, ParaType, Runtime, RuntimeStatus } from '@boart/core';
+import { DefaultRowType, ExecutionUnit, ParaType, Runtime, RuntimeStatus } from '@boart/core';
 
 import { AnyContext } from '../../AnyContext';
-import { RowTypeValue } from '../../RowTypeValue';
 import { UniqueValidator } from '../../validators/UniqueValidator';
 
 import { RunDefinitionParser } from './RunDefinitionParser';
@@ -9,7 +8,7 @@ import { RunDefinitionParser } from './RunDefinitionParser';
 /**
  *
  */
-export class RunOnlyExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
+export class RunOnlyExecutionUnit implements ExecutionUnit<AnyContext, DefaultRowType<AnyContext>> {
     readonly key = Symbol('run:only');
     readonly description = () => ({
         id: '44308180-99d2-46fd-a19d-476ebf8ae150',
@@ -22,7 +21,7 @@ export class RunOnlyExecutionUnit implements ExecutionUnit<AnyContext, RowTypeVa
     /**
      *
      */
-    execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
+    execute(_: AnyContext, row: DefaultRowType<AnyContext>): void {
         const runDefinition = RunDefinitionParser.parse(row.value.toString());
         const name = row.ast.qualifier?.paras?.join('.');
 

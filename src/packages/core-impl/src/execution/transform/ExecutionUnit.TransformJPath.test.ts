@@ -1,4 +1,6 @@
 import {
+    DefaultContext,
+    DefaultRowType,
     ExecutionEngine,
     ExecutionUnit,
     NativeContent,
@@ -9,15 +11,12 @@ import {
     TextContent
 } from '@boart/core';
 
-import { DataContext } from '../../DataExecutionContext';
-import { RowTypeValue } from '../../RowTypeValue';
-
 import { TransformJPathExecutionUnit } from './ExecutionUnit.TransformJPath';
 
 /**
  *
  */
-class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+class ExecutionUnitMock implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
     readonly key = Symbol('desc');
     /**
      *
@@ -32,7 +31,7 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    execute = jest.fn((context: DataContext, row: RowTypeValue<DataContext>): Promise<void> => {
+    execute = jest.fn((context: DefaultContext, row: DefaultRowType<DefaultContext>): Promise<void> => {
         // do noting
         return;
     });
@@ -50,7 +49,7 @@ const initialContext = {
 /**
  *
  */
-class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<DataContext>> {
+class ExecutionEngineMock extends ExecutionEngine<DefaultContext, DefaultRowType<DefaultContext>> {
     /**
      *
      */
@@ -61,8 +60,8 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
     /**
      *
      */
-    private static initializer(): () => DataContext {
-        return (): DataContext => ({
+    private static initializer(): () => DefaultContext {
+        return (): DefaultContext => ({
             config: {
                 value: ''
             },
@@ -91,7 +90,7 @@ beforeEach(() => {
  *
  */
 describe('check transform:jpath execution units', () => {
-    const tableHandler = new TableHandler(RowTypeValue, () => new ExecutionEngineMock());
+    const tableHandler = new TableHandler(DefaultRowType, () => new ExecutionEngineMock());
 
     const sut = new TransformJPathExecutionUnit();
 

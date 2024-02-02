@@ -1,11 +1,10 @@
-import { ExecutionUnit } from '@boart/core';
-import { DataContext, RowTypeValue } from '@boart/core-impl';
+import { DefaultContext, DefaultRowType, ExecutionUnit } from '@boart/core';
 import { StepReport } from '@boart/protocol';
 
 /**
  *
  */
-export class DataExecutionUnit implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+export class DataExecutionUnit implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
     readonly key = Symbol('data');
     /**
      *
@@ -47,7 +46,7 @@ export class DataExecutionUnit implements ExecutionUnit<DataContext, RowTypeValu
     /**
      *
      */
-    execute(context: DataContext): void {
+    execute(context: DefaultContext): void {
         StepReport.instance.type = 'data handling';
         StepReport.instance.addInputItem('Data Handling (input)', 'json', context.preExecution.payload);
 

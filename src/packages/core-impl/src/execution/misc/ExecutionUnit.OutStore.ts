@@ -1,6 +1,10 @@
 import {
     DataContent,
     DataContentHelper,
+    DefaultContext,
+    DefaultExecutionContext,
+    DefaultPreExecutionContext,
+    DefaultRowType,
     ExecutionUnit,
     Description,
     ParaType,
@@ -11,8 +15,6 @@ import {
     VariableParser
 } from '@boart/core';
 
-import { DataContext, DataExecutionContext, DataPreExecutionContext } from '../../DataExecutionContext';
-import { RowTypeValue } from '../../RowTypeValue';
 import { QualifierValidator } from '../../validators/QualifierValidator';
 import { ValueRequiredValidator } from '../../validators/ValueRequiredValidator';
 import { DataScope } from '@boart/core/lib/parser/ast/DataScope';
@@ -43,7 +45,9 @@ import { DataScopeValidator } from '../../validators/DataScopeValidator';
  * |--------------------|------|
  * | out:store:header:l | xxx  |
  */
-export class OutStoreExecutionUnit<StoreContext extends DataContext> implements ExecutionUnit<StoreContext, RowTypeValue<StoreContext>> {
+export class OutStoreExecutionUnit<StoreContext extends DefaultContext>
+    implements ExecutionUnit<StoreContext, DefaultRowType<StoreContext>>
+{
     get key() {
         return Symbol(this._key);
     }
@@ -85,12 +89,12 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
             return context.preExecution.payload;
         }
 
-        const executionContext = context.execution || ({} as DataExecutionContext);
+        const executionContext = context.execution || ({} as DefaultExecutionContext);
 
         if (scope) {
             return executionContext[scope];
         } else {
-            const preExecutionContext = context.preExecution || ({} as DataPreExecutionContext);
+            const preExecutionContext = context.preExecution || ({} as DefaultPreExecutionContext);
             return (
                 nonNullValue(executionContext.transformed, null) ||
                 nonNullValue(executionContext.data, null) ||
@@ -102,7 +106,7 @@ export class OutStoreExecutionUnit<StoreContext extends DataContext> implements 
     /**
      *
      */
-    execute(context: StoreContext, row: RowTypeValue<DataContext>): void {
+    execute(context: StoreContext, row: DefaultRowType<DefaultContext>): void {
         const value = this.getDataContent(context, row.ast.datascope);
         const data = SelectorExtractor.getValueBySelector(row.ast.selectors, value);
 

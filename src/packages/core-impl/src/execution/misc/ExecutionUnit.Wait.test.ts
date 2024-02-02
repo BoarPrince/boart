@@ -1,9 +1,7 @@
 import 'jest-extended';
 
-import { ExecutionEngine, ExecutionUnit, RowDefinition, TableHandler, TableRowType } from '@boart/core';
+import { DefaultContext, DefaultRowType, ExecutionEngine, ExecutionUnit, RowDefinition, TableHandler, TableRowType } from '@boart/core';
 
-import { DataContext } from '../../DataExecutionContext';
-import { RowTypeValue } from '../../RowTypeValue';
 import { QualifierValidator } from '../../validators/QualifierValidator';
 
 import { WaitExecutionUnit } from './ExecutionUnit.Wait';
@@ -11,7 +9,7 @@ import { WaitExecutionUnit } from './ExecutionUnit.Wait';
 /**
  *
  */
-class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+class ExecutionUnitMock implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
     readonly key = Symbol('desc');
     /**
      *
@@ -31,19 +29,19 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
 /**
  *
  */
-class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<DataContext>> {
+class ExecutionEngineMock extends ExecutionEngine<DefaultContext, DefaultRowType<DefaultContext>> {
     /**
      *
      */
-    constructor(mainExecutionUnit: ExecutionUnit<DataContext, RowTypeValue<DataContext>>) {
+    constructor(mainExecutionUnit: ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>) {
         super(() => mainExecutionUnit, ExecutionEngineMock.initializer());
     }
 
     /**
      *
      */
-    private static initializer(): () => DataContext {
-        return (): DataContext => ({
+    private static initializer(): () => DefaultContext {
+        return (): DefaultContext => ({
             config: {},
             preExecution: {
                 payload: null
@@ -63,7 +61,7 @@ class ExecutionEngineMock extends ExecutionEngine<DataContext, RowTypeValue<Data
 describe('check wait:before execution units', () => {
     const mainExecutionUnit = new ExecutionUnitMock();
     const executionEnginge = new ExecutionEngineMock(mainExecutionUnit);
-    const tableHandler = new TableHandler(RowTypeValue, () => executionEnginge);
+    const tableHandler = new TableHandler(DefaultRowType, () => executionEnginge);
 
     const sut = new WaitExecutionUnit();
 
@@ -234,7 +232,7 @@ describe('check wait:before execution units', () => {
 describe('check wait:after execution units', () => {
     const mainExecutionUnit = new ExecutionUnitMock();
     const executionEnginge = new ExecutionEngineMock(mainExecutionUnit);
-    const tableHandler = new TableHandler(RowTypeValue, () => executionEnginge);
+    const tableHandler = new TableHandler(DefaultRowType, () => executionEnginge);
 
     const sut = new WaitExecutionUnit();
 

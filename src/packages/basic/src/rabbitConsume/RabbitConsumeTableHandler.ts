@@ -1,11 +1,13 @@
-import { GroupRowDefinition, RowDefinition, TableHandler, TableHandlerBaseImpl, TableRowType } from '@boart/core';
 import {
-    ExpectedDataExecutinoUnit,
-    ExpectedJsonLogicExecutionUnit,
-    PropertySetterExecutionUnit,
-    RequiredValidator,
-    RowTypeValue
-} from '@boart/core-impl';
+    DefaultPropertySetterExecutionUnit,
+    DefaultRowType,
+    GroupRowDefinition,
+    RowDefinition,
+    TableHandler,
+    TableHandlerBaseImpl,
+    TableRowType
+} from '@boart/core';
+import { ExpectedDataExecutinoUnit, ExpectedJsonLogicExecutionUnit, RequiredValidator } from '@boart/core-impl';
 import { IntValidator } from '@boart/core-impl';
 
 import { RabbitConsumeContext } from './RabbitConsumeContext';
@@ -14,11 +16,11 @@ import { RabbitConsumeExecutionUnit } from './RabbitConsumeExecutionUnit';
 /**
  *
  */
-export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>> {
+export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>> {
     /**
      *
      */
-    rowType = () => RowTypeValue;
+    rowType = () => DefaultRowType;
 
     /**
      *
@@ -56,7 +58,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
     /**
      *
      */
-    addGroupRowDefinition(tableHandler: TableHandler<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>) {
+    addGroupRowDefinition(tableHandler: TableHandler<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>) {
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-group-definition'));
         tableHandler.addGroupRowDefinition(GroupRowDefinition.getInstance('basic-data'));
     }
@@ -64,7 +66,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
     /**
      * rabbit consumer definitions (name, timeout, count, ...)
      */
-    addRowDefinition(tableHandler: TableHandler<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>) {
+    addRowDefinition(tableHandler: TableHandler<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>) {
         /**
          * Credentials
          */
@@ -72,7 +74,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('username'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>(
                     'config',
                     'username'
                 ),
@@ -86,7 +88,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('password'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>(
                     'config',
                     'password'
                 ),
@@ -100,7 +102,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('hostname'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>(
                     'config',
                     'hostname'
                 ),
@@ -114,7 +116,10 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('vhost'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>('config', 'vhost'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>(
+                    'config',
+                    'vhost'
+                ),
                 validators: null
             })
         );
@@ -123,7 +128,10 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('port'),
                 type: TableRowType.PreProcessing,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>('config', 'port'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>(
+                    'config',
+                    'port'
+                ),
                 defaultValue: '${env?:rabbitmq_port}',
                 defaultValueColumn: Symbol('value'),
                 validators: [new IntValidator('value')]
@@ -137,7 +145,10 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('queue'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>('config', 'queue'),
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>(
+                    'config',
+                    'queue'
+                ),
                 validators: null
             })
         );
@@ -146,7 +157,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('timeout'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>(
                     'config',
                     'timeout'
                 ),
@@ -158,7 +169,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('count'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>(
                     'config',
                     'count_min'
                 ),
@@ -170,7 +181,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('count:min'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>(
                     'config',
                     'count_min'
                 ),
@@ -182,7 +193,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
             new RowDefinition({
                 key: Symbol('count:max'),
                 type: TableRowType.Configuration,
-                executionUnit: new PropertySetterExecutionUnit<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>(
+                executionUnit: new DefaultPropertySetterExecutionUnit<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>(
                     'config',
                     'count_max'
                 ),
@@ -218,7 +229,7 @@ export default class RabbitConsumeTableHandler extends TableHandlerBaseImpl<Rabb
     /**
      *
      */
-    addGroupValidation(tableHandler: TableHandler<RabbitConsumeContext, RowTypeValue<RabbitConsumeContext>>) {
+    addGroupValidation(tableHandler: TableHandler<RabbitConsumeContext, DefaultRowType<RabbitConsumeContext>>) {
         tableHandler.addGroupValidator(new RequiredValidator([Symbol('queue')]));
     }
 }

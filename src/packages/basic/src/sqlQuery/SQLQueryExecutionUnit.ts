@@ -1,5 +1,4 @@
-import { ExecutionUnit, NativeContent, ObjectContent, TextContent, Timer } from '@boart/core';
-import { RowTypeValue } from '@boart/core-impl';
+import { DefaultRowType, ExecutionUnit, NativeContent, ObjectContent, TextContent, Timer } from '@boart/core';
 import { MSSQLHandler, MSSQLQueryResult } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
 
@@ -8,7 +7,7 @@ import { SQLQueryContext } from './SQLQueryContext';
 /**
  *
  */
-export class SQLQueryExecutionUnit implements ExecutionUnit<SQLQueryContext, RowTypeValue<SQLQueryContext>> {
+export class SQLQueryExecutionUnit implements ExecutionUnit<SQLQueryContext, DefaultRowType<SQLQueryContext>> {
     readonly key = Symbol('rest call - main');
     readonly description = () => ({
         id: '77bc07bf-4a06-453e-8367-e8009cfa8fe7',
@@ -32,7 +31,7 @@ export class SQLQueryExecutionUnit implements ExecutionUnit<SQLQueryContext, Row
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async execute(context: SQLQueryContext, _row: RowTypeValue<SQLQueryContext>): Promise<void> {
+    async execute(context: SQLQueryContext, _row: DefaultRowType<SQLQueryContext>): Promise<void> {
         //#region rest call executing
         const timer = new Timer();
         const query = context.preExecution.query;
@@ -45,6 +44,7 @@ export class SQLQueryExecutionUnit implements ExecutionUnit<SQLQueryContext, Row
         try {
             result = await sql.query(query);
         } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             context.execution.data = new TextContent(error.message as string);
             throw error;
         } finally {
@@ -64,7 +64,7 @@ export class SQLQueryExecutionUnit implements ExecutionUnit<SQLQueryContext, Row
         const resultValue = result.getStringOrObjectArray();
         if (typeof resultValue === 'string') {
             const jsonResult = this.parseJSON(resultValue);
-            if (!!jsonResult) {
+            if (jsonResult) {
                 context.execution.data = new ObjectContent(
                     Array.isArray(jsonResult) && jsonResult.length === 1 ? (jsonResult[0] as object) : jsonResult
                 );

@@ -1,12 +1,10 @@
-import { GroupRowDefinition, RowDefinition, TableRowType } from '@boart/core';
+import { DefaultContext, DefaultRowType, GroupRowDefinition, RowDefinition, TableRowType } from '@boart/core';
 import {
     AnyContext,
-    DataContext,
     DescriptionExecutionUnit,
     GroupExecutionUnit,
     LinkExecutionUnit,
     QualifierValidator,
-    RowTypeValue,
     RunEnvExecutionUnit,
     RunNotEmptyExecutionUnit,
     RunNotExecutionUnit,
@@ -15,7 +13,7 @@ import {
 } from '@boart/core-impl';
 
 if (!GroupRowDefinition.contains('basic-group-definition')) {
-    const basicGroup = GroupRowDefinition.getInstance<AnyContext, RowTypeValue<AnyContext>>('basic-group-definition');
+    const basicGroup = GroupRowDefinition.getInstance<AnyContext, DefaultRowType<AnyContext>>('basic-group-definition');
 
     basicGroup.addRowDefinition(
         new RowDefinition({
@@ -106,4 +104,4 @@ if (!GroupRowDefinition.contains('basic-group-definition')) {
     );
 }
 
-export default GroupRowDefinition.getInstance<DataContext, RowTypeValue<DataContext>>('basic-group-definition');
+export default GroupRowDefinition.getInstance<DefaultContext, DefaultRowType<DefaultContext>>('basic-group-definition');

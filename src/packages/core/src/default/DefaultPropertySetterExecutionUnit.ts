@@ -1,17 +1,17 @@
-import {
-    ASTVariable,
-    ContentType,
-    DataContentHelper,
-    DataType,
-    ExecutionContext,
-    ExecutionUnit,
-    ObjectContent,
-    ParaType,
-    SelectorExtractor
-} from '@boart/core';
+import { ContentType } from '../data/ContentType';
+import { DataContentHelper } from '../data/DataContentHelper';
+import { DataType } from '../data/DataType.enum';
+import { ObjectContent } from '../data/ObjectContent';
+import { SelectorExtractor } from '../data/SelectorExtractor';
+import { ASTVariable } from '../parser/ast/ASTVariable';
+import { DefaultRowType } from './DefaultRowType';
+import { ParaType } from '../types/ParaType';
+import { ExecutionContext } from '../execution/ExecutionContext';
+import { ExecutionUnit } from '../execution/ExecutionUnit';
 
-import { RowTypeValue } from '../../RowTypeValue';
-
+/**
+ *
+ */
 type Config = {
     concat?: boolean;
     delimiter?: string;
@@ -27,9 +27,9 @@ type Config = {
 /**
  *
  */
-export class PropertySetterExecutionUnit<
+export class DefaultPropertySetterExecutionUnit<
     TExecutionContext extends ExecutionContext<object, object, object>,
-    TRowType extends RowTypeValue<TExecutionContext>
+    TRowType extends DefaultRowType<TExecutionContext>
 > implements ExecutionUnit<TExecutionContext, TRowType>
 {
     /**
@@ -60,7 +60,7 @@ export class PropertySetterExecutionUnit<
         id: 'propertySetter:unit',
         title: 'Generic Property Setter',
         description: '',
-        examples: null
+        examples: []
     });
 
     readonly key = Symbol('Generic Property Setter');

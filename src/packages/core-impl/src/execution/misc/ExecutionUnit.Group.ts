@@ -1,13 +1,12 @@
-import { ExecutionUnit, ParaType, Runtime } from '@boart/core';
+import { DefaultRowType, ExecutionUnit, ParaType, Runtime } from '@boart/core';
 
 import { AnyContext } from '../../AnyContext';
-import { RowTypeValue } from '../../RowTypeValue';
 import { UniqueValidator } from '../../validators/UniqueValidator';
 
 /**
  *
  */
-export class GroupExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValue<AnyContext>> {
+export class GroupExecutionUnit implements ExecutionUnit<AnyContext, DefaultRowType<AnyContext>> {
     readonly key = Symbol('group');
     readonly description = () => ({
         id: '31f46a7e-8cc0-4ebf-ae63-a9d30a2cafb4',
@@ -20,7 +19,7 @@ export class GroupExecutionUnit implements ExecutionUnit<AnyContext, RowTypeValu
     /**
      *
      */
-    execute(_: AnyContext, row: RowTypeValue<AnyContext>): void {
+    execute(_: AnyContext, row: DefaultRowType<AnyContext>): void {
         Runtime.instance.stepRuntime.currentContext.group = row.value.toString();
     }
 }

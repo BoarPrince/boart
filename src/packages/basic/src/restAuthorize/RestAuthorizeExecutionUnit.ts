@@ -1,5 +1,4 @@
-import { ExecutionUnit, ObjectContent, Timer, UrlLoader } from '@boart/core';
-import { RowTypeValue } from '@boart/core-impl';
+import { DefaultRowType, ExecutionUnit, ObjectContent, Timer, UrlLoader } from '@boart/core';
 import { RestHttp } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
 
@@ -8,7 +7,7 @@ import { RestAuthorizeContext } from './RestAuthorizeContext';
 /**
  *
  */
-export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeContext, RowTypeValue<RestAuthorizeContext>> {
+export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeContext, DefaultRowType<RestAuthorizeContext>> {
     readonly key = Symbol('rest call - main');
     public description = () => ({
         id: '0aaf6ec3-b2e8-46ed-8362-19fba9c71771',
@@ -20,7 +19,7 @@ export class RestAuthorizeExecutionUnit implements ExecutionUnit<RestAuthorizeCo
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async execute(context: RestAuthorizeContext, _row: RowTypeValue<RestAuthorizeContext>): Promise<void> {
+    async execute(context: RestAuthorizeContext, _row: DefaultRowType<RestAuthorizeContext>): Promise<void> {
         const timer = new Timer();
         const url = UrlLoader.instance.url(context.config.url);
         const rest = new RestHttp(url);

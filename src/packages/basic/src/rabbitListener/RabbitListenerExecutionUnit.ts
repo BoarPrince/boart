@@ -1,5 +1,5 @@
-import { ExecutionUnit, Runtime, Store, StoreMap } from '@boart/core';
-import { RowTypeValue, UUIDGenerator } from '@boart/core-impl';
+import { ExecutionUnit, DefaultRowType, Runtime, Store, StoreMap } from '@boart/core';
+import { UUIDGenerator } from '@boart/core-impl';
 import { RabbitQueueHandler, RabbitQueueMessage, RabbitQueueMessageConsumer } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
 
@@ -8,7 +8,7 @@ import { RabbitListenerContext } from './RabbitListenerContext';
 /**
  *
  */
-export class RabbitListenerExecutionUnit implements ExecutionUnit<RabbitListenerContext, RowTypeValue<RabbitListenerContext>> {
+export class RabbitListenerExecutionUnit implements ExecutionUnit<RabbitListenerContext, DefaultRowType<RabbitListenerContext>> {
     readonly key = Symbol('listening on rabbit queues/exchanges');
     readonly description = () => ({
         id: 'rabbit:listener:unit',
@@ -23,7 +23,7 @@ export class RabbitListenerExecutionUnit implements ExecutionUnit<RabbitListener
      * @param context containing all runtime informations
      */
     private async bindQueue(context: RabbitListenerContext): Promise<void> {
-        if (!!context.config.queue) {
+        if (context.config.queue) {
             // nothing to do, because no binding is necessary
             return;
         }
@@ -99,7 +99,7 @@ export class RabbitListenerExecutionUnit implements ExecutionUnit<RabbitListener
 
         const consumer = await this.startConsuming(context);
         consumer.start().catch((error) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
             throw Error(error?.message || error);
         });
     }

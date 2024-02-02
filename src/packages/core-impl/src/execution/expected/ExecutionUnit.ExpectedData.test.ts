@@ -1,6 +1,8 @@
 import 'jest-extended';
 import {
     DataContent,
+    DefaultContext,
+    DefaultRowType,
     ExecutionEngine,
     ExecutionUnit,
     ExpectedOperator,
@@ -15,16 +17,13 @@ import {
     TextContent
 } from '@boart/core';
 
-import { DataContext } from '../../DataExecutionContext';
-import { RowTypeValue } from '../../RowTypeValue';
-
 import { ExpectedDataExecutinoUnit } from './ExecutionUnit.ExpectedData';
 import { ExpectedOperatorImplementation } from './ExpectedOperator.Implementation';
 
 /**
  *
  */
-class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataContext>> {
+class ExecutionUnitMock implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
     readonly key = Symbol('desc');
 
     /**
@@ -40,7 +39,7 @@ class ExecutionUnitMock implements ExecutionUnit<DataContext, RowTypeValue<DataC
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/require-await
-    execute = jest.fn(async (context: DataContext, row: RowTypeValue<DataContext>): Promise<void> => {
+    execute = jest.fn(async (context: DefaultContext, row: DefaultRowType<DefaultContext>): Promise<void> => {
         // do noting
         return;
     });
@@ -58,7 +57,7 @@ const intialContext = {
 /**
  *
  */
-class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<DataContext>> {
+class RestCallExecutionEngine extends ExecutionEngine<DefaultContext, DefaultRowType<DefaultContext>> {
     /**
      *
      */
@@ -69,8 +68,8 @@ class RestCallExecutionEngine extends ExecutionEngine<DataContext, RowTypeValue<
     /**
      *
      */
-    private static initializer(): () => DataContext {
-        return (): DataContext => ({
+    private static initializer(): () => DefaultContext {
+        return (): DefaultContext => ({
             config: {
                 value: ''
             },
@@ -108,7 +107,7 @@ beforeEach(() => {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 describe('check expected:data execution units', () => {
-    const tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
+    const tableHandler = new TableHandler(DefaultRowType, () => new RestCallExecutionEngine());
 
     const sut1 = new ExpectedDataExecutinoUnit();
 
@@ -271,9 +270,9 @@ describe('check expected:data execution units', () => {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 describe('check expected:header execution units', () => {
-    const tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
+    const tableHandler = new TableHandler(DefaultRowType, () => new RestCallExecutionEngine());
 
-    const sut = new ExpectedDataExecutinoUnit<DataContext>();
+    const sut = new ExpectedDataExecutinoUnit<DefaultContext>();
 
     /**
      *
@@ -370,9 +369,9 @@ describe('check expected:header execution units', () => {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 describe('check expected:transformed execution units', () => {
-    const tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
+    const tableHandler = new TableHandler(DefaultRowType, () => new RestCallExecutionEngine());
 
-    const sut = new ExpectedDataExecutinoUnit<DataContext>();
+    const sut = new ExpectedDataExecutinoUnit<DefaultContext>();
 
     /**
      *
@@ -413,14 +412,14 @@ describe('check expected:transformed execution units', () => {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 describe('check expected:data execution units with operators', () => {
-    let tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>;
+    let tableHandler: TableHandler<DefaultContext, DefaultRowType<DefaultContext>>;
 
     /**
      *
      */
     beforeEach(() => {
         ExpectedOperatorInitializer.instance.clear();
-        tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
+        tableHandler = new TableHandler(DefaultRowType, () => new RestCallExecutionEngine());
     });
 
     /**
@@ -444,7 +443,7 @@ describe('check expected:data execution units with operators', () => {
      */
     it('add operator before', async () => {
         ExpectedOperatorInitializer.instance.addOperator(new TestOperator('op1'));
-        const sut = new ExpectedDataExecutinoUnit<DataContext>();
+        const sut = new ExpectedDataExecutinoUnit<DefaultContext>();
 
         tableHandler.addRowDefinition(
             new RowDefinition({
@@ -597,7 +596,7 @@ describe('check expected:data execution units with operators', () => {
     it('check ObjectContent value parameter', async () => {
         const operator = new TestOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit<DataContext>();
+        const sut = new ExpectedDataExecutinoUnit<DefaultContext>();
 
         const dataToCheck = new ObjectContent({ a: 'b' });
         intialContext.data = dataToCheck;
@@ -660,7 +659,7 @@ describe('check expected:data execution units with operators', () => {
         });
 
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit<DataContext>();
+        const sut = new ExpectedDataExecutinoUnit<DefaultContext>();
 
         intialContext.data = new NullContent();
         tableHandler.addRowDefinition(
@@ -710,7 +709,7 @@ describe('check expected:data execution units with operators', () => {
         };
 
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit<DataContext>();
+        const sut = new ExpectedDataExecutinoUnit<DefaultContext>();
 
         intialContext.data = new NullContent();
         tableHandler.addRowDefinition(
@@ -743,14 +742,14 @@ describe('check expected:data execution units with operators', () => {
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 describe('check expected:data ci operator', () => {
-    let tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>;
+    let tableHandler: TableHandler<DefaultContext, DefaultRowType<DefaultContext>>;
 
     /**
      *
      */
     beforeEach(() => {
         ExpectedOperatorInitializer.instance.clear();
-        tableHandler = new TableHandler(RowTypeValue, () => new RestCallExecutionEngine());
+        tableHandler = new TableHandler(DefaultRowType, () => new RestCallExecutionEngine());
     });
 
     /**
@@ -795,7 +794,7 @@ describe('check expected:data ci operator', () => {
     it('with ci the string values are transformed to lowercase values', async () => {
         const operator = new TestOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
-        const sut = new ExpectedDataExecutinoUnit<DataContext>();
+        const sut = new ExpectedDataExecutinoUnit<DefaultContext>();
 
         const dataToCheck = new TextContent('UPPER-CASE');
         intialContext.data = dataToCheck;
@@ -832,7 +831,7 @@ describe('check expected:data ci operator', () => {
         const operator = new TestDefaultOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
 
-        const sut = new ExpectedDataExecutinoUnit<DataContext>();
+        const sut = new ExpectedDataExecutinoUnit<DefaultContext>();
 
         const dataToCheck = new TextContent('upper-case');
         intialContext.data = dataToCheck;
@@ -864,7 +863,7 @@ describe('check expected:data ci operator', () => {
         const operator = new TestDefaultOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
 
-        const sut = new ExpectedDataExecutinoUnit<DataContext>();
+        const sut = new ExpectedDataExecutinoUnit<DefaultContext>();
 
         const dataToCheck = new TextContent('upper-case');
         intialContext.data = dataToCheck;
@@ -898,7 +897,7 @@ describe('check expected:data ci operator', () => {
         const operator = new TestDefaultOperator('op1');
         ExpectedOperatorInitializer.instance.addOperator(operator);
 
-        const sut = new ExpectedDataExecutinoUnit<DataContext>();
+        const sut = new ExpectedDataExecutinoUnit<DefaultContext>();
 
         const dataToCheck = new TextContent('upper-cas');
         intialContext.data = dataToCheck;

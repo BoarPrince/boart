@@ -1,6 +1,8 @@
 import 'jest-extended';
 
 import {
+    DefaultContext,
+    DefaultRowType,
     EnvLoader,
     GeneratorHandler,
     MarkdownTableReader,
@@ -16,7 +18,6 @@ import {
     TextContent,
     VariableParser
 } from '@boart/core';
-import { DataContext, RowTypeValue } from '@boart/core-impl';
 import BasicDataGroupDefinition from './BasicDataGroupDefinition';
 import BasicGroupDefinition from './BasicGroupDefinition';
 import { basicInitialize } from '..';
@@ -33,7 +34,6 @@ const astB = variableParser.parseAction('store:b');
  *
  */
 jest.mock('@boart/core', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const originalModule = jest.requireActual('@boart/core');
 
     return {
@@ -68,11 +68,11 @@ const intialContext = {
 /**
  *
  */
-class MockTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<DataContext>> {
+class MockTableHandler extends TableHandlerBaseImpl<DefaultContext, DefaultRowType<DefaultContext>> {
     /**
      *
      */
-    protected rowType = () => RowTypeValue;
+    protected rowType = () => DefaultRowType;
 
     /**
      *
@@ -105,7 +105,7 @@ class MockTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<Da
     /**
      *
      */
-    protected addGroupRowDefinition(tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>) {
+    protected addGroupRowDefinition(tableHandler: TableHandler<DefaultContext, DefaultRowType<DefaultContext>>) {
         tableHandler.addGroupRowDefinition(BasicDataGroupDefinition);
         tableHandler.addGroupRowDefinition(BasicGroupDefinition);
     }
@@ -114,7 +114,7 @@ class MockTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<Da
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected addRowDefinition(_: TableHandler<DataContext, RowTypeValue<DataContext>>) {
+    protected addRowDefinition(_: TableHandler<DefaultContext, DefaultRowType<DefaultContext>>) {
         // nothing to define
     }
 
@@ -122,7 +122,7 @@ class MockTableHandler extends TableHandlerBaseImpl<DataContext, RowTypeValue<Da
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected addGroupValidation(_tableHandler: TableHandler<DataContext, RowTypeValue<DataContext>>) {
+    protected addGroupValidation(_tableHandler: TableHandler<DefaultContext, DefaultRowType<DefaultContext>>) {
         // no validation needed for test purposes
     }
 }
@@ -159,20 +159,20 @@ describe('out store', () => {
     /**
      *
      */
-    it('not initialized', async () => {
+    test('not initialized', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action  |value |
              |--------|------|
              |store   | a    |`
         );
 
-        await sut.handler.process(tableDef);
+        expect(() => sut.handler.process(tableDef)).not.toThrow();
     });
 
     /**
      *
      */
-    it('null handling', async () => {
+    test('null handling', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action  |value |
              |--------|------|
@@ -188,7 +188,7 @@ describe('out store', () => {
     /**
      *
      */
-    it('error: name is missing', async () => {
+    test('error: name is missing', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action  |value |
              |--------|------|
@@ -203,7 +203,7 @@ describe('out store', () => {
     /**
      *
      */
-    it('get deep value, first level', async () => {
+    test('get deep value, first level', async () => {
         intialContext.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
 
         const tableDef = MarkdownTableReader.convert(
@@ -222,7 +222,7 @@ describe('out store', () => {
     /**
      *
      */
-    it('get deep value, first level, set and get', async () => {
+    test('get deep value, first level, set and get', async () => {
         intialContext.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action  |value  |
@@ -239,7 +239,7 @@ describe('out store', () => {
     /**
      *
      */
-    it('get deep value, first level, set and get, multiple times - 2', async () => {
+    test('get deep value, first level, set and get, multiple times - 2', async () => {
         intialContext.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action  |value  |
@@ -258,7 +258,7 @@ describe('out store', () => {
     /**
      *
      */
-    it('get deep value, first level, set and get, multiple times - 3', async () => {
+    test('get deep value, first level, set and get, multiple times - 3', async () => {
         intialContext.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action  |value  |
@@ -278,7 +278,7 @@ describe('out store', () => {
     /**
      *
      */
-    it('get deep value, second level, set, multiple times - 3', async () => {
+    test('get deep value, second level, set, multiple times - 3', async () => {
         intialContext.data = new ObjectContent({ a: 1, b: 2, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action  |value    |
@@ -298,7 +298,7 @@ describe('out store', () => {
     /**
      *
      */
-    it('get deep value, second level, set and get, multiple times - 3', async () => {
+    test('get deep value, second level, set and get, multiple times - 3', async () => {
         intialContext.data = new ObjectContent({ a: 1, b: { e: 5 }, c: 3, d: 4 });
         const tableDef = MarkdownTableReader.convert(
             `|action    |value    |
@@ -323,7 +323,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('set only the payload', async () => {
+    test('set only the payload', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action   | value    |
              |---------|----------|
@@ -338,7 +338,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('set only the payload - number as string', async () => {
+    test('set only the payload - number as string', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action  | value |
              |--------|-------|
@@ -356,7 +356,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('set only the payload with selector - number as string', async () => {
+    test('set only the payload with selector - number as string', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value |
              |----------|-------|
@@ -378,7 +378,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('set only the payload - object with number as string', async () => {
+    test('set only the payload - object with number as string', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action  | value      |
              |--------|------------|
@@ -395,7 +395,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('simple', async () => {
+    test('simple', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action         | value    |
              |---------------|----------|
@@ -413,7 +413,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add property without parameter', async () => {
+    test('add property without parameter', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -431,7 +431,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add empty array to additional property', async () => {
+    test('add empty array to additional property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -450,7 +450,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add empty array to additional property - array with spaces', async () => {
+    test('add empty array to additional property - array with spaces', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -469,7 +469,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add empty object to additional property', async () => {
+    test('add empty object to additional property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -487,7 +487,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add empty object to additional property - object with spaces', async () => {
+    test('add empty object to additional property - object with spaces', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -505,7 +505,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add array to additional property', async () => {
+    test('add array to additional property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value      |
              |----------|------------|
@@ -524,7 +524,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add undefined to additional property', async () => {
+    test('add undefined to additional property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value     |
              |----------|-----------|
@@ -542,7 +542,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('override property with undefined', async () => {
+    test('override property with undefined', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value     |
              |----------|-----------|
@@ -565,7 +565,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('override property with "undefined"', async () => {
+    test('override property with "undefined"', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value       |
              |----------|-------------|
@@ -588,7 +588,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('override property with quoted undefined', async () => {
+    test('override property with quoted undefined', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value         |
              |----------|---------------|
@@ -606,7 +606,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('override property with null', async () => {
+    test('override property with null', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value     |
              |----------|-----------|
@@ -625,7 +625,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('override property with "null"', async () => {
+    test('override property with "null"', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value     |
              |----------|-----------|
@@ -644,7 +644,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('override property with 1', async () => {
+    test('override property with 1', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -663,7 +663,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('override property with "1"', async () => {
+    test('override property with "1"', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value     |
              |----------|-----------|
@@ -682,7 +682,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('override property with true', async () => {
+    test('override property with true', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -701,7 +701,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('override property with "true"', async () => {
+    test('override property with "true"', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value     |
              |----------|-----------|
@@ -720,7 +720,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add null to additional property', async () => {
+    test('add null to additional property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -738,7 +738,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add number to additional property', async () => {
+    test('add number to additional property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -756,7 +756,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add boolean to additional property', async () => {
+    test('add boolean to additional property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -774,7 +774,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add number as string to additional property - 1', async () => {
+    test('add number as string to additional property - 1', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -792,7 +792,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add boolean to additional property - 2', async () => {
+    test('add boolean to additional property - 2', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value    |
              |----------|----------|
@@ -810,7 +810,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add to payload from store', async () => {
+    test('add to payload from store', async () => {
         Store.instance.testStore.put(astA, 1);
 
         const tableDef = MarkdownTableReader.convert(
@@ -829,7 +829,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('add to payload from store multiple times', async () => {
+    test('add to payload from store multiple times', async () => {
         Store.instance.testStore.put(astA, 1);
         Store.instance.testStore.put(astB, 2);
 
@@ -849,7 +849,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('try to payload from wrong replacement', async () => {
+    test('try to payload from wrong replacement', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value      |
              |----------|------------|
@@ -863,7 +863,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default', async () => {
+    test('use store default', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value          |
              |----------|----------------|
@@ -880,7 +880,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default, but store is defined', async () => {
+    test('use store default, but store is defined', async () => {
         Store.instance.testStore.put(astA, 1);
         const tableDef = MarkdownTableReader.convert(
             `|action    | value          |
@@ -898,7 +898,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default - with property', async () => {
+    test('use store default - with property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |
              |----------|------------------|
@@ -915,7 +915,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default - with property, but store is defined', async () => {
+    test('use store default - with property, but store is defined', async () => {
         Store.instance.testStore.put(astA, { p: 1 });
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |
@@ -933,7 +933,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default - with undefined', async () => {
+    test('use store default - with undefined', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                  |
              |----------|------------------------|
@@ -951,7 +951,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default - with undefined in string', async () => {
+    test('use store default - with undefined in string', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                    |
              |----------|--------------------------|
@@ -969,7 +969,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - with property', async () => {
+    test('use store default-assignment - with property', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |
              |----------|------------------|
@@ -988,7 +988,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - with two properties', async () => {
+    test('use store default-assignment - with two properties', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action      | value                             |
              |------------|-----------------------------------|
@@ -1014,7 +1014,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - with property, but store is defined', async () => {
+    test('use store default-assignment - with property, but store is defined', async () => {
         Store.instance.testStore.put(astA, { p: 1 });
         const tableDef = MarkdownTableReader.convert(
             `|action    | value            |
@@ -1033,7 +1033,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - recursive usage - simple data - number', async () => {
+    test('use store default-assignment - recursive usage - simple data - number', async () => {
         Store.instance.testStore.put(astB, 3);
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                      |
@@ -1052,7 +1052,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - recursive usage - simple data - string', async () => {
+    test('use store default-assignment - recursive usage - simple data - string', async () => {
         Store.instance.testStore.put(astB, '-3-');
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                      |
@@ -1071,7 +1071,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - recursive usage - object', async () => {
+    test('use store default-assignment - recursive usage - object', async () => {
         Store.instance.testStore.put(astB, { p: 3 });
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                        |
@@ -1092,7 +1092,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - recursive usage - array', async () => {
+    test('use store default-assignment - recursive usage - array', async () => {
         Store.instance.testStore.put(astB, [1, 2]);
         const tableDef = MarkdownTableReader.convert(
             `|action    | value                        |
@@ -1111,7 +1111,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - recursive usage - multiple assignment', async () => {
+    test('use store default-assignment - recursive usage - multiple assignment', async () => {
         jest.spyOn(Math, 'random').mockImplementation(() => 0.5);
 
         const tableDef = MarkdownTableReader.convert(
@@ -1137,7 +1137,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - recursive usage - multiple assignment - failure', async () => {
+    test('use store default-assignment - recursive usage - multiple assignment - failure', async () => {
         jest.spyOn(Math, 'random').mockImplementation(() => 0.5);
 
         const tableDef = MarkdownTableReader.convert(
@@ -1156,7 +1156,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('use store default-assignment - recursive usage - multiple assignment - optional', async () => {
+    test('use store default-assignment - recursive usage - multiple assignment - optional', async () => {
         jest.spyOn(Math, 'random').mockImplementation(() => 0.5);
 
         const tableDef = MarkdownTableReader.convert(
@@ -1181,7 +1181,7 @@ describe('out store from payload', () => {
     /**
      *
      */
-    it('using json comment with replacement', async () => {
+    test('using json comment with replacement', async () => {
         jest.spyOn(Math, 'random').mockImplementation(() => 0.5);
 
         const tableDef = MarkdownTableReader.convert(
@@ -1209,7 +1209,7 @@ describe('generate', () => {
     /**
      *
      */
-    it('default', async () => {
+    test('default', async () => {
         const hexGenerator = GeneratorHandler.instance.get('hex');
         jest.spyOn(hexGenerator, 'generate').mockImplementation((paras) => paras.join(':'));
 
@@ -1229,7 +1229,7 @@ describe('generate', () => {
     /**
      *
      */
-    it('default with name', async () => {
+    test('default with name', async () => {
         let hex = 1;
         const hexGenerator = GeneratorHandler.instance.get('hex');
         jest.spyOn(hexGenerator, 'generate').mockImplementation(() => (hex++).toString());
@@ -1252,7 +1252,7 @@ describe('generate', () => {
     /**
      *
      */
-    it('default with name and scope', async () => {
+    test('default with name and scope', async () => {
         let hex = 10;
         const hexGenerator = GeneratorHandler.instance.get('hex');
         jest.spyOn(hexGenerator, 'generate').mockImplementation(() => (hex++).toString());
@@ -1276,7 +1276,7 @@ describe('generate', () => {
     /**
      *
      */
-    it('use with store assignment', async () => {
+    test('use with store assignment', async () => {
         const hexGenerator = GeneratorHandler.instance.get('hex');
         jest.spyOn(hexGenerator, 'generate').mockImplementation((paras) => paras.join(':'));
 
@@ -1297,7 +1297,7 @@ describe('generate', () => {
     /**
      *
      */
-    it('use with store assignment and scoped name', async () => {
+    test('use with store assignment and scoped name', async () => {
         const hexGenerator = GeneratorHandler.instance.get('hex');
         jest.spyOn(hexGenerator, 'generate').mockImplementation((paras) => paras.join(':'));
 
@@ -1318,7 +1318,7 @@ describe('generate', () => {
     /**
      *
      */
-    it('use template generator', async () => {
+    test('use template generator', async () => {
         delete globalThis._templateHandlerInstance;
         jest.spyOn(EnvLoader, 'getSettings').mockImplementation(() => ({
             template_mapping: {
@@ -1344,7 +1344,7 @@ describe('generate', () => {
     /**
      *
      */
-    it('use template generator contains hex generator', async () => {
+    test('use template generator contains hex generator', async () => {
         const hexGenerator = GeneratorHandler.instance.get('hex');
         jest.spyOn(hexGenerator, 'generate').mockImplementation((paras) => paras.join(':'));
 
@@ -1371,7 +1371,7 @@ describe('generate', () => {
     /**
      *
      */
-    it('use template generator - but template not found', async () => {
+    test('use template generator - but template not found', async () => {
         delete globalThis._templateHandlerInstance;
         jest.spyOn(EnvLoader, 'getSettings').mockImplementation(() => ({}));
 
@@ -1403,7 +1403,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:only default', async () => {
+    test('run:only default', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action      |value  |
              |------------|-------|
@@ -1419,7 +1419,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:only not-matching', async () => {
+    test('run:only not-matching', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action      |value  |
              |------------|-------|
@@ -1435,7 +1435,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:only use context replacer', async () => {
+    test('run:only use context replacer', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action      |value                |
              |------------|---------------------|
@@ -1451,7 +1451,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:only use context replacer with arg', async () => {
+    test('run:only use context replacer with arg', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action      |value                |
              |------------|---------------------|
@@ -1467,7 +1467,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:only use context replacer with named arg', async () => {
+    test('run:only use context replacer with named arg', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action      |value                |
              |------------|---------------------|
@@ -1483,7 +1483,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:only use context replacer with default arg', async () => {
+    test('run:only use context replacer with default arg', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action      |value                |
              |------------|---------------------|
@@ -1499,7 +1499,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:only use context replacer but arg not defined', async () => {
+    test('run:only use context replacer but arg not defined', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action      |value             |
              |------------|------------------|
@@ -1514,7 +1514,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:only executes - validators must be executed', async () => {
+    test('run:only executes - validators must be executed', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action      |value           |
              |------------|----------------|
@@ -1529,7 +1529,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:only does not execute - validators must not be executed', async () => {
+    test('run:only does not execute - validators must not be executed', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action      |value           |
              |------------|----------------|
@@ -1547,7 +1547,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:not-empty does not execute when value is an empty string', async () => {
+    test('run:not-empty does not execute when value is an empty string', async () => {
         const astVar1 = variableParser.parseAction('store:var1');
         Store.instance.testStore.put(astVar1, '');
 
@@ -1568,7 +1568,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:not-empty does not execute when value is null', async () => {
+    test('run:not-empty does not execute when value is null', async () => {
         const astVar1 = variableParser.parseAction('store:var1');
         Store.instance.testStore.put(astVar1, null);
 
@@ -1589,7 +1589,7 @@ describe('check run:xxx', () => {
     /**
      *
      */
-    it('run:not-empty does not execute when store is not defined', async () => {
+    test('run:not-empty does not execute when store is not defined', async () => {
         const tableDef = MarkdownTableReader.convert(
             `|action        |value           |
              |--------------|----------------|

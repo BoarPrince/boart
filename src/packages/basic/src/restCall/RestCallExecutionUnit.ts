@@ -1,5 +1,5 @@
-import { DataContentHelper, ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@boart/core';
-import { PDFContent, RowTypeValue } from '@boart/core-impl';
+import { DataContentHelper, DefaultRowType, ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@boart/core';
+import { PDFContent } from '@boart/core-impl';
 import { RestHttp } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
 
@@ -8,7 +8,7 @@ import { RestCallContext } from './RestCallContext';
 /**
  *
  */
-export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, RowTypeValue<RestCallContext>> {
+export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, DefaultRowType<RestCallContext>> {
     readonly key = Symbol('rest call - main');
     readonly description = () => ({
         id: '8db1cbdc-8c32-4487-a3a8-0fe7777cd1d8',
@@ -38,8 +38,10 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
 
         try {
             if (DataContentHelper.isContent(data)) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-base-to-string
                 return JSON.parse(data.toString());
             } else if (typeof data === 'string') {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                 return JSON.parse(data);
             } else {
                 return data as Record<string, string>;
@@ -83,11 +85,11 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async execute(context: RestCallContext, _row: RowTypeValue<RestCallContext>): Promise<void> {
+    async execute(context: RestCallContext, _row: DefaultRowType<RestCallContext>): Promise<void> {
         //#region rest call executing
         const timer = new Timer();
         const query = context.preExecution.query;
-        const rest = new RestHttp(UrlLoader.instance.url(context.preExecution.method.url) + (!!query ? `?${query.toString()}` : ''));
+        const rest = new RestHttp(UrlLoader.instance.url(context.preExecution.method.url) + (query ? `?${query.toString()}` : ''));
 
         StepReport.instance.type = 'restCall';
 
@@ -95,6 +97,7 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Row
         try {
             response = await this.call(rest, context);
         } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             context.execution.data = new TextContent(error.message as string);
             throw error;
         } finally {

@@ -1,6 +1,7 @@
 import {
     DataContent,
     DataContentHelper,
+    DefaultRowType,
     ExecutionContext,
     ExecutionUnit,
     ExpectedOperator,
@@ -12,7 +13,6 @@ import {
     SelectorType
 } from '@boart/core';
 
-import { RowTypeValue } from '../../RowTypeValue';
 import { QualifierValidator } from '../../validators/QualifierValidator';
 import { DataScope } from '@boart/core/lib/parser/ast/DataScope';
 import { DataScopeValidator } from '../../validators/DataScopeValidator';
@@ -24,7 +24,7 @@ import { DataScopeValidator } from '../../validators/DataScopeValidator';
  * | expected:data#a.b | xxxx  |
  */
 export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<object, object, object>>
-    implements ExecutionUnit<DataContext, RowTypeValue<DataContext>>
+    implements ExecutionUnit<DataContext, DefaultRowType<DataContext>>
 {
     readonly key = Symbol('expected');
     readonly parameterType = ParaType.Optional;
@@ -78,7 +78,7 @@ export class ExpectedDataExecutinoUnit<DataContext extends ExecutionContext<obje
     /**
      *
      */
-    async execute(context: DataContext, row: RowTypeValue<DataContext>): Promise<void> {
+    async execute(context: DataContext, row: DefaultRowType<DataContext>): Promise<void> {
         const expected = row.value;
         const baseContent = DataContentHelper.create(this.getDataContent(context, row.ast.datascope));
 
