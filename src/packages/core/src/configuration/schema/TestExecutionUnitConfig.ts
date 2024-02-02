@@ -1,14 +1,13 @@
 import { ContextConfig } from './ContextConfig';
 import { RowDefinitionConfig } from './RowDefinitionConfig';
-import { RuntimeType } from './RuntimeType';
+import { Runtime } from './Runtime';
 
 /**
  *
  */
 export interface TestExecutionUnitConfig {
     name: string;
-    runtimeType: RuntimeType;
-    runtimePath: string;
+    runtime: Runtime;
     contextDef: ContextConfig;
     groupRowDef: Array<string>;
     rowDef: Array<RowDefinitionConfig>;

@@ -2,7 +2,8 @@
  *
  */
 export enum RuntimeType {
-  Node,
-  Native,
-  Python
+    GRPC = 'grpc',
+    HTTP = 'http',
+    FILE = 'file',
+    STDINOUT = 'std-in-out'
 }
