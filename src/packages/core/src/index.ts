@@ -64,10 +64,13 @@ import { ScopedType } from './types/ScopedType';
 import { SelectorType } from './types/SelectorType';
 import { GroupValidator } from './validators/GroupValidator';
 import { RowValidator } from './validators/RowValidator';
+import { ValidatorFactory } from './validators/ValidatorFactory';
+import { ValidatorFactoryManager } from './validators/ValidatorFactoryManager';
 import { ValidationHandler } from './validators/ValidationHandler';
 import { OperatorType } from './value/OperatorType';
 import { ValueReplaceArg, ValueReplacer, ValueReplacerConfig } from './value/ValueReplacer';
 import { ValueReplacerHandler } from './value/ValueReplacerHandler';
+import { ObjectValidator } from './validators/object/ObjectValidator';
 
 /**
  *
@@ -111,6 +114,7 @@ export {
     NativeType,
     NullContent,
     ObjectContent,
+    ObjectValidator,
     OperatorType,
     ParaType,
     RepeatableExecutionContext,
@@ -141,11 +145,13 @@ export {
     Timer,
     UrlLoader,
     ValidationHandler,
+    ValidatorFactory,
     value,
     ValueReplaceArg as ReplaceArg,
     ValueReplaceArg,
     ValueReplacer,
     ValueReplacerConfig,
     ValueReplacerHandler,
+    ValidatorFactoryManager,
     VariableParser
 };

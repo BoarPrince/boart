@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
+import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory } from '@boart/core';
 
 /**
  *
@@ -8,6 +8,41 @@ export class IntValidator implements RowValidator {
         private readonly columnName: string,
         private readonly allowNull = false
     ) {}
+
+    /**
+     * F A C T O R Y
+     */
+    public static factory(): ValidatorFactory {
+        return {
+            name: 'IntValidator',
+
+            /**
+             *
+             */
+            check(para: string | Array<unknown> | object): boolean {
+                ObjectValidator.instance(para)
+                    .notNull()
+                    .shouldArray()
+                    .containsPropertiesOnly(['column', 'allowNull'])
+                    .prop('column')
+                    .shouldString()
+                    .prop('allowNull')
+                    .shouldBoolean();
+                return true;
+            },
+
+            /**
+             *
+             */
+            create(para: string | Array<unknown> | object): RowValidator {
+                type ParaType = { column: string; allowNull: boolean };
+                const columnName = (para as ParaType).column;
+                const allowNull = (para as ParaType).allowNull;
+
+                return new IntValidator(columnName, allowNull);
+            }
+        };
+    }
 
     /**
      *

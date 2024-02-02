@@ -1,10 +1,34 @@
-import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
+import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory } from '@boart/core';
 
 /**
  *
  */
 export class BoolValidator implements RowValidator {
     constructor(private readonly columnName: string) {}
+
+    /**
+     * F A C T O R Y
+     */
+    public static factory(): ValidatorFactory {
+        return {
+            name: 'BoolValidator',
+
+            /**
+             *
+             */
+            check(para: string | Array<string> | object): boolean {
+                ObjectValidator.instance(para).notNull().shouldString();
+                return true;
+            },
+
+            /**
+             *
+             */
+            create(para: string | Array<string> | object): RowValidator {
+                return new BoolValidator(para as string);
+            }
+        };
+    }
 
     /**
      *
@@ -31,6 +55,5 @@ export class BoolValidator implements RowValidator {
         }
 
         row.values_replaced[this.columnName] = value == 'true' || value === true;
-        row.values_replaced[this.columnName] = row.values_replaced[this.columnName];
     }
 }

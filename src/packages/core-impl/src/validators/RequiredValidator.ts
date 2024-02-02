@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, GroupValidator } from '@boart/core';
+import { BaseRowMetaDefinition, GroupValidator, ObjectValidator, ValidatorFactory } from '@boart/core';
 
 /**
  * Key must occur
@@ -8,6 +8,31 @@ export class RequiredValidator implements GroupValidator {
      *
      */
     constructor(private readonly keys: readonly symbol[]) {}
+
+    /**
+     * F A C T O R Y
+     */
+    public static factory(): ValidatorFactory {
+        return {
+            name: 'RequiredValidator',
+
+            /**
+             *
+             */
+            check(para: string | Array<unknown> | object): boolean {
+                ObjectValidator.instance(para).notNull().shouldArray('string');
+                return true;
+            },
+
+            /**
+             *
+             */
+            create(para: string | Array<unknown> | object): GroupValidator {
+                const paras = (para as Array<string>).map((p) => Symbol(p));
+                return new RequiredValidator(paras);
+            }
+        };
+    }
 
     /**
      *

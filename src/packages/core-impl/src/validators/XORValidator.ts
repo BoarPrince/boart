@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, GroupValidator } from '@boart/core';
+import { BaseRowMetaDefinition, GroupValidator, ObjectValidator, ValidatorFactory } from '@boart/core';
 
 /**
  *
@@ -12,8 +12,31 @@ export class XORValidator implements GroupValidator {
     /**
      *
      */
-    get name() {
-        return 'XORValidator';
+    readonly name = 'XORValidator';
+
+    /**
+     * F A C T O R Y
+     */
+    public static factory(): ValidatorFactory {
+        return {
+            name: 'XORValidator',
+
+            /**
+             *
+             */
+            check(para: string | Array<unknown> | object): boolean {
+                ObjectValidator.instance(para).notNull().shouldArray('string');
+                return true;
+            },
+
+            /**
+             *
+             */
+            create(para: string | Array<unknown> | object): GroupValidator {
+                const paras = (para as Array<string>).map((p) => Symbol(p));
+                return new XORValidator(paras);
+            }
+        };
     }
 
     /**
@@ -23,7 +46,7 @@ export class XORValidator implements GroupValidator {
     validate(rows: readonly BaseRowMetaDefinition<any, any>[]) {
         const keys = this.keys.map((k) => k.description);
 
-        const existingKeys = rows.reduce((o, r) => {
+        const existingKeys = rows.reduce((o: Array<unknown>, r) => {
             const key = r.ast.name.stringValue;
             if (keys.includes(key)) {
                 o.push(key);

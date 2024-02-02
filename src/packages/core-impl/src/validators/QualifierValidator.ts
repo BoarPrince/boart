@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
+import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory } from '@boart/core';
 
 /**
  *
@@ -13,6 +13,37 @@ export interface ValidatorDefinition {
  */
 export class QualifierValidator implements RowValidator {
     constructor(private readonly allowedQualifierDefinitions: readonly ValidatorDefinition[]) {}
+
+    /**
+     *
+     */
+    public static factory(): ValidatorFactory {
+        return {
+            name: 'QualifierValidator',
+
+            /**
+             * F A C T O R Y
+             */
+            check(para: string | Array<unknown> | object): boolean {
+                ObjectValidator.instance(para)
+                    .notNull()
+                    .shouldArray()
+                    .containsPropertiesOnly(['qualifier', 'paras'])
+                    .prop('qualifier')
+                    .shouldString()
+                    .prop('paras')
+                    .shouldArray();
+                return true;
+            },
+
+            /**
+             *
+             */
+            create(para: string | Array<unknown> | object): RowValidator {
+                return new QualifierValidator(para as ValidatorDefinition[]);
+            }
+        };
+    }
 
     /**
      *

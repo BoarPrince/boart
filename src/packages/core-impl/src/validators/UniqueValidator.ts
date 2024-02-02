@@ -1,9 +1,32 @@
-import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
+import { BaseRowMetaDefinition, RowValidator, ValidatorFactory } from '@boart/core';
 
 /**
  * Key can only used once a time
  */
 export class UniqueValidator implements RowValidator {
+    /**
+     * F A C T O R Y
+     */
+    public static factory(): ValidatorFactory {
+        return {
+            name: 'UniqueValidator',
+
+            /**
+             *
+             */
+            check(para: string | Array<unknown> | object): boolean {
+                return para == null;
+            },
+
+            /**
+             *
+             */
+            create(): RowValidator {
+                return new UniqueValidator();
+            }
+        };
+    }
+
     /**
      *
      */

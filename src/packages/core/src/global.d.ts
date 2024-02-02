@@ -7,6 +7,7 @@ import { DescriptionHandler } from './description/DescriptionHandler';
 import { ExpectedOperatorInitializer } from './expected/ExpectedOperatorInitializer';
 import { Context } from './store/Context';
 import { Store } from './store/Store';
+import { ValidatorFactoryManager } from './validators/ValidatorFactoryManager';
 
 declare global {
     var _storeInstance: Store;
@@ -17,6 +18,7 @@ declare global {
     var _urlLoaderInstance: UrlLoader;
     var _expectedOperatorInitializer: ExpectedOperatorInitializer;
     var _descriptionFileReaderInstance: DescriptionFileReader;
+    var _validatorFactoryHandler: ValidatorFactoryManager;
 
     /**
      *

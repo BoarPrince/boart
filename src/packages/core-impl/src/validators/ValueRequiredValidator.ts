@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
+import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory } from '@boart/core';
 
 /**
  *
@@ -8,6 +8,39 @@ export class ValueRequiredValidator implements RowValidator {
         private readonly columnName: string,
         private readonly errorMessage?: string
     ) {}
+
+    /**
+     * F A C T O R Y
+     */
+    public static factory(): ValidatorFactory {
+        return {
+            name: 'ValueRequiredValidator',
+
+            /**
+             *
+             */
+            check(para: string | Array<unknown> | object): boolean {
+                ObjectValidator.instance(para)
+                    .notNull()
+                    .containsPropertiesOnly(['column'], ['errorMessge'])
+                    .prop('column')
+                    .shouldString()
+                    .prop('errorMessage')
+                    .shouldString();
+                return true;
+            },
+
+            /**
+             *
+             */
+            create(para: string | Array<unknown> | object): RowValidator {
+                type ParaType = { column: string; errorMessage: string };
+                const property = (para as ParaType).column;
+                const errorMessage = (para as ParaType).errorMessage;
+                return new ValueRequiredValidator(property, errorMessage);
+            }
+        };
+    }
 
     /**
      *

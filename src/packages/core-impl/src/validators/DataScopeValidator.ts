@@ -1,10 +1,34 @@
-import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
+import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory } from '@boart/core';
 
 /**
  * allowd datascopes can also be null or empty string if no parameter is possible
  */
 export class DataScopeValidator implements RowValidator {
     constructor(private readonly allowedDataScope: readonly string[] = ['']) {}
+
+    /**
+     * F A C T O R Y
+     */
+    public static factory(): ValidatorFactory {
+        return {
+            name: 'DataScopeValidator',
+
+            /**
+             *
+             */
+            check(para: string | Array<string> | object): boolean {
+                ObjectValidator.instance(para).notNull().shouldArray('string');
+                return true;
+            },
+
+            /**
+             *
+             */
+            create(para: string | Array<string> | Map<string, string>): RowValidator {
+                return new DataScopeValidator(para as Array<string>);
+            }
+        };
+    }
 
     /**
      *

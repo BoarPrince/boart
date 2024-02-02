@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
+import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory } from '@boart/core';
 
 /**
  *
@@ -13,10 +13,43 @@ export class DependsOnValueValidator implements RowValidator {
     private readonly dependOn: Array<ValuePara>;
 
     /**
-     *
+     * F A C T O R Y
      */
     constructor(dependOn: Array<ValuePara> | ValuePara) {
         this.dependOn = Array.isArray(dependOn) ? dependOn : [dependOn];
+    }
+
+    /**
+     *
+     */
+    public static factory(): ValidatorFactory {
+        return {
+            name: 'DependsOnValueValidator',
+
+            /**
+             *
+             */
+            check(para: string | Array<unknown> | object): boolean {
+                ObjectValidator.instance(para)
+                    .notNull()
+                    .shouldArray()
+                    .containsPropertiesOnly(['key', 'value', 'column'])
+                    .prop('key')
+                    .shouldString()
+                    .prop('value')
+                    .shouldString()
+                    .prop('column')
+                    .shouldString();
+                return true;
+            },
+
+            /**
+             *
+             */
+            create(para: string | Array<unknown> | object): RowValidator {
+                return new DependsOnValueValidator(para as Array<ValuePara>);
+            }
+        };
     }
 
     /**

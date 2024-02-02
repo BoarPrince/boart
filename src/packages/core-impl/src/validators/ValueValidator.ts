@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, RowValidator } from '@boart/core';
+import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory } from '@boart/core';
 
 /**
  *
@@ -25,6 +25,39 @@ export class ValueValidator implements RowValidator {
     }
 
     /**
+     * F A C T O R Y
+     */
+    public static factory(): ValidatorFactory {
+        return {
+            name: 'ValueValidator',
+
+            /**
+             *
+             */
+            check(para: string | Array<unknown> | object): boolean {
+                ObjectValidator.instance(para)
+                    .notNull()
+                    .shouldArray()
+                    .prop('property')
+                    .shouldString()
+                    .prop('allowedValues')
+                    .shouldArray('string');
+                return true;
+            },
+
+            /**
+             *
+             */
+            create(para: string | Array<unknown> | object): RowValidator {
+                type ParaType = { property: string; allowdValues: Array<string> };
+                const property = (para as ParaType).property;
+                const allowdValues = (para as ParaType).allowdValues;
+                return new ValueValidator(property, allowdValues);
+            }
+        };
+    }
+
+    /**
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,6 +71,7 @@ export class ValueValidator implements RowValidator {
                 validator.validate(row, rows);
             } catch (error) {
                 throw Error(
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     (error.message as string).replace(row.ast.name.stringValue, `${row.ast.name.stringValue}:${matchedValue.value}`)
                 );
             }
