@@ -7,7 +7,17 @@ export interface IObjectValidator {
     /**
      *
      */
-    shouldArray(): IObjectValidator;
+    shouldArray(type?: 'string' | 'boolean' | 'unknown'): IObjectValidator;
+
+    /**
+     *
+     */
+    shouldObject(): IObjectValidator;
+
+    /**
+     *
+     */
+    shouldString(): IObjectValidator;
 
     /**
      *

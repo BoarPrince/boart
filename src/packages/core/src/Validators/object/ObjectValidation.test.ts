@@ -15,9 +15,45 @@ describe('simple object validation', () => {
     /**
      *
      */
-
     test('should array', () => {
         expect(() => ObjectValidator.instance([]).shouldArray()).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('should array of string', () => {
+        expect(() => ObjectValidator.instance(['a']).shouldArray('string')).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('should array of boolean', () => {
+        expect(() => ObjectValidator.instance([true]).shouldArray('boolean')).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('should array of boolean - not valid', () => {
+        expect(() => ObjectValidator.instance(['true']).shouldArray('boolean')).toThrow(
+            `array is not of type boolean => 'boolean: ["true"]'`
+        );
+    });
+
+    /**
+     *
+     */
+    test('should object', () => {
+        expect(() => ObjectValidator.instance({}).shouldObject()).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('should string', () => {
+        expect(() => ObjectValidator.instance('').shouldString()).not.toThrow();
     });
 
     /**
@@ -132,6 +168,38 @@ describe('first level prop validation', () => {
                 .prop('a')
                 .shouldString()
         ).toThrow(`property 'a' is not of type string`);
+    });
+
+    /**
+     *
+     */
+    test('should boolean', () => {
+        expect(() =>
+            ObjectValidator.instance({
+                a: true,
+                b: 2,
+                c: 3,
+                e: 5
+            })
+                .prop('a')
+                .shouldBoolean()
+        ).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('should boolean - not valid', () => {
+        expect(() =>
+            ObjectValidator.instance({
+                a: 1,
+                b: 2,
+                c: 3,
+                e: 5
+            })
+                .prop('a')
+                .shouldBoolean()
+        ).toThrow(`property 'a' is not of type boolean`);
     });
 
     /**
@@ -270,7 +338,6 @@ describe('array prop validation', () => {
     /**
      *
      */
-
     test('one array alement', () => {
         expect(() =>
             ObjectValidator.instance([
@@ -280,6 +347,25 @@ describe('array prop validation', () => {
                 }
             ])
                 .prop('a')
+                .shouldString()
+        ).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('one array alement - exact props', () => {
+        expect(() =>
+            ObjectValidator.instance([
+                {
+                    a: '1',
+                    b: '2'
+                }
+            ])
+                .containsPropertiesOnly(['a', 'b'])
+                .prop('a')
+                .shouldString()
+                .prop('b')
                 .shouldString()
         ).not.toThrow();
     });
@@ -319,7 +405,6 @@ describe('array prop validation', () => {
     /**
      *
      */
-
     test('one array alement - two checks', () => {
         expect(() =>
             ObjectValidator.instance([
@@ -352,6 +437,40 @@ describe('array prop validation', () => {
                 .prop('b')
                 .shouldString()
         ).toThrow(`property 'b' is not of type string => 'b: 2'`);
+    });
+
+    /**
+     *
+     */
+    test('property has boolean array', () => {
+        expect(() =>
+            ObjectValidator.instance([
+                {
+                    a: [true, false],
+                    b: '2'
+                }
+            ])
+                .shouldArray()
+                .prop('a')
+                .shouldArray('boolean')
+        ).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('property has boolean array - not valid', () => {
+        expect(() =>
+            ObjectValidator.instance([
+                {
+                    a: ['true', 'false'],
+                    b: '2'
+                }
+            ])
+                .shouldArray()
+                .prop('a')
+                .shouldArray('boolean')
+        ).toThrow('property \'a\' is not of array type boolean => \'a: ["true","false"]\'');
     });
 });
 

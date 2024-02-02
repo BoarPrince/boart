@@ -1,7 +1,6 @@
 import assert from 'assert';
 import { IObjectPropertyValidator } from './IObjectPropertyValidator';
 import { IObjectValidator } from './IObjectValidator';
-import { ObjectArrayValidator } from './ObjectArrayValidator';
 import { ObjectPropertyValidator } from './ObjectPropertyValidator';
 import { ObjectValidator } from './ObjectValidator';
 
@@ -57,8 +56,9 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
     /**
      *
      */
-    public shouldArray(): this {
-        this.getObjectElements().forEach((propElement) => ObjectPropertyValidator.shouldArray(propElement, this.propName));
+    public shouldArray(type?: 'string' | 'boolean' | 'unknown'): this {
+        const elements = this.getObjectElements();
+        ObjectPropertyValidator.shouldArray(elements, this.propName, type);
         return this;
     }
 
@@ -67,6 +67,14 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      */
     public shouldString(): this {
         this.getObjectElements().forEach((propElement) => ObjectPropertyValidator.shouldString(propElement, this.propName));
+        return this;
+    }
+
+    /**
+     *
+     */
+    public shouldBoolean(): this {
+        this.getObjectElements().forEach((propElement) => ObjectPropertyValidator.shouldBoolean(propElement, this.propName));
         return this;
     }
 

@@ -31,8 +31,23 @@ export class ObjectArrayValidator implements IObjectValidator {
     /**
      *
      */
-    public shouldArray(): IObjectValidator {
+    public shouldArray(type?: 'string' | 'boolean' | 'unknown'): IObjectValidator {
+        ObjectValidator.shouldArray(this.objects, type);
         return this;
+    }
+
+    /**
+     *
+     */
+    public shouldObject(): IObjectValidator {
+        assert.fail(`object is not of type object => ${JSON.stringify(this.objects, null, '    ')}`);
+    }
+
+    /**
+     *
+     */
+    public shouldString(): IObjectValidator {
+        assert.fail(`object is not of type string => ${JSON.stringify(this.objects, null, '    ')}`);
     }
 
     /**

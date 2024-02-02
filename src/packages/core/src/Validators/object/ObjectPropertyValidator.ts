@@ -15,7 +15,7 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
      */
     private constructor(
         private parentObjectValidator: IObjectValidator,
-        obj: object,
+        obj: object | string,
         private propName: string
     ) {
         this.property = obj[propName];
@@ -24,7 +24,7 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
     /**
      *
      */
-    public static instance(parentObjectValidator: ObjectValidator, obj: object, prop: string): IObjectPropertyValidator {
+    public static instance(parentObjectValidator: ObjectValidator, obj: object | string, prop: string): IObjectPropertyValidator {
         return Array.isArray(obj) //
             ? new ObjectArrayPropertyValidator(parentObjectValidator, obj, prop)
             : new ObjectPropertyValidator(parentObjectValidator, obj, prop);
@@ -47,16 +47,27 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
     /**
      *
      */
-    public static shouldArray(property: unknown, prop: string) {
+    public static shouldArray(property: unknown, prop: string, type?: 'string' | 'boolean' | 'unknown') {
         assert.ok(Array.isArray(property), `property '${prop}' is not an array => '${prop}: ${JSON.stringify(property)}'`);
+
+        if (!type) {
+            return;
+        }
+
+        (property as Array<unknown>).forEach((propElement) => {
+            assert.ok(
+                typeof propElement === type,
+                `property '${prop}' is not of array type ${type} => '${prop}: ${JSON.stringify(property)}'`
+            );
+        });
         return this;
     }
 
     /**
      *
      */
-    public shouldArray(): this {
-        ObjectPropertyValidator.shouldArray(this.property, this.propName);
+    public shouldArray(type?: 'string' | 'boolean' | 'unknown'): this {
+        ObjectPropertyValidator.shouldArray(this.property, this.propName, type);
         return this;
     }
 
@@ -72,6 +83,20 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
      */
     public shouldString(): this {
         ObjectPropertyValidator.shouldString(this.property, this.propName);
+        return this;
+    }
+
+    /**
+     *
+     */
+    public static shouldBoolean(property: unknown, prop: string) {
+        assert.ok(typeof property === 'boolean', `property '${prop}' is not of type boolean => '${prop}: ${JSON.stringify(property)}'`);
+    }
+    /**
+     *
+     */
+    public shouldBoolean(): this {
+        ObjectPropertyValidator.shouldBoolean(this.property, this.propName);
         return this;
     }
 

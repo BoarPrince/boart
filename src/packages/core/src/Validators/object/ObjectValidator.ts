@@ -11,12 +11,12 @@ export class ObjectValidator implements IObjectValidator {
     /**
      *
      */
-    private constructor(private obj: object) {}
+    private constructor(private value: object | string) {}
 
     /**
      *
      */
-    public static instance(obj: object, parentObjectValidator?: IObjectValidator): IObjectValidator {
+    public static instance(obj: object | string, parentObjectValidator?: IObjectValidator): IObjectValidator {
         return Array.isArray(obj) //
             ? new ObjectArrayValidator(parentObjectValidator, obj)
             : new ObjectValidator(obj);
@@ -25,22 +25,56 @@ export class ObjectValidator implements IObjectValidator {
     /**
      *
      */
-    public shouldArray(): IObjectValidator {
-        assert.fail(`object is not of type array => ${JSON.stringify(this.obj, null, '    ')}`);
+    public static shouldArray(obj: object, type?: 'string' | 'boolean' | 'unknown') {
+        if (!type) {
+            return;
+        }
+        (obj as Array<unknown>).forEach((propElement) => {
+            assert.ok(typeof propElement === type, `array is not of type ${type} => '${type}: ${JSON.stringify(obj)}'`);
+        });
     }
 
     /**
      *
      */
-    public static notNull(obj: object) {
-        assert.ok(obj, 'can not be null');
+    public shouldArray(type?: 'string' | 'boolean' | 'unknown'): IObjectValidator {
+        assert.ok(Array.isArray(this.value), `object is not of type array => ${JSON.stringify(this.value, null, '    ')}`);
+        ObjectValidator.shouldArray(this.value, type);
+
+        return this;
+    }
+
+    /**
+     *
+     */
+    public shouldObject(): IObjectValidator {
+        assert.ok(
+            typeof this.value === 'object' && !Array.isArray(this.value),
+            `object is not of type object => ${JSON.stringify(this.value, null, '    ')}`
+        );
+        return this;
+    }
+
+    /**
+     *
+     */
+    public shouldString(): IObjectValidator {
+        assert.ok(typeof this.value === 'string', `object is not of type string => ${JSON.stringify(this.value, null, '    ')}`);
+        return this;
+    }
+
+    /**
+     *
+     */
+    public static notNull(obj: object | string) {
+        assert.ok(obj != null, 'can not be null');
     }
 
     /**
      *
      */
     public notNull(): ObjectValidator {
-        ObjectValidator.notNull(this.obj);
+        ObjectValidator.notNull(this.value);
         return this;
     }
 
@@ -57,7 +91,8 @@ export class ObjectValidator implements IObjectValidator {
      *
      */
     public containsProperties(props: Array<string>): ObjectValidator {
-        ObjectValidator.containsProperties(this.obj, props);
+        this.shouldObject();
+        ObjectValidator.containsProperties(this.value as object, props);
         return this;
     }
 
@@ -77,7 +112,8 @@ export class ObjectValidator implements IObjectValidator {
      *
      */
     public containsPropertiesOnly(props: Array<string>, optionalProps?: Array<string>): ObjectValidator {
-        ObjectValidator.containsOnlyProperties(this.obj, props, optionalProps);
+        this.shouldObject();
+        ObjectValidator.containsOnlyProperties(this.value as object, props, optionalProps);
         return this;
     }
 
@@ -85,6 +121,6 @@ export class ObjectValidator implements IObjectValidator {
      *
      */
     public prop(prop: string): IObjectPropertyValidator {
-        return ObjectPropertyValidator.instance(this, this.obj, prop);
+        return ObjectPropertyValidator.instance(this, this.value, prop);
     }
 }
