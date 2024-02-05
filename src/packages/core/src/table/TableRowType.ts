@@ -3,10 +3,10 @@
  */
 
 export enum TableRowType {
-    PreConfiguration,
-    Configuration,
-    PreProcessing,
-    InProcessing,
-    PostProcessing,
-    PostProcessingForced
+    PreConfiguration = 'pre-config',
+    Configuration = 'config',
+    PreProcessing = 'pre',
+    InProcessing = 'in',
+    PostProcessing = 'post',
+    PostProcessingForced = 'post-forced'
 }

@@ -10,6 +10,7 @@ import { DefaultPropertySetterExecutionUnit } from '../default/DefaultPropertySe
 import { RowValidator } from '../validators/RowValidator';
 import { ValidatorFactoryManager } from '../validators/ValidatorFactoryManager';
 import { ValidatorConfig } from './schema/ValidatorConfig';
+import { ConfigurationChecker } from './ConfigurationChecker';
 
 /**
  *
@@ -65,25 +66,11 @@ export class TestExecutionConfigurationParser {
             }
         };
 
-        contextDef.config.forEach((prop) => {
-            context.config[prop.name] = prop.defaultValue;
-        });
-
-        contextDef.pre.forEach((prop) => {
-            context.preExecution[prop.name] = prop.defaultValue;
-        });
-
-        contextDef.execution.data.forEach((prop) => {
-            context.execution.data[prop.name] = prop.defaultValue;
-        });
-
-        contextDef.execution.transformed.forEach((prop) => {
-            context.execution.transformed[prop.name] = prop.defaultValue;
-        });
-
-        contextDef.execution.header.forEach((prop) => {
-            context.execution.header[prop.name] = prop.defaultValue;
-        });
+        context.config = contextDef.config;
+        context.preExecution = contextDef.pre;
+        context.execution.data = contextDef.execution.data;
+        context.execution.header = contextDef.execution.header;
+        context.execution.transformed = contextDef.execution.transformed;
 
         return context;
     }
@@ -111,9 +98,9 @@ export class TestExecutionConfigurationParser {
     private parseRowDefinition(rowDefinitions: RowDefinitionConfig[], context: ExecutionContextType): Array<CoreRowDefinition<any, any>> {
         const defs = rowDefinitions.map((rowDef: RowDefinitionConfig) => {
             try {
-                const key = Symbol(rowDef.key);
+                const key = Symbol(rowDef.action);
 
-                const [firstLevel, secondLevel] = rowDef.propertyDef.split('.');
+                const [firstLevel, secondLevel] = rowDef.contextProperty.split('.');
 
                 if (context[firstLevel] === undefined) {
                     throw new Error(`reading propertyDef: context './${firstLevel}' does not exists`);
@@ -133,15 +120,17 @@ export class TestExecutionConfigurationParser {
 
                 return new CoreRowDefinition({
                     key,
-                    type: rowDef.type,
+                    type: rowDef.contextType,
                     parameterType: rowDef.parameterType,
                     selectorType: rowDef.selectorType,
+                    defaultValue: rowDef.defaultValue,
+                    defaultValueColumn: rowDef.defaultValue ? Symbol('value') : undefined,
                     executionUnit,
                     validators: this.parseValidator(rowDef.validatorDef)
                 });
             } catch (error) {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                throw new Error(`problem while reading configuration of key ${rowDef.key}\n${error.message}`);
+                throw new Error(`problem while reading configuration of key ${rowDef.action}\n${error.message}`);
             }
         });
 
@@ -154,8 +143,9 @@ export class TestExecutionConfigurationParser {
     private parseDefinition(configFilename: string) {
         const content = fs.readFileSync(configFilename, 'utf-8');
         const config = JSON.parse(content) as TestExecutionUnitConfig;
+        ConfigurationChecker.checkJSONConfig(config);
 
-        const context = this.parseConfig(config.contextDef);
+        const context = this.parseConfig(config.context);
         const rowDefinitions = this.parseRowDefinition(config.rowDef, context);
     }
 

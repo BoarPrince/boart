@@ -7,11 +7,11 @@ import { ValidatorConfig } from './ValidatorConfig';
  *
  */
 export interface RowDefinitionConfig {
-    key: string;
-    type: TableRowType;
+    action: string;
+    contextType: TableRowType;
     parameterType: ParaType;
     selectorType: SelectorType;
-    propertyDef: string;
+    contextProperty: string;
     validatorDef: Array<ValidatorConfig>;
-    defaultValue: string;
+    defaultValue?: string;
 }

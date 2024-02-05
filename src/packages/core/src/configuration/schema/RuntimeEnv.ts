@@ -3,6 +3,6 @@
  */
 
 export enum RuntimeEnv {
-    NATIVE,
-    SHELL
+    NATIVE = 'native',
+    SHELL = 'shell'
 }

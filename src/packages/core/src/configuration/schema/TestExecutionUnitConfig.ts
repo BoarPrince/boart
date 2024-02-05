@@ -8,7 +8,7 @@ import { Runtime } from './Runtime';
 export interface TestExecutionUnitConfig {
     name: string;
     runtime: Runtime;
-    contextDef: ContextConfig;
+    context: ContextConfig;
     groupRowDef: Array<string>;
     rowDef: Array<RowDefinitionConfig>;
 }

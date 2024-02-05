@@ -3,7 +3,7 @@
  */
 
 export enum SelectorType {
-    False,
-    True,
-    Optional
+    False = 'false',
+    True = 'true',
+    Optional = 'optional'
 }

@@ -1,14 +1,12 @@
-import { ContextConfigItem } from './ContextConfigItem';
-
 /**
  *
  */
 export interface ContextConfig {
-    config: Array<ContextConfigItem>;
-    pre: Array<ContextConfigItem>;
+    config: object;
+    pre: object;
     execution: {
-        data: Array<ContextConfigItem>;
-        transformed: Array<ContextConfigItem>;
-        header: Array<ContextConfigItem>;
+        data: object;
+        transformed: object;
+        header: object;
     };
 }

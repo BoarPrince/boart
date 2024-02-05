@@ -3,7 +3,7 @@
  */
 
 export enum ParaType {
-    False,
-    True,
-    Optional
+    False = 'false',
+    True = 'true',
+    Optional = 'optional'
 }

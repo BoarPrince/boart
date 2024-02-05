@@ -11,5 +11,4 @@ export interface Runtime {
     env: RuntimeEnv;
     startup: RuntimeStartUp;
     configuration: object;
-    path?: string;
 }
