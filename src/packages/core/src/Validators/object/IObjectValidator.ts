@@ -1,9 +1,9 @@
-import { IObjectPropertyValidator } from './IObjectPropertyValidator';
+import { IBaseValidator } from './IBaseValidator';
 
 /**
  *
  */
-export interface IObjectValidator {
+export interface IObjectValidator extends IBaseValidator {
     /**
      *
      */
@@ -32,10 +32,5 @@ export interface IObjectValidator {
     /**
      *
      */
-    containsPropertiesOnly(props: Array<string>, optionalProps?: Array<string>): IObjectValidator;
-
-    /**
-     *
-     */
-    prop(prop: string): IObjectPropertyValidator;
+    onlyContainsProperties(props: Array<string>, optionalProps?: Array<string>): IObjectValidator;
 }

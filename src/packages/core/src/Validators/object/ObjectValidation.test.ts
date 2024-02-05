@@ -61,7 +61,7 @@ describe('simple object validation', () => {
      */
 
     test('should not array', () => {
-        expect(() => ObjectValidator.instance({}).shouldArray()).toThrow('object is not of type array => {}');
+        expect(() => ObjectValidator.instance({}).shouldArray()).toThrow('path: $\nobject is not of type array => {}');
     });
 
     /**
@@ -88,7 +88,7 @@ describe('simple object validation', () => {
                 b: 2,
                 c: 3
             }).containsProperties(['a', 'b', 'd'])
-        ).toThrow(`must contain property 'd', but only contains 'a, b, c'`);
+        ).toThrow(`path: $\nmust contain property 'd', but only contains 'a, b, c'`);
     });
 
     /**
@@ -100,7 +100,7 @@ describe('simple object validation', () => {
                 a: 1,
                 b: 2,
                 c: 3
-            }).containsPropertiesOnly(['a', 'b', 'c'])
+            }).onlyContainsProperties(['a', 'b', 'c'])
         ).not.toThrow();
     });
 
@@ -113,7 +113,7 @@ describe('simple object validation', () => {
                 a: 1,
                 b: 2,
                 c: 3
-            }).containsPropertiesOnly(['a', 'b', 'c'], ['d'])
+            }).onlyContainsProperties(['a', 'b', 'c'], ['d'])
         ).not.toThrow();
     });
 
@@ -127,8 +127,8 @@ describe('simple object validation', () => {
                 b: 2,
                 c: 3,
                 e: 5
-            }).containsPropertiesOnly(['a', 'b', 'c'], ['d'])
-        ).toThrow(`property 'e' not known. Allowed are 'a, b, c, d'`);
+            }).onlyContainsProperties(['a', 'b', 'c'], ['d'])
+        ).toThrow(`path: $\nproperty 'e' not known. Allowed are 'a, b, c, d'`);
     });
 });
 
@@ -167,7 +167,7 @@ describe('first level prop validation', () => {
             })
                 .prop('a')
                 .shouldString()
-        ).toThrow(`property 'a' is not of type string`);
+        ).toThrow(`path: $.a\nproperty 'a' is not of type string`);
     });
 
     /**
@@ -230,7 +230,7 @@ describe('first level prop validation', () => {
             })
                 .prop('a')
                 .shouldObject()
-        ).toThrow(`property 'a' is not an object`);
+        ).toThrow(`path: $.a\nproperty 'a' is not an object`);
     });
 
     /**
@@ -245,7 +245,7 @@ describe('first level prop validation', () => {
             })
                 .prop('a')
                 .shouldObject()
-        ).toThrow(`property 'a' is not an object`);
+        ).toThrow(`path: $.a\nproperty 'a' is not an object`);
     });
 
     /**
@@ -276,7 +276,7 @@ describe('first level prop validation', () => {
             })
                 .prop('a')
                 .shouldArray()
-        ).toThrow(`property 'a' is not an array`);
+        ).toThrow(`path: $.a\nproperty 'a' is not an array`);
     });
 
     /**
@@ -291,7 +291,7 @@ describe('first level prop validation', () => {
             })
                 .prop('a')
                 .shouldArray()
-        ).toThrow(`property 'a' is not an array`);
+        ).toThrow(`path: $.a\nproperty 'a' is not an array`);
     });
 
     /**
@@ -327,7 +327,7 @@ describe('first level prop validation', () => {
                 .shouldObject()
                 .prop('b')
                 .shouldObject()
-        ).toThrow(`property 'b' is not an object => 'b: 2'`);
+        ).toThrow(`path: $.b\nproperty 'b' is not an object => 'b: 2'`);
     });
 });
 
@@ -362,7 +362,7 @@ describe('array prop validation', () => {
                     b: '2'
                 }
             ])
-                .containsPropertiesOnly(['a', 'b'])
+                .onlyContainsProperties(['a', 'b'])
                 .prop('a')
                 .shouldString()
                 .prop('b')
@@ -383,7 +383,7 @@ describe('array prop validation', () => {
             ])
                 .prop('b')
                 .shouldString()
-        ).toThrow(`property 'b' is not of type string => 'b: 2'`);
+        ).toThrow(`path: $.0.b\nproperty 'b' is not of type string => 'b: 2'`);
     });
 
     /**
@@ -399,7 +399,7 @@ describe('array prop validation', () => {
             ])
                 .prop('c')
                 .shouldString()
-        ).toThrow(`property 'c' is not of type string => 'c: undefined'`);
+        ).toThrow(`path: $.0.c\nproperty 'c' is not of type string => 'c: undefined'`);
     });
 
     /**
@@ -436,7 +436,7 @@ describe('array prop validation', () => {
                 .shouldString()
                 .prop('b')
                 .shouldString()
-        ).toThrow(`property 'b' is not of type string => 'b: 2'`);
+        ).toThrow(`path: $.0.b\nproperty 'b' is not of type string => 'b: 2'`);
     });
 
     /**
@@ -470,7 +470,7 @@ describe('array prop validation', () => {
                 .shouldArray()
                 .prop('a')
                 .shouldArray('boolean')
-        ).toThrow('property \'a\' is not of array type boolean => \'a: ["true","false"]\'');
+        ).toThrow('path: $.0.a\nproperty \'a\' is not of array type boolean => \'a: ["true","false"]\'');
     });
 });
 
@@ -492,7 +492,7 @@ describe('deep validation', () => {
                 }
             })
                 .prop('a')
-                .object()
+                .child()
                 .prop('a')
                 .shouldString()
         ).not.toThrow();
@@ -516,10 +516,9 @@ describe('deep validation', () => {
                 ]
             })
                 .prop('a')
-                .object()
+                .child()
                 .prop('a')
                 .shouldString()
-                .parent()
                 .prop('b')
                 .shouldString()
         ).not.toThrow();
@@ -544,13 +543,12 @@ describe('deep validation', () => {
                 ]
             })
                 .prop('a')
-                .object()
+                .child()
                 .prop('a')
                 .shouldString()
-                .parent()
                 .prop('b')
                 .shouldString()
-        ).toThrow(`property 'b' is not of type string => 'b: 4'`);
+        ).toThrow(`path: $.a.1.b\nproperty 'b' is not of type string => 'b: 4'`);
     });
 
     /**
@@ -571,9 +569,9 @@ describe('deep validation', () => {
                 ]
             })
                 .prop('a')
-                .object()
+                .child()
                 .prop('a')
-                .object()
+                .child()
                 .prop('c')
                 .shouldString()
         ).not.toThrow();
@@ -597,9 +595,9 @@ describe('deep validation', () => {
                 ]
             })
                 .prop('a')
-                .object()
+                .child()
                 .prop('a')
-                .object()
+                .child()
                 .prop('c')
                 .shouldString()
         ).not.toThrow();
@@ -642,7 +640,7 @@ describe('allowed values', () => {
             })
                 .prop('a')
                 .shouldHaveValueOf(...Object.values(AllowedValues))
-        ).toThrow(`value 'fourth' is not allowd for property 'a'. Allowed values are => 'first, second, third'`);
+        ).toThrow(`path: $.a\nvalue 'fourth' is not allowd for property 'a'. Allowed values are => 'first, second, third'`);
     });
 
     /**
@@ -697,7 +695,7 @@ describe('allowed values', () => {
                 ]
             })
                 .prop('a')
-                .object()
+                .child()
                 .prop('a')
                 .shouldHaveValueOf(...Object.values(AllowedValues))
         ).not.toThrow();
@@ -721,9 +719,9 @@ describe('allowed values', () => {
                 ]
             })
                 .prop('a')
-                .object()
+                .child()
                 .prop('a')
-                .object()
+                .child()
                 .prop('c')
                 .shouldHaveValueOf('7', '6')
         ).not.toThrow();

@@ -1,13 +1,14 @@
 import { IObjectValidator } from './IObjectValidator';
+import { IBaseValidator } from './IBaseValidator';
 
 /**
  *
  */
-export interface IObjectPropertyValidator {
+export interface IObjectPropertyValidator extends IBaseValidator {
     /**
      *
      */
-    shouldArray(type?: 'string' | 'boolean' | 'unknown'): IObjectPropertyValidator;
+    shouldArray(type?: 'string' | 'boolean' | 'unknown' | 'object'): IObjectPropertyValidator;
 
     /**
      *
@@ -32,15 +33,5 @@ export interface IObjectPropertyValidator {
     /**
      *
      */
-    parent(): IObjectValidator;
-
-    /**
-     *
-     */
-    prop(propName: string): IObjectPropertyValidator;
-
-    /**
-     *
-     */
-    object(): IObjectValidator;
+    child(): IObjectValidator;
 }

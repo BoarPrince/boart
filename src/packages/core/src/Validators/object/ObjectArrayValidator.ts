@@ -3,6 +3,7 @@ import { IObjectValidator } from './IObjectValidator';
 import { ObjectArrayPropertyValidator } from './ObjectArrayPropertyValidator';
 import { IObjectPropertyValidator } from './IObjectPropertyValidator';
 import { ObjectValidator } from './ObjectValidator';
+import { IBaseValidator } from './IBaseValidator';
 
 /**
  *
@@ -13,65 +14,36 @@ export class ObjectArrayValidator implements IObjectValidator {
     /**
      *
      */
+    readonly type = 'prop';
+    private _path: Array<string>;
+
+    /**
+     *
+     */
     constructor(
-        private parentObjectValidator: IObjectValidator,
+        private parentValidator: IBaseValidator,
         objArr: Array<unknown>
     ) {
         this.objects = objArr as Array<object>;
-        assert.ok(Array.isArray(this.objects), `must be an array but is => ${JSON.stringify(this.objects, null, '  ')}`);
+        this._path = this.parentValidator?.path() || ['$'];
+        assert.ok(
+            Array.isArray(this.objects),
+            `path: ${this.path().join('.')}\nmust be an array but is => ${JSON.stringify(this.objects, null, '  ')}`
+        );
     }
 
     /**
      *
      */
     public parent(): IObjectValidator {
-        return this.parentObjectValidator ?? this;
+        return ObjectValidator.parent(this.parentValidator);
     }
 
     /**
      *
      */
-    public shouldArray(type?: 'string' | 'boolean' | 'unknown'): IObjectValidator {
-        ObjectValidator.shouldArray(this.objects, type);
-        return this;
-    }
-
-    /**
-     *
-     */
-    public shouldObject(): IObjectValidator {
-        assert.fail(`object is not of type object => ${JSON.stringify(this.objects, null, '    ')}`);
-    }
-
-    /**
-     *
-     */
-    public shouldString(): IObjectValidator {
-        assert.fail(`object is not of type string => ${JSON.stringify(this.objects, null, '    ')}`);
-    }
-
-    /**
-     *
-     */
-    public notNull(): ObjectArrayValidator {
-        this.objects.forEach((obj) => ObjectValidator.notNull(obj));
-        return this;
-    }
-
-    /**
-     *
-     */
-    public containsProperties(props: Array<string>): ObjectArrayValidator {
-        this.objects.forEach((obj) => ObjectValidator.containsOnlyProperties(obj, props));
-        return this;
-    }
-
-    /**
-     *
-     */
-    public containsPropertiesOnly(props: Array<string>, optionalProps?: Array<string>): ObjectArrayValidator {
-        this.objects.forEach((obj) => ObjectValidator.containsOnlyProperties(obj, props, optionalProps));
-        return this;
+    public path(index?: number): Array<string> {
+        return index == null ? this._path : this._path.concat(`[${index}]`);
     }
 
     /**
@@ -79,5 +51,51 @@ export class ObjectArrayValidator implements IObjectValidator {
      */
     public prop(prop: string): IObjectPropertyValidator {
         return new ObjectArrayPropertyValidator(this, this.objects, prop);
+    }
+
+    /**
+     *
+     */
+    public shouldArray(type?: 'string' | 'boolean' | 'unknown'): IObjectValidator {
+        ObjectValidator.shouldArray(this.objects, this.path(), type);
+        return this;
+    }
+
+    /**
+     *
+     */
+    public shouldObject(): IObjectValidator {
+        assert.fail(`path: ${this.path().join('.')}\nobject is not of type object => ${JSON.stringify(this.objects, null, '    ')}`);
+    }
+
+    /**
+     *
+     */
+    public shouldString(): IObjectValidator {
+        assert.fail(`path: ${this.path().join('.')}\nobject is not of type string => ${JSON.stringify(this.objects, null, '    ')}`);
+    }
+
+    /**
+     *
+     */
+    public notNull(): ObjectArrayValidator {
+        this.objects.forEach((obj, index) => ObjectValidator.notNull(obj, this.path(index)));
+        return this;
+    }
+
+    /**
+     *
+     */
+    public containsProperties(props: Array<string>): ObjectArrayValidator {
+        this.objects.forEach((obj, index) => ObjectValidator.containsOnlyProperties(obj, this.path(index), props));
+        return this;
+    }
+
+    /**
+     *
+     */
+    public onlyContainsProperties(props: Array<string>, optionalProps?: Array<string>): ObjectArrayValidator {
+        this.objects.forEach((obj, index) => ObjectValidator.containsOnlyProperties(obj, this.path(index), props, optionalProps));
+        return this;
     }
 }

@@ -3,22 +3,28 @@ import { IObjectPropertyValidator } from './IObjectPropertyValidator';
 import { IObjectValidator } from './IObjectValidator';
 import { ObjectPropertyValidator } from './ObjectPropertyValidator';
 import { ObjectValidator } from './ObjectValidator';
+import { IBaseValidator } from './IBaseValidator';
 
 /**
  *
  */
 export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
-    // private property: Array<unknown>;
+    /**
+     *
+     */
+    readonly type = 'prop';
+    private _path: Array<string>;
 
     /**
      *
      */
     constructor(
-        private parentObjectValidator: IObjectValidator,
+        private parentValidator: IBaseValidator,
         private obj: Array<unknown>,
-        private propName: string
+        private readonly propName: string
     ) {
-        assert.ok(Array.isArray(obj), `must be an array`);
+        this._path = [...this.parentValidator.path()];
+        assert.ok(Array.isArray(obj), `${this.path().join('.')}\nmust be an array`);
     }
 
     /**
@@ -43,14 +49,29 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public parent(): IObjectValidator {
-        return this.parentObjectValidator;
+        return ObjectValidator.parent(this.parentValidator);
+    }
+
+    /**
+     *
+     */
+    public child(): IObjectValidator {
+        const childElements = this.getObjectElements();
+        return ObjectValidator.instance(childElements, this);
+    }
+
+    /**
+     *
+     */
+    public path(index?: number): Array<string> {
+        return index == null ? this._path.concat(this.propName) : this._path.concat(index.toString(), this.propName);
     }
 
     /**
      *
      */
     public prop(propName: string): IObjectPropertyValidator {
-        return this.parentObjectValidator.prop(propName);
+        return this.parentValidator.prop(propName);
     }
 
     /**
@@ -58,7 +79,7 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      */
     public shouldArray(type?: 'string' | 'boolean' | 'unknown'): this {
         const elements = this.getObjectElements();
-        ObjectPropertyValidator.shouldArray(elements, this.propName, type);
+        ObjectPropertyValidator.shouldArray(elements, this.path(), this.propName, type);
         return this;
     }
 
@@ -66,7 +87,9 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public shouldString(): this {
-        this.getObjectElements().forEach((propElement) => ObjectPropertyValidator.shouldString(propElement, this.propName));
+        this.getObjectElements().forEach((propElement, index) =>
+            ObjectPropertyValidator.shouldString(propElement, this.path(index), this.propName)
+        );
         return this;
     }
 
@@ -74,7 +97,9 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public shouldBoolean(): this {
-        this.getObjectElements().forEach((propElement) => ObjectPropertyValidator.shouldBoolean(propElement, this.propName));
+        this.getObjectElements().forEach((propElement, index) =>
+            ObjectPropertyValidator.shouldBoolean(propElement, this.path(index), this.propName)
+        );
         return this;
     }
 
@@ -82,7 +107,9 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public shouldObject(): this {
-        this.getObjectElements().forEach((propElement) => ObjectPropertyValidator.shouldObject(propElement, this.propName));
+        this.getObjectElements().forEach((propElement, index) =>
+            ObjectPropertyValidator.shouldObject(propElement, this.path(index), this.propName)
+        );
         return this;
     }
 
@@ -90,15 +117,9 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public shouldHaveValueOf(...values: string[]): this {
-        this.getObjectElements().forEach((propElement) => ObjectPropertyValidator.shouldValueOf(propElement, this.propName, values));
+        this.getObjectElements().forEach((propElement, index) =>
+            ObjectPropertyValidator.shouldValueOf(propElement, this.path(index), this.propName, values)
+        );
         return this;
-    }
-
-    /**
-     *
-     */
-    public object(): IObjectValidator {
-        const childElements = this.getObjectElements();
-        return ObjectValidator.instance(childElements, this.parentObjectValidator);
     }
 }
