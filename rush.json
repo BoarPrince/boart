@@ -25,10 +25,6 @@
      * for details about these alternatives.
      */
   "pnpmVersion": "7.33.5",
-  // "npmVersion": "9.5.0",
-  // "npmVersion": "8.1.0",
-  // "npmVersion": "6.14.15",
-  // "yarnVersion": "1.9.4",
   /**
      * Older releases of the Node.js engine may be missing features required by your system.
      * Other releases may have bugs.  In particular, the "latest" version will not be a
@@ -339,6 +335,10 @@
       "packageName": "@boart/basic",
       "projectFolder": "src/packages/basic"
     },
+    // {
+    //   "packageName": "@boart/remote",
+    //   "projectFolder": "src/packages/remote"
+    // },
     {
       "packageName": "@boart/test",
       "projectFolder": "src/gauge",
