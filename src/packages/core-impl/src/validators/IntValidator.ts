@@ -23,7 +23,7 @@ export class IntValidator implements RowValidator {
                 ObjectValidator.instance(para)
                     .notNull()
                     .shouldArray()
-                    .containsPropertiesOnly(['column', 'allowNull'])
+                    .onlyContainsProperties(['column', 'allowNull'])
                     .prop('column')
                     .shouldString()
                     .prop('allowNull')

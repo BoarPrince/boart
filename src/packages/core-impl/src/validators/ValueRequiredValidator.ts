@@ -22,7 +22,7 @@ export class ValueRequiredValidator implements RowValidator {
             check(para: string | Array<unknown> | object): boolean {
                 ObjectValidator.instance(para)
                     .notNull()
-                    .containsPropertiesOnly(['column'], ['errorMessge'])
+                    .onlyContainsProperties(['column'], ['errorMessge'])
                     .prop('column')
                     .shouldString()
                     .prop('errorMessage')

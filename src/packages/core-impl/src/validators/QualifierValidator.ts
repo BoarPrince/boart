@@ -28,7 +28,7 @@ export class QualifierValidator implements RowValidator {
                 ObjectValidator.instance(para)
                     .notNull()
                     .shouldArray()
-                    .containsPropertiesOnly(['qualifier', 'paras'])
+                    .onlyContainsProperties(['qualifier', 'paras'])
                     .prop('qualifier')
                     .shouldString()
                     .prop('paras')

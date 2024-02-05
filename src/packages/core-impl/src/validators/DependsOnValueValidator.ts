@@ -33,7 +33,7 @@ export class DependsOnValueValidator implements RowValidator {
                 ObjectValidator.instance(para)
                     .notNull()
                     .shouldArray()
-                    .containsPropertiesOnly(['key', 'value', 'column'])
+                    .onlyContainsProperties(['key', 'value', 'column'])
                     .prop('key')
                     .shouldString()
                     .prop('value')
