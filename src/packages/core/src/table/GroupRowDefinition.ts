@@ -17,6 +17,9 @@ export class GroupRowDefinition<
     private readonly _validations = new ArraySubject<TypedGroupValidator<TExecutionContext, TRowType>>();
     private readonly _definitions = new ArraySubject<RowDefinition<TExecutionContext, TRowType>>();
 
+    /**
+     *
+     */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private static get instance(): Map<string, GroupRowDefinition<any, any>> {
         if (!globalThis._groupDefinitionInstance) {
@@ -36,6 +39,13 @@ export class GroupRowDefinition<
      */
     static contains(name: string): boolean {
         return GroupRowDefinition.instance.has(name);
+    }
+
+    /**
+     *
+     */
+    static keys(): Array<string> {
+        return Array.from(GroupRowDefinition.instance.keys());
     }
 
     /**

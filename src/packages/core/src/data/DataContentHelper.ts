@@ -57,7 +57,7 @@ export class DataContentHelper {
     /**
      *
      */
-    static isNative(variable: ContentType): boolean {
+    static isNative(variable: unknown): boolean {
         return (
             typeof variable === 'boolean' ||
             typeof variable === 'number' ||
@@ -143,7 +143,7 @@ export class DataContentHelper {
     /**
      *
      */
-    static create(value?: ContentType): DataContent {
+    static create(value?: unknown): DataContent {
         if (value === null) {
             return new NullContent();
         } else if (value === undefined) {
