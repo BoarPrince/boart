@@ -166,7 +166,13 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public shouldHaveValueOf(...values: string[]): this {
-        ObjectPropertyValidator.shouldValueOf(this.property, this.path(), this.propName, values);
+        if (Array.isArray(this.property)) {
+            this.property.forEach((property, index) =>
+                ObjectPropertyValidator.shouldValueOf(property, this.path().concat(index.toString()), this.propName, values)
+            );
+        } else {
+            ObjectPropertyValidator.shouldValueOf(this.property, this.path(), this.propName, values);
+        }
         return this;
     }
 

@@ -472,6 +472,51 @@ describe('array prop validation', () => {
                 .shouldArray('boolean')
         ).toThrow('path: $.0.a\nproperty \'a\' is not of array type boolean => \'a: ["true","false"]\'');
     });
+
+    /**
+     *
+     */
+    test('property must be of type string array', () => {
+        expect(() =>
+            ObjectValidator.instance([
+                {
+                    a: ['true', 'false']
+                }
+            ])
+                .prop('a')
+                .shouldArray('string')
+        ).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('property must be of type string array and have the correct values', () => {
+        expect(() =>
+            ObjectValidator.instance([
+                {
+                    a: ['true', 'false']
+                }
+            ])
+                .prop('a')
+                .shouldArray('string')
+                .shouldHaveValueOf('true', 'false')
+        ).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('property must be of type string array and have the correct values - not valid', () => {
+        expect(() =>
+            ObjectValidator.instance({
+                a: ['true', 'falsex']
+            })
+                .prop('a')
+                .shouldArray('string')
+                .shouldHaveValueOf('true', 'false')
+        ).toThrow(`path: $.a.1\nvalue 'falsex' is not allowd for property 'a'. Allowed values are => 'true, false'`);
+    });
 });
 
 /**
