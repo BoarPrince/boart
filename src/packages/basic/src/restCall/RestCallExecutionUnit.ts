@@ -47,6 +47,7 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Def
                 return data as Record<string, string>;
             }
         } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
             throw Error(`${type} cannot be parsed as a valid json\n${data.toString()}`);
         }
     }
@@ -112,9 +113,11 @@ export class RestCallExecutionUnit implements ExecutionUnit<RestCallContext, Def
         //#endregion
 
         //#region setting result to context
-        context.execution.header.asDataContentObject().set('statusText', response.statusText);
-        context.execution.header.asDataContentObject().set('status', response.status);
-        context.execution.header.asDataContentObject().set('headers', Object.fromEntries(response.headers));
+        const header = DataContentHelper.create(context.execution.header);
+        context.execution.header = header;
+        header.asDataContentObject().set('statusText', response.statusText);
+        header.asDataContentObject().set('status', response.status);
+        header.asDataContentObject().set('headers', Object.fromEntries(response.headers));
 
         const contentType = response.headers.get('content-type');
         if (contentType?.includes('pdf')) {

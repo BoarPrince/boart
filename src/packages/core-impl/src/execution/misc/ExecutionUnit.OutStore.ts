@@ -81,18 +81,18 @@ export class OutStoreExecutionUnit<StoreContext extends DefaultContext>
      *
      */
     private getDataContent(context: StoreContext, dataScope: DataScope): DataContent {
-        const nonNullValue = (value: DataContent, nullValue?: DataContent) =>
-            DataContentHelper.isNullOrUndefined(value) && nullValue !== undefined ? nullValue : value;
+        const nonNullValue = (value: object, nullValue?: DataContent): DataContent =>
+            DataContentHelper.isNullOrUndefined(value) && nullValue !== undefined ? nullValue : DataContentHelper.create(value);
 
         const scope = dataScope?.value;
         if (scope === 'payload') {
-            return context.preExecution.payload;
+            return DataContentHelper.create(context.preExecution.payload);
         }
 
         const executionContext = context.execution || ({} as DefaultExecutionContext);
 
         if (scope) {
-            return executionContext[scope];
+            return DataContentHelper.create(executionContext[scope]);
         } else {
             const preExecutionContext = context.preExecution || ({} as DefaultPreExecutionContext);
             return (

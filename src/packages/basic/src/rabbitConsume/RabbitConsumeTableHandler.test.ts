@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 import {
+    DataContent,
     LocalContext,
     MarkdownTableReader,
     ObjectContent,
@@ -184,7 +185,7 @@ describe('default', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.config).toEqual({
+        expect(sut.handler.getExecutionEngine().context.config).toStrictEqual({
             count_max: null,
             count_min: 1,
             hostname: 'p',
@@ -268,7 +269,7 @@ describe.skip('filter', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual({ a: 'x' });
     });
 
     /**
@@ -306,7 +307,7 @@ describe.skip('filter', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual([{ a: '1' }, { a: '2' }]);
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual([{ a: '1' }, { a: '2' }]);
     });
 });
 
@@ -337,7 +338,7 @@ describe('expected', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual({ a: 'x' });
     });
 
     /**
@@ -363,7 +364,7 @@ describe('expected', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual({ a: 'x' });
     });
 
     /**
@@ -389,7 +390,7 @@ describe('expected', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toEqual({ a: 'x' });
+        expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual({ a: 'x' });
     });
 
     /**
@@ -437,7 +438,7 @@ describe('expected', () => {
              | expected | y     |`
         );
 
-        await expect(sut.handler.process(tableRows)).rejects.toThrowError('expected\n\texpected: y\n\tactual: {"a":"x"}');
+        await expect(sut.handler.process(tableRows)).rejects.toThrow('expected\n\texpected: y\n\tactual: {"a":"x"}');
     });
 });
 
@@ -532,7 +533,7 @@ describe('count', () => {
              | timeout      | 2      |`
         );
 
-        await expect(sut.handler.process(tableRows)).rejects.toThrowError(
+        await expect(sut.handler.process(tableRows)).rejects.toThrow(
             'consumer timed out after 2 seconds, minimum 2 message(s) expected, 1 message(s) received'
         );
     });
@@ -548,7 +549,7 @@ describe('count', () => {
              | count  | 0     |`
         );
 
-        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrow(
             `minimum message count can't be 0 if no maximum count is defined`
         );
     });
@@ -661,7 +662,7 @@ describe('count', () => {
              | count:max | 1     |`
         );
 
-        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(`maximum 1 message(s) expected, but 2 message(s) received`);
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrow(`maximum 1 message(s) expected, but 2 message(s) received`);
     });
 
     /**
@@ -746,7 +747,7 @@ describe('count', () => {
              | count:min | 2     |`
         );
 
-        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrow(
             `consumer timed out after 2 seconds, minimum 2 message(s) expected, 1 message(s) received`
         );
     });
@@ -776,7 +777,7 @@ describe('count', () => {
              | count:min | 1     |`
         );
 
-        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(`maximum 2 message(s) expected, but 3 message(s) received`);
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrow(`maximum 2 message(s) expected, but 3 message(s) received`);
         expect(sut.handler.getExecutionEngine().context.execution.data.getValue()).toStrictEqual([{ a: 1 }, { b: 2 }, { c: 3 }]);
     });
 });
@@ -810,7 +811,7 @@ describe('transform & output', () => {
 
         await sut.handler.process(tableRows);
 
-        expect(sut.handler.getExecutionEngine().context.execution.transformed.getValue()).toEqual('x');
+        expect(sut.handler.getExecutionEngine().context.execution.transformed.getValue()).toStrictEqual('x');
     });
 
     /**
@@ -1030,7 +1031,7 @@ describe('reports', () => {
              | description  | Consume events |`
         );
 
-        await expect(sut.handler.process(tableRows)).rejects.toThrowError('custom error while consuming');
+        await expect(sut.handler.process(tableRows)).rejects.toThrow('custom error while consuming');
 
         Runtime.instance.stepRuntime.currentContext.id = 'id-id-id';
         Runtime.instance.stepRuntime.currentContext.startTime = '2020-01-01T00:00:00.000Z';

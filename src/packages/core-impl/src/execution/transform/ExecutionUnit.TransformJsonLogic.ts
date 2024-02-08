@@ -38,7 +38,7 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DefaultCon
                 return context.execution.header;
 
             default:
-                return !!context.execution.transformed && !!context.execution.transformed.getValue()
+                return !!context.execution.transformed && !!context.execution.transformed.valueOf()
                     ? context.execution.transformed
                     : context.execution.data;
         }
@@ -55,6 +55,10 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DefaultCon
 
         context.execution.transformed = !row.ast.selectors?.match
             ? transformedResult
-            : SelectorExtractor.setValueBySelector(row.ast.selectors, transformedResult, context.execution.transformed);
+            : SelectorExtractor.setValueBySelector(
+                  row.ast.selectors,
+                  transformedResult,
+                  DataContentHelper.create(context.execution.transformed)
+              );
     }
 }

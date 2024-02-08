@@ -35,5 +35,9 @@ export interface DataContentObject {
     /**
      *
      */
+    isObject(): boolean;
+    /**
+     *
+     */
     valueOf(): object | string | number | boolean;
 }

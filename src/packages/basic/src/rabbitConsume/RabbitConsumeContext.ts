@@ -23,6 +23,9 @@ export interface RabbitConsumeDataExecutionContext extends DefaultExecutionConte
         data: DataContent | null;
         header: DataContent | null;
     };
+    data: DataContent | null;
+    header: DataContent | null;
+    transformed: DataContent | null;
 }
 
 /**

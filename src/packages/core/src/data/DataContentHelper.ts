@@ -20,13 +20,13 @@ export class DataContentHelper {
      */
     private static tryParse(content: string, failedContent = null): object | string {
         try {
-            return JSON.parse(content);
+            return JSON.parse(content) as object;
         } catch (error) {
             try {
                 // try again without comments in json
-                return JSON.parse(content?.replace(/[\n]?\s[^\S]*\/\/.*[\n]?/g, ''));
+                return JSON.parse(content?.replace(/[\n]?\s[^\S]*\/\/.*[\n]?/g, '')) as object;
             } catch (error) {
-                return failedContent;
+                return failedContent as string;
             }
         }
     }
@@ -34,9 +34,9 @@ export class DataContentHelper {
     /**
      *
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static isContent(variable: any): boolean {
-        return !!variable && !!variable.getValue;
+    static isContent(variable: unknown): boolean {
+        const dataContentCandidate = variable as DataContent;
+        return !!variable && !!dataContentCandidate.getValue && !!dataContentCandidate.isObject;
     }
 
     /**
@@ -177,15 +177,7 @@ export class DataContentHelper {
         } else if (DataContentHelper.isNative(value)) {
             return new NativeContent(value as boolean | number);
         } else {
-            return new ObjectContent(value);
+            return new ObjectContent(value as ContentType);
         }
-    }
-
-    public static getByPath(a: any, b: any): DataContent {
-        throw 'not implemented';
-    }
-
-    public static setByPath(a: any, b: any, c: any): DataContent {
-        throw 'not implemented';
     }
 }

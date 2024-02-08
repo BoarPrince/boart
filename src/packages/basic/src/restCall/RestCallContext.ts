@@ -31,4 +31,13 @@ export interface RestCallPreExecutionContext {
 /**
  *
  */
-export type RestCallContext = ExecutionContext<RestCallConfigContext, RestCallPreExecutionContext, DefaultExecutionContext>;
+export interface RestCallExecutionContext extends DefaultExecutionContext {
+    data: DataContent | null;
+    header: DataContent | null;
+    transformed: DataContent | null;
+}
+
+/**
+ *
+ */
+export type RestCallContext = ExecutionContext<RestCallConfigContext, RestCallPreExecutionContext, RestCallExecutionContext>;

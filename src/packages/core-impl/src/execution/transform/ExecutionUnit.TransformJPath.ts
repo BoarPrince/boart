@@ -1,4 +1,13 @@
-import { DataContentHelper, DefaultContext, DefaultRowType, ExecutionUnit, ParaType, SelectorExtractor, SelectorType } from '@boart/core';
+import {
+    DataContent,
+    DataContentHelper,
+    DefaultContext,
+    DefaultRowType,
+    ExecutionUnit,
+    ParaType,
+    SelectorExtractor,
+    SelectorType
+} from '@boart/core';
 import JSPath from 'jspath';
 
 import { DataScopeValidator } from '../../validators/DataScopeValidator';
@@ -40,7 +49,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DefaultContext
                     return context.execution.header;
 
                 default:
-                    return !!context.execution.transformed && !!context.execution.transformed.getValue()
+                    return !!context.execution.transformed && !!context.execution.transformed.valueOf()
                         ? context.execution.transformed
                         : context.execution.data;
             }
@@ -54,6 +63,7 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DefaultContext
      *
      */
     execute(context: DefaultContext, row: DefaultRowType<DefaultContext>): void {
+        debugger;
         const rule = row.value.toString();
         const data = this.getSourceData(context, row.ast.datascope?.value);
 
@@ -71,6 +81,6 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DefaultContext
 
         context.execution.transformed = !row.ast.selectors?.match
             ? transformedResult
-            : SelectorExtractor.setValueBySelector(row.ast.selectors, transformedResult, context.execution.transformed);
+            : SelectorExtractor.setValueBySelector(row.ast.selectors, transformedResult, context.execution.transformed as DataContent);
     }
 }

@@ -1,6 +1,7 @@
 import 'jest-extended';
 
 import {
+    DataContent,
     DefaultContext,
     DefaultRowType,
     EnvLoader,
@@ -33,7 +34,7 @@ const astB = variableParser.parseAction('store:b');
 /**
  *
  */
-jest.mock('@boart/core', () => {
+jest.mock<typeof import('@boart/core')>('@boart/core', () => {
     const originalModule = jest.requireActual('@boart/core');
 
     return {
@@ -159,7 +160,7 @@ describe('out store', () => {
     /**
      *
      */
-    test('not initialized', async () => {
+    test('not initialized', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action  |value |
              |--------|------|
@@ -367,7 +368,8 @@ describe('out store from payload', () => {
 
         const result = sut.handler.getExecutionEngine().context.preExecution.payload;
         expect(result?.constructor.name).toBe('ObjectContent');
-        expect(result?.getValue()).toBeInstanceOf(Object);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        expect((result as DataContent)?.getValue()).toBeInstanceOf(Object);
 
         expect((result as ObjectContent).get('a')).toBeString();
         expect((result as ObjectContent).get('a')?.toString()).toBe('2');
@@ -555,7 +557,8 @@ describe('out store from payload', () => {
 
         const payload = sut.handler.getExecutionEngine().context.preExecution.payload;
         expect(payload).toBeInstanceOf(NativeContent);
-        expect(payload.getValue()).toBeUndefined();
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        expect((payload as DataContent).getValue()).toBeUndefined();
 
         const result = Store.instance.testStore.get(astVar) as NativeContent;
         expect(result).toBeInstanceOf(NativeContent);
@@ -578,7 +581,8 @@ describe('out store from payload', () => {
 
         const payload = sut.handler.getExecutionEngine().context.preExecution.payload;
         expect(payload).toBeInstanceOf(TextContent);
-        expect(payload?.getValue()).toBe('undefined');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        expect((payload as DataContent)?.getValue()).toBe('undefined');
 
         const result = Store.instance.testStore.get(astVar) as TextContent;
         expect(result).toBeInstanceOf(TextContent);
@@ -592,7 +596,7 @@ describe('out store from payload', () => {
         const tableDef = MarkdownTableReader.convert(
             `|action    | value         |
              |----------|---------------|
-             |-payload   | {"a": 1}      |
+             |-payload   | {"a": 1}     |
              |payload   | ""undefined"" |
              |store     | var           |`
         );

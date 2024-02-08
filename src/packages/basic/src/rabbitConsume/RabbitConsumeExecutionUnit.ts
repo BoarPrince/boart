@@ -148,7 +148,7 @@ export class RabbitConsumeExecutionUnit
             );
             await consumer.start();
         } catch (error) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
             throw Error(error?.message || error);
         } finally {
             clearTimeout(timeoutHandler);

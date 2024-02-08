@@ -438,6 +438,22 @@ describe('null or undefined', () => {
         const result = DataContentHelper.isNullOrUndefined(new NativeContent(1));
         expect(result).toBeFalsy();
     });
+
+    /**
+     *
+     */
+    it('null - isContent', () => {
+        const result = DataContentHelper.isContent(null);
+        expect(result).toBeFalsy();
+    });
+
+    /**
+     *
+     */
+    it('NullContent - isContent', () => {
+        const result = DataContentHelper.isContent(new NullContent());
+        expect(result).toBeTruthy();
+    });
 });
 
 /**

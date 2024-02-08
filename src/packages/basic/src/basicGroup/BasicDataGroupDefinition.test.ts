@@ -1,6 +1,8 @@
+/* eslint-disable jest/expect-expect */
 import 'jest-extended';
 
 import {
+    DataContent,
     DefaultExecutionContext,
     DefaultPreExecutionContext,
     DefaultPropertySetterExecutionUnit,
@@ -869,7 +871,8 @@ describe('basic group definition', () => {
 
             const result = await sut.handler.process(tableDef);
             expect(result.execution.transformed).toBeInstanceOf(ObjectContent);
-            expect(result.execution.transformed?.toJSON()).toBe('{"c":{"d":"e"}}');
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+            expect((result.execution.transformed as DataContent)?.toJSON()).toBe('{"c":{"d":"e"}}');
         });
 
         /**
@@ -1073,7 +1076,8 @@ describe('basic group definition', () => {
 
             const result = await sut.handler.process(tableDef);
             expect(result.execution.transformed).toBeInstanceOf(ObjectContent);
-            expect(result.execution.transformed?.toJSON()).toBe('{"c":{"d":"e"}}');
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+            expect((result.execution.transformed as DataContent)?.toJSON()).toBe('{"c":{"d":"e"}}');
         });
 
         /**

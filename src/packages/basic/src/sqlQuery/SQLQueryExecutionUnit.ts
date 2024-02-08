@@ -1,4 +1,4 @@
-import { DefaultRowType, ExecutionUnit, NativeContent, ObjectContent, TextContent, Timer } from '@boart/core';
+import { DataContentHelper, DefaultRowType, ExecutionUnit, NativeContent, ObjectContent, TextContent, Timer } from '@boart/core';
 import { MSSQLHandler, MSSQLQueryResult } from '@boart/execution';
 import { StepReport } from '@boart/protocol';
 
@@ -59,7 +59,9 @@ export class SQLQueryExecutionUnit implements ExecutionUnit<SQLQueryContext, Def
         //#endregion
 
         //#region setting result to context
-        context.execution.header.asDataContentObject().set('rows', result.affectedRows[0]);
+        const header = DataContentHelper.create(context.execution.header);
+        context.execution.header = header;
+        header.asDataContentObject().set('rows', result.affectedRows[0]);
 
         const resultValue = result.getStringOrObjectArray();
         if (typeof resultValue === 'string') {
