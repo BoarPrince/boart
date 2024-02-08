@@ -1,7 +1,6 @@
 import fs from 'fs';
 import fsPath from 'path';
 
-import { ExecutionContext } from '../execution/ExecutionContext';
 import { ContextConfig } from './schema/ContextConfig';
 import { RowDefinition as CoreRowDefinition } from '../table/RowDefinition';
 import { RowDefinitionConfig } from './schema/RowDefinitionConfig';
@@ -11,24 +10,16 @@ import { RowValidator } from '../validators/RowValidator';
 import { ValidatorFactoryManager } from '../validators/ValidatorFactoryManager';
 import { ValidatorConfig } from './schema/ValidatorConfig';
 import { ConfigurationChecker } from './ConfigurationChecker';
+import { RemoteFactory } from '../remote/RemoteFactory';
+import { RemoteFactoryHandler } from '../remote/RemoteFactoryHandler';
+import { ConfigurationTableHandler } from './ConfigurationTableHandler';
+import { DefaultContext } from '../default/DefaultExecutionContext';
+import { DefaultRowType } from '../default/DefaultRowType';
 
 /**
  *
  */
-type ExecutionContextType = ExecutionContext<
-    object,
-    object,
-    {
-        data: object;
-        header: object;
-        transformed: object;
-    }
->;
-
-/**
- *
- */
-export class TestExecutionConfigurationParser {
+export class ConfigurationParser {
     private readonly fileEnding = '.bdef';
 
     /**
@@ -55,10 +46,12 @@ export class TestExecutionConfigurationParser {
     /**
      *
      */
-    private parseConfig(contextDef: ContextConfig): ExecutionContextType {
-        const context: ExecutionContextType = {
+    private parseConfig(contextDef: ContextConfig): DefaultContext {
+        const context: DefaultContext = {
             config: {},
-            preExecution: {},
+            preExecution: {
+                payload: {}
+            },
             execution: {
                 data: {},
                 transformed: {},
@@ -67,7 +60,7 @@ export class TestExecutionConfigurationParser {
         };
 
         context.config = contextDef.config;
-        context.preExecution = contextDef.pre;
+        context.preExecution.payload = contextDef.pre;
         context.execution.data = contextDef.execution.data;
         context.execution.header = contextDef.execution.header;
         context.execution.transformed = contextDef.execution.transformed;
@@ -95,7 +88,10 @@ export class TestExecutionConfigurationParser {
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private parseRowDefinition(rowDefinitions: RowDefinitionConfig[], context: ExecutionContextType): Array<CoreRowDefinition<any, any>> {
+    private parseRowDefinition(
+        rowDefinitions: RowDefinitionConfig[],
+        context: DefaultContext
+    ): Array<CoreRowDefinition<DefaultContext, DefaultRowType<DefaultContext>>> {
         const defs = rowDefinitions.map((rowDef: RowDefinitionConfig) => {
             try {
                 const key = Symbol(rowDef.action);
@@ -118,7 +114,7 @@ export class TestExecutionConfigurationParser {
                     secondLevel
                 );
 
-                return new CoreRowDefinition({
+                return new CoreRowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
                     key,
                     type: rowDef.contextType,
                     parameterType: rowDef.parameterType,
@@ -140,6 +136,16 @@ export class TestExecutionConfigurationParser {
     /**
      *
      */
+    private parseMainExecutionUnit(config: TestExecutionUnitConfig): RemoteFactory {
+        const factory = RemoteFactoryHandler.instance.getFactory(config.runtime.type);
+        factory.init(config.name, config.runtime.configuration, config.runtime.startup);
+        factory.validate();
+        return factory;
+    }
+
+    /**
+     *
+     */
     private parseDefinition(configFilename: string) {
         const content = fs.readFileSync(configFilename, 'utf-8');
         const config = JSON.parse(content) as TestExecutionUnitConfig;
@@ -147,6 +153,9 @@ export class TestExecutionConfigurationParser {
 
         const context = this.parseConfig(config.context);
         const rowDefinitions = this.parseRowDefinition(config.rowDef, context);
+        const mainExecutionUnitFactory = this.parseMainExecutionUnit(config);
+
+        new ConfigurationTableHandler(context, mainExecutionUnitFactory, rowDefinitions, config.groupRowDef);
     }
 
     /**

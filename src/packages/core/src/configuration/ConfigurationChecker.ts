@@ -1,10 +1,10 @@
 import { TestExecutionUnitConfig } from './schema/TestExecutionUnitConfig';
-import { RuntimeType } from './schema/RuntimeType';
-import { RuntimeEnv } from './schema/RuntimeEnv';
 import { RuntimeStartUp } from './schema/RuntimeStartUp';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
 import { ObjectValidator } from '../validators/object/ObjectValidator';
+import { GroupRowDefinition } from '../table/GroupRowDefinition';
+import { RemoteFactoryHandler } from '../remote/RemoteFactoryHandler';
 
 /**
  *
@@ -24,11 +24,9 @@ export class ConfigurationChecker {
             // runtime
             .prop('runtime')
             .child()
-            .onlyContainsProperties(['type', 'env', 'startup', 'configuration'])
+            .onlyContainsProperties(['type', 'startup', 'configuration'])
             .prop('type')
-            .shouldHaveValueOf(...Object.values(RuntimeType))
-            .prop('env')
-            .shouldHaveValueOf(...Object.values(RuntimeEnv))
+            .shouldHaveValueOf(...RemoteFactoryHandler.instance.keys())
             .prop('startup')
             .shouldHaveValueOf(...Object.values(RuntimeStartUp))
             .prop('configuration')
@@ -60,6 +58,7 @@ export class ConfigurationChecker {
             .parent()
             .prop('groupRowDef')
             .shouldArray('string')
+            .shouldHaveValueOf(...GroupRowDefinition.keys())
             .prop('rowDef')
             .shouldArray('object')
 
