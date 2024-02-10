@@ -1,12 +1,6 @@
-import { run } from 'node:test';
-import { RuntimeStartUp } from '../../configuration/schema/RuntimeStartUp';
-import { DefaultContext } from '../../default/DefaultExecutionContext';
-import { DefaultRowType } from '../../default/DefaultRowType';
-import { ExecutionUnit } from '../../execution/ExecutionUnit';
-import { ObjectValidator } from '../../validators/object/ObjectValidator';
-import { RemoteFactory } from '../RemoteFactory';
 import { NodeForkExecutionUnit } from './NodeForkExecutionUnit';
 import { NodeForkServer } from './NodeForkServer';
+import { DefaultContext, DefaultRowType, ExecutionUnit, ObjectValidator, RemoteFactory, RuntimeStartUp } from '@boart/core';
 
 /**
  *
@@ -42,7 +36,7 @@ export class NodeForkRemoteFactory implements RemoteFactory {
     /**
      *
      */
-    init(name: string, config: Configuration, runtimeStartup?: RuntimeStartUp): void {
+    init(name: string, config: Configuration, runtimeStartup: RuntimeStartUp): void {
         this.name = name;
         this.config = config;
         this.runtimeStartup = runtimeStartup;

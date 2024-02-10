@@ -1,4 +1,4 @@
-import { RemoteResponse } from './node-fork/NodeForkDataResponse';
+import { RemoteResponse } from './RemoteResponse';
 import { RemoteRequest } from './RemoteRequest';
 
 /**

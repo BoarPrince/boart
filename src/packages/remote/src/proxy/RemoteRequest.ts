@@ -1,7 +1,6 @@
 /**
  *
  */
-
 export interface RemoteRequest {
     config: object;
     preExecution: {

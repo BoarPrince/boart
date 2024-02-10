@@ -1,7 +1,6 @@
 import { ChildProcess, fork } from 'child_process';
-import { NodeForkResponse } from './NodeForkResponse';
-import { RemoteRequest } from '../RemoteRequest';
-import { RemoteResponse } from './NodeForkDataResponse';
+import { randomUUID } from 'crypto';
+import { NodeForkRequest, NodeForkResponse, RemoteRequest, RemoteResponse } from '@boart/remote';
 
 /**
  *
@@ -37,12 +36,23 @@ export class NodeForkServer {
      */
     public execute(message: RemoteRequest): Promise<RemoteResponse> {
         return new Promise((resolve, reject) => {
-            this.child.once('message', (msgFromClient: NodeForkResponse) => {
+            const id: string = randomUUID();
+
+            /**
+             *
+             */
+            const msgListener = (msgFromClient: NodeForkResponse) => {
+                if (msgFromClient.id !== 'uncaughtException' || msgFromClient.id !== id) {
+                    return;
+                }
+                this.child.removeListener('message', msgListener);
                 msgFromClient.error //
                     ? reject(msgFromClient.error)
                     : resolve(msgFromClient.data);
-            });
-            this.child.send(message);
+            };
+
+            this.child.on('message', msgListener);
+            this.child.send({ message, id } as NodeForkRequest);
         });
     }
 }

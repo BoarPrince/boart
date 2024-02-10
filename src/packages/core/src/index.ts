@@ -74,6 +74,9 @@ import { ObjectValidator } from './validators/object/ObjectValidator';
 import { DefaultRowType } from './default/DefaultRowType';
 import { DefaultPropertySetterExecutionUnit } from './default/DefaultPropertySetterExecutionUnit';
 import { DefaultContext, DefaultExecutionContext, DefaultPreExecutionContext } from './default/DefaultExecutionContext';
+import { RemoteFactory } from './remote/RemoteFactory';
+import { RemoteFactoryHandler } from './remote/RemoteFactoryHandler';
+import { RuntimeStartUp } from './configuration/schema/RuntimeStartUp';
 
 /**
  *
@@ -133,6 +136,9 @@ export {
     RuntimePriority,
     RuntimeResultContext,
     RuntimeStatus,
+    RuntimeStartUp,
+    RemoteFactory,
+    RemoteFactoryHandler,
     ScopedType,
     ScopeType,
     SelectorType,

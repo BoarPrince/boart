@@ -1,5 +1,5 @@
 {
-  "name": "@boart/remote",
+  "name": "@boart/remote-server",
   "author": "kem@boarprince.net",
   "version": "1.0.0-314",
   "bugs": {
@@ -24,6 +24,10 @@
     "grpc:create": "ts-proto --src ../ path/to/myData.ts --outDir path/to/outputDir",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix"
+  },
+  "dependencies": {
+    "@boart/core": "workspace:*",
+    "@boart/remote": "workspace:*"
   },
   "devDependencies": {
     "tslib": "~2.6.2",

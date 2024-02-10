@@ -1,4 +1,4 @@
-import { RemoteReportItem } from '../RemoteReportItem';
+import { RemoteReportItem } from './RemoteReportItem';
 
 /**
  *

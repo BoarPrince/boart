@@ -10,7 +10,7 @@ export interface RemoteFactory {
     /**
      * is called once a time during the configuration
      */
-    init(name: string, config: object, runtimeStartup?: RuntimeStartUp): void;
+    init(name: string, config: object, runtimeStartup: RuntimeStartUp): void;
 
     /**
      * is called once a time during the configuration and after init.

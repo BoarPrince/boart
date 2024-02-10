@@ -1,11 +1,6 @@
-import { DataContentHelper } from '../../data/DataContentHelper';
-import { DefaultContext } from '../../default/DefaultExecutionContext';
-import { DefaultRowType } from '../../default/DefaultRowType';
-import { ExecutionUnit } from '../../execution/ExecutionUnit';
-import { ParaType } from '../../types/ParaType';
-import { ScopedType } from '../../types/ScopedType';
-import { SelectorType } from '../../types/SelectorType';
+import { DataContentHelper, DefaultContext, DefaultRowType, ExecutionUnit, ParaType, ScopedType, SelectorType } from '@boart/core';
 import { NodeForkServer } from './NodeForkServer';
+import { RemoteResponse } from '@boart/remote';
 
 /**
  *
@@ -30,7 +25,7 @@ export class NodeForkExecutionUnit implements ExecutionUnit<DefaultContext, Defa
      *
      */
     async execute(context: DefaultContext): Promise<void> {
-        const response = await this.server.execute({
+        const response: RemoteResponse = await this.server.execute({
             config: context.config,
             preExecution: context.preExecution
         });
