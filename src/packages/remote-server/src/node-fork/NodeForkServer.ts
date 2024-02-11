@@ -42,7 +42,7 @@ export class NodeForkServer {
              *
              */
             const msgListener = (msgFromClient: NodeForkResponse) => {
-                if (msgFromClient.id !== 'uncaughtException' || msgFromClient.id !== id) {
+                if (msgFromClient.id !== 'uncaughtException' && msgFromClient.id !== id) {
                     return;
                 }
                 this.child.removeListener('message', msgListener);
