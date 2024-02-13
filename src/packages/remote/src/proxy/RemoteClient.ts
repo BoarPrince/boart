@@ -5,5 +5,5 @@ import { RemoteRequest } from './RemoteRequest';
  *
  */
 export interface RemoteClient {
-    execute(data: RemoteRequest): RemoteResponse;
+    execute(data: RemoteRequest): RemoteResponse | Promise<RemoteResponse>;
 }

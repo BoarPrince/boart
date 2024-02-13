@@ -162,6 +162,7 @@ describe('error handing', () => {
     test('unhandled expections must be catched', async () => {
         const sut = new NodeForkServer('-path-');
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         messageFromClient = { id: 'uncaughtException' as any, error: 'any exception', data: null };
 
         await expect(sut.execute(messageToClient)).rejects.toBe('any exception');

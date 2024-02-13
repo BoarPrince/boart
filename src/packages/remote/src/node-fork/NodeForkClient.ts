@@ -26,22 +26,33 @@ export class NodeForkClient {
          *
          */
         process.on('message', (request: NodeForkRequest) => {
-            const response: NodeForkResponse = {
-                id: request.id,
-                data: undefined,
-                error: undefined
-            };
-
-            try {
-                response.data = this.clientImpl.execute(request.message);
-            } catch (error) {
-                response.error = (error as { message: string }).message || (error as unknown);
-            }
-            process.send(response);
+            void this.execute(request) //
+                .then((response) => process.send(response));
         });
 
+        /**
+         *
+         */
         process.on('uncaughtException', (error) => {
             process.send({ id: 'uncaughtException', error: error.message || error });
         });
+    }
+
+    /**
+     *
+     */
+    private async execute(request: NodeForkRequest): Promise<NodeForkResponse> {
+        const response: NodeForkResponse = {
+            id: request.id,
+            data: undefined,
+            error: undefined
+        };
+
+        try {
+            response.data = await this.clientImpl.execute(request.message);
+        } catch (error) {
+            response.error = (error as { message: string }).message || (error as unknown);
+        }
+        return response;
     }
 }
