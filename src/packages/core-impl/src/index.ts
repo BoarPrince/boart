@@ -1,3 +1,4 @@
+import { GeneratorHandler, TableHandlerInstances, ValueReplacerHandler } from '@boart/core';
 import { AnyContext } from './AnyContext';
 import { PDFContent } from './data/PDFContent';
 import { ExpectedDataExecutinoUnit } from './execution/expected/ExecutionUnit.ExpectedData';
@@ -92,5 +93,38 @@ export {
     XORValidator
 };
 
-// initialize
-ExpectedOperatorImplementation.addAll();
+/**
+ *
+ */
+export default function initialize(): void {
+    if (globalThis.remoteServerInitialized) {
+        // call initialize only once a time
+        return;
+    } else {
+        globalThis.remoteServerInitialized = true;
+    }
+
+    // initialize
+    ExpectedOperatorImplementation.addAll();
+
+    ValueReplacerHandler.instance.add('store', new StoreReplacer());
+    ValueReplacerHandler.instance.add('env', new EnvironmentReplacer());
+    ValueReplacerHandler.instance.add('text', new TextReplacer());
+    ValueReplacerHandler.instance.add('generate', new GenerateReplacer());
+    ValueReplacerHandler.instance.add('ref', new ReferenceReplacer());
+    ValueReplacerHandler.instance.add('context', new ContextReplacer());
+    ValueReplacerHandler.instance.add('file', new FileReplacer());
+
+    GeneratorHandler.instance.addItems([
+        new CharGenerator(),
+        new DateTimeGenerator(),
+        new FakeGenerator(),
+        new TemplateGenerator(),
+        new HexGenerator(),
+        new IbanGenerator(),
+        new ISODateGenerator(),
+        new RandomGenerator(),
+        new TimestampGenerator(),
+        new UUIDGenerator()
+    ]);
+}

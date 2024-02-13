@@ -25,22 +25,22 @@ export class RemoteFactoryHandler {
     /**
      *
      */
-    public addFactory(runtimeType: string, factory: RemoteFactory) {
-        if (this.factories.has(runtimeType)) {
-            throw new Error(`remote factory '${runtimeType}' already exists`);
+    public addFactory(name: string, factory: RemoteFactory) {
+        if (this.factories.has(name)) {
+            throw new Error(`remote factory '${name}' already exists`);
         }
 
-        this.factories.set(runtimeType, factory);
+        this.factories.set(name, factory);
     }
 
     /**
      *
      */
-    public getFactory(runtimeType: string): RemoteFactory {
-        if (!this.factories.has(runtimeType)) {
-            throw new Error(`remote factory '${runtimeType}' does not exist`);
+    public getFactory(name: string): RemoteFactory {
+        if (!this.factories.has(name)) {
+            throw new Error(`remote factory '${name}' does not exist`);
         }
-        return this.factories.get(runtimeType);
+        return this.factories.get(name);
     }
 
     /**

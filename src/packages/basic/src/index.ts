@@ -1,24 +1,7 @@
-import { GeneratorHandler, Runtime, TableHandlerInstances, ValueReplacerHandler } from '@boart/core';
-import {
-    CharGenerator,
-    ContextReplacer,
-    DateTimeGenerator,
-    EnvironmentReplacer,
-    FakeGenerator,
-    FileReplacer,
-    GenerateReplacer,
-    HexGenerator,
-    IbanGenerator,
-    ISODateGenerator,
-    RandomGenerator,
-    ReferenceReplacer,
-    StoreReplacer,
-    TemplateGenerator,
-    TextReplacer,
-    TimestampGenerator,
-    UUIDGenerator
-} from '@boart/core-impl';
+import { Runtime, TableHandlerInstances } from '@boart/core';
 import { LocalReport, ProtocolGenerator, StepReport, TestReport } from '@boart/protocol';
+import core_impl_initialize from '@boart/core-impl';
+import remote_server_initialize from '@boart/remote-server';
 
 import BasicDataGroupDefinition from './basicGroup/BasicDataGroupDefinition';
 import BasicGroupDefinition from './basicGroup/BasicGroupDefinition';
@@ -69,28 +52,10 @@ export function basicInitialize(): void {
         new ProtocolGenerator().generate();
     });
 
-    ValueReplacerHandler.instance.add('store', new StoreReplacer());
-    ValueReplacerHandler.instance.add('env', new EnvironmentReplacer());
-    ValueReplacerHandler.instance.add('text', new TextReplacer());
-    ValueReplacerHandler.instance.add('generate', new GenerateReplacer());
-    ValueReplacerHandler.instance.add('ref', new ReferenceReplacer());
-    ValueReplacerHandler.instance.add('context', new ContextReplacer());
-    ValueReplacerHandler.instance.add('file', new FileReplacer());
-
     TableHandlerInstances.instance.add(new RestCallTableHandler().handler);
 
-    GeneratorHandler.instance.addItems([
-        new CharGenerator(),
-        new DateTimeGenerator(),
-        new FakeGenerator(),
-        new TemplateGenerator(),
-        new HexGenerator(),
-        new IbanGenerator(),
-        new ISODateGenerator(),
-        new RandomGenerator(),
-        new TimestampGenerator(),
-        new UUIDGenerator()
-    ]);
+    core_impl_initialize();
+    remote_server_initialize();
 }
 
 /**
