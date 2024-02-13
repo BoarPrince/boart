@@ -1,4 +1,4 @@
-import { NodeForkExecutionUnit } from './NodeForkExecutionUnit';
+import { NodeForkExecutionProxyUnit } from './NodeForkExecutionProxyUnit';
 import { NodeForkServer } from './NodeForkServer';
 import { DefaultContext, DefaultRowType, ExecutionUnit, ObjectValidator, RemoteFactory, RuntimeStartUp } from '@boart/core';
 
@@ -12,7 +12,7 @@ interface Configuration {
 /**
  *
  */
-export class NodeForkRemoteFactory implements RemoteFactory {
+export class NodeForkRemoteProxyFactory implements RemoteFactory {
     private server: NodeForkServer;
     private name: string;
     private config: Configuration;
@@ -21,7 +21,7 @@ export class NodeForkRemoteFactory implements RemoteFactory {
     /**
      *
      */
-    validate(): void {
+    public validate(): void {
         if (this.runtimeStartup && this.runtimeStartup !== RuntimeStartUp.ONCE) {
             throw new Error(`node fork allows only runtime startup 'once'`);
         }
@@ -36,7 +36,7 @@ export class NodeForkRemoteFactory implements RemoteFactory {
     /**
      *
      */
-    init(name: string, config: Configuration, runtimeStartup: RuntimeStartUp): void {
+    public init(name: string, config: Configuration, runtimeStartup: RuntimeStartUp): void {
         this.name = name;
         this.config = config;
         this.runtimeStartup = runtimeStartup;
@@ -45,14 +45,14 @@ export class NodeForkRemoteFactory implements RemoteFactory {
     /**
      *
      */
-    start() {
+    public start() {
         this.server = new NodeForkServer(this.config.path);
     }
 
     /**
      *
      */
-    get executionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
-        return new NodeForkExecutionUnit(this.name, this.server);
+    public get executionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
+        return new NodeForkExecutionProxyUnit(this.name, this.server);
     }
 }

@@ -27,7 +27,8 @@
   },
   "dependencies": {
     "@boart/core": "workspace:*",
-    "@boart/remote": "workspace:*"
+    "@boart/remote": "workspace:*",
+    "@boart/protocol": "workspace:*"
   },
   "devDependencies": {
     "tslib": "~2.6.2",
