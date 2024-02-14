@@ -1,18 +1,7 @@
 /* globals gauge*/
 'use strict'
 
-const {
-    RestCallTableHandler,
-    TestDescriptionTableHandler,
-    RestAuthorizeTableHandler,
-    RabbitBindTableHandler,
-    RabbitPublishTableHandler,
-    RabbitConsumeTableHandler,
-    DataTableHandler,
-    RabbitListenerTableHandler,
-    SQLQueryTableHandler
-} = require('@boart/basic')
-const { DescriptionHandler, Store, ValueReplacerHandler, Runtime, RuntimeStatus } = require('@boart/core')
+const { DescriptionHandler, Store, ValueReplacerHandler, Runtime, RuntimeStatus, TableHandlerInstances } = require('@boart/core')
 const { DescriptionGenerator } = require('@boart/description')
 
 /**
@@ -30,7 +19,17 @@ beforeSuite(async () => {
 beforeSuite(context => {
     Runtime.instance.runtime.notifyStart({
         name: context.projectName
-    })
+    });
+
+    for(const [name, handler] of TableHandlerInstances.instance.values) {
+      step(`${name} <table>`, async table => {
+          await handler.process(table)
+      });
+
+      step(`${name}, continue <table>`, { continueOnFailure: true }, async table => {
+          await handler.process(table)
+      });
+    }
 })
 
 /**
@@ -107,123 +106,6 @@ afterStep(context => {
         errorMessage: context.currentStep.errorMessage,
         status: RuntimeStatus.status(context.currentStep.isFailed)
     })
-})
-
-// /**
-//  *
-//  */
-// afterStep(() => {
-//     DescriptionHandler.instance.describe();
-//     // process.stdout.destroy(); // = stream.Writable();
-//     // process.stderr.destroy(); // = stream.Writable();
-//     process.exit(0);
-// });
-
-/**
- *
- */
-const restcallTableHandler = new RestCallTableHandler()
-step('Rest call <table>', async table => {
-    await restcallTableHandler.handler.process(table)
-})
-
-step('Rest call, continue <table>', { continueOnFailure: true }, async table => {
-    await restcallTableHandler.handler.process(table)
-})
-
-/**
- *
- */
-const restauthorizeTableHandler = new RestAuthorizeTableHandler()
-step('Rest authorize <table>', async table => {
-    await restauthorizeTableHandler.handler.process(table)
-})
-
-step('Rest authorize, continue <table>', { continueOnFailure: true }, async table => {
-    await restauthorizeTableHandler.handler.process(table)
-})
-
-/**
- *
- */
-const rabbitBindTableHandler = new RabbitBindTableHandler()
-step('RabbitMQ bind <table>', async table => {
-    await rabbitBindTableHandler.handler.process(table)
-})
-
-step('RabbitMQ bind, continue <table>', { continueOnFailure: true }, async table => {
-    await rabbitBindTableHandler.handler.process(table)
-})
-
-/**
- *
- */
-const rabbitPublishTableHandler = new RabbitPublishTableHandler()
-step('RabbitMQ publish <table>', async table => {
-    await rabbitPublishTableHandler.handler.process(table)
-})
-
-step('RabbitMQ publish, continue <table>', { continueOnFailure: true }, async table => {
-    await rabbitPublishTableHandler.handler.process(table)
-})
-
-/**
- *
- */
-const rabbitConsumeTableHandler = new RabbitConsumeTableHandler()
-step('RabbitMQ consume <table>', async table => {
-    await rabbitConsumeTableHandler.handler.process(table)
-})
-
-step('RabbitMQ consume, continue <table>', { continueOnFailure: true }, async table => {
-    await rabbitConsumeTableHandler.handler.process(table)
-})
-
-/**
- *
- */
-const rabbitListenerTableHandler = new RabbitListenerTableHandler()
-step('RabbitMQ listening <table>', async table => {
-    await rabbitListenerTableHandler.handler.process(table)
-})
-
-step('RabbitMQ listening, continue <table>', { continueOnFailure: true }, async table => {
-    await rabbitListenerTableHandler.handler.process(table)
-})
-
-/**
- *
- */
-const sqlQueryTableHandler = new SQLQueryTableHandler()
-step('SQL query <table>', async table => {
-    await sqlQueryTableHandler.handler.process(table)
-})
-
-step('SQL query, continue <table>', { continueOnFailure: true }, async table => {
-    await sqlQueryTableHandler.handler.process(table)
-})
-
-/**
- *
- */
-const testDescriptionTableHandler = new TestDescriptionTableHandler()
-step('Test description <table>', async table => {
-    await testDescriptionTableHandler.handler.process(table)
-})
-
-/**
- *
- */
-const dataTableHandler = new DataTableHandler()
-step('Data manage <table>', async table => {
-    await dataTableHandler.handler.process(table)
-})
-
-/**
- *
- */
-step('Data manage, continue <table>', { continueOnFailure: true }, async table => {
-    await dataTableHandler.handler.process(table)
 })
 
 /**

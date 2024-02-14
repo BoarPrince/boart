@@ -15,6 +15,7 @@ import { RemoteFactoryHandler } from '../remote/RemoteFactoryHandler';
 import { ConfigurationTableHandler } from './ConfigurationTableHandler';
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
+import { TableHandlerInstances } from '../table/TableHandlerInstances';
 
 /**
  *
@@ -146,7 +147,7 @@ export class ConfigurationParser {
     /**
      *
      */
-    private parseDefinition(configFilename: string) {
+    private parseDefinition(configFilename: string): ConfigurationTableHandler {
         const content = fs.readFileSync(configFilename, 'utf-8');
         const config = JSON.parse(content) as TestExecutionUnitConfig;
         ConfigurationChecker.checkJSONConfig(config);
@@ -155,7 +156,7 @@ export class ConfigurationParser {
         const rowDefinitions = this.parseRowDefinition(config.rowDef, context);
         const mainExecutionUnitFactory = this.parseMainExecutionUnit(config);
 
-        new ConfigurationTableHandler(context, mainExecutionUnitFactory, rowDefinitions, config.groupRowDef);
+        return new ConfigurationTableHandler(config.name, context, mainExecutionUnitFactory, rowDefinitions, config.groupRowDef);
     }
 
     /**
@@ -164,7 +165,8 @@ export class ConfigurationParser {
     public readDefinitions() {
         const definitionFiles = this.lookup('');
         for (const definitionFilename of definitionFiles) {
-            this.parseDefinition(definitionFilename);
+            const tableHandler = this.parseDefinition(definitionFilename);
+            TableHandlerInstances.instance.add(tableHandler.handler, tableHandler.name);
         }
     }
 }

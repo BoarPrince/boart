@@ -36,7 +36,8 @@ export class DescriptionHandler {
      */
     private describeTableHandler(): TableHandlerDescription[] {
         const tableHandlerList = Array.from(TableHandlerInstances.instance.values);
-        return tableHandlerList.map((tableHandler) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        return tableHandlerList.map(([_, tableHandler]) => {
             const desc: TableHandlerDescription = {
                 desc: DescriptionHandler.solve(tableHandler.getExecutionEngine()?.mainExecutionUnit().description),
                 dataTables: tableHandler

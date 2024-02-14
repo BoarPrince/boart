@@ -34,15 +34,14 @@ export class TableHandlerInstances {
     /**
      *
      */
-    public add(tableHandler: TableHandlerGenericType, name: string = null): void {
-        const title = name || DescriptionHandler.solve(tableHandler.description).title;
-        this.instanceList.set(title, tableHandler);
+    public add(tableHandler: TableHandlerGenericType, name: string): void {
+        this.instanceList.set(name, tableHandler);
     }
 
     /**
      *
      */
-    public get values(): IterableIterator<TableHandlerGenericType> {
-        return this.instanceList.values();
+    public get values(): IterableIterator<[string, TableHandlerGenericType]> {
+        return this.instanceList.entries();
     }
 }

@@ -3,8 +3,6 @@ import { LocalReport, ProtocolGenerator, StepReport, TestReport } from '@boart/p
 import core_impl_initialize from '@boart/core-impl';
 import remote_server_initialize from '@boart/remote-server';
 
-import BasicDataGroupDefinition from './basicGroup/BasicDataGroupDefinition';
-import BasicGroupDefinition from './basicGroup/BasicGroupDefinition';
 import DataTableHandler from './data/DataTableHandler';
 import RabbitBindTableHandler from './rabbitBind/RabbitBindTableHandler';
 import RabbitConsumeTableHandler from './rabbitConsume/RabbitConsumeTableHandler';
@@ -14,20 +12,6 @@ import RestAuthorizeTableHandler from './restAuthorize/RestAuthorizeTableHandler
 import RestCallTableHandler from './restCall/RestCallTableHandler';
 import SQLQueryTableHandler from './sqlQuery/SQLQueryTableHandler';
 import TestDescriptionTableHandler from './testDescription/TestDescriptionTableHandler';
-
-export {
-    BasicDataGroupDefinition,
-    BasicGroupDefinition,
-    RabbitConsumeTableHandler,
-    RabbitBindTableHandler,
-    RabbitPublishTableHandler,
-    RabbitListenerTableHandler,
-    RestAuthorizeTableHandler,
-    RestCallTableHandler,
-    TestDescriptionTableHandler,
-    DataTableHandler,
-    SQLQueryTableHandler
-};
 
 /**
  *
@@ -52,10 +36,18 @@ export function basicInitialize(): void {
         new ProtocolGenerator().generate();
     });
 
-    TableHandlerInstances.instance.add(new RestCallTableHandler().handler);
-
     core_impl_initialize();
     remote_server_initialize();
+
+    TableHandlerInstances.instance.add(new RestCallTableHandler().handler, 'Rest call');
+    TableHandlerInstances.instance.add(new RestAuthorizeTableHandler().handler, 'Rest authorize');
+    TableHandlerInstances.instance.add(new RabbitBindTableHandler().handler, 'RabbitMQ bind');
+    TableHandlerInstances.instance.add(new RabbitPublishTableHandler().handler, 'RabbitMQ publish');
+    TableHandlerInstances.instance.add(new RabbitConsumeTableHandler().handler, 'RabbitMQ consume');
+    TableHandlerInstances.instance.add(new RabbitListenerTableHandler().handler, 'RabbitMQ listening');
+    TableHandlerInstances.instance.add(new SQLQueryTableHandler().handler, 'SQL query');
+    TableHandlerInstances.instance.add(new DataTableHandler().handler, 'Data manage');
+    TableHandlerInstances.instance.add(new TestDescriptionTableHandler().handler, 'Test description');
 }
 
 /**

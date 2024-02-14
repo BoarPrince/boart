@@ -16,7 +16,7 @@ export class ConfigurationChecker {
     public static checkJSONConfig(config: TestExecutionUnitConfig) {
         ObjectValidator.instance(config)
             .notNull()
-            .onlyContainsProperties(['name', 'runtime', 'context', 'groupRowDef', 'rowDef'])
+            .onlyContainsProperties(['name', 'runtime', 'context', 'groupRowDef', 'groupValidatorDef', 'rowDef'])
             // name
             .prop('name')
             .shouldString()
@@ -59,10 +59,21 @@ export class ConfigurationChecker {
             .prop('groupRowDef')
             .shouldArray('string')
             .shouldHaveValueOf(...GroupRowDefinition.keys())
-            .prop('rowDef')
+
+            // grupValidatorDef
+            .prop('groupValidatorDef')
             .shouldArray('object')
+            .child()
+            .onlyContainsProperties(['name', 'parameter'])
+            .prop('name')
+            .shouldString()
+            .prop('parameter')
+            .shouldObject()
+            .parent()
 
             // rowDef
+            .prop('rowDef')
+            .shouldArray('object')
             .child()
             .onlyContainsProperties(
                 ['action', 'contextType', 'contextProperty', 'parameterType', 'selectorType', 'validatorDef'],
@@ -78,14 +89,15 @@ export class ConfigurationChecker {
             .shouldHaveValueOf(...Object.values(SelectorType))
             .prop('contextProperty')
             .shouldString()
-            .prop('validatorDef')
-            .shouldArray('object')
 
             // rowDef / validatorDef
+            .prop('validatorDef')
+            .shouldArray('object')
             .child()
             .onlyContainsProperties(['name', 'parameter'])
             .prop('name')
             .shouldString()
-            .prop('parameter');
+            .prop('parameter')
+            .shouldObject();
     }
 }

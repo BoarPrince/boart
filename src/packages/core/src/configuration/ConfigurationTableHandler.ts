@@ -17,6 +17,7 @@ export class ConfigurationTableHandler extends TableHandlerBaseImpl<DefaultConte
      *
      */
     constructor(
+        public readonly name: string,
         private context: DefaultContext,
         private factory: RemoteFactory,
         private rowDefinitions: Array<RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>>,

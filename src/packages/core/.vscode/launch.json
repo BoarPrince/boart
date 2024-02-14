@@ -6,23 +6,23 @@
   "configurations": [
     {
       "type": "node",
-      "name": "jest-launch",
+      "name": "vscode-jest-tests.v2",
       "request": "launch",
       "args": [
+        "--coverage",
+        "--runInBand",
         "--runInBand",
         "--watchAll=false",
+        "--testNamePattern",
+        "${jest.testNamePattern}",
+        "--runTestsByPath",
         "${jest.testFile}"
       ],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "runtimeArgs": [
-        "--preserve-symlinks"
-      ],
-      "program": "${workspaceFolder}/node_modules/.bin/jest",
-      "windows": {
-        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-      }
+      // "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "program": "${workspaceFolder}/node_modules/.bin/jest"
     }
   ]
 }

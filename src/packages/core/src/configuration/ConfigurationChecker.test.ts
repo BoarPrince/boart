@@ -22,6 +22,12 @@ const defaultConfig: TestExecutionUnitConfig = {
         }
     },
     groupRowDef: ['group-1', 'group-2'],
+    groupValidatorDef: [
+        {
+            name: '-group-name-',
+            parameter: {}
+        }
+    ],
     rowDef: [
         {
             action: '-key-',
@@ -100,7 +106,7 @@ describe('wrong root', () => {
         delete config.name;
 
         expect(() => ConfigurationChecker.checkJSONConfig(config)).toThrow(
-            `must contain property 'name', but only contains 'context, groupRowDef, rowDef, runtime'`
+            `path: $\nmust contain property 'name', but only contains 'context, groupRowDef, groupValidatorDef, rowDef, runtime'`
         );
     });
 

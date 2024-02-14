@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 // child.js
 process.on('message', (message) => {
     try {
@@ -17,18 +19,124 @@ function listening(message) {
     // throw new Error('etwas passiert');
 
     // textChange('abcdefghijklmnopqrstuvwqyz');
+    // textChangeLeftRigh('abcdefghijklmnopqrstuvwqyz');
     // fizzBuzz(20);
     // checkPalindrom('ottor');
+    // checkPalindrom1('otto');
     // anagram('act2', 'Cat1');
-    // findingMissingNumber(1, 2, 3, 4, 5, 6, 8);
+    // findingMissingNumber1(1, 2, 3, 4, 5, 6, 8);
     // highestProduct([1, 2, 5, -6, 3]);
     // longestSequence(100, 4, 200, 5, 1, 3, 2);
+    longestSequence1(100, 4, 200, 5, 1, 2, 3);
     // stringCompression('aabcccccaaa');
     // changeOnlyWords('hallo wie geht es dir');
     // inplaceChange([...'hallor']);
-    changeOrderOnlyText('abc!!de');
+    // changeOrderOnlyText('abc!!de');
+    // flattenArray([0, [1, 2, [3, 4, 5]]]);
+    // fibonacci(50);
+    // textChangeFromTo('abcdefghijklmnopqrstuvwqyz', 0, 5);
 
     return { hallo: 'world' };
+}
+
+/**
+ *
+ */
+function longestSequence1(...numbers) {
+    let leftNumber = numbers[0];
+    const sequenceLength = [{ length: 1 }];
+    const lengthBuffer = [];
+
+    for (let index = 1; index < numbers.length; index++) {
+        if (leftNumber === numbers[index] - 1) {
+            sequenceLength.at(-1).length++;
+        } else {
+            sequenceLength.push({ length: 1 });
+        }
+        leftNumber = numbers[index];
+    }
+
+    console.log('longest', sequenceLength.sort((a, b) => b.length - a.length)[0]);
+}
+
+function checkPalindrom1(text) {
+    const buffer = [];
+    for (let index = text.length - 1; index >= 0; index--) {
+        buffer.push(text.charAt(index));
+    }
+
+    if (text === buffer.join('')) {
+        console.log('palindrom', 'yes');
+    } else {
+        console.log('palindrom', 'no');
+    }
+}
+
+function anagram1(text1, text2) {
+    if (text1.length != text2.length) {
+        console.log('no anagram', text1, text2);
+    }
+
+    const text1Buffer1 = text1.split('').sort().join('');
+    const text1Buffer2 = text2.split('').sort().join('');
+
+    console.log('anagram', text1Buffer1 === text1Buffer2, text1, text2);
+}
+
+/**
+ *
+ */
+function textChangeLeftRigh(text) {
+    let leftIndex = 0;
+    let rightIndex = text.length - 1;
+    const buffer = text.split('');
+
+    while (leftIndex < rightIndex) {
+        const char = buffer[leftIndex];
+        buffer[leftIndex] = buffer[rightIndex];
+        buffer[rightIndex] = char;
+        leftIndex++;
+        rightIndex--;
+    }
+
+    console.log('textChangeLeftRigh', buffer.join(''));
+}
+
+/**
+ *
+ */
+function textChangeFromTo(text, from, to) {
+    const buffer = text.split('');
+
+    for (let index = from; index < to; index++) {
+        buffer[index] = text[to - index - 1];
+    }
+
+    console.log('text change from to', from, to, buffer.join(''));
+}
+
+/**
+ *
+ */
+function fibonacci(length) {
+    let fibonacci = [1, 1];
+    let qotient = [1];
+
+    for (let count = 0; count < length - 2; count++) {
+        fibonacci.push(fibonacci.at(-1) + fibonacci.at(-2));
+        qotient.push((fibonacci.at(-1) / fibonacci.at(-2)).toFixed(5));
+    }
+
+    console.log('fibonacci', fibonacci.join(','));
+    console.log('qotient', qotient.join(', '));
+}
+
+/**
+ *
+ */
+function flattenArray(array) {
+    const flat = (arr) => arr.reduce((a, b) => (Array.isArray(b) ? [...a, ...flat(b)] : [...a, b]), []);
+    console.log(flat(array));
 }
 
 /**
@@ -151,6 +259,17 @@ function findingMissingNumber(...numbers) {
     for (let index = 0; index < numbers.length; index++) {
         if (numbers[index] !== index + 1) {
             console.log('missing number is ', index + 1);
+            return;
+        }
+    }
+}
+
+function findingMissingNumber1(...numbers) {
+    for (let index = 1; index < numbers.length; index++) {
+        const number = numbers[index - 1];
+        const nextNumber = numbers[index];
+        if (number !== nextNumber - 1) {
+            console.log('missing', number + 1);
             return;
         }
     }
