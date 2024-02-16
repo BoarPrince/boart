@@ -87,6 +87,13 @@ export class EnvLoader {
     /**
      *
      */
+    public getExtensionDir(): string {
+        return this.get('environment_extension_dir');
+    }
+
+    /**
+     *
+     */
     public static get projectRoot(): string {
         const path = process.env.environment_project_root || '.';
         if (fsPath.isAbsolute(path)) {
