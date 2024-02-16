@@ -22,10 +22,11 @@ export class ObjectArrayValidator implements IObjectValidator {
      */
     constructor(
         private parentValidator: IBaseValidator,
-        objArr: Array<unknown>
+        objArr: Array<unknown>,
+        private basePath: string
     ) {
         this.objects = objArr as Array<object>;
-        this._path = this.parentValidator?.path() || ['$'];
+        this._path = this.parentValidator?.path() || [this.basePath || '$'];
         assert.ok(
             Array.isArray(this.objects),
             `path: ${this.path().join('.')}\nmust be an array but is => ${JSON.stringify(this.objects, null, '  ')}`

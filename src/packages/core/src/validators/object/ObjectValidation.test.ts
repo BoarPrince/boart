@@ -61,7 +61,7 @@ describe('simple object validation', () => {
      */
 
     test('should not array', () => {
-        expect(() => ObjectValidator.instance({}).shouldArray()).toThrow('path: $\nobject is not of type array => {}');
+        expect(() => ObjectValidator.instance({}).shouldArray()).toThrow(`path: '$'. Is not of type array<any>, it's: '{}'`);
     });
 
     /**
@@ -129,6 +129,15 @@ describe('simple object validation', () => {
                 e: 5
             }).onlyContainsProperties(['a', 'b', 'c'], ['d'])
         ).toThrow(`path: $\nproperty 'e' not known. Allowed are 'a, b, c, d'`);
+    });
+
+    /**
+     *
+     */
+    test('base path must be used', () => {
+        expect(() => ObjectValidator.instance({}, null, '$.base.path').shouldArray()).toThrow(
+            `path: '$.base.path'. Is not of type array<any>, it's: '{}'`
+        );
     });
 });
 

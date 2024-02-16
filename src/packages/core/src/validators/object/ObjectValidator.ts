@@ -20,18 +20,19 @@ export class ObjectValidator implements IObjectValidator {
      */
     private constructor(
         private parentValidator: IBaseValidator,
-        private value: object | string
+        private value: object | string,
+        private basePath: string
     ) {
-        this._path = [...(parentValidator?.path() || ['$'])];
+        this._path = [...(parentValidator?.path() || [this.basePath || '$'])];
     }
 
     /**
      *
      */
-    public static instance(obj: object | string, parentValidator?: IBaseValidator): IObjectValidator {
+    public static instance(obj: object | string, parentValidator?: IBaseValidator, basePath?: string): IObjectValidator {
         return Array.isArray(obj) //
-            ? new ObjectArrayValidator(parentValidator, obj)
-            : new ObjectValidator(parentValidator, obj);
+            ? new ObjectArrayValidator(parentValidator, obj, basePath)
+            : new ObjectValidator(parentValidator, obj, basePath);
     }
 
     /**
@@ -90,7 +91,7 @@ export class ObjectValidator implements IObjectValidator {
     public shouldArray(type?: 'string' | 'boolean' | 'unknown'): IObjectValidator {
         assert.ok(
             Array.isArray(this.value),
-            `path: ${this.path().join('.')}\nobject is not of type array => ${JSON.stringify(this.value, null, '    ')}`
+            `path: '${this.path().join('.')}'. Is not of type array<${type || 'any'}>, it's: '${JSON.stringify(this.value, null, '    ')}'`
         );
         ObjectValidator.shouldArray(this.value, this.path(), type);
 
