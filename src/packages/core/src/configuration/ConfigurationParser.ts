@@ -1,5 +1,4 @@
 import fs from 'fs';
-import fsPath from 'path';
 
 import { ContextConfig } from './schema/ContextConfig';
 import { RowDefinition as CoreRowDefinition } from '../table/RowDefinition';
@@ -16,34 +15,13 @@ import { ConfigurationTableHandler } from './ConfigurationTableHandler';
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
 import { TableHandlerInstances } from '../table/TableHandlerInstances';
+import { EnvLoader } from '../common/EnvLoader';
+import { ConfigurationLookup } from './ConfigurationLookup';
 
 /**
  *
  */
 export class ConfigurationParser {
-    private readonly fileEnding = '.bdef';
-
-    /**
-     *
-     */
-    private lookup(path: string): Array<string> {
-        const foundDefinitions = new Array<string>();
-        const files = fs.readdirSync(path);
-
-        for (const file of files) {
-            const filePath = fsPath.join(path, file);
-            const fileStat = fs.statSync(filePath);
-
-            if (fileStat.isDirectory()) {
-                foundDefinitions.concat(this.lookup(filePath));
-            } else if (file.endsWith(this.fileEnding)) {
-                foundDefinitions.push(file);
-            }
-        }
-
-        return foundDefinitions;
-    }
-
     /**
      *
      */
@@ -73,13 +51,13 @@ export class ConfigurationParser {
      *
      */
     private parseValidator(validatorConfig: Array<ValidatorConfig>): Array<RowValidator> {
-        return (validatorConfig || []).map((config) => {
+        return (validatorConfig || []).map((config, index) => {
             const factory = ValidatorFactoryManager.instance.getRowFactory(config.name);
             try {
                 factory.check(config.parameter);
             } catch (error) {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                throw new Error(`cannot parse parameter of validator ${config.name}\n${error.message}`);
+                throw new Error(`Cannot parse validator validatorDef[name = '${config.name}', index:${index}].parameter\n${error.message}`);
             }
             return factory.create(config.parameter) as RowValidator;
         });
@@ -93,19 +71,34 @@ export class ConfigurationParser {
         rowDefinitions: RowDefinitionConfig[],
         context: DefaultContext
     ): Array<CoreRowDefinition<DefaultContext, DefaultRowType<DefaultContext>>> {
-        const defs = rowDefinitions.map((rowDef: RowDefinitionConfig) => {
+        const defs = rowDefinitions.map((rowDef: RowDefinitionConfig, index) => {
             try {
                 const key = Symbol(rowDef.action);
 
                 const [firstLevel, secondLevel] = rowDef.contextProperty.split('.');
 
                 if (context[firstLevel] === undefined) {
-                    throw new Error(`reading propertyDef: context './${firstLevel}' does not exists`);
+                    throw new Error(
+                        `Reading $.rowDef[${index}].contextPropery: context '${
+                            rowDef.contextProperty
+                        }' does not exists. Available: ${Object.keys(context)
+                            .map((c) => `'${c}'`)
+                            .join(', ')}`
+                    );
                 }
 
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 if (secondLevel && context[firstLevel][secondLevel] === undefined) {
-                    throw new Error(`reading propertyDef: context '.${firstLevel}.${secondLevel}' does not exists`);
+                    throw new Error(
+                        `Reading $.rowDef[${index}].contextPropery: context '${
+                            rowDef.contextProperty
+                        }' does not exists. Available: ${Object.keys(
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                            context[firstLevel]
+                        )
+                            .map((c) => `'${firstLevel}.${c}'`)
+                            .join(', ')}`
+                    );
                 }
 
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -126,8 +119,10 @@ export class ConfigurationParser {
                     validators: this.parseValidator(rowDef.validatorDef)
                 });
             } catch (error) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                throw new Error(`problem while reading configuration of key ${rowDef.action}\n${error.message}`);
+                throw new Error(
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    `Problem while reading configuration of $.rowDef[action:'${rowDef.action}', index:${index}]. ${error.message}`
+                );
             }
         });
 
@@ -140,7 +135,12 @@ export class ConfigurationParser {
     private parseMainExecutionUnit(config: TestExecutionUnitConfig): RemoteFactory {
         const factory = RemoteFactoryHandler.instance.getFactory(config.runtime.type);
         factory.init(config.name, config.runtime.configuration, config.runtime.startup);
-        factory.validate();
+        try {
+            factory.validate('$.runtime.configuration');
+        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            throw new Error(`Problem while runtime configuration. ${error.message}`);
+        }
         return factory;
     }
 
@@ -163,10 +163,16 @@ export class ConfigurationParser {
      *
      */
     public readDefinitions() {
-        const definitionFiles = this.lookup('');
+        const lookup = new ConfigurationLookup(EnvLoader.instance.getExtensionDir());
+        const definitionFiles = lookup.lookup();
         for (const definitionFilename of definitionFiles) {
-            const tableHandler = this.parseDefinition(definitionFilename);
-            TableHandlerInstances.instance.add(tableHandler.handler, tableHandler.name);
+            try {
+                const tableHandler = this.parseDefinition(definitionFilename);
+                TableHandlerInstances.instance.add(tableHandler.handler, tableHandler.name);
+            } catch (error) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                throw new Error(`Reading boart configuration '${definitionFilename}'.\n${error.message}`);
+            }
         }
     }
 }

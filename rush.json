@@ -335,10 +335,14 @@
       "packageName": "@boart/basic",
       "projectFolder": "src/packages/basic"
     },
-    // {
-    //   "packageName": "@boart/remote",
-    //   "projectFolder": "src/packages/remote"
-    // },
+    {
+      "packageName": "@boart/remote",
+      "projectFolder": "src/packages/remote"
+    },
+    {
+      "packageName": "@boart/remote-server",
+      "projectFolder": "src/packages/remote-server"
+    },
     {
       "packageName": "@boart/test",
       "projectFolder": "src/gauge",

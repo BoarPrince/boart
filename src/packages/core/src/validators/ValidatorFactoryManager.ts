@@ -39,8 +39,19 @@ export class ValidatorFactoryManager {
      */
     public getRowFactory(name: string): ValidatorFactory {
         if (!this.factories.has(name)) {
-            throw new Error(`validator '${name}' does not exist`);
+            throw new Error(
+                `Validator '${name}' does not exist. Available validators: ${Array.from(this.factories.keys())
+                    .map((v) => `\n'${v}'`)
+                    .join(',')}`
+            );
         }
         return this.factories.get(name);
+    }
+
+    /**
+     *
+     */
+    clear(): void {
+        this.factories.clear();
     }
 }

@@ -67,8 +67,6 @@ export class ConfigurationChecker {
             .onlyContainsProperties(['name', 'parameter'])
             .prop('name')
             .shouldString()
-            .prop('parameter')
-            .shouldObject()
             .parent()
 
             // rowDef
@@ -96,8 +94,6 @@ export class ConfigurationChecker {
             .child()
             .onlyContainsProperties(['name', 'parameter'])
             .prop('name')
-            .shouldString()
-            .prop('parameter')
-            .shouldObject();
+            .shouldString();
     }
 }

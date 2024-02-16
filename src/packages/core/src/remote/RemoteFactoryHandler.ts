@@ -15,11 +15,11 @@ export class RemoteFactoryHandler {
      *
      */
     public static get instance(): RemoteFactoryHandler {
-        if (!globalThis._remoteFacotoryHandler) {
+        if (!globalThis._remoteFactoryHandler) {
             const instance = new RemoteFactoryHandler();
-            globalThis._remoteFacotoryHandler = instance;
+            globalThis._remoteFactoryHandler = instance;
         }
-        return globalThis._remoteFacotoryHandler;
+        return globalThis._remoteFactoryHandler;
     }
 
     /**
@@ -38,7 +38,7 @@ export class RemoteFactoryHandler {
      */
     public getFactory(name: string): RemoteFactory {
         if (!this.factories.has(name)) {
-            throw new Error(`remote factory '${name}' does not exist`);
+            throw new Error(`Remote proxy '${name}' does not exist. Available: '${this.keys().join(', ')}'`);
         }
         return this.factories.get(name);
     }
@@ -48,5 +48,12 @@ export class RemoteFactoryHandler {
      */
     public keys(): Array<string> {
         return Array.from(this.factories.keys());
+    }
+
+    /**
+     *
+     */
+    public clear(): void {
+        return this.factories.clear();
     }
 }

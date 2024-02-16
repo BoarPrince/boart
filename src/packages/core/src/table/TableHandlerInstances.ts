@@ -35,6 +35,9 @@ export class TableHandlerInstances {
      *
      */
     public add(tableHandler: TableHandlerGenericType, name: string): void {
+        if (this.instanceList.has(name)) {
+            throw new Error(`Command: ${name} already exists`);
+        }
         this.instanceList.set(name, tableHandler);
     }
 
@@ -43,5 +46,12 @@ export class TableHandlerInstances {
      */
     public get values(): IterableIterator<[string, TableHandlerGenericType]> {
         return this.instanceList.entries();
+    }
+
+    /**
+     *
+     */
+    public clear(): void {
+        this.instanceList.clear();
     }
 }

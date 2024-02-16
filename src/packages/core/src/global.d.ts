@@ -9,6 +9,7 @@ import { RemoteFactoryHandler } from './remote/RemoteFactoryHandler';
 import { Context } from './store/Context';
 import { Store } from './store/Store';
 import { GroupRowDefinition } from './table/GroupRowDefinition';
+import { TableHandlerInstances } from './table/TableHandlerInstances';
 import { ValidatorFactoryManager } from './validators/ValidatorFactoryManager';
 
 declare global {
@@ -21,7 +22,8 @@ declare global {
     var _expectedOperatorInitializer: ExpectedOperatorInitializer;
     var _descriptionFileReaderInstance: DescriptionFileReader;
     var _validatorFactoryHandler: ValidatorFactoryManager;
-    var _remoteFacotoryHandler: RemoteFactoryHandler;
+    var _remoteFactoryHandler: RemoteFactoryHandler;
+    var _tableHandlerInstances: TableHandlerInstances;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     var _groupDefinitionInstance: Map<string, GroupRowDefinition<any, any>>;
 

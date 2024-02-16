@@ -17,7 +17,7 @@ export interface RemoteFactory {
      *
      * The init parameter (config) can be validated
      */
-    validate(): void;
+    validate(basePath?: string): void;
 
     /***
      * is called only once a time before the first execution unit is requrested.
