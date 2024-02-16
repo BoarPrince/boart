@@ -1,4 +1,5 @@
 import { ValidatorFactory } from './ValidatorFactory';
+import { ValidatorType } from './ValidatorType';
 
 /**
  *
@@ -37,7 +38,14 @@ export class ValidatorFactoryManager {
     /**
      *
      */
-    public getRowFactory(name: string): ValidatorFactory {
+    public addFactories(factories: Array<ValidatorFactory>): void {
+        factories.forEach((factory) => this.addFactory(factory));
+    }
+
+    /**
+     *
+     */
+    public getFactory(name: string): ValidatorFactory {
         if (!this.factories.has(name)) {
             throw new Error(
                 `Validator '${name}' does not exist. Available validators: ${Array.from(this.factories.keys())
@@ -46,6 +54,15 @@ export class ValidatorFactoryManager {
             );
         }
         return this.factories.get(name);
+    }
+
+    /**
+     *
+     */
+    public validFactoriesByType(type: ValidatorType): Array<string> {
+        return Array.from(this.factories.entries())
+            .filter((factory) => factory[1].type === type)
+            .map((factory) => factory[0]);
     }
 
     /**

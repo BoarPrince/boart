@@ -6,6 +6,7 @@ import { GroupRowDefinition } from '../table/GroupRowDefinition';
 import { RowDefinition } from '../table/RowDefinition';
 import { TableHandler } from '../table/TableHandler';
 import { TableHandlerBaseImpl } from '../table/TableHandlerBaseImpl';
+import { GroupValidator } from '../validators/GroupValidator';
 
 /**
  *
@@ -21,7 +22,8 @@ export class ConfigurationTableHandler extends TableHandlerBaseImpl<DefaultConte
         private context: DefaultContext,
         private factory: RemoteFactory,
         private rowDefinitions: Array<RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>>,
-        private groupRowDef: Array<string>
+        private groupRowDef: Array<string>,
+        private groupValidations: Array<GroupValidator>
     ) {
         super();
     }
@@ -72,6 +74,9 @@ export class ConfigurationTableHandler extends TableHandlerBaseImpl<DefaultConte
      *
      */
     protected addGroupValidation(tableHandler: TableHandler<DefaultContext, DefaultRowType<DefaultContext>>): void {
-        throw new Error('Method not implemented.');
+        for (const groupValidation of this.groupValidations) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            tableHandler.addGroupValidator(groupValidation);
+        }
     }
 }

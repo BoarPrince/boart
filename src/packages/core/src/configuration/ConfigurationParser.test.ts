@@ -13,6 +13,7 @@ import { RemoteFactoryHandler } from '../remote/RemoteFactoryHandler';
 import { RemoteFactory } from '../remote/RemoteFactory';
 import { GroupRowDefinition } from '../table/GroupRowDefinition';
 import { TableHandlerInstances } from '../table/TableHandlerInstances';
+import { ValidatorType } from '../validators/ValidatorType';
 
 /**
  *
@@ -49,8 +50,8 @@ const defaultConfig = JSON.stringify({
     groupRowDef: ['group-1', 'group-2'],
     groupValidatorDef: [
         {
-            name: '-group-name-',
-            parameter: {}
+            name: 'group-val',
+            parameter: ['para-1', 'para-2']
         }
     ],
     rowDef: [
@@ -99,7 +100,10 @@ class ValidatorFactoryMock implements ValidatorFactory {
     /**
      *
      */
-    constructor(public name) {}
+    constructor(
+        public name,
+        public type: ValidatorType
+    ) {}
 
     /**
      *
@@ -160,8 +164,9 @@ class RemoteProxyFactory implements RemoteFactory {
 let config: TestExecutionUnitConfig;
 beforeEach(() => {
     ValidatorFactoryManager.instance.clear();
-    ValidatorFactoryManager.instance.addFactory(new ValidatorFactoryMock('validator-1'));
-    ValidatorFactoryManager.instance.addFactory(new ValidatorFactoryMock('validator-2'));
+    ValidatorFactoryManager.instance.addFactory(new ValidatorFactoryMock('validator-1', ValidatorType.ROW));
+    ValidatorFactoryManager.instance.addFactory(new ValidatorFactoryMock('validator-2', ValidatorType.ROW));
+    ValidatorFactoryManager.instance.addFactory(new ValidatorFactoryMock('group-val', ValidatorType.GROUP));
 
     RemoteFactoryHandler.instance.clear();
     RemoteFactoryHandler.instance.addFactory('grpc', new RemoteProxyFactory());
@@ -222,6 +227,19 @@ describe('configurationParser', () => {
     /**
      *
      */
+    test('validator must have the correct type', () => {
+        config.rowDef[0].validatorDef[0].name = 'group-val';
+        jest.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(config));
+
+        const sut = new ConfigurationParser();
+        expect(() => sut.readDefinitions()).toThrow(
+            `Problem while reading configuration of $.rowDef[action:'-key-', index:0]. Incorrect validator type validatorDef[name = 'group-val', index:0], must be of type 'row'. Available:\n - 'validator-1',\n - 'validator-2'`
+        );
+    });
+
+    /**
+     *
+     */
     test('validator parameter must be correct', () => {
         config.rowDef[0].validatorDef[0].parameter = {};
         jest.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(config));
@@ -271,7 +289,7 @@ describe('configurationParser', () => {
             `Reading boart configuration 'extensions/text-extension/boart.json'.\nCommand: -rest call- already exists`
         );
 
-        const tableHandlers = Array.from(TableHandlerInstances.instance.values).map(([name, _]) => name);
+        const tableHandlers = Array.from(TableHandlerInstances.instance.values).map(([name]) => name);
         expect(tableHandlers).toStrictEqual(['-rest call-']);
     });
 
@@ -284,7 +302,7 @@ describe('configurationParser', () => {
         const sut = new ConfigurationParser();
         sut.readDefinitions();
 
-        const tableHandlers = Array.from(TableHandlerInstances.instance.values).map(([name, _]) => name);
+        const tableHandlers = Array.from(TableHandlerInstances.instance.values).map(([name]) => name);
         expect(tableHandlers).toStrictEqual(['-rest call-']);
     });
 });

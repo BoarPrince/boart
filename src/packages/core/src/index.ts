@@ -77,6 +77,7 @@ import { DefaultContext, DefaultExecutionContext, DefaultPreExecutionContext } f
 import { RemoteFactory } from './remote/RemoteFactory';
 import { RemoteFactoryHandler } from './remote/RemoteFactoryHandler';
 import { RuntimeStartUp } from './configuration/schema/RuntimeStartUp';
+import { ValidatorType } from './validators/ValidatorType';
 
 /**
  *
@@ -160,6 +161,7 @@ export {
     UrlLoader,
     ValidationHandler,
     ValidatorFactory,
+    ValidatorType,
     value,
     ValueReplaceArg as ReplaceArg,
     ValueReplaceArg,

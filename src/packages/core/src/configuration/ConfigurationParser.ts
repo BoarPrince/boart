@@ -17,6 +17,8 @@ import { DefaultRowType } from '../default/DefaultRowType';
 import { TableHandlerInstances } from '../table/TableHandlerInstances';
 import { EnvLoader } from '../common/EnvLoader';
 import { ConfigurationLookup } from './ConfigurationLookup';
+import { GroupValidator } from '../validators/GroupValidator';
+import { ValidatorType } from '../validators/ValidatorType';
 
 /**
  *
@@ -50,15 +52,27 @@ export class ConfigurationParser {
     /**
      *
      */
-    private parseValidator(validatorConfig: Array<ValidatorConfig>): Array<RowValidator> {
+    private parseValidator(validatorConfig: Array<ValidatorConfig>, type: ValidatorType): Array<RowValidator> | Array<GroupValidator> {
         return (validatorConfig || []).map((config, index) => {
-            const factory = ValidatorFactoryManager.instance.getRowFactory(config.name);
+            const factory = ValidatorFactoryManager.instance.getFactory(config.name);
             try {
                 factory.check(config.parameter);
             } catch (error) {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 throw new Error(`Cannot parse validator validatorDef[name = '${config.name}', index:${index}].parameter\n${error.message}`);
             }
+
+            if (factory.type !== type) {
+                throw new Error(
+                    `Incorrect validator type validatorDef[name = '${
+                        config.name
+                    }', index:${index}], must be of type '${type}'. Available:${ValidatorFactoryManager.instance
+                        .validFactoriesByType(type)
+                        .map((f) => `\n - '${f}'`)
+                        .join(',')}`
+                );
+            }
+
             return factory.create(config.parameter) as RowValidator;
         });
     }
@@ -116,7 +130,7 @@ export class ConfigurationParser {
                     defaultValue: rowDef.defaultValue,
                     defaultValueColumn: rowDef.defaultValue ? Symbol('value') : undefined,
                     executionUnit,
-                    validators: this.parseValidator(rowDef.validatorDef)
+                    validators: this.parseValidator(rowDef.validatorDef, ValidatorType.ROW) as Array<RowValidator>
                 });
             } catch (error) {
                 throw new Error(
@@ -154,9 +168,17 @@ export class ConfigurationParser {
 
         const context = this.parseConfig(config.context);
         const rowDefinitions = this.parseRowDefinition(config.rowDef, context);
+        const groupValidations = this.parseValidator(config.groupValidatorDef, ValidatorType.GROUP) as Array<GroupValidator>;
         const mainExecutionUnitFactory = this.parseMainExecutionUnit(config);
 
-        return new ConfigurationTableHandler(config.name, context, mainExecutionUnitFactory, rowDefinitions, config.groupRowDef);
+        return new ConfigurationTableHandler(
+            config.name,
+            context,
+            mainExecutionUnitFactory,
+            rowDefinitions,
+            config.groupRowDef,
+            groupValidations
+        );
     }
 
     /**
