@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory } from '@boart/core';
+import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory, ValidatorType } from '@boart/core';
 
 /**
  *
@@ -25,6 +25,7 @@ export class DependsOnValueValidator implements RowValidator {
     public static factory(): ValidatorFactory {
         return {
             name: 'DependsOnValueValidator',
+            type: ValidatorType.ROW,
 
             /**
              *

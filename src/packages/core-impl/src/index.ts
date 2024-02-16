@@ -1,4 +1,4 @@
-import { GeneratorHandler, TableHandlerInstances, ValueReplacerHandler } from '@boart/core';
+import { GeneratorHandler, ValidatorFactoryManager, ValueReplacerHandler } from '@boart/core';
 import { AnyContext } from './AnyContext';
 import { PDFContent } from './data/PDFContent';
 import { ExpectedDataExecutinoUnit } from './execution/expected/ExecutionUnit.ExpectedData';
@@ -43,6 +43,8 @@ import { GenerateReplacer } from './value/GenerateReplacer';
 import { ReferenceReplacer } from './value/ReferenceReplacer';
 import { StoreReplacer } from './value/StoreReplacer';
 import { TextReplacer } from './value/TextReplacer';
+import { DataScopeValidator } from './validators/DataScopeValidator';
+import { QualifierParaValidator } from './validators/QualifierParaValidator';
 
 /**
  *
@@ -114,6 +116,20 @@ export default function initialize(): void {
     ValueReplacerHandler.instance.add('ref', new ReferenceReplacer());
     ValueReplacerHandler.instance.add('context', new ContextReplacer());
     ValueReplacerHandler.instance.add('file', new FileReplacer());
+
+    ValidatorFactoryManager.instance.addFactories([
+        BoolValidator.factory(),
+        DataScopeValidator.factory(),
+        DependsOnValidator.factory(),
+        IntValidator.factory(),
+        QualifierParaValidator.factory(),
+        QualifierValidator.factory(),
+        RequiredValidator.factory(),
+        UniqueValidator.factory(),
+        ValueRequiredValidator.factory(),
+        ValueValidator.factory(),
+        XORValidator.factory()
+    ]);
 
     GeneratorHandler.instance.addItems([
         new CharGenerator(),

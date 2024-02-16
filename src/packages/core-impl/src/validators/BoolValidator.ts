@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory } from '@boart/core';
+import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory, ValidatorType } from '@boart/core';
 
 /**
  *
@@ -12,6 +12,7 @@ export class BoolValidator implements RowValidator {
     public static factory(): ValidatorFactory {
         return {
             name: 'BoolValidator',
+            type: ValidatorType.ROW,
 
             /**
              *

@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory } from '@boart/core';
+import { BaseRowMetaDefinition, ObjectValidator, RowValidator, ValidatorFactory, ValidatorType } from '@boart/core';
 
 /**
  * allowd datascopes can also be null or empty string if no parameter is possible
@@ -12,6 +12,7 @@ export class DataScopeValidator implements RowValidator {
     public static factory(): ValidatorFactory {
         return {
             name: 'DataScopeValidator',
+            type: ValidatorType.ROW,
 
             /**
              *

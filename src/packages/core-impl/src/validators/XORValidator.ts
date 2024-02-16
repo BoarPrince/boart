@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, GroupValidator, ObjectValidator, ValidatorFactory } from '@boart/core';
+import { BaseRowMetaDefinition, GroupValidator, ObjectValidator, ValidatorFactory, ValidatorType } from '@boart/core';
 
 /**
  *
@@ -20,6 +20,7 @@ export class XORValidator implements GroupValidator {
     public static factory(): ValidatorFactory {
         return {
             name: 'XORValidator',
+            type: ValidatorType.GROUP,
 
             /**
              *

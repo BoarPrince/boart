@@ -1,4 +1,4 @@
-import { BaseRowMetaDefinition, GroupValidator, ObjectValidator, ValidatorFactory } from '@boart/core';
+import { BaseRowMetaDefinition, GroupValidator, ObjectValidator, ValidatorFactory, ValidatorType } from '@boart/core';
 
 /**
  * Key must occur
@@ -15,6 +15,7 @@ export class RequiredValidator implements GroupValidator {
     public static factory(): ValidatorFactory {
         return {
             name: 'RequiredValidator',
+            type: ValidatorType.GROUP,
 
             /**
              *
