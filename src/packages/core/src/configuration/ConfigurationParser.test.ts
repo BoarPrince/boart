@@ -14,6 +14,12 @@ import { RemoteFactory } from '../remote/RemoteFactory';
 import { GroupRowDefinition } from '../table/GroupRowDefinition';
 import { TableHandlerInstances } from '../table/TableHandlerInstances';
 import { ValidatorType } from '../validators/ValidatorType';
+import { MarkdownTableReader } from '../table/MarkdownTableReader';
+import { ExecutionUnit } from '../execution/ExecutionUnit';
+import { DefaultContext } from '../default/DefaultExecutionContext';
+import { DefaultRowType } from '../default/DefaultRowType';
+import { TextContent } from '../data/TextContent';
+import { DirectExecutionUnitProxyFactory } from './DirectExecutionUnitProxyFactory';
 
 /**
  *
@@ -171,6 +177,7 @@ beforeEach(() => {
     RemoteFactoryHandler.instance.clear();
     RemoteFactoryHandler.instance.addFactory('grpc', new RemoteProxyFactory());
     RemoteFactoryHandler.instance.addFactory('node-fork', new RemoteProxyFactory());
+    RemoteFactoryHandler.instance.addFactory('direct', new DirectExecutionUnitProxyFactory());
 
     GroupRowDefinition.getInstance('group-1').addGroupValidation(null);
     GroupRowDefinition.getInstance('group-2').addGroupValidation(null);
@@ -259,7 +266,7 @@ describe('configurationParser', () => {
 
         const sut = new ConfigurationParser();
         expect(() => sut.readDefinitions()).toThrow(
-            `Reading boart configuration 'extensions/text-extension/boart.json'.\npath: $.groupRowDef.0\nvalue 'group-x' is not allowd for property 'groupRowDef'. Allowed values are => 'group-1, group-2'`
+            `Reading boart configuration 'extensions/text-extension/boart.json'.\ngroupRowDef: 'group-x' is not a valid group row definition. Available:\n - 'group-1',\n - 'group-2'`
         );
     });
 
@@ -304,5 +311,124 @@ describe('configurationParser', () => {
 
         const tableHandlers = Array.from(TableHandlerInstances.instance.values).map(([name]) => name);
         expect(tableHandlers).toStrictEqual(['-rest call-']);
+    });
+});
+
+/**
+ *
+ */
+describe('direct configuration', () => {
+    /**
+     *
+     */
+    class MockExecutionUnit implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
+        key = Symbol('test call');
+
+        /**
+         *
+         */
+        execute(context: DefaultContext): void | Promise<void> {
+            context.execution.data = new TextContent(`config.conf: ${context.config['conf']}`);
+        }
+    }
+
+    /**
+     *
+     */
+    let executionConfig: TestExecutionUnitConfig;
+    beforeEach(() => {
+        executionConfig = JSON.parse(
+            JSON.stringify({
+                name: 'test call',
+                context: {
+                    config: {
+                        conf: ''
+                    },
+                    pre: {},
+                    execution: {
+                        data: {},
+                        transformed: {},
+                        header: {}
+                    }
+                },
+                groupRowDef: [],
+                groupValidatorDef: [],
+                rowDef: [
+                    {
+                        action: 'set-conf',
+                        contextType: TableRowType.Configuration,
+                        contextProperty: 'config.conf',
+                        parameterType: ParaType.True,
+                        selectorType: SelectorType.False,
+                        validatorDef: [],
+                        defaultValue: ''
+                    }
+                ],
+                runtime: {
+                    type: 'direct',
+                    startup: RuntimeStartUp.EACH,
+                    configuration: null
+                }
+            })
+        );
+        executionConfig.runtime.configuration = new MockExecutionUnit();
+    });
+
+    /**
+     *
+     */
+    test('one definition', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `| action   | value |
+             |----------|-------|
+             | set-conf | xxx   |`
+        );
+
+        const sut = new ConfigurationParser();
+        const handler = sut.parseDefinition(executionConfig).handler;
+        await handler.process(tableDef);
+
+        const context = handler.getExecutionEngine().context;
+        expect(context.execution.data.valueOf()).toBe('config.conf: xxx');
+    });
+
+    /**
+     *
+     */
+    test('two definitions', async () => {
+        executionConfig.rowDef.push({
+            action: 'set-config-2',
+            contextType: TableRowType.Configuration,
+            contextProperty: 'config.conf2',
+            parameterType: ParaType.True,
+            selectorType: SelectorType.False,
+            validatorDef: [],
+            defaultValue: ''
+        });
+
+        Object.defineProperty(executionConfig.context.config, 'conf2', {
+            writable: true,
+            value: ''
+        });
+
+        const executionUnit = new MockExecutionUnit();
+        executionConfig.runtime.configuration = executionUnit;
+        executionUnit.execute = (context: DefaultContext) => {
+            context.execution.data = new TextContent(`config.conf: ${context.config['conf']}, config.conf2: ${context.config['conf2']}`);
+        };
+
+        const tableDef = MarkdownTableReader.convert(
+            `| action       | value |
+             |--------------|-------|
+             | set-config   | xxx   |
+             | set-config-2 | yyy   |`
+        );
+
+        const sut = new ConfigurationParser();
+        const handler = sut.parseDefinition(executionConfig).handler;
+        await handler.process(tableDef);
+
+        const context = handler.getExecutionEngine().context;
+        expect(context.execution.data.valueOf()).toBe('config.conf: xxx, config.conf2: yyy');
     });
 });

@@ -24,6 +24,7 @@ declare global {
     var _validatorFactoryHandler: ValidatorFactoryManager;
     var _remoteFactoryHandler: RemoteFactoryHandler;
     var _tableHandlerInstances: TableHandlerInstances;
+    var _coreInitialized: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     var _groupDefinitionInstance: Map<string, GroupRowDefinition<any, any>>;
 

@@ -8,7 +8,6 @@ import { DefaultPropertySetterExecutionUnit } from '../default/DefaultPropertySe
 import { RowValidator } from '../validators/RowValidator';
 import { ValidatorFactoryManager } from '../validators/ValidatorFactoryManager';
 import { ValidatorConfig } from './schema/ValidatorConfig';
-import { ConfigurationChecker } from './ConfigurationChecker';
 import { RemoteFactory } from '../remote/RemoteFactory';
 import { RemoteFactoryHandler } from '../remote/RemoteFactoryHandler';
 import { ConfigurationTableHandler } from './ConfigurationTableHandler';
@@ -19,6 +18,7 @@ import { EnvLoader } from '../common/EnvLoader';
 import { ConfigurationLookup } from './ConfigurationLookup';
 import { GroupValidator } from '../validators/GroupValidator';
 import { ValidatorType } from '../validators/ValidatorType';
+import { GroupRowDefinition } from '../table/GroupRowDefinition';
 
 /**
  *
@@ -161,24 +161,42 @@ export class ConfigurationParser {
     /**
      *
      */
-    private parseDefinition(configFilename: string): ConfigurationTableHandler {
-        const content = fs.readFileSync(configFilename, 'utf-8');
-        const config = JSON.parse(content) as TestExecutionUnitConfig;
-        ConfigurationChecker.checkJSONConfig(config);
+    private readDefinition(configFileName: string): TestExecutionUnitConfig {
+        const content = fs.readFileSync(configFileName, 'utf-8');
+        return JSON.parse(content) as TestExecutionUnitConfig;
+    }
+
+    /**
+     *
+     */
+    private groupRowDef(groupRows: Array<string>): Array<string> {
+        for (const groupRow of groupRows) {
+            if (!GroupRowDefinition.contains(groupRow)) {
+                throw new Error(
+                    `groupRowDef: '${groupRow}' is not a valid group row definition. Available:\n${GroupRowDefinition.keys()
+                        .map((g) => ` - '${g}'`)
+                        .join(',\n')}`
+                );
+            }
+        }
+
+        return groupRows;
+    }
+
+    /**
+     *
+     */
+    public parseDefinition(configOrFileName: TestExecutionUnitConfig | string): ConfigurationTableHandler {
+        const config: TestExecutionUnitConfig =
+            typeof configOrFileName === 'string' ? this.readDefinition(configOrFileName) : configOrFileName;
 
         const context = this.parseConfig(config.context);
         const rowDefinitions = this.parseRowDefinition(config.rowDef, context);
         const groupValidations = this.parseValidator(config.groupValidatorDef, ValidatorType.GROUP) as Array<GroupValidator>;
         const mainExecutionUnitFactory = this.parseMainExecutionUnit(config);
+        const groupRows = this.groupRowDef(config.groupRowDef);
 
-        return new ConfigurationTableHandler(
-            config.name,
-            context,
-            mainExecutionUnitFactory,
-            rowDefinitions,
-            config.groupRowDef,
-            groupValidations
-        );
+        return new ConfigurationTableHandler(config.name, context, mainExecutionUnitFactory, rowDefinitions, groupRows, groupValidations);
     }
 
     /**

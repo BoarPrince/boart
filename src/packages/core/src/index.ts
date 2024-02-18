@@ -78,6 +78,7 @@ import { RemoteFactory } from './remote/RemoteFactory';
 import { RemoteFactoryHandler } from './remote/RemoteFactoryHandler';
 import { RuntimeStartUp } from './configuration/schema/RuntimeStartUp';
 import { ValidatorType } from './validators/ValidatorType';
+import { DirectExecutionUnitProxyFactory } from './configuration/DirectExecutionUnitProxyFactory';
 
 /**
  *
@@ -171,3 +172,20 @@ export {
     ValidatorFactoryManager,
     VariableParser
 };
+
+/**
+ *
+ */
+export default function initialize(): void {
+    if (globalThis._coreInitialized) {
+        // call initialize only once a time
+        return;
+    } else {
+        globalThis._coreInitialized = true;
+    }
+
+    RemoteFactoryHandler.instance.addFactory('direct', new DirectExecutionUnitProxyFactory());
+}
+
+// eslint-disable-next-line jest/require-hook
+(() => initialize())();
