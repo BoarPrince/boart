@@ -1,5 +1,5 @@
 import { BaseRuntimeContext } from './BaseRuntimeContext';
-import { RuntimeResultContext } from './RuntimeContext';
+import { RuntimeResultContext } from './RuntimeResultContext';
 
 /**
  *

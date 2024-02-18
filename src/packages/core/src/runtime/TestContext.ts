@@ -1,5 +1,5 @@
 import { BaseRuntimeContext } from './BaseRuntimeContext';
-import { RuntimeResultContext } from './RuntimeContext';
+import { RuntimeResultContext } from './RuntimeResultContext';
 import { RuntimePriority } from './RuntimePriority';
 import { StepContext } from './StepContext';
 

@@ -7,8 +7,8 @@ import { EnvLoader } from '../common/EnvLoader';
 import { Timer } from '../common/Timer';
 
 import { LocalContext } from './LocalContext';
-import { RuntimeResultContext } from './RuntimeContext';
-import { RuntimeContext } from './RuntimeContext.1';
+import { RuntimeResultContext } from './RuntimeResultContext';
+import { RuntimeContext } from './RuntimeContext';
 import { StepContext } from './StepContext';
 import { TestContext } from './TestContext';
 

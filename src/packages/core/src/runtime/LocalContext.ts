@@ -1,5 +1,5 @@
 import { TestContext } from './TestContext';
-import { RuntimeResultContext } from './RuntimeContext';
+import { RuntimeResultContext } from './RuntimeResultContext';
 import { BaseRuntimeContext } from './BaseRuntimeContext';
 
 /**
