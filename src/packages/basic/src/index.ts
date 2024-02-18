@@ -1,6 +1,5 @@
 import { Runtime, TableHandlerInstances } from '@boart/core';
 import { LocalReport, ProtocolGenerator, StepReport, TestReport } from '@boart/protocol';
-import core_impl_initialize from '@boart/core-impl';
 import remote_server_initialize from '@boart/remote-server';
 
 import DataTableHandler from './data/DataTableHandler';
@@ -16,7 +15,7 @@ import TestDescriptionTableHandler from './testDescription/TestDescriptionTableH
 /**
  *
  */
-export function basicInitialize(): void {
+export function initialized(): void {
     if (globalThis.basicInitialized) {
         // call initialize only once a time
         return;
@@ -28,15 +27,16 @@ export function basicInitialize(): void {
     Runtime.instance.stepRuntime.onClear().subscribe(() => StepReport.instance.clear());
     Runtime.instance.testRuntime.onEnd().subscribe(() => TestReport.instance.report());
     Runtime.instance.localRuntime.onEnd().subscribe(() => LocalReport.instance.report());
+
     Runtime.instance.runtime.onStart().subscribe(() => {
         ProtocolGenerator.cleanReportPath();
     });
+
     Runtime.instance.runtime.onEnd().subscribe(() => {
         Runtime.instance.save();
         new ProtocolGenerator().generate();
     });
 
-    core_impl_initialize();
     remote_server_initialize();
 
     TableHandlerInstances.instance.add(new RestCallTableHandler().handler, 'Rest call');
@@ -53,4 +53,5 @@ export function basicInitialize(): void {
 /**
  *
  */
-basicInitialize();
+// eslint-disable-next-line jest/require-hook
+(() => initialized())();

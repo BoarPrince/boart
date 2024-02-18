@@ -99,11 +99,11 @@ export {
  *
  */
 export default function initialize(): void {
-    if (globalThis.remoteServerInitialized) {
+    if (globalThis._coreImplInitialized) {
         // call initialize only once a time
         return;
     } else {
-        globalThis.remoteServerInitialized = true;
+        globalThis._coreImplInitialized = true;
     }
 
     // initialize
@@ -144,3 +144,6 @@ export default function initialize(): void {
         new UUIDGenerator()
     ]);
 }
+
+// eslint-disable-next-line jest/require-hook
+(() => initialize())();

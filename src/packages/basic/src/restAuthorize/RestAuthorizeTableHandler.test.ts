@@ -5,7 +5,7 @@ import { MarkdownTableReader, Runtime, StepContext, Store, StoreMap } from '@boa
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
 import RestAuthorizeTableHandler from './RestAuthorizeTableHandler';
-import { basicInitialize } from '..';
+import { initialized } from '..';
 
 const sut = new RestAuthorizeTableHandler();
 
@@ -49,7 +49,7 @@ jest.mock('fs');
  *
  */
 beforeAll(() => {
-    basicInitialize();
+    initialized();
 });
 
 /**

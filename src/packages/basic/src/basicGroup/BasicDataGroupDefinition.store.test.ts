@@ -21,7 +21,7 @@ import {
 } from '@boart/core';
 import BasicDataGroupDefinition from './BasicDataGroupDefinition';
 import BasicGroupDefinition from './BasicGroupDefinition';
-import { basicInitialize } from '..';
+import { initialized } from '..';
 
 /**
  *
@@ -137,7 +137,7 @@ const sut = new MockTableHandler();
  *
  */
 beforeAll(() => {
-    basicInitialize();
+    initialized();
 });
 
 /**

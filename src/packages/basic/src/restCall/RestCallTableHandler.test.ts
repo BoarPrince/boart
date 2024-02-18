@@ -4,7 +4,7 @@ import { DataContent, MarkdownTableReader, Runtime, StepContext, Store, StoreMap
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
 import RestCallTableHandler from './RestCallTableHandler';
-import { basicInitialize } from '..';
+import { initialized } from '..';
 
 fetchMock.enableMocks();
 const sut = new RestCallTableHandler();
@@ -49,7 +49,7 @@ jest.mock('fs');
  *
  */
 beforeAll(() => {
-    basicInitialize();
+    initialized();
 });
 
 /**

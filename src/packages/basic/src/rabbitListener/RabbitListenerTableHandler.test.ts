@@ -18,7 +18,7 @@ import {
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution/src/index.mock';
 import { StepReport } from '@boart/protocol';
 import RabbitListenerTableHandler from './RabbitListenerTableHandler';
-import { basicInitialize } from '..';
+import { initialized } from '..';
 
 const sut = new RabbitListenerTableHandler();
 
@@ -67,7 +67,7 @@ jest.mock('amqplib', () => {
  *
  */
 beforeAll(() => {
-    basicInitialize();
+    initialized();
 });
 
 /**

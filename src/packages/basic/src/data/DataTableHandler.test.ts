@@ -4,7 +4,7 @@ import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, StepContext
 import { StepReport } from '@boart/protocol';
 import fetchMock from 'jest-fetch-mock';
 import DataTableHandler from './DataTableHandler';
-import { basicInitialize } from '..';
+import { initialized } from '..';
 
 // eslint-disable-next-line jest/require-hook
 fetchMock.enableMocks();
@@ -70,7 +70,7 @@ jest.mock('fs');
  *
  */
 beforeAll(() => {
-    basicInitialize();
+    initialized();
 });
 
 /**
