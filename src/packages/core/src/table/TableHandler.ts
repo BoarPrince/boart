@@ -4,7 +4,7 @@ import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionEngine } from '../execution/ExecutionEngine';
 import { RepeatableExecutionContext } from '../execution/RepeatableExecutionContext';
 import { LogProvider } from '../logging/LogProvider';
-import { Runtime } from '../runtime/Runtime';
+import { Runtime } from '../runtime/RuntimeNotifier';
 import { TypedGroupValidator } from '../validators/GroupValidator';
 import { ValidationHandler } from '../validators/ValidationHandler';
 

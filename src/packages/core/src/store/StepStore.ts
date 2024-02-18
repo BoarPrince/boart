@@ -1,5 +1,5 @@
 import { DataContent } from '../data/DataContent';
-import { Runtime } from '../runtime/Runtime';
+import { Runtime } from '../runtime/RuntimeNotifier';
 import { ValueReplaceArg } from '../value/ValueReplacer';
 
 import { StoreMap } from './StoreMap';

@@ -1,6 +1,6 @@
 import 'jest-extended';
 import { VariableParser } from '../parser/VariableParser';
-import { Runtime } from '../runtime/Runtime';
+import { Runtime } from '../runtime/RuntimeNotifier';
 import { RuntimeStatus } from '../runtime/RuntimeStatus';
 import { StepContext } from '../runtime/StepContext';
 import { BaseRowType } from '../table/BaseRowType';
