@@ -74,11 +74,11 @@ import { ObjectValidator } from './validators/object/ObjectValidator';
 import { DefaultRowType } from './default/DefaultRowType';
 import { DefaultPropertySetterExecutionUnit } from './default/DefaultPropertySetterExecutionUnit';
 import { DefaultContext, DefaultExecutionContext, DefaultPreExecutionContext } from './default/DefaultExecutionContext';
-import { RemoteFactory } from './remote/RemoteFactory';
-import { RemoteFactoryHandler } from './remote/RemoteFactoryHandler';
+import { ExecutionProxyFactory } from './execution-proxy/ExecutionProxyFactory';
+import { ExecutionProxyFactoryHandler } from './execution-proxy/ExecutionProxyFactoryHandler';
 import { RuntimeStartUp } from './configuration/schema/RuntimeStartUp';
 import { ValidatorType } from './validators/ValidatorType';
-import { DirectExecutionUnitProxyFactory } from './configuration/DirectExecutionUnitProxyFactory';
+import { DirectExecutionProxyFactory } from './execution-proxy/DirectExecutionProxyFactory';
 
 /**
  *
@@ -139,8 +139,8 @@ export {
     RuntimeResultContext,
     RuntimeStatus,
     RuntimeStartUp,
-    RemoteFactory,
-    RemoteFactoryHandler,
+    ExecutionProxyFactory,
+    ExecutionProxyFactoryHandler,
     ScopedType,
     ScopeType,
     SelectorType,
@@ -184,7 +184,7 @@ export default function initialize(): void {
         globalThis._coreInitialized = true;
     }
 
-    RemoteFactoryHandler.instance.addFactory('direct', new DirectExecutionUnitProxyFactory());
+    ExecutionProxyFactoryHandler.instance.addFactory('direct', new DirectExecutionProxyFactory());
 }
 
 // eslint-disable-next-line jest/require-hook

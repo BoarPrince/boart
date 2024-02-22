@@ -1,7 +1,7 @@
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
-import { RemoteFactory } from '../remote/RemoteFactory';
+import { ExecutionProxyFactory } from '../execution-proxy/ExecutionProxyFactory';
 import { GroupRowDefinition } from '../table/GroupRowDefinition';
 import { RowDefinition } from '../table/RowDefinition';
 import { TableHandler } from '../table/TableHandler';
@@ -18,7 +18,7 @@ export class ConfigurationTableHandler extends TableHandlerBaseImpl<DefaultConte
     constructor(
         public readonly name: string,
         private context: DefaultContext,
-        private factory: RemoteFactory,
+        private factory: ExecutionProxyFactory,
         private rowDefinitions: Array<RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>>,
         private groupRowDef: Array<string>,
         private groupValidations: Array<GroupValidator>

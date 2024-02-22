@@ -8,8 +8,8 @@ import { DefaultPropertySetterExecutionUnit } from '../default/DefaultPropertySe
 import { RowValidator } from '../validators/RowValidator';
 import { ValidatorFactoryManager } from '../validators/ValidatorFactoryManager';
 import { ValidatorConfig } from './schema/ValidatorConfig';
-import { RemoteFactory } from '../remote/RemoteFactory';
-import { RemoteFactoryHandler } from '../remote/RemoteFactoryHandler';
+import { ExecutionProxyFactory } from '../execution-proxy/ExecutionProxyFactory';
+import { ExecutionProxyFactoryHandler } from '../execution-proxy/ExecutionProxyFactoryHandler';
 import { ConfigurationTableHandler } from './ConfigurationTableHandler';
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
@@ -125,7 +125,7 @@ export class ConfigurationParser {
     private parseRowDefinition(
         config: TestExecutionUnitConfig,
         context: DefaultContext,
-        factory: RemoteFactory
+        factory: ExecutionProxyFactory
     ): Array<CoreRowDefinition<DefaultContext, DefaultRowType<DefaultContext>>> {
         const defs = config.rowDef.map((rowDef: RowDefinitionConfig, index) => {
             try {
@@ -160,8 +160,8 @@ export class ConfigurationParser {
     /**
      *
      */
-    private getExecutionUnitFactory(config: TestExecutionUnitConfig): RemoteFactory {
-        const factory = RemoteFactoryHandler.instance.getFactory(config.runtime.type);
+    private getExecutionUnitFactory(config: TestExecutionUnitConfig): ExecutionProxyFactory {
+        const factory = ExecutionProxyFactoryHandler.instance.getFactory(config.runtime.type);
         factory.init(config.name, config.runtime.configuration, config.runtime.startup);
         try {
             factory.validate('$.runtime.configuration');

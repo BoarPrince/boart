@@ -1,6 +1,6 @@
 import { NodeForkExecutionProxyUnit } from './NodeForkExecutionProxyUnit';
 import { NodeForkServer } from './NodeForkServer';
-import { DefaultContext, DefaultRowType, ExecutionUnit, ObjectValidator, RemoteFactory, RuntimeStartUp } from '@boart/core';
+import { DefaultContext, DefaultRowType, ExecutionProxyFactory, ExecutionUnit, ObjectValidator, RuntimeStartUp } from '@boart/core';
 
 /**
  *
@@ -12,7 +12,7 @@ interface Configuration {
 /**
  *
  */
-export class NodeForkRemoteProxyFactory implements RemoteFactory {
+export class NodeForkRemoteProxyFactory implements ExecutionProxyFactory {
     private server: NodeForkServer;
     private name: string;
     private config: Configuration;

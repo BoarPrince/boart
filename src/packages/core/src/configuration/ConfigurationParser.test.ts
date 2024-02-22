@@ -9,8 +9,8 @@ import { ValidatorFactoryManager } from '../validators/ValidatorFactoryManager';
 import { ValidatorFactory } from '../validators/ValidatorFactory';
 import { RowValidator } from '../validators/RowValidator';
 import { ObjectValidator } from '../validators/object/ObjectValidator';
-import { RemoteFactoryHandler } from '../remote/RemoteFactoryHandler';
-import { RemoteFactory } from '../remote/RemoteFactory';
+import { ExecutionProxyFactoryHandler } from '../execution-proxy/ExecutionProxyFactoryHandler';
+import { ExecutionProxyFactory } from '../execution-proxy/ExecutionProxyFactory';
 import { GroupRowDefinition } from '../table/GroupRowDefinition';
 import { TableHandlerInstances } from '../table/TableHandlerInstances';
 import { ValidatorType } from '../validators/ValidatorType';
@@ -19,7 +19,7 @@ import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
 import { TextContent } from '../data/TextContent';
-import { DirectExecutionUnitProxyFactory } from './DirectExecutionUnitProxyFactory';
+import { DirectExecutionProxyFactory } from '../execution-proxy/DirectExecutionProxyFactory';
 import { ExecutionType } from './schema/ExecutionType';
 
 /**
@@ -133,7 +133,7 @@ class ValidatorFactoryMock implements ValidatorFactory {
 /**
  *
  */
-class RemoteProxyFactory implements RemoteFactory {
+class RemoteProxyFactory implements ExecutionProxyFactory {
     private name: string;
     private config: object;
     /**
@@ -179,10 +179,10 @@ beforeEach(() => {
     ValidatorFactoryManager.instance.addFactory(new ValidatorFactoryMock('validator-2', ValidatorType.ROW));
     ValidatorFactoryManager.instance.addFactory(new ValidatorFactoryMock('group-val', ValidatorType.GROUP));
 
-    RemoteFactoryHandler.instance.clear();
-    RemoteFactoryHandler.instance.addFactory('grpc', new RemoteProxyFactory());
-    RemoteFactoryHandler.instance.addFactory('node-fork', new RemoteProxyFactory());
-    RemoteFactoryHandler.instance.addFactory('direct', new DirectExecutionUnitProxyFactory());
+    ExecutionProxyFactoryHandler.instance.clear();
+    ExecutionProxyFactoryHandler.instance.addFactory('grpc', new RemoteProxyFactory());
+    ExecutionProxyFactoryHandler.instance.addFactory('node-fork', new RemoteProxyFactory());
+    ExecutionProxyFactoryHandler.instance.addFactory('direct', new DirectExecutionProxyFactory());
 
     GroupRowDefinition.getInstance('group-1').addGroupValidation(null);
     GroupRowDefinition.getInstance('group-2').addGroupValidation(null);

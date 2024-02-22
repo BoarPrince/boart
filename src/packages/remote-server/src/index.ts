@@ -1,4 +1,4 @@
-import { RemoteFactoryHandler } from '@boart/core';
+import { ExecutionProxyFactoryHandler } from '@boart/core';
 import { NodeForkRemoteProxyFactory } from './node-fork/NodeForkRemoteProxyFactory';
 
 /**
@@ -12,5 +12,5 @@ export default function initialize(): void {
         globalThis.remoteServerInitialized = true;
     }
 
-    RemoteFactoryHandler.instance.addFactory('node-fork', new NodeForkRemoteProxyFactory());
+    ExecutionProxyFactoryHandler.instance.addFactory('node-fork', new NodeForkRemoteProxyFactory());
 }

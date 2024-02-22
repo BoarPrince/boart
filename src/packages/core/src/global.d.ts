@@ -5,7 +5,7 @@ import { UrlLoader } from './common/UrlLoader';
 import { DescriptionFileReader } from './description/DescriptionFileReader';
 import { DescriptionHandler } from './description/DescriptionHandler';
 import { ExpectedOperatorInitializer } from './expected/ExpectedOperatorInitializer';
-import { RemoteFactoryHandler } from './remote/RemoteFactoryHandler';
+import { ExecutionProxyFactoryHandler } from './execution-proxy/ExecutionProxyFactoryHandler';
 import { Context } from './store/Context';
 import { Store } from './store/Store';
 import { GroupRowDefinition } from './table/GroupRowDefinition';
@@ -22,7 +22,7 @@ declare global {
     var _expectedOperatorInitializer: ExpectedOperatorInitializer;
     var _descriptionFileReaderInstance: DescriptionFileReader;
     var _validatorFactoryHandler: ValidatorFactoryManager;
-    var _remoteFactoryHandler: RemoteFactoryHandler;
+    var _executionProxyFactoryHandler: ExecutionProxyFactoryHandler;
     var _tableHandlerInstances: TableHandlerInstances;
     var _coreInitialized: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

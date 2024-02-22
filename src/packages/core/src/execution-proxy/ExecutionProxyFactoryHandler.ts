@@ -2,18 +2,18 @@ import { RuntimeStartUp } from '../configuration/schema/RuntimeStartUp';
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
-import { RemoteFactory } from './RemoteFactory';
+import { ExecutionProxyFactory } from './ExecutionProxyFactory';
 
 /**
  *
  */
-class RemoteFactoryProxy implements RemoteFactory {
+class StarterProxyFactory implements ExecutionProxyFactory {
     private started = false;
 
     /**
      *
      */
-    constructor(private origin: RemoteFactory) {}
+    constructor(private origin: ExecutionProxyFactory) {}
 
     /**
      *
@@ -34,6 +34,7 @@ class RemoteFactoryProxy implements RemoteFactory {
      */
     start(): void {
         this.origin.start();
+        this.started = true;
     }
 
     /**
@@ -49,7 +50,6 @@ class RemoteFactoryProxy implements RemoteFactory {
         originExecutionUnit.execute = (context, row) => {
             if (!this.started) {
                 this.start();
-                this.started = true;
             }
             return originExecuteMethod(context, row);
         };
@@ -61,8 +61,8 @@ class RemoteFactoryProxy implements RemoteFactory {
 /**
  *
  */
-export class RemoteFactoryHandler {
-    private factories = new Map<string, RemoteFactory>();
+export class ExecutionProxyFactoryHandler {
+    private factories = new Map<string, StarterProxyFactory>();
 
     /**
      *
@@ -72,29 +72,29 @@ export class RemoteFactoryHandler {
     /**
      *
      */
-    public static get instance(): RemoteFactoryHandler {
-        if (!globalThis._remoteFactoryHandler) {
-            const instance = new RemoteFactoryHandler();
-            globalThis._remoteFactoryHandler = instance;
+    public static get instance(): ExecutionProxyFactoryHandler {
+        if (!globalThis._executionProxyFactoryHandler) {
+            const instance = new ExecutionProxyFactoryHandler();
+            globalThis._executionProxyFactoryHandler = instance;
         }
-        return globalThis._remoteFactoryHandler;
+        return globalThis._executionProxyFactoryHandler;
     }
 
     /**
      *
      */
-    public addFactory(name: string, factory: RemoteFactory) {
+    public addFactory(name: string, factory: ExecutionProxyFactory) {
         if (this.factories.has(name)) {
             throw new Error(`remote factory '${name}' already exists`);
         }
 
-        this.factories.set(name, new RemoteFactoryProxy(factory));
+        this.factories.set(name, new StarterProxyFactory(factory));
     }
 
     /**
      *
      */
-    public getFactory(name: string): RemoteFactory {
+    public getFactory(name: string): ExecutionProxyFactory {
         if (!this.factories.has(name)) {
             throw new Error(`Remote proxy '${name}' does not exist. Available: '${this.keys().join(', ')}'`);
         }

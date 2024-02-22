@@ -6,7 +6,7 @@ import { ExecutionUnit } from '../execution/ExecutionUnit';
 /**
  *
  */
-export interface RemoteFactory {
+export interface ExecutionProxyFactory {
     /**
      * is called once a time during the configuration
      */

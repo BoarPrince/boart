@@ -1,14 +1,14 @@
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
-import { RemoteFactory } from '../remote/RemoteFactory';
-import { RuntimeStartUp } from './schema/RuntimeStartUp';
+import { ExecutionProxyFactory } from './ExecutionProxyFactory';
+import { RuntimeStartUp } from '../configuration/schema/RuntimeStartUp';
 
 /**
  *
  */
-export class DirectExecutionUnitProxyFactory implements RemoteFactory {
-    private config: ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>;
+export class DirectExecutionProxyFactory implements ExecutionProxyFactory {
+    private executionUnit: ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>;
     private runtimeStartup: RuntimeStartUp;
 
     /**
@@ -20,8 +20,8 @@ export class DirectExecutionUnitProxyFactory implements RemoteFactory {
         }
 
         if (
-            !Object.hasOwn(this.config, 'execute') && //
-            !Object.hasOwn(this.config, 'key')
+            !Object.hasOwn(this.executionUnit, 'execute') && //
+            !Object.hasOwn(this.executionUnit, 'key')
         ) {
             throw new Error(`config must be an execition unit`);
         }
@@ -30,8 +30,12 @@ export class DirectExecutionUnitProxyFactory implements RemoteFactory {
     /**
      *
      */
-    public init(_: string, config: ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>, runtimeStartup: RuntimeStartUp): void {
-        this.config = config;
+    public init(
+        _: string,
+        executionUnit: ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>,
+        runtimeStartup: RuntimeStartUp
+    ): void {
+        this.executionUnit = executionUnit;
         this.runtimeStartup = runtimeStartup;
     }
 
@@ -46,6 +50,6 @@ export class DirectExecutionUnitProxyFactory implements RemoteFactory {
      *
      */
     public createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
-        return this.config;
+        return this.executionUnit;
     }
 }

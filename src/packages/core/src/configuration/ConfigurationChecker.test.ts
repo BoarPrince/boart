@@ -72,8 +72,8 @@ const defaultConfig: TestExecutionUnitConfig = {
  *
  */
 // eslint-disable-next-line jest/no-untyped-mock-factory
-jest.mock('../remote/RemoteFactoryHandler', () => ({
-    RemoteFactoryHandler: class {
+jest.mock('../execution-proxy/ExecutionProxyFactoryHandler', () => ({
+    ExecutionProxyFactoryHandler: class {
         static instance = {
             keys: () => ['grpc', 'fork']
         };
