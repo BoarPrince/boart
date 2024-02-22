@@ -5,6 +5,7 @@ import { SelectorType } from '../types/SelectorType';
 import { ObjectValidator } from '../validators/object/ObjectValidator';
 import { GroupRowDefinition } from '../table/GroupRowDefinition';
 import { RemoteFactoryHandler } from '../remote/RemoteFactoryHandler';
+import { ExecutionType } from './schema/ExecutionType';
 
 /**
  *
@@ -74,13 +75,15 @@ export class ConfigurationChecker {
             .shouldArray('object')
             .child()
             .onlyContainsProperties(
-                ['action', 'contextType', 'contextProperty', 'parameterType', 'selectorType', 'validatorDef'],
+                ['action', 'executionOrder', 'executionType', 'contextProperty', 'parameterType', 'selectorType', 'validatorDef'],
                 ['defaultValue']
             )
             .prop('action')
             .shouldString()
-            .prop('contextType')
+            .prop('executionOrder')
             .shouldHaveValueOf('config', 'pre')
+            .prop('executionType')
+            .shouldHaveValueOf(...Object.values(ExecutionType))
             .prop('parameterType')
             .shouldHaveValueOf(...Object.values(ParaType))
             .prop('selectorType')

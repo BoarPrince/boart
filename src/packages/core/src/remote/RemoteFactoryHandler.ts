@@ -1,4 +1,62 @@
+import { RuntimeStartUp } from '../configuration/schema/RuntimeStartUp';
+import { DefaultContext } from '../default/DefaultExecutionContext';
+import { DefaultRowType } from '../default/DefaultRowType';
+import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { RemoteFactory } from './RemoteFactory';
+
+/**
+ *
+ */
+class RemoteFactoryProxy implements RemoteFactory {
+    private started = false;
+
+    /**
+     *
+     */
+    constructor(private origin: RemoteFactory) {}
+
+    /**
+     *
+     */
+    init(name: string, config: object, runtimeStartup: RuntimeStartUp): void {
+        this.origin.init(name, config, runtimeStartup);
+    }
+
+    /**
+     *
+     */
+    validate(basePath?: string): void {
+        this.origin.validate(basePath);
+    }
+
+    /**
+     *
+     */
+    start(): void {
+        this.origin.start();
+    }
+
+    /**
+     * keep care that start is called only once a time before the first execute is called.
+     */
+    createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
+        const originExecutionUnit = this.origin.createExecutionUnit();
+        const originExecuteMethod = originExecutionUnit.execute.bind(originExecutionUnit) as (
+            context: unknown,
+            row?: unknown
+        ) => void | Promise<void>;
+
+        originExecutionUnit.execute = (context, row) => {
+            if (!this.started) {
+                this.start();
+                this.started = true;
+            }
+            return originExecuteMethod(context, row);
+        };
+
+        return originExecutionUnit;
+    }
+}
 
 /**
  *
@@ -30,7 +88,7 @@ export class RemoteFactoryHandler {
             throw new Error(`remote factory '${name}' already exists`);
         }
 
-        this.factories.set(name, factory);
+        this.factories.set(name, new RemoteFactoryProxy(factory));
     }
 
     /**

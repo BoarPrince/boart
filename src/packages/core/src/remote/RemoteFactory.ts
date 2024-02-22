@@ -24,10 +24,10 @@ export interface RemoteFactory {
      *
      * Any startup sequences can be called.
      */
-    start();
+    start(): void;
 
     /**
      * is called each time the executionUnit is used
      */
-    readonly executionUnit: ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>;
+    createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>;
 }

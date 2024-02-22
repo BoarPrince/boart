@@ -2,6 +2,7 @@ import { TableRowType } from '../table/TableRowType';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
 import { ConfigurationChecker } from './ConfigurationChecker';
+import { ExecutionType } from './schema/ExecutionType';
 import { RuntimeStartUp } from './schema/RuntimeStartUp';
 import { TestExecutionUnitConfig } from './schema/TestExecutionUnitConfig';
 
@@ -31,7 +32,8 @@ const defaultConfig: TestExecutionUnitConfig = {
     rowDef: [
         {
             action: '-key-',
-            contextType: TableRowType.Configuration,
+            executionType: ExecutionType.PropertySetter,
+            executionOrder: TableRowType.Configuration,
             contextProperty: 'conf',
             parameterType: ParaType.True,
             selectorType: SelectorType.False,
@@ -45,7 +47,8 @@ const defaultConfig: TestExecutionUnitConfig = {
         },
         {
             action: '-key-2-',
-            contextType: TableRowType.Configuration,
+            executionType: ExecutionType.PropertySetter,
+            executionOrder: TableRowType.Configuration,
             contextProperty: 'conf',
             parameterType: ParaType.True,
             selectorType: SelectorType.False,
@@ -143,7 +146,7 @@ describe('wrong root', () => {
         config.runtime.type = 'grp';
 
         expect(() => ConfigurationChecker.checkJSONConfig(config)).toThrow(
-            `path: $.runtime.type\nvalue 'grp' is not allowd for property 'type'. Allowed values are => 'grpc,`
+            `path: $.runtime.type\nvalue 'grp' is not allowd for property 'type'. Available:\n - 'grpc',\n - 'fork'`
         );
     });
 
@@ -151,10 +154,21 @@ describe('wrong root', () => {
      *
      */
     test('wrong rowDef - contextType', () => {
-        config.rowDef[1].contextType = 'conf' as TableRowType;
+        config.rowDef[1].executionOrder = 'conf' as TableRowType;
 
         expect(() => ConfigurationChecker.checkJSONConfig(config)).toThrow(
-            `path: $.rowDef.1.contextType\nvalue 'conf' is not allowd for property 'contextType'. Allowed values are => 'config, pre'`
+            `path: $.rowDef.1.executionOrder\nvalue 'conf' is not allowd for property 'executionOrder'. Available:\n - 'config',\n - 'pre'`
+        );
+    });
+
+    /**
+     *
+     */
+    test('missing executionType', () => {
+        delete config.rowDef[0].executionType;
+
+        expect(() => ConfigurationChecker.checkJSONConfig(config)).toThrow(
+            `path: $.rowDef.[0]\nmust contain property 'executionType', but only contains 'action, executionOrder, contextProperty, parameterType, selectorType, validatorDef, defaultValue'`
         );
     });
 });

@@ -45,7 +45,7 @@ export class DirectExecutionUnitProxyFactory implements RemoteFactory {
     /**
      *
      */
-    public get executionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
+    public createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
         return this.config;
     }
 }

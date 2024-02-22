@@ -4,7 +4,7 @@ import mockFs from 'mock-fs';
 /**
  *
  */
-beforeAll(() => {
+beforeEach(() => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     mockFs({
         '/boart': {
@@ -40,7 +40,7 @@ beforeAll(() => {
  *
  */
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-afterAll(() => mockFs.restore());
+afterEach(() => mockFs.restore());
 
 /**
  *

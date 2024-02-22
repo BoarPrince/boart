@@ -1,6 +1,7 @@
 import { TableRowType } from '../../table/TableRowType';
 import { ParaType } from '../../types/ParaType';
 import { SelectorType } from '../../types/SelectorType';
+import { ExecutionType } from './ExecutionType';
 import { ValidatorConfig } from './ValidatorConfig';
 
 /**
@@ -8,10 +9,11 @@ import { ValidatorConfig } from './ValidatorConfig';
  */
 export interface RowDefinitionConfig {
     action: string;
-    contextType: TableRowType;
+    executionType: ExecutionType;
+    executionOrder: TableRowType;
+    contextProperty: string;
     parameterType: ParaType;
     selectorType: SelectorType;
-    contextProperty: string;
     validatorDef: Array<ValidatorConfig>;
     defaultValue?: string;
 }

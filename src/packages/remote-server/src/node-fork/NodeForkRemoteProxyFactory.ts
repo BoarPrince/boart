@@ -52,7 +52,7 @@ export class NodeForkRemoteProxyFactory implements RemoteFactory {
     /**
      *
      */
-    public get executionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
+    public createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
         return new NodeForkExecutionProxyUnit(this.name, this.server);
     }
 }

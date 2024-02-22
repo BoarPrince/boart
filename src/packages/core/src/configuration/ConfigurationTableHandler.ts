@@ -12,8 +12,6 @@ import { GroupValidator } from '../validators/GroupValidator';
  *
  */
 export class ConfigurationTableHandler extends TableHandlerBaseImpl<DefaultContext, DefaultRowType<DefaultContext>> {
-    private callCount = 0;
-
     /**
      *
      */
@@ -37,11 +35,7 @@ export class ConfigurationTableHandler extends TableHandlerBaseImpl<DefaultConte
      *
      */
     protected mainExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
-        if (this.callCount++ === 0) {
-            this.factory.start();
-        }
-
-        return this.factory.executionUnit;
+        return this.factory.createExecutionUnit();
     }
 
     /**

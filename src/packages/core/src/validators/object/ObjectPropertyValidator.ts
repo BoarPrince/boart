@@ -156,9 +156,9 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
         ObjectPropertyValidator.shouldString(property, path, prop);
         assert.ok(
             values.includes(property as string),
-            `path: ${path.join('.')}\nvalue '${
-                property as string
-            }' is not allowd for property '${prop}'. Allowed values are => '${values.join(', ')}'`
+            `path: ${path.join('.')}\nvalue '${property as string}' is not allowd for property '${prop}'. Available:${values
+                .map((v) => `\n - '${v}'`)
+                .join(',')}`
         );
     }
 

@@ -109,7 +109,7 @@ describe('factory', () => {
             null
         );
 
-        sut.executionUnit;
+        sut.createExecutionUnit();
 
         expect(NodeForkExecutionProxyUnit).toHaveBeenCalledTimes(1);
         expect(NodeForkExecutionProxyUnit).toHaveBeenCalledWith('-name-', undefined);

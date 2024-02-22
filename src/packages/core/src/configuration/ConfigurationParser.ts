@@ -18,7 +18,9 @@ import { EnvLoader } from '../common/EnvLoader';
 import { ConfigurationLookup } from './ConfigurationLookup';
 import { GroupValidator } from '../validators/GroupValidator';
 import { ValidatorType } from '../validators/ValidatorType';
-import { GroupRowDefinition } from '../table/GroupRowDefinition';
+import { ExecutionType } from './schema/ExecutionType';
+import { ExecutionUnit } from '../execution/ExecutionUnit';
+import { ConfigurationChecker } from './ConfigurationChecker';
 
 /**
  *
@@ -27,7 +29,7 @@ export class ConfigurationParser {
     /**
      *
      */
-    private parseConfig(contextDef: ContextConfig): DefaultContext {
+    private parseContext(contextDef: ContextConfig): DefaultContext {
         const context: DefaultContext = {
             config: {},
             preExecution: {
@@ -80,51 +82,63 @@ export class ConfigurationParser {
     /**
      *
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private getPropertySetterExecutionUnit(
+        rowDef: RowDefinitionConfig,
+        context: DefaultContext,
+        index: number
+    ): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
+        const [firstLevel, secondLevel] = rowDef.contextProperty.split('.');
+
+        if (context[firstLevel] === undefined) {
+            throw new Error(
+                `Reading $.rowDef[${index}].contextPropery: context '${rowDef.contextProperty}' does not exists. Available: ${Object.keys(
+                    context
+                )
+                    .map((c) => `'${c}'`)
+                    .join(', ')}`
+            );
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (secondLevel && context[firstLevel][secondLevel] === undefined) {
+            throw new Error(
+                `Reading $.rowDef[${index}].contextPropery: context '${rowDef.contextProperty}' does not exists. Available: ${Object.keys(
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                    context[firstLevel]
+                )
+                    .map((c) => `'${firstLevel}.${c}'`)
+                    .join(', ')}`
+            );
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return new DefaultPropertySetterExecutionUnit<any, any>(
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+            firstLevel as any,
+            secondLevel
+        );
+    }
+
+    /**
+     *
+     */
     private parseRowDefinition(
-        rowDefinitions: RowDefinitionConfig[],
-        context: DefaultContext
+        config: TestExecutionUnitConfig,
+        context: DefaultContext,
+        factory: RemoteFactory
     ): Array<CoreRowDefinition<DefaultContext, DefaultRowType<DefaultContext>>> {
-        const defs = rowDefinitions.map((rowDef: RowDefinitionConfig, index) => {
+        const defs = config.rowDef.map((rowDef: RowDefinitionConfig, index) => {
             try {
                 const key = Symbol(rowDef.action);
 
-                const [firstLevel, secondLevel] = rowDef.contextProperty.split('.');
-
-                if (context[firstLevel] === undefined) {
-                    throw new Error(
-                        `Reading $.rowDef[${index}].contextPropery: context '${
-                            rowDef.contextProperty
-                        }' does not exists. Available: ${Object.keys(context)
-                            .map((c) => `'${c}'`)
-                            .join(', ')}`
-                    );
-                }
-
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                if (secondLevel && context[firstLevel][secondLevel] === undefined) {
-                    throw new Error(
-                        `Reading $.rowDef[${index}].contextPropery: context '${
-                            rowDef.contextProperty
-                        }' does not exists. Available: ${Object.keys(
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                            context[firstLevel]
-                        )
-                            .map((c) => `'${firstLevel}.${c}'`)
-                            .join(', ')}`
-                    );
-                }
-
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const executionUnit = new DefaultPropertySetterExecutionUnit<any, any>(
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-                    firstLevel as any,
-                    secondLevel
-                );
+                const executionUnit =
+                    rowDef.executionType !== ExecutionType.PropertySetter
+                        ? factory.createExecutionUnit()
+                        : this.getPropertySetterExecutionUnit(rowDef, context, index);
 
                 return new CoreRowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
                     key,
-                    type: rowDef.contextType,
+                    type: rowDef.executionOrder,
                     parameterType: rowDef.parameterType,
                     selectorType: rowDef.selectorType,
                     defaultValue: rowDef.defaultValue,
@@ -146,7 +160,7 @@ export class ConfigurationParser {
     /**
      *
      */
-    private parseMainExecutionUnit(config: TestExecutionUnitConfig): RemoteFactory {
+    private getExecutionUnitFactory(config: TestExecutionUnitConfig): RemoteFactory {
         const factory = RemoteFactoryHandler.instance.getFactory(config.runtime.type);
         factory.init(config.name, config.runtime.configuration, config.runtime.startup);
         try {
@@ -169,34 +183,19 @@ export class ConfigurationParser {
     /**
      *
      */
-    private groupRowDef(groupRows: Array<string>): Array<string> {
-        for (const groupRow of groupRows) {
-            if (!GroupRowDefinition.contains(groupRow)) {
-                throw new Error(
-                    `groupRowDef: '${groupRow}' is not a valid group row definition. Available:\n${GroupRowDefinition.keys()
-                        .map((g) => ` - '${g}'`)
-                        .join(',\n')}`
-                );
-            }
-        }
-
-        return groupRows;
-    }
-
-    /**
-     *
-     */
     public parseDefinition(configOrFileName: TestExecutionUnitConfig | string): ConfigurationTableHandler {
         const config: TestExecutionUnitConfig =
             typeof configOrFileName === 'string' ? this.readDefinition(configOrFileName) : configOrFileName;
 
-        const context = this.parseConfig(config.context);
-        const rowDefinitions = this.parseRowDefinition(config.rowDef, context);
-        const groupValidations = this.parseValidator(config.groupValidatorDef, ValidatorType.GROUP) as Array<GroupValidator>;
-        const mainExecutionUnitFactory = this.parseMainExecutionUnit(config);
-        const groupRows = this.groupRowDef(config.groupRowDef);
+        ConfigurationChecker.checkJSONConfig(config);
 
-        return new ConfigurationTableHandler(config.name, context, mainExecutionUnitFactory, rowDefinitions, groupRows, groupValidations);
+        const context = this.parseContext(config.context);
+        const executionUnitFactory = this.getExecutionUnitFactory(config);
+        const rowDefinitions = this.parseRowDefinition(config, context, executionUnitFactory);
+        const groupValidations = this.parseValidator(config.groupValidatorDef, ValidatorType.GROUP) as Array<GroupValidator>;
+        const groupRows = config.groupRowDef;
+
+        return new ConfigurationTableHandler(config.name, context, executionUnitFactory, rowDefinitions, groupRows, groupValidations);
     }
 
     /**

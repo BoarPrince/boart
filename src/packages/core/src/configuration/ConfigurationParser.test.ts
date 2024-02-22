@@ -20,6 +20,7 @@ import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
 import { TextContent } from '../data/TextContent';
 import { DirectExecutionUnitProxyFactory } from './DirectExecutionUnitProxyFactory';
+import { ExecutionType } from './schema/ExecutionType';
 
 /**
  *
@@ -63,7 +64,8 @@ const defaultConfig = JSON.stringify({
     rowDef: [
         {
             action: '-key-',
-            contextType: TableRowType.Configuration,
+            executionOrder: TableRowType.Configuration,
+            executionType: ExecutionType.PropertySetter,
             contextProperty: 'config.conf',
             parameterType: ParaType.True,
             selectorType: SelectorType.False,
@@ -77,7 +79,8 @@ const defaultConfig = JSON.stringify({
         },
         {
             action: '-key-2-',
-            contextType: TableRowType.Configuration,
+            executionOrder: TableRowType.Configuration,
+            executionType: ExecutionType.PropertySetter,
             contextProperty: 'config.conf',
             parameterType: ParaType.True,
             selectorType: SelectorType.False,
@@ -161,7 +164,9 @@ class RemoteProxyFactory implements RemoteFactory {
     /**
      *
      */
-    executionUnit: null;
+    createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
+        return null;
+    }
 }
 
 /**
@@ -266,7 +271,7 @@ describe('configurationParser', () => {
 
         const sut = new ConfigurationParser();
         expect(() => sut.readDefinitions()).toThrow(
-            `Reading boart configuration 'extensions/text-extension/boart.json'.\ngroupRowDef: 'group-x' is not a valid group row definition. Available:\n - 'group-1',\n - 'group-2'`
+            `Reading boart configuration 'extensions/text-extension/boart.json'.\npath: $.groupRowDef.0\nvalue 'group-x' is not allowd for property 'groupRowDef'. Available:\n - 'group-1',\n - 'group-2'`
         );
     });
 
@@ -356,7 +361,8 @@ describe('direct configuration', () => {
                 rowDef: [
                     {
                         action: 'set-conf',
-                        contextType: TableRowType.Configuration,
+                        executionType: ExecutionType.PropertySetter,
+                        executionOrder: TableRowType.Configuration,
                         contextProperty: 'config.conf',
                         parameterType: ParaType.True,
                         selectorType: SelectorType.False,
@@ -398,7 +404,8 @@ describe('direct configuration', () => {
     test('two definitions', async () => {
         executionConfig.rowDef.push({
             action: 'set-config-2',
-            contextType: TableRowType.Configuration,
+            executionType: ExecutionType.PropertySetter,
+            executionOrder: TableRowType.Configuration,
             contextProperty: 'config.conf2',
             parameterType: ParaType.True,
             selectorType: SelectorType.False,
