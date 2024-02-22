@@ -10,7 +10,11 @@ export interface ExecutionProxyFactory {
     /**
      * is called once a time during the configuration
      */
-    init(name: string, config: object, runtimeStartup: RuntimeStartUp): void;
+    init(
+        name: string,
+        config: object | (() => ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>),
+        runtimeStartup: RuntimeStartUp
+    ): void;
 
     /**
      * is called once a time during the configuration and after init.

@@ -78,7 +78,7 @@ import { ExecutionProxyFactory } from './execution-proxy/ExecutionProxyFactory';
 import { ExecutionProxyFactoryHandler } from './execution-proxy/ExecutionProxyFactoryHandler';
 import { RuntimeStartUp } from './configuration/schema/RuntimeStartUp';
 import { ValidatorType } from './validators/ValidatorType';
-import { DirectExecutionProxyFactory } from './execution-proxy/DirectExecutionProxyFactory';
+import { DirectExecutionProxyFactory } from './configuration/DirectExecutionProxyFactory';
 
 /**
  *

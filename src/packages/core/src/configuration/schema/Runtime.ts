@@ -10,5 +10,5 @@ import { RuntimeStartUp } from './RuntimeStartUp';
 export interface Runtime {
     type: string;
     startup: RuntimeStartUp;
-    configuration: object | ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>;
+    configuration: object | (() => ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>);
 }

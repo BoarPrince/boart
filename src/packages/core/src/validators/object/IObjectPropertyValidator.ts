@@ -28,6 +28,11 @@ export interface IObjectPropertyValidator extends IBaseValidator {
     /**
      *
      */
+    shouldObjectOrFunction(): IObjectPropertyValidator;
+
+    /**
+     *
+     */
     shouldHaveValueOf(...values: string[]): IObjectPropertyValidator;
 
     /**

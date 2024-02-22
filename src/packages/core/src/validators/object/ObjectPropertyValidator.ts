@@ -195,4 +195,24 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
 
         return this;
     }
+
+    /**
+     *
+     */
+    public static shouldObjectOrFunction(property: unknown, path: Array<string>, prop: string) {
+        assert.ok(
+            (typeof property === 'object' && !Array.isArray(property)) || typeof property === 'function',
+            `path: ${path.join('.')}\nproperty '${prop}' is not an object or a function => '${prop}: ${JSON.stringify(property)}'`
+        );
+        return this;
+    }
+
+    /**
+     *
+     */
+    public shouldObjectOrFunction(): ObjectPropertyValidator {
+        ObjectPropertyValidator.shouldObjectOrFunction(this.property, this.path(), this.propName);
+
+        return this;
+    }
 }

@@ -214,7 +214,6 @@ describe('first level prop validation', () => {
     /**
      *
      */
-
     test('should object', () => {
         expect(() =>
             ObjectValidator.instance({
@@ -260,7 +259,51 @@ describe('first level prop validation', () => {
     /**
      *
      */
+    test('should object or function - 1', () => {
+        expect(() =>
+            ObjectValidator.instance({
+                a: {},
+                b: 2,
+                c: 3
+            })
+                .prop('a')
+                .shouldObjectOrFunction()
+        ).not.toThrow();
+    });
 
+    /**
+     *
+     */
+    test('should object or function - 2', () => {
+        expect(() =>
+            ObjectValidator.instance({
+                a: () => {},
+                b: 2,
+                c: 3
+            })
+                .prop('a')
+                .shouldObjectOrFunction()
+        ).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('should object or function - not valid', () => {
+        expect(() =>
+            ObjectValidator.instance({
+                a: 1,
+                b: 2,
+                c: 3
+            })
+                .prop('a')
+                .shouldObjectOrFunction()
+        ).toThrow(`path: $.a\nproperty 'a' is not an object or a function`);
+    });
+
+    /**
+     *
+     */
     test('should array', () => {
         expect(() =>
             ObjectValidator.instance({
@@ -524,7 +567,7 @@ describe('array prop validation', () => {
                 .prop('a')
                 .shouldArray('string')
                 .shouldHaveValueOf('true', 'false')
-        ).toThrow(`path: $.a.1\nvalue 'falsex' is not allowd for property 'a'. Allowed values are => 'true, false'`);
+        ).toThrow(`path: $.a.1\nvalue 'falsex' is not allowd for property 'a'. Available:\n - 'true',\n - 'false'`);
     });
 });
 
@@ -694,7 +737,7 @@ describe('allowed values', () => {
             })
                 .prop('a')
                 .shouldHaveValueOf(...Object.values(AllowedValues))
-        ).toThrow(`path: $.a\nvalue 'fourth' is not allowd for property 'a'. Allowed values are => 'first, second, third'`);
+        ).toThrow(`path: $.a\nvalue 'fourth' is not allowd for property 'a'. Available:\n - 'first',\n - 'second',\n - 'third'`);
     });
 
     /**
@@ -730,7 +773,7 @@ describe('allowed values', () => {
             ])
                 .prop('a')
                 .shouldHaveValueOf(...Object.values(AllowedValues))
-        ).toThrow("value 'fourth' is not allowd for property 'a'. Allowed values are => 'first, second, third'");
+        ).toThrow(`path: $.1.a\nvalue 'fourth' is not allowd for property 'a'. Available:\n - 'first',\n - 'second',\n - 'third'`);
     });
 
     /**

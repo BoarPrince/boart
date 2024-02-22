@@ -1,14 +1,14 @@
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
-import { ExecutionProxyFactory } from './ExecutionProxyFactory';
-import { RuntimeStartUp } from '../configuration/schema/RuntimeStartUp';
+import { ExecutionProxyFactory } from '../execution-proxy/ExecutionProxyFactory';
+import { RuntimeStartUp } from './schema/RuntimeStartUp';
 
 /**
  *
  */
 export class DirectExecutionProxyFactory implements ExecutionProxyFactory {
-    private executionUnit: ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>;
+    private executionUnit: () => ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>;
     private runtimeStartup: RuntimeStartUp;
 
     /**
@@ -16,14 +16,11 @@ export class DirectExecutionProxyFactory implements ExecutionProxyFactory {
      */
     public validate(): void {
         if (this.runtimeStartup && this.runtimeStartup !== RuntimeStartUp.EACH) {
-            throw new Error(`direct execution unit prosy only allows runtime startup 'each'`);
+            throw new Error(`DirectExecutionProxyFactory (direct): Only allows runtime startup 'each'`);
         }
 
-        if (
-            !Object.hasOwn(this.executionUnit, 'execute') && //
-            !Object.hasOwn(this.executionUnit, 'key')
-        ) {
-            throw new Error(`config must be an execition unit`);
+        if (typeof this.executionUnit !== 'function') {
+            throw new Error(`DirectExecutionProxyFactory (direct): Config must be a function to create an execution unit`);
         }
     }
 
@@ -32,7 +29,7 @@ export class DirectExecutionProxyFactory implements ExecutionProxyFactory {
      */
     public init(
         _: string,
-        executionUnit: ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>,
+        executionUnit: () => ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>,
         runtimeStartup: RuntimeStartUp
     ): void {
         this.executionUnit = executionUnit;
@@ -50,6 +47,6 @@ export class DirectExecutionProxyFactory implements ExecutionProxyFactory {
      *
      */
     public createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
-        return this.executionUnit;
+        return this.executionUnit();
     }
 }

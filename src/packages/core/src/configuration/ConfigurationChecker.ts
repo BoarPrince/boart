@@ -31,7 +31,7 @@ export class ConfigurationChecker {
             .prop('startup')
             .shouldHaveValueOf(...Object.values(RuntimeStartUp))
             .prop('configuration')
-            .shouldObject()
+            .shouldObjectOrFunction()
 
             // context
             .parent()

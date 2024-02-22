@@ -19,7 +19,7 @@ import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
 import { TextContent } from '../data/TextContent';
-import { DirectExecutionProxyFactory } from '../execution-proxy/DirectExecutionProxyFactory';
+import { DirectExecutionProxyFactory } from './DirectExecutionProxyFactory';
 import { ExecutionType } from './schema/ExecutionType';
 
 /**
@@ -377,7 +377,7 @@ describe('direct configuration', () => {
                 }
             })
         );
-        executionConfig.runtime.configuration = new MockExecutionUnit();
+        executionConfig.runtime.configuration = () => new MockExecutionUnit();
     });
 
     /**
@@ -419,7 +419,7 @@ describe('direct configuration', () => {
         });
 
         const executionUnit = new MockExecutionUnit();
-        executionConfig.runtime.configuration = executionUnit;
+        executionConfig.runtime.configuration = () => executionUnit;
         executionUnit.execute = (context: DefaultContext) => {
             context.execution.data = new TextContent(`config.conf: ${context.config['conf']}, config.conf2: ${context.config['conf2']}`);
         };

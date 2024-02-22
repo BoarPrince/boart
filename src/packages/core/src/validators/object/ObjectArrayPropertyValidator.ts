@@ -116,6 +116,16 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
     /**
      *
      */
+    public shouldObjectOrFunction(): this {
+        this.getObjectElements().forEach((propElement, index) =>
+            ObjectPropertyValidator.shouldObjectOrFunction(propElement, this.path(index), this.propName)
+        );
+        return this;
+    }
+
+    /**
+     *
+     */
     public shouldHaveValueOf(...values: string[]): this {
         this.getObjectElements().forEach((propElement, index) =>
             ObjectPropertyValidator.shouldValueOf(propElement, this.path(index), this.propName, values)
