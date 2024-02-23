@@ -1,6 +1,7 @@
 import { ChildProcess, fork } from 'child_process';
 import { randomUUID } from 'crypto';
 import { NodeForkRequest, NodeForkResponse, RemoteRequest, RemoteResponse } from '@boart/remote';
+import { ASTAction } from '@boart/core';
 
 /**
  *
@@ -34,7 +35,7 @@ export class NodeForkServer {
     /**
      *
      */
-    public execute(message: RemoteRequest): Promise<RemoteResponse> {
+    public execute(message: RemoteRequest, action?: { name: string; ast: ASTAction }): Promise<RemoteResponse> {
         return new Promise((resolve, reject) => {
             const id: string = randomUUID();
 
@@ -52,7 +53,7 @@ export class NodeForkServer {
             };
 
             this.child.on('message', msgListener);
-            this.child.send({ message, id } as NodeForkRequest);
+            this.child.send({ message, id, action } as NodeForkRequest);
         });
     }
 }

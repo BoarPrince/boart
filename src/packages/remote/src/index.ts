@@ -1,6 +1,6 @@
 import { NodeForkRequest } from './node-fork/NodeForkRequest';
 import { NodeForkResponse } from './node-fork/NodeForkResponse';
-import { RemoteClient } from './proxy/RemoteClient';
+import { ClientExecutionProxy } from './proxy/ClientExecutionProxy';
 import { RemoteReportItem } from './proxy/RemoteReportItem';
 import { RemoteRequest } from './proxy/RemoteRequest';
 import { RemoteResponse } from './proxy/RemoteResponse';
@@ -8,4 +8,4 @@ import { RemoteResponse } from './proxy/RemoteResponse';
 /**
  *
  */
-export { RemoteClient, RemoteReportItem, RemoteRequest, RemoteResponse, NodeForkResponse, NodeForkRequest };
+export { ClientExecutionProxy as RemoteClient, RemoteReportItem, RemoteRequest, RemoteResponse, NodeForkResponse, NodeForkRequest };

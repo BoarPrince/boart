@@ -25,11 +25,17 @@ export class NodeForkExecutionProxyUnit implements ExecutionUnit<DefaultContext,
     /**
      *
      */
-    async execute(context: DefaultContext): Promise<void> {
-        const response: RemoteResponse = await this.server.execute({
-            config: context.config,
-            preExecution: context.preExecution
-        });
+    async execute(context: DefaultContext, row?: DefaultRowType<DefaultContext>): Promise<void> {
+        const response: RemoteResponse = await this.server.execute(
+            {
+                config: context.config,
+                preExecution: context.preExecution
+            },
+            {
+                name: row?.action, //
+                ast: row?.ast
+            }
+        );
 
         context.execution.data = DataContentHelper.create(response.execution.data);
         context.execution.header = DataContentHelper.create(response.execution.header);

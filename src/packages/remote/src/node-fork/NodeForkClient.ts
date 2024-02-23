@@ -1,5 +1,5 @@
 import { NodeForkResponse } from './NodeForkResponse';
-import { RemoteClient } from '../proxy/RemoteClient';
+import { ClientExecutionProxy } from '../proxy/ClientExecutionProxy';
 import { NodeForkRequest } from './NodeForkRequest';
 
 /**
@@ -7,11 +7,22 @@ import { NodeForkRequest } from './NodeForkRequest';
  */
 export class NodeForkClient {
     private started = false;
+    private clientImplList = new Map<string, ClientExecutionProxy>();
 
     /**
      *
      */
-    constructor(private clientImpl: RemoteClient) {}
+    constructor(private mainClientExecutionProxy?: ClientExecutionProxy) {}
+
+    /**
+     *
+     */
+    public addClientExecutionProxy(clientExecutionProxy: ClientExecutionProxy) {
+        if (this.clientImplList.has(clientExecutionProxy.action)) {
+            throw new Error(`client action ${clientExecutionProxy.action} already exists`);
+        }
+        this.clientImplList.set(clientExecutionProxy.action, clientExecutionProxy);
+    }
 
     /**
      *
@@ -48,8 +59,14 @@ export class NodeForkClient {
             error: undefined
         };
 
+        const client = !request.action?.name ? this.mainClientExecutionProxy : this.clientImplList.get(request.action.name);
+        if (!client) {
+            response.error = `client '${request.action?.name || 'mainClient'}' not found`;
+            return response;
+        }
+
         try {
-            response.data = await this.clientImpl.execute(request.message);
+            response.data = await client.execute(request.message);
         } catch (error) {
             response.error = (error as { message: string }).message || (error as unknown);
         }

@@ -63,6 +63,7 @@ describe('synchron', () => {
      */
     test('message is called without any error', async () => {
         const remoteClient = {
+            action: '-test-action-',
             execute: jest.fn().mockReturnValue(response)
         };
 
@@ -81,6 +82,7 @@ describe('synchron', () => {
      */
     test('message is called with a simple error', async () => {
         const remoteClient = {
+            action: '-test-action-',
             execute: jest.fn().mockImplementation(() => {
                 throw '-error-';
             })
@@ -101,6 +103,7 @@ describe('synchron', () => {
      */
     test('message is called with an error', async () => {
         const remoteClient = {
+            action: '-test-action-',
             execute: jest.fn().mockImplementation(() => {
                 throw new Error('-error-');
             })
@@ -121,6 +124,7 @@ describe('synchron', () => {
      */
     test('unexpected error occurs with simple error', async () => {
         const remoteClient = {
+            action: '-test-action-',
             execute: jest.fn()
         };
 
@@ -140,6 +144,7 @@ describe('synchron', () => {
      */
     test('unexpected error occurs with error', async () => {
         const remoteClient = {
+            action: '-test-action-',
             execute: jest.fn()
         };
 
@@ -152,6 +157,20 @@ describe('synchron', () => {
         expect(process.send).toHaveBeenCalledTimes(1);
         expect(process.send).toHaveBeenCalledWith({ id: 'uncaughtException', error: '-unexpected-' });
     });
+
+    /**
+     *
+     */
+    test('no remote client registered', async () => {
+        const sut = new NodeForkClient();
+        sut.start();
+
+        onListeners.get('message').forEach((listener) => listener({ message: '-message-' }));
+        await jest.runAllTimersAsync();
+
+        expect(process.send).toHaveBeenCalledTimes(1);
+        expect(process.send).toHaveBeenCalledWith({ error: `client 'mainClient' not found` });
+    });
 });
 
 /**
@@ -163,6 +182,7 @@ describe('asynchron', () => {
      */
     test('message is called without any error', async () => {
         const remoteClient = {
+            action: '-test-action-',
             execute: jest.fn().mockResolvedValue(response)
         };
 
@@ -174,5 +194,91 @@ describe('asynchron', () => {
 
         expect(process.send).toHaveBeenCalledTimes(1);
         expect(process.send).toHaveBeenCalledWith({ id: undefined, error: undefined, data: response });
+    });
+});
+
+/**
+ *
+ */
+describe('with clientExecutionProxy', () => {
+    /**
+     *
+     */
+    test('one client proxy', async () => {
+        const remoteClient = {
+            action: '-test-proxy-action-',
+            execute: jest.fn().mockResolvedValue(response)
+        };
+
+        const sut = new NodeForkClient();
+        sut.addClientExecutionProxy(remoteClient);
+        sut.start();
+
+        onListeners.get('message').forEach((listener) => listener({ message: '-message-', action: { name: '-test-proxy-action-' } }));
+        await jest.runAllTimersAsync();
+
+        expect(process.send).toHaveBeenCalledTimes(1);
+        expect(process.send).toHaveBeenCalledWith({ id: undefined, error: undefined, data: response });
+    });
+
+    /**
+     *
+     */
+    test('two client proxy', async () => {
+        const remoteClient1 = {
+            action: '-test-proxy-1-action-',
+            execute: jest.fn().mockResolvedValue(response)
+        };
+
+        const remoteClient2 = {
+            action: '-test-proxy-2-action-',
+            execute: jest.fn().mockResolvedValue(response)
+        };
+
+        const sut = new NodeForkClient();
+        sut.addClientExecutionProxy(remoteClient1);
+        sut.addClientExecutionProxy(remoteClient2);
+        sut.start();
+
+        onListeners.get('message').forEach((listener) => listener({ message: '-message-', action: { name: '-test-proxy-1-action-' } }));
+        await jest.runAllTimersAsync();
+
+        expect(process.send).toHaveBeenCalledTimes(1);
+        expect(process.send).toHaveBeenCalledWith({ id: undefined, error: undefined, data: response });
+    });
+
+    /**
+     *
+     */
+    test('client proxy not found', async () => {
+        const remoteClient1 = {
+            action: '-test-proxy-x-action-',
+            execute: jest.fn().mockResolvedValue(response)
+        };
+
+        const sut = new NodeForkClient();
+        sut.addClientExecutionProxy(remoteClient1);
+        sut.start();
+
+        onListeners.get('message').forEach((listener) => listener({ message: '-message-', action: { name: '-test-proxy-action-' } }));
+        await jest.runAllTimersAsync();
+
+        expect(process.send).toHaveBeenCalledTimes(1);
+        expect(process.send).toHaveBeenCalledWith({ error: `client '-test-proxy-action-' not found` });
+    });
+
+    /**
+     *
+     */
+    test('client proxy already exists', () => {
+        const remoteClient = {
+            action: '-test-proxy-x-action-',
+            execute: jest.fn().mockResolvedValue(response)
+        };
+
+        const sut = new NodeForkClient();
+        sut.addClientExecutionProxy(remoteClient);
+
+        expect(() => sut.addClientExecutionProxy(remoteClient)).toThrow('client action -test-proxy-x-action- already exists');
     });
 });
