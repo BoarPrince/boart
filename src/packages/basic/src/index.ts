@@ -1,6 +1,7 @@
 import { Runtime, TableHandlerInstances } from '@boart/core';
 import { LocalReport, ProtocolGenerator, StepReport, TestReport } from '@boart/protocol';
 import remote_server_initialize from '@boart/remote-server';
+import core_impl_initialize from '@boart/core-impl';
 
 import DataTableHandler from './data/DataTableHandler';
 import RabbitBindTableHandler from './rabbitBind/RabbitBindTableHandler';
@@ -11,6 +12,8 @@ import RestAuthorizeTableHandler from './restAuthorize/RestAuthorizeTableHandler
 import RestCallTableHandler from './restCall/RestCallTableHandler';
 import SQLQueryTableHandler from './sqlQuery/SQLQueryTableHandler';
 import TestDescriptionTableHandler from './testDescription/TestDescriptionTableHandler';
+import { initialize as basicDataGroupDefinitionInitialize } from './basicGroup/BasicDataGroupDefinition';
+import { initialize as basicGroupDefinitionInitialize } from './basicGroup/BasicGroupDefinition';
 
 /**
  *
@@ -37,7 +40,11 @@ export function initialized(): void {
         new ProtocolGenerator().generate();
     });
 
+    core_impl_initialize();
     remote_server_initialize();
+
+    basicDataGroupDefinitionInitialize();
+    basicGroupDefinitionInitialize();
 
     TableHandlerInstances.instance.add(new RestCallTableHandler().handler, 'Rest call');
     TableHandlerInstances.instance.add(new RestAuthorizeTableHandler().handler, 'Rest authorize');

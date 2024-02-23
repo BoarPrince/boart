@@ -51,7 +51,7 @@ export default class DataTableHandler extends TableHandlerBaseImpl<
      *
      */
     addRowDefinition(tableHandler: TableHandler<RepeatableDataExecutionContext, DefaultRowType<RepeatableDataExecutionContext>>): void {
-        tableHandler.getRowDefinition('payload').forEach((def) => (def.key = Symbol('in')));
+        // tableHandler.getRowDefinition('payload').forEach((def) => (def.key = Symbol('in')));
 
         tableHandler.addRowDefinition(
             new RowDefinition({

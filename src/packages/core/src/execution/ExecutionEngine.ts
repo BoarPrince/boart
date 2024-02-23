@@ -1,5 +1,5 @@
 import { LogProvider } from '../logging/LogProvider';
-import { Runtime } from '../runtime/RuntimeNotifier';
+import { Runtime } from '../runtime/Runtime';
 import { RuntimeStatus } from '../runtime/RuntimeStatus';
 import { Context } from '../store/Context';
 import { BaseRowType } from '../table/BaseRowType';

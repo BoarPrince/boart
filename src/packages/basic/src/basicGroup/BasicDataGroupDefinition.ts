@@ -18,7 +18,14 @@ import {
     TransformResetExecutionUnit
 } from '@boart/core-impl';
 
-if (!GroupRowDefinition.contains('basic-data')) {
+/**
+ *
+ */
+export function initialize() {
+    if (GroupRowDefinition.contains('basic-data')) {
+        return;
+    }
+
     const basicGroup = GroupRowDefinition.getInstance<DefaultContext, DefaultRowType<DefaultContext>>('basic-data');
 
     //-------------------------------------------------------------------------
@@ -27,6 +34,23 @@ if (!GroupRowDefinition.contains('basic-data')) {
     basicGroup.addRowDefinition(
         new RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
             key: Symbol('payload'),
+            type: TableRowType.PreProcessing,
+            parameterType: ParaType.False,
+            selectorType: SelectorType.Optional,
+            executionUnit: new DefaultPropertySetterExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>(
+                'preExecution',
+                'payload',
+                {
+                    defaultTypeConverter: (value) => DataContentHelper.create(value)
+                }
+            ),
+            validators: null
+        })
+    );
+
+    basicGroup.addRowDefinition(
+        new RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
+            key: Symbol('in'),
             type: TableRowType.PreProcessing,
             parameterType: ParaType.False,
             selectorType: SelectorType.Optional,
@@ -97,5 +121,8 @@ if (!GroupRowDefinition.contains('basic-data')) {
         })
     );
 }
+
+// eslint-disable-next-line jest/require-hook
+(() => initialize())();
 
 export default GroupRowDefinition.getInstance<DefaultContext, DefaultRowType<DefaultContext>>('basic-data');

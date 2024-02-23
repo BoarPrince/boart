@@ -5,11 +5,11 @@ import { VariableParser } from '../parser/VariableParser';
 
 import { StepStore } from './StepStore';
 
-const onStartSubject = new Subject<void>();
-
 /**
  *
  */
+const onStartSubject = new Subject<void>();
+// eslint-disable-next-line jest/no-untyped-mock-factory
 jest.mock('../runtime/Runtime', () => {
     return {
         Runtime: class {
@@ -61,14 +61,14 @@ describe('check step store', () => {
      */
     it('put and get and change context', () => {
         const sut = new StepStore();
-        const ast = pegParser.parseAction('store:a');
+        const ast_a = pegParser.parseAction('store:a');
         const ast_b = pegParser.parseAction('store:b');
 
-        sut.put(ast, new TextContent('b'));
+        sut.put(ast_a, new TextContent('b'));
         onStartSubject.next();
         sut.put(ast_b, 'c');
 
-        expect(sut.get(ast)).toBeUndefined();
+        expect(sut.get(ast_a)).toBeUndefined();
         expect(sut.get(ast_b)).toBe('c');
     });
 

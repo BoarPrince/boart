@@ -4,7 +4,7 @@ import { ExecutionContext } from '../execution/ExecutionContext';
 import { ExecutionEngine } from '../execution/ExecutionEngine';
 import { RepeatableExecutionContext } from '../execution/RepeatableExecutionContext';
 import { LogProvider } from '../logging/LogProvider';
-import { Runtime } from '../runtime/RuntimeNotifier';
+import { Runtime } from '../runtime/Runtime';
 import { TypedGroupValidator } from '../validators/GroupValidator';
 import { ValidationHandler } from '../validators/ValidationHandler';
 
@@ -76,7 +76,8 @@ export class TableHandler<
      */
     removeRowDefinition(key: string): this {
         if (!this.rowDefinitions.has(key)) {
-            throw Error(`key: '${key}' cannot removed, because it does not exists`);
+            return;
+            // throw Error(`key: '${key}' cannot removed, because it does not exists`);
         }
         this.rowDefinitions.delete(key);
         return this;

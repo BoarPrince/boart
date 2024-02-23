@@ -11,6 +11,7 @@ import { Store } from './store/Store';
 import { GroupRowDefinition } from './table/GroupRowDefinition';
 import { TableHandlerInstances } from './table/TableHandlerInstances';
 import { ValidatorFactoryManager } from './validators/ValidatorFactoryManager';
+import { Runtime } from './runtime/Runtime';
 
 declare global {
     var _storeInstance: Store;
@@ -27,6 +28,7 @@ declare global {
     var _coreInitialized: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     var _groupDefinitionInstance: Map<string, GroupRowDefinition<any, any>>;
+    var _runtimeInstance: Runtime;
 
     /**
      *

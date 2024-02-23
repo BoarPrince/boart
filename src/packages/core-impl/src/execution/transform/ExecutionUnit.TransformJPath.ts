@@ -63,7 +63,6 @@ export class TransformJPathExecutionUnit implements ExecutionUnit<DefaultContext
      *
      */
     execute(context: DefaultContext, row: DefaultRowType<DefaultContext>): void {
-        debugger;
         const rule = row.value.toString();
         const data = this.getSourceData(context, row.ast.datascope?.value);
 

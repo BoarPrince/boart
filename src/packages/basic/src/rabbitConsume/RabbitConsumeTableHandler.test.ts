@@ -213,7 +213,7 @@ describe('default', () => {
 /**
  *
  */
-describe.skip('filter', () => {
+xdescribe('filter', () => {
     /**
      *
      */

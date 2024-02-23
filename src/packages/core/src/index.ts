@@ -36,7 +36,7 @@ import { ASTValue } from './parser/ast/ASTValue';
 import { ASTVariable } from './parser/ast/ASTVariable';
 import { SelectorType as ASTSelectorType } from './parser/ast/SelectorType';
 import { LocalContext } from './runtime/LocalContext';
-import { Runtime } from './runtime/RuntimeNotifier';
+import { Runtime } from './runtime/Runtime';
 import { RuntimeResultContext } from './runtime/RuntimeResultContext';
 import { RuntimeContext } from './runtime/RuntimeContext';
 import { RuntimePriority } from './runtime/RuntimePriority';

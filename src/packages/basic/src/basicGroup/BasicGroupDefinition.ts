@@ -12,7 +12,14 @@ import {
     WaitExecutionUnit
 } from '@boart/core-impl';
 
-if (!GroupRowDefinition.contains('basic-group-definition')) {
+/**
+ *
+ */
+export function initialize() {
+    if (GroupRowDefinition.contains('basic-group-definition')) {
+        return;
+    }
+
     const basicGroup = GroupRowDefinition.getInstance<AnyContext, DefaultRowType<AnyContext>>('basic-group-definition');
 
     basicGroup.addRowDefinition(
@@ -103,5 +110,8 @@ if (!GroupRowDefinition.contains('basic-group-definition')) {
         })
     );
 }
+
+// eslint-disable-next-line jest/require-hook
+(() => initialize())();
 
 export default GroupRowDefinition.getInstance<DefaultContext, DefaultRowType<DefaultContext>>('basic-group-definition');
