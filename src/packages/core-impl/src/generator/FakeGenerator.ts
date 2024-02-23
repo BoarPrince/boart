@@ -1,4 +1,4 @@
-import { Generator, TextLanguageHandler } from '@boart/core';
+import { Generator, Runtime } from '@boart/core';
 import { faker } from '@faker-js/faker';
 
 /**
@@ -14,7 +14,7 @@ export class FakeGenerator implements Generator {
      *
      */
     constructor() {
-        TextLanguageHandler.instance.language.subscribe((lang) => {
+        Runtime.instance.language.subscribe((lang) => {
             faker.locale = lang;
         });
     }

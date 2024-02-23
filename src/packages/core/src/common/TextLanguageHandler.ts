@@ -1,9 +1,7 @@
 import fs from 'fs';
 import fsPath from 'path';
 
-import { Observable, Subject } from 'rxjs';
-
-import { ArraySubject } from './ArraySubject';
+import { Runtime } from '../runtime/Runtime';
 
 /**
  *
@@ -60,7 +58,6 @@ class MappingEntry {
 export class TextLanguageHandler {
     private readonly mappings: Record<string, MappingEntry>;
     private _defaultLanguage: string;
-    private readonly _language: Subject<string>;
 
     /**
      *
@@ -68,7 +65,6 @@ export class TextLanguageHandler {
     private constructor() {
         this.mappings = {};
         this._defaultLanguage = '';
-        this._language = new ArraySubject<string>();
     }
 
     /**
@@ -78,8 +74,8 @@ export class TextLanguageHandler {
         if (!globalThis._textLanguageHandlerInstance) {
             const instance = new TextLanguageHandler();
             globalThis._textLanguageHandlerInstance = instance;
-            instance.readMapping();
         }
+        globalThis._textLanguageHandlerInstance.readMapping();
         return globalThis._textLanguageHandlerInstance;
     }
 
@@ -118,14 +114,7 @@ export class TextLanguageHandler {
      */
     set defaultLanguage(language: string) {
         this._defaultLanguage = language;
-        this._language.next(language);
-    }
-
-    /**
-     *
-     */
-    get language(): Observable<string> {
-        return this._language;
+        Runtime.instance.language.next(language);
     }
 
     /**
@@ -138,7 +127,6 @@ export class TextLanguageHandler {
             const settings = JSON.parse(fileData) as EnvironmentSettings;
             return settings.text_mapping;
         } catch (error) {
-            // console.error(error);
             throw Error(`can't read language settings from env [${filename}]: ${JSON.stringify(error)}`);
         }
     }

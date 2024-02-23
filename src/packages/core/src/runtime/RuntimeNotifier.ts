@@ -1,21 +1,12 @@
 import { randomUUID } from 'crypto';
-import fs from 'fs';
-
 import { Observable, Subject } from 'rxjs';
-
-import { EnvLoader } from '../common/EnvLoader';
 import { Timer } from '../common/Timer';
-
-import { LocalContext } from './LocalContext';
 import { RuntimeResultContext } from './RuntimeResultContext';
-import { RuntimeContext } from './RuntimeContext';
-import { StepContext } from './StepContext';
-import { TestContext } from './TestContext';
 
 /**
  *
  */
-class RuntimeNotifier<TContext extends RuntimeResultContext> {
+export class RuntimeNotifier<TContext extends RuntimeResultContext> {
     private timer: Timer;
     private start = new Subject<TContext>();
     private end = new Subject<RuntimeResultContext>();
@@ -71,53 +62,5 @@ class RuntimeNotifier<TContext extends RuntimeResultContext> {
      */
     public notifyClear() {
         this.clear.next();
-    }
-}
-
-/**
- *
- */
-export class Runtime {
-    public stepRuntime = new RuntimeNotifier<StepContext>(() => new StepContext());
-    public testRuntime = new RuntimeNotifier<TestContext>(() => new TestContext());
-    public localRuntime = new RuntimeNotifier<LocalContext>(() => new LocalContext());
-    public runtime = new RuntimeNotifier<RuntimeContext>(() => new RuntimeContext(), false);
-
-    /**
-     *
-     */
-    private constructor() {
-        // hide constructor externally
-    }
-
-    /**
-     *
-     */
-    private initialize() {
-        this.localRuntime.onStart().subscribe((context) => this.runtime.currentContext.localContext.push(context));
-        this.testRuntime.onStart().subscribe((context) => this.localRuntime.currentContext.testContext.push(context));
-        this.stepRuntime.onStart().subscribe((context) => this.testRuntime.currentContext.stepContext.push(context));
-    }
-
-    /**
-     *
-     */
-    static get instance(): Runtime {
-        if (!globalThis._runtimeInstance) {
-            const instance = new Runtime();
-            globalThis._runtimeInstance = instance;
-            instance.initialize();
-        }
-        return globalThis._runtimeInstance;
-    }
-
-    /**
-     *
-     */
-    save(filename?: string) {
-        const data: string = JSON.stringify(this.runtime.currentContext);
-        filename = filename || EnvLoader.instance.mapReportData(`boart-runtime-data.json`);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        fs.writeFileSync(filename, data, 'utf-8');
     }
 }

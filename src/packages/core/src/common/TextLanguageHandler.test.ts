@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 import { EnvironmentSettings, TextLanguageHandler } from './TextLanguageHandler';
+import { Runtime } from '../runtime/Runtime';
 
 jest.mock('fs');
 
@@ -113,17 +114,25 @@ describe('check text language handler', () => {
         /**
          *
          */
-        it('check setting default language', (done) => {
-            let i = 0;
+        it('check setting default language', async () => {
             const expectedResult = ['nl', 'en'];
+            const foundLanguages = [];
             const sut = TextLanguageHandler.instance;
-            sut.language.subscribe((lang) => {
-                expect(lang).toBe(expectedResult[i++]);
-                if (i === 2) {
-                    done();
-                }
+
+            await new Promise<void>((done) => {
+                Runtime.instance.language.subscribe((lang) => {
+                    foundLanguages.push(lang);
+                    expect(expectedResult.find((l) => l === lang)).toBe(lang);
+
+                    if (expectedResult.toString() === foundLanguages.toString()) {
+                        // latest language must be 'en'
+                        expect(lang).toBe('en');
+                        done();
+                    }
+                });
+
+                sut.defaultLanguage = 'en';
             });
-            sut.defaultLanguage = 'en';
         });
 
         /**
