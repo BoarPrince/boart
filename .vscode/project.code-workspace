@@ -24,6 +24,22 @@
       "name": "📦 @boart/description ###########",
       "path": "../src/packages/description"
     },
+    {
+      "name": "📦 @boart/execution-proxy-client ###########",
+      "path": "../src/packages/execution-proxy-client"
+    },
+    {
+      "name": "📦 @boart/execution-proxy ###########",
+      "path": "../src/packages/execution-proxy"
+    },
+    {
+      "name": "📦 @boart/ui ###########",
+      "path": "../src/packages/ui"
+    },
+    {
+      "name": "📦 @boart/ui-selenium ###########",
+      "path": "../src/packages/ui-selenium"
+    },
     // {
     //   "name": "📦 @boart/desc",
     //   "path": "../src/packages/desc"
@@ -100,18 +116,19 @@
       "*.html": "html"
     },
     "files.autoSave": "off",
-    "jest.jestCommandLine": "./node_modules/.bin/jest --coverage --runInBand",
-    "jest.autoRun": {
-      "watch": false
-    },
-    "jest.testExplorer": {
-      "enabled": false,
-      "autoRun": false
-    },
+    "jest.jestCommandLine": "/Users/developer/Projects/boart.worktrees/v2/src/packages/core/node_modules/.bin/jest --coverage --runInBand --silent=false",
+    "jest.runMode": "deferred",
     "testing.autoRun.delay": 1000000,
     "eslint.workingDirectories": [
       ".eslintrc.js",
       ".eslintignore"
-    ]
+    ],
+    "CodeGPT.apiKey": "CodeGPT Plus Beta",
+    "jestTestExplorer.logpanel": true,
+    "jestTestExplorer.pathToJest": "/Users/developer/Projects/boart.worktrees/v2/src/packages/core/node_modules/.bin/jest --coverage --runInBand --silent=false",
+    "[svg]": {
+      "editor.defaultFormatter": "jock.svg"
+    }
+    // "jestTestExplorer.debugOutput": "internalConsole"
   }
 }

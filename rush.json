@@ -336,12 +336,20 @@
       "projectFolder": "src/packages/basic"
     },
     {
-      "packageName": "@boart/remote",
-      "projectFolder": "src/packages/remote"
+      "packageName": "@boart/execution-proxy-client",
+      "projectFolder": "src/packages/execution-proxy-client"
     },
     {
-      "packageName": "@boart/remote-server",
-      "projectFolder": "src/packages/remote-server"
+      "packageName": "@boart/execution-proxy",
+      "projectFolder": "src/packages/execution-proxy"
+    },
+    {
+      "packageName": "@boart/ui",
+      "projectFolder": "src/packages/ui"
+    },
+    {
+      "packageName": "@boart/ui-selenium",
+      "projectFolder": "src/packages/ui-selenium"
     },
     {
       "packageName": "@boart/test",
