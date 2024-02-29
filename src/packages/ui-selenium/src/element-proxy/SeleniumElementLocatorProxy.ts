@@ -34,7 +34,21 @@ export class SeleniumElementLocatorProxy implements ElementProxy {
     /**
      *
      */
+    getTagName(): Promise<string> {
+        throw new Error('Method not implemented.');
+    }
+
+    /**
+     *
+     */
     getParent(): Promise<ElementProxy> {
         return null;
+    }
+
+    /**
+     *
+     */
+    getXPath(): Promise<string> {
+        return Promise.resolve('/');
     }
 }

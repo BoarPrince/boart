@@ -20,7 +20,7 @@ export class ElementProxyLocatorHandler {
             globalThis._elementProxyLocatorHandler = instance;
         }
 
-        return globalThis._elementProxyLocatorHandler as ElementProxyLocatorHandler;
+        return globalThis._elementProxyLocatorHandler;
     }
 
     /**

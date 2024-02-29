@@ -1,6 +1,6 @@
-import { SeleniumElementProxy } from '../element-proxy/SeleniumElementProxy';
 import { WebElement } from 'selenium-webdriver';
 import { BaseLocator } from './BaseLocator';
+import { UIElementProxyHandler } from '@boart/ui';
 
 /**
  *
@@ -12,16 +12,16 @@ export class ByText extends BaseLocator {
     /**
      *
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public find(locationByStrategy: string, parentElement: SeleniumElementProxy): Promise<WebElement[]> {
-        throw new Error('not implemented');
+    public async find(locationByStrategy: string): Promise<WebElement[]> {
+        return (await UIElementProxyHandler.instance.getElementsByText(locationByStrategy)).map(
+            (proxyElement) => proxyElement.nativeElement as WebElement
+        );
     }
 
     /**
      *
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    findAll(parentElement: SeleniumElementProxy): Promise<WebElement[]> {
-        throw new Error('not implemented');
+    public async findAll(): Promise<WebElement[]> {
+        return (await UIElementProxyHandler.instance.getElementsByText()).map((proxyElement) => proxyElement.nativeElement as WebElement);
     }
 }

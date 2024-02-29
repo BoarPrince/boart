@@ -3,6 +3,9 @@ import { ElementProxyLocator } from '@boart/ui';
 import { SeleniumElementProxy } from '../element-proxy/SeleniumElementProxy';
 import { SeleniumElementLocatorProxy } from '../element-proxy/SeleniumElementLocatorProxy';
 
+/**
+ *
+ */
 export abstract class BaseLocator implements ElementProxyLocator {
     abstract readonly strategy;
     abstract strategyCanBeNull: boolean;

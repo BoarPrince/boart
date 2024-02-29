@@ -8,5 +8,8 @@
       "./tsconfig.json"
     ]
   },
+  "env": {
+    "browser": true
+  },
   "root": false
 }

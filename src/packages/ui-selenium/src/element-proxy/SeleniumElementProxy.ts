@@ -27,6 +27,13 @@ export class SeleniumElementProxy extends SeleniumElementLocatorProxy {
     /**
      *
      */
+    getTagName(): Promise<string> {
+        return this.nativeElement.getTagName();
+    }
+
+    /**
+     *
+     */
     async getParent(): Promise<ElementProxy> {
         const elements = await this.nativeElement.findElements(By.xpath('./parent::node()'));
         return elements?.length > 0 ? new SeleniumElementProxy(elements[0]) : null;
@@ -58,5 +65,44 @@ export class SeleniumElementProxy extends SeleniumElementLocatorProxy {
         }
 
         return true;
+    }
+
+    /**
+     *
+     */
+    public getXPath(): Promise<string> {
+        return this.driver.executeScript(() => {
+            // eslint-disable-next-line prefer-rest-params
+            let currentElement = arguments[0] as Element;
+            let xpath = '';
+            let isRootElement = false;
+
+            while (!isRootElement) {
+                const tagName = currentElement.tagName.toLowerCase();
+                const parentElement = currentElement.parentElement;
+
+                if (parentElement.childElementCount > 1) {
+                    const parentsChildren = Array.from(parentElement.children);
+                    const elementsByTag = parentsChildren.filter((child) => child.tagName.toLowerCase() === tagName);
+
+                    if (elementsByTag.length > 1) {
+                        const position = elementsByTag.indexOf(currentElement);
+                        xpath = `/${tagName}[${position}]${xpath}`;
+                    } else {
+                        xpath = `/${tagName}${xpath}`;
+                    }
+                } else {
+                    xpath = `/${tagName}${xpath}`;
+                }
+
+                currentElement = parentElement;
+                isRootElement = parentElement.tagName.toLowerCase() === 'html';
+                if (isRootElement) {
+                    xpath = `/html${xpath}`;
+                }
+            }
+
+            return xpath;
+        }, this.nativeElement);
     }
 }

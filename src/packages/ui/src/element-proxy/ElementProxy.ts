@@ -12,6 +12,16 @@ export interface ElementProxy {
      */
     getParent(): Promise<ElementProxy> | null;
 
+    /**
+     *
+     */
+    getTagName(): Promise<string>;
+
+    /**
+     *
+     */
+    getXPath(): Promise<string>;
+
     // /**
     //  *
     //  */

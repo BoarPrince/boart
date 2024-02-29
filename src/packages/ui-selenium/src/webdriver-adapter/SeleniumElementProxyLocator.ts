@@ -15,14 +15,14 @@ export class SeleniumElementProxyLocator {
     /**
      *
      */
-    private getElement(parentElement: SeleniumElementProxy): SeleniumElementLocatorProxy {
+    private getElement(parentElement: ElementProxy): ElementProxy {
         return !parentElement ? new SeleniumElementLocatorProxy(this.driver.nativeDriver) : parentElement;
     }
 
     /**
      *
      */
-    public async findBy(strategy: string, location: string, parentElement?: SeleniumElementProxy, index?: number): Promise<ElementProxy> {
+    public async findBy(strategy: string, location: string, parentElement?: ElementProxy, index?: number): Promise<ElementProxy> {
         const element = await this.findOptionalBy(strategy, location, parentElement, index);
         return element ? element : Promise.reject(`element with strategy: '${strategy}' and location: '${location}' not found!`);
     }
@@ -30,7 +30,7 @@ export class SeleniumElementProxyLocator {
     /**
      *
      */
-    findOptionalBy(strategy: string, location: string, parentElement?: SeleniumElementProxy, index?: number): Promise<ElementProxy> {
+    findOptionalBy(strategy: string, location: string, parentElement?: ElementProxy, index?: number): Promise<ElementProxy> {
         const locator = ElementProxyLocatorHandler.instance.findLocator(strategy);
         return locator.findBy(location, this.getElement(parentElement), index);
     }

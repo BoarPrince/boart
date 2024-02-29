@@ -1,8 +1,7 @@
-import { ElementProxy } from '@boart/ui';
-import { WebDriverAdapterElement } from '@boart/ui/lib/webdriver/WebDriverAdapterElement';
+import { ElementProxy, UIElementProxyHandler, WebDriverAdapter, WebDriverAdapterElement } from '@boart/ui';
 import { SeleniumWebDriver } from './SeleniumWebDriver';
 import { SeleniumElementProxyLocator } from './SeleniumElementProxyLocator';
-import { SeleniumElementProxy } from '../element-proxy/SeleniumElementProxy';
+import { UIElementProxy } from '@boart/ui/lib/ui-element-proxy/UIElementProxy';
 
 /**
  *
@@ -11,14 +10,17 @@ export class SeleniumWebDriverAdapterElement implements WebDriverAdapterElement 
     /**
      *
      */
-    constructor(private driver: SeleniumWebDriver) {
+    constructor(
+        private driver: SeleniumWebDriver,
+        public readonly webDriverAdapter: WebDriverAdapter
+    ) {
         this.locator = new SeleniumElementProxyLocator(this.driver);
     }
 
     /**
      *
      */
-    public async byId(location: string, parentElement?: SeleniumElementProxy, index?: number): Promise<ElementProxy> {
+    public async byId(location: string, parentElement?: ElementProxy, index?: number): Promise<ElementProxy> {
         return this.locator.findBy('id', location, parentElement, index);
     }
 
@@ -30,35 +32,54 @@ export class SeleniumWebDriverAdapterElement implements WebDriverAdapterElement 
     /**
      *
      */
-    exists(location: string): Promise<boolean> {
-        throw new Error('Method not implemented.');
+    private async getProxyAndCheckAccessibility(element: ElementProxy, location: string): Promise<UIElementProxy> {
+        const proxy = await UIElementProxyHandler.instance.getProxy(element);
+        const tagName = await element.getTagName();
+
+        if (!proxy) {
+            throw new Error(`elements are nots supported with tagName: '${tagName}'`);
+        }
+
+        if (!(await proxy.isDisplayed()) || !(await proxy.isEnabled())) {
+            throw new Error(`element location: '${location}', tagName: '${tagName}' is not visible or not enabled`);
+        }
+
+        return proxy;
     }
 
     /**
      *
      */
-    getActive(location: string): Promise<ElementProxy> {
-        throw new Error('Method not implemented.');
+    async setValue(value: string, location: string, element: ElementProxy): Promise<void> {
+        await this.webDriverAdapter.isInProgess();
+
+        const proxy = await this.getProxyAndCheckAccessibility(element, location);
+        const tagName = await element.getTagName();
+
+        try {
+            await proxy.requestFocus(element);
+            await proxy.setValue(value, element);
+        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            throw new Error(`set value is not supported for '${location}', tagName: '${tagName}'\n${error.message}`);
+        }
     }
 
     /**
      *
      */
-    setValue(value: string, location: string, element: ElementProxy): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
+    async click(location: string, element: ElementProxy): Promise<void> {
+        await this.webDriverAdapter.isInProgess();
 
-    /**
-     *
-     */
-    setControlValue(value: string, location: string, element: ElementProxy): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
+        const proxy = await this.getProxyAndCheckAccessibility(element, location);
+        const tagName = await element.getTagName();
 
-    /**
-     *
-     */
-    click(location: string, element: ElementProxy): Promise<void> {
-        throw new Error('Method not implemented.');
+        try {
+            await proxy.requestFocus(element);
+            await proxy.click(element);
+        } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            throw new Error(`set value is not supported for '${location}', tagName: '${tagName}'\n${error.message}`);
+        }
     }
 }

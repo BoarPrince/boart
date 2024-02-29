@@ -1,10 +1,11 @@
 import { ElementProxy } from '../element-proxy/ElementProxy';
-import { ElementProxyLocator } from '../element-proxy/ElementProxyLocator';
+import { WebDriverAdapter } from './WebDriverAdapter';
 
 /**
  *
  */
 export interface WebDriverAdapterElement {
+    readonly webDriverAdapter: WebDriverAdapter;
     /**
      *
      */
@@ -33,19 +34,13 @@ export interface WebDriverAdapterElement {
     /**
      *
      */
-    exists(location: string): Promise<boolean>;
-    /**
-     *
-     */
-    getActive(location: string): Promise<ElementProxy>;
-    /**
-     *
-     */
     setValue(value: string, location: string, element: ElementProxy): Promise<void>;
-    /**
-     *
-     */
-    setControlValue(value: string, location: string, element: ElementProxy): Promise<void>;
+
+    // /**
+    //  *
+    //  */
+    // setControlValue(value: string, location: string, element: ElementProxy): Promise<void>;
+
     /**
      *
      */
