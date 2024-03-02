@@ -7,15 +7,20 @@ import { WebDriverProxy } from './WebDriverProxy';
  */
 
 export interface WebDriverAdapter {
-    // /**
-    //  *
-    //  */
+    /**
+     *
+     */
     readonly driver: WebDriverProxy;
 
     /**
      *
      */
-    isInProgess(): Promise<void>;
+    progessWaiting(): Promise<void>;
+
+    /**
+     *
+     */
+    errorChecking(): Promise<void>;
 
     /**
      *

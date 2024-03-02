@@ -51,7 +51,7 @@ export class SeleniumWebDriverAdapterElement implements WebDriverAdapterElement 
      *
      */
     async setValue(value: string, location: string, element: ElementProxy): Promise<void> {
-        await this.webDriverAdapter.isInProgess();
+        await this.webDriverAdapter.progessWaiting();
 
         const proxy = await this.getProxyAndCheckAccessibility(element, location);
         const tagName = await element.getTagName();
@@ -63,13 +63,16 @@ export class SeleniumWebDriverAdapterElement implements WebDriverAdapterElement 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             throw new Error(`set value is not supported for '${location}', tagName: '${tagName}'\n${error.message}`);
         }
+
+        await this.webDriverAdapter.progessWaiting();
+        await this.webDriverAdapter.errorChecking();
     }
 
     /**
      *
      */
     async click(location: string, element: ElementProxy): Promise<void> {
-        await this.webDriverAdapter.isInProgess();
+        await this.webDriverAdapter.progessWaiting();
 
         const proxy = await this.getProxyAndCheckAccessibility(element, location);
         const tagName = await element.getTagName();
@@ -81,5 +84,8 @@ export class SeleniumWebDriverAdapterElement implements WebDriverAdapterElement 
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             throw new Error(`set value is not supported for '${location}', tagName: '${tagName}'\n${error.message}`);
         }
+
+        await this.webDriverAdapter.progessWaiting();
+        await this.webDriverAdapter.errorChecking();
     }
 }
