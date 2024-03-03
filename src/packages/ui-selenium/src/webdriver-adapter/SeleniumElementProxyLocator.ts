@@ -1,4 +1,4 @@
-import { ElementProxy, ElementProxyLocatorHandler } from '@boart/ui';
+import { ElementProxy, ElementProxyLocatorHandler, WebPageAdapterElementLocator } from '@boart/ui';
 import { SeleniumWebDriver } from './SeleniumWebDriver';
 import { SeleniumElementLocatorProxy } from '../element-proxy/SeleniumElementLocatorProxy';
 import { SeleniumElementProxy } from '../element-proxy/SeleniumElementProxy';
@@ -6,7 +6,7 @@ import { SeleniumElementProxy } from '../element-proxy/SeleniumElementProxy';
 /**
  *
  */
-export class SeleniumElementProxyLocator {
+export class SeleniumElementProxyLocator implements WebPageAdapterElementLocator {
     /**
      *
      */

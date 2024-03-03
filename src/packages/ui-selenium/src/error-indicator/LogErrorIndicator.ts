@@ -18,9 +18,12 @@ export class LogErrorIndicator implements UIErrorIndicator {
         // check logEntries
         const logEntries = await driver.nativeDriver.manage().logs().get(logging.Type.BROWSER);
 
-        return logEntries
-            .filter((entry) => entry.level === logging.Level.SEVERE)
-            .map((entry) => entry.message)
-            .join('\n');
+        return (
+            logEntries
+                // errors are not allowed
+                .filter((entry) => entry.level === logging.Level.SEVERE)
+                .map((entry) => entry.message)
+                .join('\n')
+        );
     }
 }

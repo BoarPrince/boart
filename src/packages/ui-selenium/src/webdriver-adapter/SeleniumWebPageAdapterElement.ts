@@ -1,4 +1,4 @@
-import { ElementProxy, UIElementProxyHandler, WebDriverAdapter, WebDriverAdapterElement } from '@boart/ui';
+import { ElementProxy, UIElementProxyHandler, WebPageAdapter, WebPageAdapterElement } from '@boart/ui';
 import { SeleniumWebDriver } from './SeleniumWebDriver';
 import { SeleniumElementProxyLocator } from './SeleniumElementProxyLocator';
 import { UIElementProxy } from '@boart/ui/lib/ui-element-proxy/UIElementProxy';
@@ -6,13 +6,13 @@ import { UIElementProxy } from '@boart/ui/lib/ui-element-proxy/UIElementProxy';
 /**
  *
  */
-export class SeleniumWebDriverAdapterElement implements WebDriverAdapterElement {
+export class SeleniumWebPageAdapterElement implements WebPageAdapterElement {
     /**
      *
      */
     constructor(
         private driver: SeleniumWebDriver,
-        public readonly webDriverAdapter: WebDriverAdapter
+        public readonly webDriverAdapter: WebPageAdapter
     ) {
         this.locator = new SeleniumElementProxyLocator(this.driver);
     }

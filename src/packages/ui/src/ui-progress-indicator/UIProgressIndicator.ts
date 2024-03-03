@@ -1,4 +1,4 @@
-import { WebDriverProxy } from '../webdriver-adapter/WebDriverProxy';
+import { WebDriverProxy } from '../web-driver/WebDriverProxy';
 
 /**
  *

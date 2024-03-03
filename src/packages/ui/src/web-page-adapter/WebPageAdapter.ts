@@ -1,12 +1,12 @@
 import { ElementProxy } from '../element-proxy/ElementProxy';
-import { WebDriverAdapterElement } from './WebDriverAdapterElement';
-import { WebDriverProxy } from './WebDriverProxy';
+import { WebPageAdapterElement } from './WebPageAdapterElement';
+import { WebDriverProxy } from '../web-driver/WebDriverProxy';
 
 /**
  *
  */
 
-export interface WebDriverAdapter {
+export interface WebPageAdapter {
     /**
      *
      */
@@ -35,7 +35,7 @@ export interface WebDriverAdapter {
     /**
      *
      */
-    element: WebDriverAdapterElement;
+    element: WebPageAdapterElement;
 
     /**
      *

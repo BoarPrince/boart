@@ -6,20 +6,22 @@ import { UIErrorIndicator } from './ui-error-indicator/UIErrorIndicator';
 import { UIErrorIndicatorHandler } from './ui-error-indicator/UIProgressIndicatorHandler';
 import { UIProgressIndicator } from './ui-progress-indicator/UIProgressIndicator';
 import { UIProgressIndicatorHandler } from './ui-progress-indicator/UIProgressIndicatorHandler';
-import { WebDriverAdapter } from './webdriver-adapter/WebDriverAdapter';
-import { WebDriverAdapterElement } from './webdriver-adapter/WebDriverAdapterElement';
-import { WebDriverProxy } from './webdriver-adapter/WebDriverProxy';
+import { WebPageAdapter } from './web-page-adapter/WebPageAdapter';
+import { WebPageAdapterElement } from './web-page-adapter/WebPageAdapterElement';
+import { WebDriverProxy } from './web-driver/WebDriverProxy';
+import { WebPageAdapterElementLocator } from './web-page-adapter/WebPageAdapterElementLocator';
 
 export {
     ElementProxy,
     ElementProxyLocator,
     ElementProxyLocatorHandler,
     WebDriverProxy,
-    WebDriverAdapter,
-    WebDriverAdapterElement,
+    WebPageAdapter,
+    WebPageAdapterElement,
     UIElementProxyHandler,
     UIProgressIndicator,
     UIProgressIndicatorHandler,
     UIErrorIndicatorHandler,
-    UIErrorIndicator
+    UIErrorIndicator,
+    WebPageAdapterElementLocator
 };

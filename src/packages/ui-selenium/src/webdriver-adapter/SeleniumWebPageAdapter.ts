@@ -1,17 +1,17 @@
-import { UIErrorIndicatorHandler, UIProgressIndicatorHandler, WebDriverAdapter } from '@boart/ui';
+import { UIErrorIndicatorHandler, UIProgressIndicatorHandler, WebPageAdapter } from '@boart/ui';
 import { SeleniumWebDriver } from './SeleniumWebDriver';
 import { By } from 'selenium-webdriver';
-import { SeleniumWebDriverAdapterElement } from './SeleniumWebDriverAdapterElement';
+import { SeleniumWebPageAdapterElement } from './SeleniumWebPageAdapterElement';
 
 /**
  *
  */
-export class SeleniumWebDriverAdapter implements WebDriverAdapter {
+export class SeleniumWebPageAdapter implements WebPageAdapter {
     /**
      *
      */
-    public static instance(): WebDriverAdapter {
-        return new SeleniumWebDriverAdapter();
+    public static instance(): WebPageAdapter {
+        return new SeleniumWebPageAdapter();
     }
 
     /**
@@ -95,7 +95,7 @@ export class SeleniumWebDriverAdapter implements WebDriverAdapter {
     /**
      *
      */
-    readonly element = new SeleniumWebDriverAdapterElement(this.driver, this);
+    readonly element = new SeleniumWebPageAdapterElement(this.driver, this);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     readonly elements: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
