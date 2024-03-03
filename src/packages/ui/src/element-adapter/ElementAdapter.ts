@@ -1,7 +1,7 @@
 /**
  *
  */
-export interface ElementProxy {
+export interface ElementAdapter {
     /**
      *
      */
@@ -10,7 +10,7 @@ export interface ElementProxy {
     /**
      *
      */
-    getParent(): Promise<ElementProxy> | null;
+    getParent(): Promise<ElementAdapter> | null;
 
     /**
      *
@@ -31,9 +31,4 @@ export interface ElementProxy {
     //  *
     //  */
     // isEnabled(): Promise<boolean>;
-
-    // /**
-    //  *
-    //  */
-    // isAccessible(): Promise<boolean>;
 }

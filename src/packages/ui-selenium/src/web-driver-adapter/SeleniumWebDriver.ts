@@ -1,10 +1,10 @@
-import { ElementProxy, WebDriverProxy } from '@boart/ui';
+import { ElementAdapter, WebDriverAdapter } from '@boart/ui';
 import { WebDriver } from 'selenium-webdriver';
 
 /**
  *
  */
-export class SeleniumWebDriver implements WebDriverProxy {
+export class SeleniumWebDriver implements WebDriverAdapter<WebDriver> {
     /**
      *
      */
@@ -67,8 +67,15 @@ export class SeleniumWebDriver implements WebDriverProxy {
     /**
      *
      */
-    public async requestFocus(element: ElementProxy): Promise<void> {
+    public async requestFocus(element: ElementAdapter): Promise<void> {
         return this.nativeDriver.executeScript('arguments[0].focus(); arguments[0].scrollIntoView();', element.nativeElement);
+    }
+
+    /**
+     *
+     */
+    public preventPrintDialog(): Promise<void> {
+        return this.nativeDriver.executeScript('window.print = () => {}');
     }
 
     /**

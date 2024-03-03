@@ -1,4 +1,4 @@
-import { ElementProxy } from '@boart/ui';
+import { ElementAdapter } from '@boart/ui';
 import selenium, { By } from 'selenium-webdriver';
 import { SeleniumElementLocatorProxy } from './SeleniumElementLocatorProxy';
 
@@ -34,7 +34,7 @@ export class SeleniumElementProxy extends SeleniumElementLocatorProxy {
     /**
      *
      */
-    async getParent(): Promise<ElementProxy> {
+    async getParent(): Promise<ElementAdapter> {
         const elements = await this.nativeElement.findElements(By.xpath('./parent::node()'));
         return elements?.length > 0 ? new SeleniumElementProxy(elements[0]) : null;
     }

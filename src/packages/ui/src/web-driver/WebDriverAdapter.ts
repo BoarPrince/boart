@@ -1,10 +1,10 @@
-import { ElementProxy } from '../element-proxy/ElementProxy';
+import { ElementAdapter } from '../element-adapter/ElementAdapter';
 
 /**
  *
  */
-export interface WebDriverProxy {
-    readonly nativeDriver: unknown;
+export interface WebDriverAdapter<T> {
+    readonly nativeDriver: T;
 
     /**
      *
@@ -40,12 +40,17 @@ export interface WebDriverProxy {
     /**
      *
      */
+    preventPrintDialog(): Promise<void>;
+
+    /**
+     *
+     */
     scrollToTop(): Promise<void>;
 
     /**
      *
      */
-    requestFocus(element: ElementProxy): Promise<void>;
+    requestFocus(element: ElementAdapter): Promise<void>;
 
     // /**
     //  *

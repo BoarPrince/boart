@@ -1,16 +1,16 @@
-import { ElementProxy } from '../element-proxy/ElementProxy';
+import { ElementAdapter } from '../element-adapter/ElementAdapter';
 import { WebPageAdapterElement } from './WebPageAdapterElement';
-import { WebDriverProxy } from '../web-driver/WebDriverProxy';
+import { WebDriverAdapter } from '../web-driver/WebDriverAdapter';
 
 /**
  *
  */
 
-export interface WebPageAdapter {
+export interface WebPageAdapter<T> {
     /**
      *
      */
-    readonly driver: WebDriverProxy;
+    readonly driver: WebDriverAdapter<T>;
 
     /**
      *
@@ -30,21 +30,16 @@ export interface WebPageAdapter {
     /**
      *
      */
-    preventPrintDialog(): Promise<void>;
-
-    /**
-     *
-     */
-    element: WebPageAdapterElement;
+    element: WebPageAdapterElement<T>;
 
     /**
      *
      */
     elements: {
-        byClassName(location: string, element: ElementProxy, index?: number): Promise<ElementProxy[]>;
-        byXPath(location: string, element: ElementProxy, index?: number): Promise<ElementProxy[]>;
-        all(): Promise<ElementProxy[]>;
-        toString(element: ElementProxy[]): string;
+        byClassName(location: string, element: ElementAdapter, index?: number): Promise<ElementAdapter[]>;
+        byXPath(location: string, element: ElementAdapter, index?: number): Promise<ElementAdapter[]>;
+        all(): Promise<ElementAdapter[]>;
+        toString(element: ElementAdapter[]): string;
     };
 
     screenshot: {

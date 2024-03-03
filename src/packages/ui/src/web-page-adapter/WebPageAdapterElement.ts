@@ -1,16 +1,16 @@
-import { ElementProxy } from '../element-proxy/ElementProxy';
+import { ElementAdapter } from '../element-adapter/ElementAdapter';
 import { WebPageAdapter } from './WebPageAdapter';
 import { WebPageAdapterElementLocator } from './WebPageAdapterElementLocator';
 
 /**
  *
  */
-export interface WebPageAdapterElement {
-    readonly webDriverAdapter: WebPageAdapter;
+export interface WebPageAdapterElement<T> {
+    readonly webDriverAdapter: WebPageAdapter<T>;
     /**
      *
      */
-    byId(location: string, parentElement: ElementProxy, index?: number): Promise<ElementProxy>;
+    byId(location: string, parentElement: ElementAdapter, index?: number): Promise<ElementAdapter>;
 
     /**
      *
@@ -20,7 +20,7 @@ export interface WebPageAdapterElement {
     /**
      *
      */
-    setValue(value: string, location: string, element: ElementProxy): Promise<void>;
+    setValue(value: string, location: string, element: ElementAdapter): Promise<void>;
 
     // /**
     //  *
@@ -30,5 +30,5 @@ export interface WebPageAdapterElement {
     /**
      *
      */
-    click(location: string, element: ElementProxy): Promise<void>;
+    click(location: string, element: ElementAdapter): Promise<void>;
 }

@@ -1,4 +1,4 @@
-import { ElementProxy } from '@boart/ui';
+import { ElementAdapter } from '@boart/ui';
 import selenium from 'selenium-webdriver';
 
 /**
@@ -11,7 +11,7 @@ type LocatorType = {
 /**
  *
  */
-export class SeleniumElementLocatorProxy implements ElementProxy {
+export class SeleniumElementLocatorProxy implements ElementAdapter {
     /**
      *
      */
@@ -41,7 +41,7 @@ export class SeleniumElementLocatorProxy implements ElementProxy {
     /**
      *
      */
-    getParent(): Promise<ElementProxy> {
+    getParent(): Promise<ElementAdapter> {
         return null;
     }
 

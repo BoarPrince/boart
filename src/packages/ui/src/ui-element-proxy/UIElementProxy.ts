@@ -1,4 +1,4 @@
-import { ElementProxy } from '../element-proxy/ElementProxy';
+import { ElementAdapter } from '../element-adapter/ElementAdapter';
 
 /**
  *
@@ -17,17 +17,17 @@ export interface UIElementProxy {
     /**
      *
      */
-    getElement(): Promise<ElementProxy>;
+    getElement(): Promise<ElementAdapter>;
 
     /**
      *
      */
-    isMatching(element: ElementProxy): Promise<boolean>;
+    isMatching(element: ElementAdapter): Promise<boolean>;
 
     /**
      *
      */
-    getElementByMatchingText(text?: string): Promise<ElementProxy>;
+    getElementByMatchingText(text?: string): Promise<ElementAdapter>;
 
     /**
      *
@@ -42,20 +42,20 @@ export interface UIElementProxy {
     /**
      *
      */
-    requestFocus(element: ElementProxy): Promise<void>;
+    requestFocus(element: ElementAdapter): Promise<void>;
 
     /**
      *
      */
-    setControlValue(value: string, element: ElementProxy): Promise<void>;
+    setControlValue(value: string, element: ElementAdapter): Promise<void>;
 
     /**
      *
      */
-    setValue(value: string, element: ElementProxy): Promise<void>;
+    setValue(value: string, element: ElementAdapter): Promise<void>;
 
     /**
      *
      */
-    click(element: ElementProxy): Promise<void>;
+    click(element: ElementAdapter): Promise<void>;
 }

@@ -1,25 +1,17 @@
-import { UIErrorIndicatorHandler, UIProgressIndicatorHandler, WebPageAdapter } from '@boart/ui';
-import { SeleniumWebDriver } from './SeleniumWebDriver';
-import { By } from 'selenium-webdriver';
-import { SeleniumWebPageAdapterElement } from './SeleniumWebPageAdapterElement';
+import { UIErrorIndicatorHandler } from '../ui-error-indicator/UIProgressIndicatorHandler';
+import { UIProgressIndicatorHandler } from '../ui-progress-indicator/UIProgressIndicatorHandler';
+import { WebDriverAdapter } from '../web-driver/WebDriverAdapter';
+import { WebPageAdapter } from './WebPageAdapter';
+import { WebPageAdapterElement } from './WebPageAdapterElement';
 
 /**
  *
  */
-export class SeleniumWebPageAdapter implements WebPageAdapter {
+export abstract class WebPageAdapterDefault<T> implements WebPageAdapter<T> {
     /**
      *
      */
-    public static instance(): WebPageAdapter {
-        return new SeleniumWebPageAdapter();
-    }
-
-    /**
-     *
-     */
-    public get driver(): SeleniumWebDriver {
-        return null;
-    }
+    constructor(public readonly driver: WebDriverAdapter<T>) {}
 
     /**
      *
@@ -69,35 +61,14 @@ export class SeleniumWebPageAdapter implements WebPageAdapter {
     /**
      *
      */
-    public async getPageText(): Promise<string> {
-        // get body text
-        const bodyElement = await this.driver.nativeDriver.findElement(By.css('body'));
-        const pageTextArr = [];
-        pageTextArr.push(await bodyElement.getText());
-
-        // get text of any input fields
-        const inputElements = await this.driver.nativeDriver.findElements(By.css('input'));
-        for (const element of inputElements) {
-            const value = await element.getAttribute('value');
-            pageTextArr.push(value);
-        }
-
-        return pageTextArr.join('\n');
-    }
+    public abstract getPageText(): Promise<string>;
 
     /**
      *
      */
-    public preventPrintDialog(): Promise<void> {
-        return this.driver.nativeDriver.executeScript('window.print = () => {}');
-    }
-
-    /**
-     *
-     */
-    readonly element = new SeleniumWebPageAdapterElement(this.driver, this);
+    public abstract readonly element: WebPageAdapterElement<T>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    readonly elements: any;
+    public abstract readonly elements: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    readonly screenshot: any;
+    public abstract readonly screenshot: any;
 }

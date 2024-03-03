@@ -1,38 +1,35 @@
-import { ElementProxy, UIElementProxyHandler, WebPageAdapter, WebPageAdapterElement } from '@boart/ui';
-import { SeleniumWebDriver } from './SeleniumWebDriver';
-import { SeleniumElementProxyLocator } from './SeleniumElementProxyLocator';
-import { UIElementProxy } from '@boart/ui/lib/ui-element-proxy/UIElementProxy';
+import { ElementAdapter } from '../element-adapter/ElementAdapter';
+import { UIElementProxy } from '../ui-element-proxy/UIElementProxy';
+import { UIElementProxyHandler } from '../ui-element-proxy/UIElementProxyHandler';
+import { WebDriverAdapter } from '../web-driver/WebDriverAdapter';
+import { WebPageAdapter } from './WebPageAdapter';
+import { WebPageAdapterElement } from './WebPageAdapterElement';
+import { WebPageAdapterElementLocator } from './WebPageAdapterElementLocator';
 
 /**
  *
  */
-export class SeleniumWebPageAdapterElement implements WebPageAdapterElement {
+export class WebPageAdapterElementDefault<T> implements WebPageAdapterElement<T> {
     /**
      *
      */
     constructor(
-        private driver: SeleniumWebDriver,
-        public readonly webDriverAdapter: WebPageAdapter
-    ) {
-        this.locator = new SeleniumElementProxyLocator(this.driver);
-    }
+        private driver: WebDriverAdapter<T>,
+        public readonly webDriverAdapter: WebPageAdapter<T>,
+        public readonly locator: WebPageAdapterElementLocator
+    ) {}
 
     /**
      *
      */
-    public async byId(location: string, parentElement?: ElementProxy, index?: number): Promise<ElementProxy> {
+    public async byId(location: string, parentElement?: ElementAdapter, index?: number): Promise<ElementAdapter> {
         return this.locator.findBy('id', location, parentElement, index);
     }
 
     /**
      *
      */
-    readonly locator: SeleniumElementProxyLocator;
-
-    /**
-     *
-     */
-    private async getProxyAndCheckAccessibility(element: ElementProxy, location: string): Promise<UIElementProxy> {
+    private async getProxyAndCheckAccessibility(element: ElementAdapter, location: string): Promise<UIElementProxy> {
         const proxy = await UIElementProxyHandler.instance.getProxy(element);
         const tagName = await element.getTagName();
 
@@ -50,7 +47,7 @@ export class SeleniumWebPageAdapterElement implements WebPageAdapterElement {
     /**
      *
      */
-    async setValue(value: string, location: string, element: ElementProxy): Promise<void> {
+    async setValue(value: string, location: string, element: ElementAdapter): Promise<void> {
         await this.webDriverAdapter.progessWaiting();
 
         const proxy = await this.getProxyAndCheckAccessibility(element, location);
@@ -71,7 +68,7 @@ export class SeleniumWebPageAdapterElement implements WebPageAdapterElement {
     /**
      *
      */
-    async click(location: string, element: ElementProxy): Promise<void> {
+    async click(location: string, element: ElementAdapter): Promise<void> {
         await this.webDriverAdapter.progessWaiting();
 
         const proxy = await this.getProxyAndCheckAccessibility(element, location);

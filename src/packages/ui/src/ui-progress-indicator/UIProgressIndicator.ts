@@ -1,4 +1,4 @@
-import { WebDriverProxy } from '../web-driver/WebDriverProxy';
+import { WebDriverAdapter } from '../web-driver/WebDriverAdapter';
 
 /**
  *
@@ -12,5 +12,5 @@ export interface UIProgressIndicator {
     /**
      *
      */
-    isProcessing(driver: WebDriverProxy): Promise<boolean>;
+    isProcessing(driver: WebDriverAdapter<unknown>): Promise<boolean>;
 }

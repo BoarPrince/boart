@@ -1,5 +1,5 @@
 import { UIErrorIndicator } from '@boart/ui';
-import { SeleniumWebDriver } from '../webdriver-adapter/SeleniumWebDriver';
+import { SeleniumWebDriver } from '../web-driver-adapter/SeleniumWebDriver';
 import { logging } from 'selenium-webdriver';
 
 /**

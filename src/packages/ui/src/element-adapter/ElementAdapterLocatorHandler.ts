@@ -1,10 +1,10 @@
-import { ElementProxyLocator } from './ElementProxyLocator';
+import { ElementAdapterLocator } from './ElementAdapterLocator';
 
 /**
  *
  */
-export class ElementProxyLocatorHandler {
-    private locators = new Map<string, ElementProxyLocator>();
+export class ElementAdapterLocatorHandler {
+    private locators = new Map<string, ElementAdapterLocator>();
 
     /**
      *
@@ -14,9 +14,9 @@ export class ElementProxyLocatorHandler {
     /**
      *
      */
-    public static get instance(): ElementProxyLocatorHandler {
+    public static get instance(): ElementAdapterLocatorHandler {
         if (!globalThis._elementProxyLocatorHandler) {
-            const instance = new ElementProxyLocatorHandler();
+            const instance = new ElementAdapterLocatorHandler();
             globalThis._elementProxyLocatorHandler = instance;
         }
 
@@ -26,7 +26,7 @@ export class ElementProxyLocatorHandler {
     /**
      *
      */
-    public addLocator(locator: ElementProxyLocator) {
+    public addLocator(locator: ElementAdapterLocator) {
         if (this.locators.has(locator.strategy)) {
             throw new Error(`locator for strategy ${locator.strategy} already exists`);
         }
@@ -37,7 +37,7 @@ export class ElementProxyLocatorHandler {
     /**
      *
      */
-    public findLocator(strategy: string): ElementProxyLocator | null {
+    public findLocator(strategy: string): ElementAdapterLocator | null {
         if (!this.locators.has(strategy)) {
             throw new Error(`locator for strategy ${strategy} does not exist`);
         }
@@ -48,7 +48,7 @@ export class ElementProxyLocatorHandler {
     /**
      *
      */
-    public getAll(): ElementProxyLocator[] {
+    public getAll(): ElementAdapterLocator[] {
         return Array.from(this.locators.values());
     }
 }

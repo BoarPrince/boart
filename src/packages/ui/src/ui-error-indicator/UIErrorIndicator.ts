@@ -1,4 +1,4 @@
-import { WebDriverProxy } from '../web-driver/WebDriverProxy';
+import { WebDriverAdapter } from '../web-driver/WebDriverAdapter';
 
 /**
  *
@@ -12,5 +12,5 @@ export interface UIErrorIndicator {
     /**
      *
      */
-    getError(driver: WebDriverProxy): Promise<string | null>;
+    getError(driver: WebDriverAdapter<unknown>): Promise<string | null>;
 }

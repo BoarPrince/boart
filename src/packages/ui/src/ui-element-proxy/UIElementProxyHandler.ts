@@ -1,4 +1,4 @@
-import { ElementProxy } from '../element-proxy/ElementProxy';
+import { ElementAdapter } from '../element-adapter/ElementAdapter';
 import { UIElementProxy } from './UIElementProxy';
 
 /**
@@ -48,7 +48,7 @@ export class UIElementProxyHandler {
     /**
      *
      */
-    async getProxy(element: ElementProxy): Promise<UIElementProxy> {
+    async getProxy(element: ElementAdapter): Promise<UIElementProxy> {
         const tagName = await element.getTagName();
         const proxies = this.proxies.get(tagName);
 
@@ -68,10 +68,10 @@ export class UIElementProxyHandler {
     /**
      *
      */
-    public async getElementsByText(text?: string): Promise<ElementProxy[]> {
+    public async getElementsByText(text?: string): Promise<ElementAdapter[]> {
         const proxies = Array.from(this.proxies.values()).flatMap((proxy) => proxy);
 
-        const elements = new Array<ElementProxy>();
+        const elements = new Array<ElementAdapter>();
         for (const proxy of proxies) {
             const proxyElement = await proxy.getElementByMatchingText(text);
             elements.push(proxyElement);
