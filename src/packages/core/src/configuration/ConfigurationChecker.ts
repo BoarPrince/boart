@@ -6,6 +6,7 @@ import { ObjectValidator } from '../validators/object/ObjectValidator';
 import { GroupRowDefinition } from '../table/GroupRowDefinition';
 import { ExecutionProxyFactoryHandler } from '../execution-proxy/ExecutionProxyFactoryHandler';
 import { ExecutionType } from './schema/ExecutionType';
+import { RowDefinitionConfig } from './schema/RowDefinitionConfig';
 
 /**
  *
@@ -14,7 +15,55 @@ export class ConfigurationChecker {
     /**
      *
      */
-    public static checkJSONConfig(config: TestExecutionUnitConfig) {
+    public static checkExecutionUnit(config: RowDefinitionConfig, basePath: string) {
+        ObjectValidator.instance(config, null, basePath)
+            .notNull()
+            .shouldObject()
+            .onlyContainsProperties(
+                ['action', 'executionOrder', 'executionType'], //
+                ['parameterType', 'selectorType', 'validatorDef']
+            )
+            .prop('executionOrder')
+            .shouldHaveValueOf('config', 'pre', 'post')
+            .default('pre')
+            .prop('executionType')
+            .shouldHaveValueOf(ExecutionType.ExecutionUnit)
+            .prop('parameterType')
+            .default(ParaType.Optional)
+            .prop('selectorType')
+            .default(SelectorType.Optional)
+            .prop('validatorDef')
+            .default([]);
+    }
+
+    /**
+     *
+     */
+    public static checkPropertySetter(config: RowDefinitionConfig, basePath: string) {
+        ObjectValidator.instance(config, null, basePath)
+            .notNull()
+            .shouldObject()
+            .onlyContainsProperties(
+                ['action', 'executionOrder', 'executionType', 'contextProperty'],
+                ['parameterType', 'selectorType', 'validatorDef', 'defaultValue']
+            )
+            .prop('executionOrder')
+            .shouldHaveValueOf('config', 'pre')
+            .default('config')
+            .prop('executionType')
+            .shouldHaveValueOf(ExecutionType.PropertySetter)
+            .prop('parameterType')
+            .default(ParaType.Optional)
+            .prop('selectorType')
+            .default(SelectorType.Optional)
+            .prop('validatorDef')
+            .default([]);
+    }
+
+    /**
+     *
+     */
+    public static check(config: TestExecutionUnitConfig) {
         ObjectValidator.instance(config)
             .notNull()
             .onlyContainsProperties(['name', 'runtime', 'context', 'groupRowDef', 'groupValidatorDef', 'rowDef'])
@@ -75,13 +124,13 @@ export class ConfigurationChecker {
             .shouldArray('object')
             .child()
             .onlyContainsProperties(
-                ['action', 'executionOrder', 'executionType', 'contextProperty', 'parameterType', 'selectorType', 'validatorDef'],
-                ['defaultValue']
+                ['action', 'executionType'],
+                ['executionOrder', 'executionType', 'defaultValue', 'contextProperty', 'parameterType', 'selectorType', 'validatorDef']
             )
             .prop('action')
             .shouldString()
             .prop('executionOrder')
-            .shouldHaveValueOf('config', 'pre')
+            .shouldHaveValueOf('config', 'pre', 'post')
             .prop('executionType')
             .shouldHaveValueOf(...Object.values(ExecutionType))
             .prop('parameterType')

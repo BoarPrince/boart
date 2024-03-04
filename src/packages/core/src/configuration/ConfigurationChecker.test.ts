@@ -108,7 +108,7 @@ describe('wrong root', () => {
     test('missing name', () => {
         delete config.name;
 
-        expect(() => ConfigurationChecker.checkJSONConfig(config)).toThrow(
+        expect(() => ConfigurationChecker.check(config)).toThrow(
             `path: $\nmust contain property 'name', but only contains 'context, groupRowDef, groupValidatorDef, rowDef, runtime'`
         );
     });
@@ -123,7 +123,7 @@ describe('wrong root', () => {
         };
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
-        expect(() => ConfigurationChecker.checkJSONConfig(config as any)).toThrow(
+        expect(() => ConfigurationChecker.check(config as any)).toThrow(
             `must contain property 'runtime', but only contains 'name, noRuntime'`
         );
     });
@@ -134,7 +134,7 @@ describe('wrong root', () => {
     test('missing runtime - type', () => {
         delete config.runtime.type;
 
-        expect(() => ConfigurationChecker.checkJSONConfig(config)).toThrow(
+        expect(() => ConfigurationChecker.check(config)).toThrow(
             `path: $.runtime\nmust contain property 'type', but only contains 'startup, configuration'`
         );
     });
@@ -145,7 +145,7 @@ describe('wrong root', () => {
     test('wrong runtime - type', () => {
         config.runtime.type = 'grp';
 
-        expect(() => ConfigurationChecker.checkJSONConfig(config)).toThrow(
+        expect(() => ConfigurationChecker.check(config)).toThrow(
             `path: $.runtime.type\nvalue 'grp' is not allowd for property 'type'. Available:\n - 'grpc',\n - 'fork'`
         );
     });
@@ -156,7 +156,7 @@ describe('wrong root', () => {
     test('wrong rowDef - contextType', () => {
         config.rowDef[1].executionOrder = 'conf' as TableRowType;
 
-        expect(() => ConfigurationChecker.checkJSONConfig(config)).toThrow(
+        expect(() => ConfigurationChecker.check(config)).toThrow(
             `path: $.rowDef.1.executionOrder\nvalue 'conf' is not allowd for property 'executionOrder'. Available:\n - 'config',\n - 'pre'`
         );
     });
@@ -167,9 +167,103 @@ describe('wrong root', () => {
     test('missing executionType', () => {
         delete config.rowDef[0].executionType;
 
-        expect(() => ConfigurationChecker.checkJSONConfig(config)).toThrow(
+        expect(() => ConfigurationChecker.check(config)).toThrow(
             `path: $.rowDef.[0]\nmust contain property 'executionType', but only contains 'action, executionOrder, contextProperty, parameterType, selectorType, validatorDef, defaultValue'`
         );
+    });
+});
+
+/**
+ *
+ */
+describe('property setter', () => {
+    /**
+     *
+     */
+    test('default', () => {
+        expect(() => ConfigurationChecker.checkPropertySetter(config.rowDef[0], '$.rowDef[5]')).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('default execution order', () => {
+        config.rowDef[0].executionOrder = undefined;
+
+        ConfigurationChecker.checkPropertySetter(config.rowDef[0], '$.rowDef[5]');
+        expect(config.rowDef[0].executionOrder).toBe(TableRowType.Configuration);
+    });
+});
+
+/**
+ *
+ */
+describe('execution unit', () => {
+    /**
+     *
+     */
+    test('default', () => {
+        delete config.rowDef[0].contextProperty;
+        delete config.rowDef[0].defaultValue;
+        config.rowDef[0].executionType = ExecutionType.ExecutionUnit;
+
+        expect(() => ConfigurationChecker.checkExecutionUnit(config.rowDef[0], '$.rowDef[5]')).not.toThrow();
+    });
+
+    /**
+     *
+     */
+    test('default execution order', () => {
+        delete config.rowDef[0].contextProperty;
+        delete config.rowDef[0].defaultValue;
+        config.rowDef[0].executionType = ExecutionType.ExecutionUnit;
+        config.rowDef[0].executionOrder = undefined;
+
+        ConfigurationChecker.checkExecutionUnit(config.rowDef[0], '$.rowDef[5]');
+
+        expect(config.rowDef[0].executionOrder).toBe(TableRowType.PreProcessing);
+    });
+
+    /**
+     *
+     */
+    test('default parameter type', () => {
+        delete config.rowDef[0].contextProperty;
+        delete config.rowDef[0].defaultValue;
+        config.rowDef[0].executionType = ExecutionType.ExecutionUnit;
+        config.rowDef[0].parameterType = undefined;
+
+        ConfigurationChecker.checkExecutionUnit(config.rowDef[0], '$.rowDef[5]');
+
+        expect(config.rowDef[0].parameterType).toBe(ParaType.Optional);
+    });
+
+    /**
+     *
+     */
+    test('default selector type', () => {
+        delete config.rowDef[0].contextProperty;
+        delete config.rowDef[0].defaultValue;
+        config.rowDef[0].executionType = ExecutionType.ExecutionUnit;
+        config.rowDef[0].selectorType = undefined;
+
+        ConfigurationChecker.checkExecutionUnit(config.rowDef[0], '$.rowDef[5]');
+
+        expect(config.rowDef[0].selectorType).toBe(SelectorType.Optional);
+    });
+
+    /**
+     *
+     */
+    test('default selector validator definitions', () => {
+        delete config.rowDef[0].contextProperty;
+        delete config.rowDef[0].defaultValue;
+        config.rowDef[0].executionType = ExecutionType.ExecutionUnit;
+        config.rowDef[0].validatorDef = undefined;
+
+        ConfigurationChecker.checkExecutionUnit(config.rowDef[0], '$.rowDef[5]');
+
+        expect(config.rowDef[0].validatorDef).toStrictEqual([]);
     });
 });
 
@@ -181,6 +275,6 @@ describe('correct config', () => {
      *
      */
     test('ok', () => {
-        expect(() => ConfigurationChecker.checkJSONConfig(defaultConfig)).not.toThrow();
+        expect(() => ConfigurationChecker.check(defaultConfig)).not.toThrow();
     });
 });

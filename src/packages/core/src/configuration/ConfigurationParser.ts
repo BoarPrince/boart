@@ -130,11 +130,15 @@ export class ConfigurationParser {
         const defs = config.rowDef.map((rowDef: RowDefinitionConfig, index) => {
             try {
                 const key = Symbol(rowDef.action);
-
-                const executionUnit =
-                    rowDef.executionType !== ExecutionType.PropertySetter
-                        ? factory.createExecutionUnit()
-                        : this.getPropertySetterExecutionUnit(rowDef, context, index);
+                const executionUnit = (() => {
+                    if (rowDef.executionType === ExecutionType.PropertySetter) {
+                        ConfigurationChecker.checkPropertySetter(rowDef, `$.rowDef[${index}]`);
+                        return this.getPropertySetterExecutionUnit(rowDef, context, index);
+                    } else {
+                        ConfigurationChecker.checkExecutionUnit(rowDef, `$.rowDef[${index}]`);
+                        return factory.createExecutionUnit();
+                    }
+                })();
 
                 return new CoreRowDefinition<DefaultContext, DefaultRowType<DefaultContext>>({
                     key,
@@ -187,7 +191,7 @@ export class ConfigurationParser {
         const config: TestExecutionUnitConfig =
             typeof configOrFileName === 'string' ? this.readDefinition(configOrFileName) : configOrFileName;
 
-        ConfigurationChecker.checkJSONConfig(config);
+        ConfigurationChecker.check(config);
 
         const context = this.parseContext(config.context);
         const executionUnitFactory = this.getExecutionUnitFactory(config);

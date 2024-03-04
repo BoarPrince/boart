@@ -22,7 +22,7 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
      */
     private constructor(
         private parentValidator: IBaseValidator,
-        obj: object | string,
+        private obj: object | string,
         private readonly propName: string
     ) {
         this.property = obj[propName];
@@ -36,6 +36,16 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
         return Array.isArray(obj) //
             ? new ObjectArrayPropertyValidator(parentValidator, obj, prop)
             : new ObjectPropertyValidator(parentValidator, obj, prop);
+    }
+
+    /**
+     *
+     */
+    default(value: string): this {
+        if (this.obj[this.propName] == null) {
+            this.obj[this.propName] = value;
+        }
+        return this;
     }
 
     /**
@@ -119,7 +129,7 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
      */
     public static shouldString(property: unknown, path: Array<string>, prop: string) {
         assert.ok(
-            typeof property === 'string',
+            property == null || typeof property === 'string',
             `path: ${path.join('.')}\nproperty '${prop}' is not of type string => '${prop}: ${JSON.stringify(property)}'`
         );
     }
@@ -155,7 +165,7 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
     public static shouldValueOf(property: unknown, path: Array<string>, prop: string, values: string[]) {
         ObjectPropertyValidator.shouldString(property, path, prop);
         assert.ok(
-            values.includes(property as string),
+            property == null || values.includes(property as string),
             `path: ${path.join('.')}\nvalue '${property as string}' is not allowd for property '${prop}'. Available:${values
                 .map((v) => `\n - '${v}'`)
                 .join(',')}`

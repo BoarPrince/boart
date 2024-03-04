@@ -10,10 +10,10 @@ import { ValidatorConfig } from './ValidatorConfig';
 export interface RowDefinitionConfig {
     action: string;
     executionType: ExecutionType;
-    executionOrder: TableRowType;
-    contextProperty: string;
-    parameterType: ParaType;
-    selectorType: SelectorType;
-    validatorDef: Array<ValidatorConfig>;
+    executionOrder?: TableRowType;
+    contextProperty?: string;
+    parameterType?: ParaType;
+    selectorType?: SelectorType;
+    validatorDef?: Array<ValidatorConfig>;
     defaultValue?: string;
 }

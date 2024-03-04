@@ -77,6 +77,16 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
     /**
      *
      */
+    default(value: string): this {
+        if (this.obj[this.propName] == null) {
+            this.obj[this.propName] = value;
+        }
+        return this;
+    }
+
+    /**
+     *
+     */
     public shouldArray(type?: 'string' | 'boolean' | 'unknown'): this {
         const elements = this.getObjectElements();
         ObjectPropertyValidator.shouldArray(elements, this.path(), this.propName, type);
