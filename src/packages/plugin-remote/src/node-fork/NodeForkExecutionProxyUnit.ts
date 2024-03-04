@@ -1,7 +1,7 @@
 import { DataContentHelper, DefaultContext, DefaultRowType, ExecutionUnit, ParaType, ScopedType, SelectorType } from '@boart/core';
 import { NodeForkServer } from './NodeForkServer';
-import { RemoteResponse } from '../../../execution-proxy-client/lib';
 import { StepReport } from '@boart/protocol';
+import { RemoteResponse } from '@boart/plugin';
 
 /**
  *

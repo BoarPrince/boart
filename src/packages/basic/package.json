@@ -28,7 +28,7 @@
     "@boart/core-impl": "workspace:*",
     "@boart/protocol": "workspace:*",
     "@boart/execution": "workspace:*",
-    "@boart/execution-proxy": "workspace:*"
+    "@boart/plugin-remote": "workspace:*"
   },
   "devDependencies": {
     "jest-fetch-mock": "~3.0.3",

@@ -16,7 +16,10 @@ export class LogErrorIndicator implements UIErrorIndicator {
      */
     public async getError(driver: SeleniumWebDriver): Promise<string> {
         // check logEntries
-        const logEntries = await driver.nativeDriver.manage().logs().get(logging.Type.BROWSER);
+        const logEntries = await driver.nativeDriver
+            .manage() //
+            .logs()
+            .get(logging.Type.BROWSER);
 
         return (
             logEntries

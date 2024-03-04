@@ -1,5 +1,5 @@
 {
-  "name": "@boart/execution-proxy",
+  "name": "@boart/plugin-remote",
   "author": "kem@boarprince.net",
   "version": "1.0.0-314",
   "bugs": {
@@ -27,8 +27,8 @@
   },
   "dependencies": {
     "@boart/core": "workspace:*",
-    "@boart/execution-proxy-client": "workspace:*",
-    "@boart/protocol": "workspace:*"
+    "@boart/protocol": "workspace:*",
+    "@boart/plugin": "workspace:*"
   },
   "devDependencies": {
     "tslib": "~2.6.2",

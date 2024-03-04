@@ -1,6 +1,6 @@
 import { ChildProcess, fork } from 'child_process';
 import { randomUUID } from 'crypto';
-import { NodeForkRequest, NodeForkResponse, RemoteRequest, RemoteResponse } from '../../../execution-proxy-client/lib';
+import { NodeForkRequest, NodeForkResponse, RemoteRequest, RemoteResponse } from '@boart/plugin';
 import { ASTAction } from '@boart/core';
 
 /**
