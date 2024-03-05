@@ -4,6 +4,7 @@ import { IObjectValidator } from './IObjectValidator';
 import { ObjectArrayValidator } from './ObjectArrayValidator';
 import { IObjectPropertyValidator } from './IObjectPropertyValidator';
 import { IBaseValidator } from './IBaseValidator';
+import { NullObjectPropertyValidator } from './NullObjectPropertyValidator';
 
 /**
  *
@@ -67,6 +68,9 @@ export class ObjectValidator implements IObjectValidator {
      *
      */
     public prop(prop: string): IObjectPropertyValidator {
+        if (this.value == null) {
+            return new NullObjectPropertyValidator(this);
+        }
         return ObjectPropertyValidator.instance(this, this.value, prop);
     }
 
@@ -88,10 +92,21 @@ export class ObjectValidator implements IObjectValidator {
     /**
      *
      */
+    private static getTypeErrorMessage(value: unknown): string {
+        if (typeof value === 'function') {
+            return `it's of type function`;
+        } else {
+            return `it's of type '${typeof value}': '${JSON.stringify(value, null, '    ')}'`;
+        }
+    }
+
+    /**
+     *
+     */
     public shouldArray(type?: 'string' | 'boolean' | 'unknown'): IObjectValidator {
         assert.ok(
             Array.isArray(this.value),
-            `path: '${this.path().join('.')}'. Is not of type array<${type || 'any'}>, it's: '${JSON.stringify(this.value, null, '    ')}'`
+            `path: '${this.path().join('.')}'. Is not of type array<${type || 'any'}>, ${ObjectValidator.getTypeErrorMessage(this.value)}`
         );
         ObjectValidator.shouldArray(this.value, this.path(), type);
 
@@ -104,7 +119,7 @@ export class ObjectValidator implements IObjectValidator {
     public shouldObject(): IObjectValidator {
         assert.ok(
             typeof this.value === 'object' && !Array.isArray(this.value),
-            `path: ${this.path().join('.')}\nobject is not of type object => ${JSON.stringify(this.value, null, '    ')}`
+            `path: ${this.path().join('.')}\nmust be of type object, but ${ObjectValidator.getTypeErrorMessage(this.value)}`
         );
         return this;
     }
@@ -115,7 +130,7 @@ export class ObjectValidator implements IObjectValidator {
     public shouldString(): IObjectValidator {
         assert.ok(
             typeof this.value === 'string',
-            `path: ${this.path().join('.')}\nobject is not of type string => ${JSON.stringify(this.value, null, '    ')}`
+            `path: ${this.path().join('.')}\nobject is not of type string => ${ObjectValidator.getTypeErrorMessage(this.value)}`
         );
         return this;
     }
@@ -141,8 +156,10 @@ export class ObjectValidator implements IObjectValidator {
     public static containsProperties(obj: object, path: Array<string>, props: Array<string>) {
         props.forEach((prop) => {
             assert.ok(
-                Object.hasOwn(obj, prop),
-                `path: ${path.join('.')}\nmust contain property '${prop}', but only contains '${Object.keys(obj).join(', ')}'`
+                Object.hasOwn(obj, prop) && obj[prop] != null,
+                `path: ${path.join('.')}\nmust contain property '${prop}', but only contains '${Object.keys(obj)
+                    .filter((key) => obj[key] != null)
+                    .join(', ')}'`
             );
         });
     }

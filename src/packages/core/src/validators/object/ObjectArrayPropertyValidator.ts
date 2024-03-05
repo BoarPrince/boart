@@ -31,18 +31,20 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      *
      */
     private getObjectElements(): Array<unknown> {
-        return this.obj.flatMap((element: object) => {
-            if (typeof element === 'object') {
-                if (!Array.isArray(element)) {
-                    return element[this.propName] as unknown;
-                } else {
-                    return (element as Array<unknown>).map((propElement) => {
-                        return propElement[this.propName] as unknown;
-                    });
+        return this.obj
+            .flatMap((element: object) => {
+                if (typeof element === 'object') {
+                    if (!Array.isArray(element)) {
+                        return element[this.propName] as unknown;
+                    } else {
+                        return (element as Array<unknown>).map((propElement) => {
+                            return propElement[this.propName] as unknown;
+                        });
+                    }
                 }
-            }
-            return null;
-        });
+                return null;
+            })
+            .filter((element) => element != null);
     }
 
     /**
@@ -97,9 +99,11 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public shouldString(): this {
-        this.getObjectElements().forEach((propElement, index) =>
-            ObjectPropertyValidator.shouldString(propElement, this.path(index), this.propName)
-        );
+        this.getObjectElements().forEach((propElement, index) => {
+            if (propElement != null) {
+                ObjectPropertyValidator.shouldString(propElement, this.path(index), this.propName);
+            }
+        });
         return this;
     }
 
@@ -107,9 +111,11 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public shouldBoolean(): this {
-        this.getObjectElements().forEach((propElement, index) =>
-            ObjectPropertyValidator.shouldBoolean(propElement, this.path(index), this.propName)
-        );
+        this.getObjectElements().forEach((propElement, index) => {
+            if (propElement != null) {
+                ObjectPropertyValidator.shouldBoolean(propElement, this.path(index), this.propName);
+            }
+        });
         return this;
     }
 
@@ -117,9 +123,11 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public shouldObject(): this {
-        this.getObjectElements().forEach((propElement, index) =>
-            ObjectPropertyValidator.shouldObject(propElement, this.path(index), this.propName)
-        );
+        this.getObjectElements().forEach((propElement, index) => {
+            if (propElement != null) {
+                ObjectPropertyValidator.shouldObject(propElement, this.path(index), this.propName);
+            }
+        });
         return this;
     }
 
@@ -137,9 +145,18 @@ export class ObjectArrayPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public shouldHaveValueOf(...values: string[]): this {
-        this.getObjectElements().forEach((propElement, index) =>
-            ObjectPropertyValidator.shouldValueOf(propElement, this.path(index), this.propName, values)
-        );
+        this.getObjectElements().forEach((propElement, index) => {
+            if (propElement != null) {
+                ObjectPropertyValidator.shouldValueOf(propElement, this.path(index), this.propName, values);
+            }
+        });
         return this;
+    }
+
+    /**
+     *
+     */
+    check(validator: (validator: IObjectPropertyValidator) => IObjectPropertyValidator): IObjectPropertyValidator {
+        return validator(this);
     }
 }

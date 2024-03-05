@@ -7,11 +7,24 @@ import { GroupRowDefinition } from '../table/GroupRowDefinition';
 import { ExecutionProxyFactoryHandler } from '../execution-proxy/ExecutionProxyFactoryHandler';
 import { ExecutionType } from './schema/ExecutionType';
 import { RowDefinitionConfig } from './schema/RowDefinitionConfig';
+import { IObjectPropertyValidator } from '../validators/object/IObjectPropertyValidator';
 
 /**
  *
  */
 export class ConfigurationChecker {
+    private static runtimeCheck(validator: IObjectPropertyValidator): IObjectPropertyValidator {
+        // runtime
+        return validator
+            .child()
+            .onlyContainsProperties(['type', 'startup', 'configuration'])
+            .prop('type')
+            .shouldHaveValueOf(...ExecutionProxyFactoryHandler.instance.keys())
+            .prop('startup')
+            .shouldHaveValueOf(...Object.values(RuntimeStartUp))
+            .prop('configuration')
+            .shouldObjectOrFunction();
+    }
     /**
      *
      */
@@ -20,12 +33,12 @@ export class ConfigurationChecker {
             .notNull()
             .shouldObject()
             .onlyContainsProperties(
-                ['action', 'executionOrder', 'executionType'], //
-                ['parameterType', 'selectorType', 'validatorDef']
+                ['action', 'executionType'], //
+                ['parameterType', 'selectorType', 'validatorDef', 'executionOrder', 'runtime']
             )
             .prop('executionOrder')
-            .shouldHaveValueOf('config', 'pre', 'post')
             .default('pre')
+            .shouldHaveValueOf('config', 'pre', 'post')
             .prop('executionType')
             .shouldHaveValueOf(ExecutionType.ExecutionUnit)
             .prop('parameterType')
@@ -33,7 +46,11 @@ export class ConfigurationChecker {
             .prop('selectorType')
             .default(SelectorType.Optional)
             .prop('validatorDef')
-            .default([]);
+            .default([])
+
+            // runtime
+            .prop('runtime')
+            .check((validator) => ConfigurationChecker.runtimeCheck(validator));
     }
 
     /**
@@ -48,8 +65,8 @@ export class ConfigurationChecker {
                 ['parameterType', 'selectorType', 'validatorDef', 'defaultValue']
             )
             .prop('executionOrder')
-            .shouldHaveValueOf('config', 'pre')
             .default('config')
+            .shouldHaveValueOf('config', 'pre')
             .prop('executionType')
             .shouldHaveValueOf(ExecutionType.PropertySetter)
             .prop('parameterType')
@@ -73,14 +90,7 @@ export class ConfigurationChecker {
 
             // runtime
             .prop('runtime')
-            .child()
-            .onlyContainsProperties(['type', 'startup', 'configuration'])
-            .prop('type')
-            .shouldHaveValueOf(...ExecutionProxyFactoryHandler.instance.keys())
-            .prop('startup')
-            .shouldHaveValueOf(...Object.values(RuntimeStartUp))
-            .prop('configuration')
-            .shouldObjectOrFunction()
+            .check((validator) => ConfigurationChecker.runtimeCheck(validator))
 
             // context
             .parent()
@@ -125,7 +135,16 @@ export class ConfigurationChecker {
             .child()
             .onlyContainsProperties(
                 ['action', 'executionType'],
-                ['executionOrder', 'executionType', 'defaultValue', 'contextProperty', 'parameterType', 'selectorType', 'validatorDef']
+                [
+                    'executionOrder',
+                    'executionType',
+                    'defaultValue',
+                    'contextProperty',
+                    'parameterType',
+                    'selectorType',
+                    'validatorDef',
+                    'runtime'
+                ]
             )
             .prop('action')
             .shouldString()
@@ -139,6 +158,8 @@ export class ConfigurationChecker {
             .shouldHaveValueOf(...Object.values(SelectorType))
             .prop('contextProperty')
             .shouldString()
+            .prop('runtime')
+            .shouldObject()
 
             // rowDef / validatorDef
             .prop('validatorDef')

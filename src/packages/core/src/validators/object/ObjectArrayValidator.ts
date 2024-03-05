@@ -4,6 +4,7 @@ import { ObjectArrayPropertyValidator } from './ObjectArrayPropertyValidator';
 import { IObjectPropertyValidator } from './IObjectPropertyValidator';
 import { ObjectValidator } from './ObjectValidator';
 import { IBaseValidator } from './IBaseValidator';
+import { NullObjectPropertyValidator } from './NullObjectPropertyValidator';
 
 /**
  *
@@ -51,6 +52,10 @@ export class ObjectArrayValidator implements IObjectValidator {
      *
      */
     public prop(prop: string): IObjectPropertyValidator {
+        if (this.objects == null) {
+            return new NullObjectPropertyValidator(this);
+        }
+
         return new ObjectArrayPropertyValidator(this, this.objects, prop);
     }
 
@@ -66,14 +71,14 @@ export class ObjectArrayValidator implements IObjectValidator {
      *
      */
     public shouldObject(): IObjectValidator {
-        assert.fail(`path: ${this.path().join('.')}\nobject is not of type object => ${JSON.stringify(this.objects, null, '    ')}`);
+        assert.fail(`path: ${this.path().join('.')}\nmust be of type object, but ${JSON.stringify(this.objects, null, '    ')}`);
     }
 
     /**
      *
      */
     public shouldString(): IObjectValidator {
-        assert.fail(`path: ${this.path().join('.')}\nobject is not of type string => ${JSON.stringify(this.objects, null, '    ')}`);
+        assert.fail(`path: ${this.path().join('.')}\nmust be of type object, but ${JSON.stringify(this.objects, null, '    ')}`);
     }
 
     /**

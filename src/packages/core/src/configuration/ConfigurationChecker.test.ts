@@ -52,6 +52,11 @@ const defaultConfig: TestExecutionUnitConfig = {
             contextProperty: 'conf',
             parameterType: ParaType.True,
             selectorType: SelectorType.False,
+            runtime: {
+                type: 'direct',
+                startup: RuntimeStartUp.EACH,
+                configuration: {}
+            },
             validatorDef: [
                 {
                     name: '-name-',

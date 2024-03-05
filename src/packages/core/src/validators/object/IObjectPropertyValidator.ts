@@ -44,4 +44,9 @@ export interface IObjectPropertyValidator extends IBaseValidator {
      *
      */
     child(): IObjectValidator;
+
+    /**
+     *
+     */
+    check(validator: (validator: IObjectPropertyValidator) => IObjectPropertyValidator): IObjectPropertyValidator;
 }

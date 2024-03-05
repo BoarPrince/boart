@@ -4,13 +4,13 @@ import { IObjectPropertyValidator } from './IObjectPropertyValidator';
 import { IObjectValidator } from './IObjectValidator';
 import { ObjectArrayPropertyValidator } from './ObjectArrayPropertyValidator';
 import { IBaseValidator } from './IBaseValidator';
+import { NullObjectValidator } from './NullIObjectValidator';
+import { NullObjectPropertyValidator } from './NullObjectPropertyValidator';
 
 /**
  *
  */
 export class ObjectPropertyValidator implements IObjectPropertyValidator {
-    private property: unknown;
-
     /**
      *
      */
@@ -20,12 +20,18 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
     /**
      *
      */
+    private get property(): unknown {
+        return this.obj[this.propName] as unknown;
+    }
+
+    /**
+     *
+     */
     private constructor(
         private parentValidator: IBaseValidator,
         private obj: object | string,
         private readonly propName: string
     ) {
-        this.property = obj[propName];
         this._path = parentValidator.path().concat(propName);
     }
 
@@ -59,6 +65,10 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public child(): IObjectValidator {
+        if (this.property == null) {
+            return new NullObjectValidator(this.parentValidator);
+        }
+
         assert.ok(
             typeof this.property === 'object' || Array.isArray(this.property),
             `path: ${this.path().join('.')}\nproperty '${this.propName}' must be an object or an array, but is ${JSON.stringify(
@@ -90,6 +100,9 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
      *
      */
     public prop(propName: string): IObjectPropertyValidator {
+        if (this.property == null) {
+            return new NullObjectPropertyValidator(this);
+        }
         return this.parentValidator.prop(propName);
     }
 
@@ -113,6 +126,7 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
                 `path: ${pathWithIndex}\nproperty '${prop}' is not of array type ${type} => '${prop}: ${JSON.stringify(property)}'`
             );
         });
+
         return this;
     }
 
@@ -129,7 +143,7 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
      */
     public static shouldString(property: unknown, path: Array<string>, prop: string) {
         assert.ok(
-            property == null || typeof property === 'string',
+            typeof property === 'string',
             `path: ${path.join('.')}\nproperty '${prop}' is not of type string => '${prop}: ${JSON.stringify(property)}'`
         );
     }
@@ -165,7 +179,7 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
     public static shouldValueOf(property: unknown, path: Array<string>, prop: string, values: string[]) {
         ObjectPropertyValidator.shouldString(property, path, prop);
         assert.ok(
-            property == null || values.includes(property as string),
+            values.includes(property as string),
             `path: ${path.join('.')}\nvalue '${property as string}' is not allowd for property '${prop}'. Available:${values
                 .map((v) => `\n - '${v}'`)
                 .join(',')}`
@@ -224,5 +238,12 @@ export class ObjectPropertyValidator implements IObjectPropertyValidator {
         ObjectPropertyValidator.shouldObjectOrFunction(this.property, this.path(), this.propName);
 
         return this;
+    }
+
+    /**
+     *
+     */
+    check(validator: (validator: IObjectPropertyValidator) => IObjectPropertyValidator): IObjectPropertyValidator {
+        return validator(this);
     }
 }
