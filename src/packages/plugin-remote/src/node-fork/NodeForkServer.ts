@@ -1,18 +1,21 @@
 import { ChildProcess, fork } from 'child_process';
 import { randomUUID } from 'crypto';
-import { NodeForkRequest, NodeForkResponse, RemoteRequest, RemoteResponse } from '@boart/plugin';
-import { ASTAction } from '@boart/core';
+import { NodeForkRequest, NodeForkResponse } from '@boart/plugin';
+import { ExecutionUnitPlugin, PluginRequest, PluginResponse } from '@boart/core';
 
 /**
  *
  */
-export class NodeForkServer {
+export class NodeForkServer implements ExecutionUnitPlugin {
     private readonly child: ChildProcess;
 
     /**
      *
      */
-    constructor(private path: string) {
+    constructor(
+        public readonly action: string,
+        private path: string
+    ) {
         this.child = fork(path, {
             silent: true
         });
@@ -35,8 +38,8 @@ export class NodeForkServer {
     /**
      *
      */
-    public execute(message: RemoteRequest, action?: { name: string; ast: ASTAction }): Promise<RemoteResponse> {
-        return new Promise((resolve, reject) => {
+    execute(request: PluginRequest): Promise<PluginResponse> {
+        return new Promise<PluginResponse>((resolve, reject) => {
             const id: string = randomUUID();
 
             /**
@@ -53,7 +56,7 @@ export class NodeForkServer {
             };
 
             this.child.on('message', msgListener);
-            this.child.send({ message, id, action } as NodeForkRequest);
+            this.child.send({ id, data: request } as NodeForkRequest);
         });
     }
 }

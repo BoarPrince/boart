@@ -1,6 +1,6 @@
-import { NodeForkExecutionProxyUnit } from './NodeForkExecutionProxyUnit';
+import { ExecutionUnitPlugin } from '@boart/core/lib/plugin/ExecutionUnitPlugin';
 import { NodeForkServer } from './NodeForkServer';
-import { DefaultContext, DefaultRowType, ExecutionProxyFactory, ExecutionUnit, ObjectValidator, RuntimeStartUp } from '@boart/core';
+import { ExecutionProxyFactory, ObjectValidator, RuntimeStartUp } from '@boart/core';
 
 /**
  *
@@ -46,13 +46,16 @@ export class NodeForkRemoteProxyFactory implements ExecutionProxyFactory {
      *
      */
     public start() {
-        this.server = new NodeForkServer(this.config.path);
+        this.server = new NodeForkServer(this.name, this.config.path);
     }
 
     /**
      *
      */
-    public createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
-        return new NodeForkExecutionProxyUnit(this.name, this.server);
+    public createExecutionUnit(): ExecutionUnitPlugin {
+        if (this.server == null) {
+            throw new Error(`node fork must be started before creating an execution unit`);
+        }
+        return this.server;
     }
 }

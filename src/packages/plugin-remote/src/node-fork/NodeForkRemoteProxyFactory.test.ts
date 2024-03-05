@@ -1,14 +1,12 @@
 import { RuntimeStartUp } from '@boart/core';
 import { NodeForkRemoteProxyFactory } from './NodeForkRemoteProxyFactory';
 
-import { NodeForkExecutionProxyUnit } from './NodeForkExecutionProxyUnit';
 import { NodeForkServer } from './NodeForkServer';
 
 /**
  *
  */
 jest.mock('./NodeForkServer');
-jest.mock('./NodeForkExecutionProxyUnit');
 
 /**
  *
@@ -92,7 +90,7 @@ describe('factory', () => {
         sut.start();
 
         expect(NodeForkServer).toHaveBeenCalledTimes(1);
-        expect(NodeForkServer).toHaveBeenCalledWith('-path-');
+        expect(NodeForkServer).toHaveBeenCalledWith('-name-', '-path-');
     });
 
     /**
@@ -109,9 +107,6 @@ describe('factory', () => {
             null
         );
 
-        sut.createExecutionUnit();
-
-        expect(NodeForkExecutionProxyUnit).toHaveBeenCalledTimes(1);
-        expect(NodeForkExecutionProxyUnit).toHaveBeenCalledWith('-name-', undefined);
+        expect(() => sut.createExecutionUnit()).toThrow(`node fork must be started before creating an execution unit`);
     });
 });

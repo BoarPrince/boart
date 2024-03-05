@@ -3,6 +3,7 @@ import * as child_process from 'child_process';
 import * as crypto from 'crypto';
 import { Readable } from 'stream';
 import { NodeForkServer } from './NodeForkServer';
+import { PluginRequest } from '@boart/core';
 
 /**
  *
@@ -34,6 +35,10 @@ const messageToClient = {
     config: {},
     preExecution: {
         payload: {}
+    },
+    action: {
+        name: '-action-',
+        ast: null
     }
 };
 
@@ -69,29 +74,40 @@ describe('client - server - communication', () => {
     test('default', async () => {
         const onSend = jest.spyOn(process, 'send');
 
-        const sut = new NodeForkServer('-path-');
+        const sut = new NodeForkServer('-action-', '-path-');
 
-        const messageToClient = {
+        const messageToClient: PluginRequest = {
             config: { conf: 'a' },
             preExecution: {
                 payload: {}
+            },
+            action: {
+                name: '-action-',
+                ast: null
             }
         };
 
         await sut.execute(messageToClient);
-        expect(onSend).toHaveBeenCalledWith({ id: UUID, message: messageToClient });
+        expect(onSend).toHaveBeenCalledWith({
+            data: messageToClient,
+            id: '0-0-0-0-0'
+        });
     });
 
     /**
      *
      */
     test('check message from client', async () => {
-        const sut = new NodeForkServer('-path-');
+        const sut = new NodeForkServer('-action-', '-path-');
 
         const messageToClient = {
             config: {},
             preExecution: {
                 payload: {}
+            },
+            action: {
+                name: '-action-',
+                ast: null
             }
         };
 
@@ -103,7 +119,7 @@ describe('client - server - communication', () => {
      *
      */
     test('client stdout calls console.log', () => {
-        new NodeForkServer('-path-');
+        new NodeForkServer('-action-', '-path-');
         const onConsoleLog = jest.spyOn(console, 'log');
 
         process.stdout.emit('data', '-log-');
@@ -115,7 +131,7 @@ describe('client - server - communication', () => {
      *
      */
     test('client stderr calls console.log', () => {
-        new NodeForkServer('-path-');
+        new NodeForkServer('-action-', '-path-');
         const onConsoleError = jest.spyOn(console, 'error');
 
         process.stderr.emit('data', '-error-');
@@ -132,12 +148,16 @@ describe('error handing', () => {
      *
      */
     test('id must be the same', async () => {
-        const sut = new NodeForkServer('-path-');
+        const sut = new NodeForkServer('-action-', '-path-');
 
         const messageToClient = {
             config: {},
             preExecution: {
                 payload: {}
+            },
+            action: {
+                name: '-action-',
+                ast: null
             }
         };
 
@@ -160,7 +180,7 @@ describe('error handing', () => {
      *
      */
     test('unhandled expections must be catched', async () => {
-        const sut = new NodeForkServer('-path-');
+        const sut = new NodeForkServer('-action-', '-path-');
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         messageFromClient = { id: 'uncaughtException' as any, error: 'any exception', data: null };
@@ -172,7 +192,7 @@ describe('error handing', () => {
      *
      */
     test('exception from client', async () => {
-        const sut = new NodeForkServer('-path-');
+        const sut = new NodeForkServer('-action-', '-path-');
 
         messageFromClient = { id: UUID, error: 'any exception', data: null };
 

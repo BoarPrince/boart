@@ -1,4 +1,3 @@
-import { NodeForkExecutionProxyUnit } from './NodeForkExecutionProxyUnit';
 import { NodeForkServer } from './NodeForkServer';
 import { DefaultContext, NullContent } from '@boart/core';
 import { StepReport } from '@boart/protocol';
