@@ -3,7 +3,8 @@ import * as child_process from 'child_process';
 import * as crypto from 'crypto';
 import { Readable } from 'stream';
 import { NodeForkServer } from './NodeForkServer';
-import { PluginRequest } from '@boart/core';
+import { PluginRequest, PluginResponse } from '@boart/core';
+import { NodeForkResponse } from '@boart/plugin';
 
 /**
  *
@@ -29,18 +30,8 @@ const mockChildProcess = (): child_process.ChildProcess => {
  *
  */
 const UUID: crypto.UUID = '0-0-0-0-0';
-let messageFromClient: { id: crypto.UUID; data: object; error?: string };
+let messageFromClient: NodeForkResponse;
 let process: child_process.ChildProcess;
-const messageToClient = {
-    config: {},
-    preExecution: {
-        payload: {}
-    },
-    action: {
-        name: '-action-',
-        ast: null
-    }
-};
 
 /**
  *
@@ -61,7 +52,18 @@ beforeEach(() => {
         listener(messageFromClient);
         return process;
     });
-    messageFromClient = { id: UUID, data: {} };
+
+    messageFromClient = {
+        id: UUID,
+        error: null,
+        data: {
+            execution: {
+                data: null,
+                header: null
+            },
+            reportItems: []
+        }
+    };
 });
 
 /**
@@ -77,9 +79,16 @@ describe('client - server - communication', () => {
         const sut = new NodeForkServer('-action-', '-path-');
 
         const messageToClient: PluginRequest = {
-            config: { conf: 'a' },
-            preExecution: {
-                payload: {}
+            context: {
+                config: { conf: 'a' },
+                preExecution: {
+                    payload: {}
+                },
+                execution: {
+                    data: {},
+                    header: {},
+                    transformed: {}
+                }
             },
             action: {
                 name: '-action-',
@@ -87,7 +96,7 @@ describe('client - server - communication', () => {
             }
         };
 
-        await sut.execute(messageToClient);
+        await sut.execute(messageToClient, {} as PluginResponse);
         expect(onSend).toHaveBeenCalledWith({
             data: messageToClient,
             id: '0-0-0-0-0'
@@ -100,10 +109,17 @@ describe('client - server - communication', () => {
     test('check message from client', async () => {
         const sut = new NodeForkServer('-action-', '-path-');
 
-        const messageToClient = {
-            config: {},
-            preExecution: {
-                payload: {}
+        const messageToClient: PluginRequest = {
+            context: {
+                config: {},
+                preExecution: {
+                    payload: {}
+                },
+                execution: {
+                    data: {},
+                    header: {},
+                    transformed: {}
+                }
             },
             action: {
                 name: '-action-',
@@ -111,7 +127,13 @@ describe('client - server - communication', () => {
             }
         };
 
-        const response = await sut.execute(messageToClient);
+        jest.spyOn(process, 'on').mockImplementation((_, listener: (message: NodeForkResponse) => void) => {
+            listener(messageFromClient);
+            return process;
+        });
+
+        const response = {} as PluginResponse;
+        await sut.execute(messageToClient, response);
         expect(response).toStrictEqual(messageFromClient.data);
     });
 
@@ -144,36 +166,51 @@ describe('client - server - communication', () => {
  *
  */
 describe('error handing', () => {
+    const messageToClient: PluginRequest = {
+        context: {
+            config: {},
+            preExecution: {
+                payload: {}
+            },
+            execution: {
+                data: {},
+                header: {},
+                transformed: {}
+            }
+        },
+        action: {
+            name: '-action-',
+            ast: null
+        }
+    };
+
     /**
      *
      */
     test('id must be the same', async () => {
         const sut = new NodeForkServer('-action-', '-path-');
 
-        const messageToClient = {
-            config: {},
-            preExecution: {
-                payload: {}
+        const response: PluginResponse = {
+            execution: {
+                data: {},
+                header: {}
             },
-            action: {
-                name: '-action-',
-                ast: null
-            }
+            reportItems: []
         };
 
         // check if id is ok
-        let responsePromise = sut.execute(messageToClient);
+        let executePromise = sut.execute(messageToClient, response);
         let timeoutPromise = new Promise((_, reject) => setTimeout(() => reject('timer first'), 200));
 
-        await expect(Promise.race([timeoutPromise, responsePromise])).resolves.not.toThrow();
+        await expect(Promise.race([timeoutPromise, executePromise])).resolves.not.toThrow();
 
         // check if id is not ok
         messageFromClient.id = '1-1-1-1-1-1';
-        responsePromise = sut.execute(messageToClient);
+        executePromise = sut.execute(messageToClient, response);
         timeoutPromise = new Promise((_, reject) => setTimeout(() => reject('timer first'), 200));
 
         // check that the response promise does not resolve
-        await expect(Promise.race([timeoutPromise, responsePromise])).rejects.toBe('timer first');
+        await expect(Promise.race([timeoutPromise, executePromise])).rejects.toBe('timer first');
     });
 
     /**
@@ -184,8 +221,15 @@ describe('error handing', () => {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         messageFromClient = { id: 'uncaughtException' as any, error: 'any exception', data: null };
+        const response: PluginResponse = {
+            execution: {
+                data: {},
+                header: {}
+            },
+            reportItems: []
+        };
 
-        await expect(sut.execute(messageToClient)).rejects.toBe('any exception');
+        await expect(sut.execute(messageToClient, response)).rejects.toBe('any exception');
     });
 
     /**
@@ -195,7 +239,14 @@ describe('error handing', () => {
         const sut = new NodeForkServer('-action-', '-path-');
 
         messageFromClient = { id: UUID, error: 'any exception', data: null };
+        const response: PluginResponse = {
+            execution: {
+                data: {},
+                header: {}
+            },
+            reportItems: []
+        };
 
-        await expect(sut.execute(messageToClient)).rejects.toBe('any exception');
+        await expect(sut.execute(messageToClient, response)).rejects.toBe('any exception');
     });
 });

@@ -1,10 +1,11 @@
-import { RemoteResponse } from '../proxy/RemoteResponse';
+import { PluginResponse } from '@boart/core';
 import { NodeForkClient } from './NodeForkClient';
+import { NodeForkRequest } from './NodeForkRequest';
 
 /**
  *
  */
-type OnListeners = Map<string, Array<(value: unknown) => void>>;
+type OnListeners = Map<string, Array<(value: NodeForkRequest) => void>>;
 
 /**
  *
@@ -34,8 +35,9 @@ const mockChildProcess = (listeners: OnListeners): NodeJS.Process => {
 /**
  *
  */
-let response: RemoteResponse;
+let response: PluginResponse;
 let onListeners: OnListeners;
+let listenerData: NodeForkRequest;
 
 /**
  *
@@ -45,13 +47,36 @@ beforeEach(() => {
     onListeners = new Map<string, Array<(value: unknown) => void>>();
     process = mockChildProcess(onListeners);
 
-    response = {
-        execution: {
-            data: {},
-            header: {}
-        },
-        reportItems: []
-    };
+    response = JSON.parse(
+        JSON.stringify({
+            execution: {
+                data: {},
+                header: {}
+            },
+            reportItems: []
+        })
+    );
+
+    listenerData = JSON.parse(
+        JSON.stringify({
+            id: '-id-',
+            data: {
+                context: {
+                    config: undefined,
+                    preExecution: undefined,
+                    execution: {
+                        data: '-message-',
+                        header: '',
+                        transformed: ''
+                    }
+                },
+                action: {
+                    name: '',
+                    ast: undefined
+                }
+            }
+        } as NodeForkRequest)
+    );
 });
 
 /**
@@ -67,14 +92,15 @@ describe('synchron', () => {
             execute: jest.fn().mockReturnValue(response)
         };
 
-        const sut = new NodeForkClient(remoteClient);
+        const sut = new NodeForkClient();
+        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
         sut.start();
 
-        onListeners.get('message').forEach((listener) => listener({ message: '-message-' }));
+        onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: undefined, error: undefined, data: response });
+        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: undefined, data: response });
     });
 
     /**
@@ -88,14 +114,15 @@ describe('synchron', () => {
             })
         };
 
-        const sut = new NodeForkClient(remoteClient);
+        const sut = new NodeForkClient();
+        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
         sut.start();
 
-        onListeners.get('message').forEach((listener) => listener({ message: '-message-' }));
+        onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: undefined, error: '-error-', data: undefined });
+        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: '-error-', data: undefined });
     });
 
     /**
@@ -109,14 +136,16 @@ describe('synchron', () => {
             })
         };
 
-        const sut = new NodeForkClient(remoteClient);
+        const sut = new NodeForkClient();
+        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
+
         sut.start();
 
-        onListeners.get('message').forEach((listener) => listener({ message: '-message-' }));
+        onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: undefined, error: '-error-', data: undefined });
+        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: '-error-', data: undefined });
     });
 
     /**
@@ -128,11 +157,14 @@ describe('synchron', () => {
             execute: jest.fn()
         };
 
-        const sut = new NodeForkClient(remoteClient);
+        const sut = new NodeForkClient();
+        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
+
         sut.start();
         sut.start();
 
-        onListeners.get('uncaughtException').forEach((listener) => listener(new Error('-unexpected-')));
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+        onListeners.get('uncaughtException').forEach((listener) => listener(new Error('-unexpected-') as any));
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
@@ -148,10 +180,13 @@ describe('synchron', () => {
             execute: jest.fn()
         };
 
-        const sut = new NodeForkClient(remoteClient);
+        const sut = new NodeForkClient();
+        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
+
         sut.start();
 
-        onListeners.get('uncaughtException').forEach((listener) => listener('-unexpected-'));
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+        onListeners.get('uncaughtException').forEach((listener) => listener('-unexpected-' as any));
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
@@ -165,11 +200,11 @@ describe('synchron', () => {
         const sut = new NodeForkClient();
         sut.start();
 
-        onListeners.get('message').forEach((listener) => listener({ message: '-message-' }));
+        onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ error: `client 'mainClient' not found` });
+        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: `client '-mainClient-' not found` });
     });
 });
 
@@ -186,14 +221,16 @@ describe('asynchron', () => {
             execute: jest.fn().mockResolvedValue(response)
         };
 
-        const sut = new NodeForkClient(remoteClient);
+        const sut = new NodeForkClient();
+        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
+
         sut.start();
 
-        onListeners.get('message').forEach((listener) => listener({ message: '-message-' }));
+        onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: undefined, error: undefined, data: response });
+        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: undefined, data: response });
     });
 });
 
@@ -211,14 +248,15 @@ describe('with clientExecutionProxy', () => {
         };
 
         const sut = new NodeForkClient();
-        sut.addClientExecutionProxy(remoteClient);
+        sut.pluginHandler.addExecutionUnit(remoteClient.action, () => remoteClient);
         sut.start();
 
-        onListeners.get('message').forEach((listener) => listener({ message: '-message-', action: { name: '-test-proxy-action-' } }));
+        listenerData.data.action.name = '-test-proxy-action-';
+        onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: undefined, error: undefined, data: response });
+        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: undefined, data: response });
     });
 
     /**
@@ -236,15 +274,16 @@ describe('with clientExecutionProxy', () => {
         };
 
         const sut = new NodeForkClient();
-        sut.addClientExecutionProxy(remoteClient1);
-        sut.addClientExecutionProxy(remoteClient2);
+        sut.pluginHandler.addExecutionUnit(remoteClient1.action, () => remoteClient1);
+        sut.pluginHandler.addExecutionUnit(remoteClient2.action, () => remoteClient2);
         sut.start();
 
-        onListeners.get('message').forEach((listener) => listener({ message: '-message-', action: { name: '-test-proxy-1-action-' } }));
+        listenerData.data.action.name = '-test-proxy-1-action-';
+        onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: undefined, error: undefined, data: response });
+        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: undefined, data: response });
     });
 
     /**
@@ -257,14 +296,15 @@ describe('with clientExecutionProxy', () => {
         };
 
         const sut = new NodeForkClient();
-        sut.addClientExecutionProxy(remoteClient1);
+        sut.pluginHandler.addExecutionUnit(remoteClient1.action, () => remoteClient1);
         sut.start();
 
-        onListeners.get('message').forEach((listener) => listener({ message: '-message-', action: { name: '-test-proxy-action-' } }));
+        listenerData.data.action.name = '-test-proxy-action-';
+        onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ error: `client '-test-proxy-action-' not found` });
+        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: `client '-test-proxy-action-' not found` });
     });
 
     /**
@@ -277,8 +317,11 @@ describe('with clientExecutionProxy', () => {
         };
 
         const sut = new NodeForkClient();
-        sut.addClientExecutionProxy(remoteClient);
+        sut.pluginHandler.addExecutionUnit(remoteClient.action, () => remoteClient);
+        sut.start();
 
-        expect(() => sut.addClientExecutionProxy(remoteClient)).toThrow('client action -test-proxy-x-action- already exists');
+        expect(() => sut.pluginHandler.addExecutionUnit(remoteClient.action, () => remoteClient)).toThrow(
+            'client action -test-proxy-x-action- already exists'
+        );
     });
 });

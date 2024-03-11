@@ -1,12 +1,13 @@
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
-import { ExecutionProxyFactory } from '../execution-proxy/ExecutionProxyFactory';
+import { ExecutionUnitPluginFactory } from '../plugin/ExecutionUnitPluginFactory';
 import { GroupRowDefinition } from '../table/GroupRowDefinition';
 import { RowDefinition } from '../table/RowDefinition';
 import { TableHandler } from '../table/TableHandler';
 import { TableHandlerBaseImpl } from '../table/TableHandlerBaseImpl';
 import { GroupValidator } from '../validators/GroupValidator';
+import { ExecutionUnitPluginAdapter } from '../plugin/ExecutionUnitPluginAdapter';
 
 /**
  *
@@ -18,7 +19,7 @@ export class ConfigurationTableHandler extends TableHandlerBaseImpl<DefaultConte
     constructor(
         public readonly name: string,
         private context: DefaultContext,
-        private factory: ExecutionProxyFactory,
+        private factory: ExecutionUnitPluginFactory,
         private rowDefinitions: Array<RowDefinition<DefaultContext, DefaultRowType<DefaultContext>>>,
         private groupRowDef: Array<string>,
         private groupValidations: Array<GroupValidator>
@@ -35,7 +36,7 @@ export class ConfigurationTableHandler extends TableHandlerBaseImpl<DefaultConte
      *
      */
     protected mainExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
-        return this.factory.createExecutionUnit();
+        return new ExecutionUnitPluginAdapter(Symbol(this.name), this.factory);
     }
 
     /**

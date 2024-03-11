@@ -1,19 +1,19 @@
 import { RuntimeStartUp } from '../configuration/schema/RuntimeStartUp';
-import { DefaultContext } from '../default/DefaultExecutionContext';
-import { DefaultRowType } from '../default/DefaultRowType';
-import { ExecutionUnit } from '../execution/ExecutionUnit';
-import { ExecutionProxyFactory } from './ExecutionProxyFactory';
+import { ExecutionUnitPlugin } from '../plugin/ExecutionUnitPlugin';
+import { PluginRequest } from '../plugin/PluginRequest';
+import { PluginResponse } from '../plugin/PluginResponse';
+import { ExecutionUnitPluginFactory } from './ExecutionUnitPluginFactory';
 
 /**
  *
  */
-class StarterProxyFactory implements ExecutionProxyFactory {
+class StarterProxyFactory implements ExecutionUnitPluginFactory {
     private started = false;
 
     /**
      *
      */
-    constructor(private origin: ExecutionProxyFactory) {}
+    constructor(private origin: ExecutionUnitPluginFactory) {}
 
     /**
      *
@@ -40,18 +40,18 @@ class StarterProxyFactory implements ExecutionProxyFactory {
     /**
      * keep care that start is called only once a time before the first execute is called.
      */
-    createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
+    createExecutionUnit(): ExecutionUnitPlugin {
         const originExecutionUnit = this.origin.createExecutionUnit();
         const originExecuteMethod = originExecutionUnit.execute.bind(originExecutionUnit) as (
-            context: unknown,
-            row?: unknown
+            request: PluginRequest,
+            response: PluginResponse
         ) => void | Promise<void>;
 
-        originExecutionUnit.execute = (context, row) => {
+        originExecutionUnit.execute = (request, response): void | Promise<void> => {
             if (!this.started) {
                 this.start();
             }
-            return originExecuteMethod(context, row);
+            return originExecuteMethod(request, response);
         };
 
         return originExecutionUnit;
@@ -61,7 +61,7 @@ class StarterProxyFactory implements ExecutionProxyFactory {
 /**
  *
  */
-export class ExecutionProxyFactoryHandler {
+export class ExecutionUnitPluginFactoryHandler {
     private factories = new Map<string, StarterProxyFactory>();
 
     /**
@@ -72,18 +72,18 @@ export class ExecutionProxyFactoryHandler {
     /**
      *
      */
-    public static get instance(): ExecutionProxyFactoryHandler {
-        if (!globalThis._executionProxyFactoryHandler) {
-            const instance = new ExecutionProxyFactoryHandler();
-            globalThis._executionProxyFactoryHandler = instance;
+    public static get instance(): ExecutionUnitPluginFactoryHandler {
+        if (!globalThis._executionPluginFactoryHandler) {
+            const instance = new ExecutionUnitPluginFactoryHandler();
+            globalThis._executionPluginFactoryHandler = instance;
         }
-        return globalThis._executionProxyFactoryHandler;
+        return globalThis._executionPluginFactoryHandler;
     }
 
     /**
      *
      */
-    public addFactory(name: string, factory: ExecutionProxyFactory) {
+    public addFactory(name: string, factory: ExecutionUnitPluginFactory) {
         if (this.factories.has(name)) {
             throw new Error(`remote factory '${name}' already exists`);
         }
@@ -94,7 +94,7 @@ export class ExecutionProxyFactoryHandler {
     /**
      *
      */
-    public getFactory(name: string): ExecutionProxyFactory {
+    public getFactory(name: string): ExecutionUnitPluginFactory {
         if (!this.factories.has(name)) {
             throw new Error(`Remote proxy '${name}' does not exist. Available: '${this.keys().join(', ')}'`);
         }

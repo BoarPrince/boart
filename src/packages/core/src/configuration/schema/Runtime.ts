@@ -1,6 +1,4 @@
-import { DefaultContext } from '../../default/DefaultExecutionContext';
-import { DefaultRowType } from '../../default/DefaultRowType';
-import { ExecutionUnit } from '../../execution/ExecutionUnit';
+import { ExecutionUnitPlugin } from '../../plugin/ExecutionUnitPlugin';
 import { RuntimeStartUp } from './RuntimeStartUp';
 
 /**
@@ -10,5 +8,5 @@ import { RuntimeStartUp } from './RuntimeStartUp';
 export interface Runtime {
     type: string;
     startup: RuntimeStartUp;
-    configuration: object | (() => ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>);
+    configuration: Record<string, unknown> | (() => ExecutionUnitPlugin);
 }

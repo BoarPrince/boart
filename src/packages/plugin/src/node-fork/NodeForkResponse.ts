@@ -1,4 +1,4 @@
-import { RemoteResponse } from '../proxy/RemoteResponse';
+import { PluginResponse } from '@boart/core';
 
 /**
  *
@@ -6,5 +6,5 @@ import { RemoteResponse } from '../proxy/RemoteResponse';
 export interface NodeForkResponse {
     id: string;
     error: unknown;
-    data: RemoteResponse;
+    data: PluginResponse;
 }

@@ -1,28 +1,18 @@
 import { NodeForkResponse } from './NodeForkResponse';
-import { ClientExecutionProxy } from '../proxy/ClientExecutionProxy';
 import { NodeForkRequest } from './NodeForkRequest';
+import { ExecutionUnitPluginHandler } from '@boart/core';
 
 /**
  *
  */
 export class NodeForkClient {
     private started = false;
-    private clientImplList = new Map<string, ClientExecutionProxy>();
+    public readonly pluginHandler = new ExecutionUnitPluginHandler();
 
     /**
      *
      */
-    constructor(private mainClientExecutionProxy?: ClientExecutionProxy) {}
-
-    /**
-     *
-     */
-    public addClientExecutionProxy(clientExecutionProxy: ClientExecutionProxy) {
-        if (this.clientImplList.has(clientExecutionProxy.action)) {
-            throw new Error(`client action ${clientExecutionProxy.action} already exists`);
-        }
-        this.clientImplList.set(clientExecutionProxy.action, clientExecutionProxy);
-    }
+    constructor() {}
 
     /**
      *
@@ -55,19 +45,20 @@ export class NodeForkClient {
     private async execute(request: NodeForkRequest): Promise<NodeForkResponse> {
         const response: NodeForkResponse = {
             id: request.id,
-            data: undefined,
+            data: {
+                execution: {
+                    data: {},
+                    header: {}
+                },
+                reportItems: []
+            },
             error: undefined
         };
 
-        const client = !request.action?.name ? this.mainClientExecutionProxy : this.clientImplList.get(request.action.name);
-        if (!client) {
-            response.error = `client '${request.action?.name || 'mainClient'}' not found`;
-            return response;
-        }
-
         try {
-            response.data = await client.execute(request.message);
+            await this.pluginHandler.execute(request.data, response.data);
         } catch (error) {
+            response.data = undefined;
             response.error = (error as { message: string }).message || (error as unknown);
         }
         return response;

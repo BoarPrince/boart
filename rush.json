@@ -336,12 +336,12 @@
       "projectFolder": "src/packages/basic"
     },
     {
-      "packageName": "@boart/execution-proxy-client",
-      "projectFolder": "src/packages/execution-proxy-client"
+      "packageName": "@boart/plugin-remote",
+      "projectFolder": "src/packages/plugin-remote"
     },
     {
-      "packageName": "@boart/execution-proxy",
-      "projectFolder": "src/packages/execution-proxy"
+      "packageName": "@boart/plugin",
+      "projectFolder": "src/packages/plugin"
     },
     {
       "packageName": "@boart/ui",

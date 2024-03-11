@@ -1,10 +1,9 @@
-import { RemoteRequest } from '../proxy/RemoteRequest';
+import { PluginRequest } from '@boart/core';
 
 /**
  *
  */
 export interface NodeForkRequest {
     id: string;
-    action?: { name: string; ast: object };
-    message: RemoteRequest;
+    data: PluginRequest;
 }

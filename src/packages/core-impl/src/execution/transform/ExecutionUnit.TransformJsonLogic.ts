@@ -1,4 +1,13 @@
-import { DataContentHelper, DefaultContext, DefaultRowType, ExecutionUnit, ParaType, SelectorExtractor, SelectorType } from '@boart/core';
+import {
+    ContentType,
+    DataContentHelper,
+    DefaultContext,
+    DefaultRowType,
+    ExecutionUnit,
+    ParaType,
+    SelectorExtractor,
+    SelectorType
+} from '@boart/core';
 
 import { JsonLogic } from '../../jsonlogic/JsonLogic';
 import { DataScopeValidator } from '../../validators/DataScopeValidator';
@@ -29,7 +38,7 @@ export class TransformJsonLogicExecutionUnit implements ExecutionUnit<DefaultCon
     /**
      *
      */
-    private getSourceData(context: DefaultContext, executionType: string): object {
+    private getSourceData(context: DefaultContext, executionType: string): ContentType {
         switch (executionType) {
             case 'data':
                 return context.execution.data;

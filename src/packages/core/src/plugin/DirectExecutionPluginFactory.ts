@@ -1,14 +1,13 @@
-import { DefaultContext } from '../default/DefaultExecutionContext';
-import { DefaultRowType } from '../default/DefaultRowType';
-import { ExecutionUnit } from '../execution/ExecutionUnit';
-import { ExecutionProxyFactory } from '../execution-proxy/ExecutionProxyFactory';
-import { RuntimeStartUp } from './schema/RuntimeStartUp';
+import { ExecutionUnitPluginFactory } from './ExecutionUnitPluginFactory';
+import { RuntimeStartUp } from '../configuration/schema/RuntimeStartUp';
+import { ExecutionUnitPlugin } from './ExecutionUnitPlugin';
 
 /**
  *
  */
-export class DirectExecutionProxyFactory implements ExecutionProxyFactory {
-    private executionUnit: () => ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>;
+export class DirectExecutionPluginFactory implements ExecutionUnitPluginFactory {
+    public readonly isLocal = true;
+    private executionUnit: () => ExecutionUnitPlugin;
     private runtimeStartup: RuntimeStartUp;
 
     /**
@@ -27,11 +26,7 @@ export class DirectExecutionProxyFactory implements ExecutionProxyFactory {
     /**
      *
      */
-    public init(
-        _: string,
-        executionUnit: () => ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>,
-        runtimeStartup: RuntimeStartUp
-    ): void {
+    public init(name: string, executionUnit: () => ExecutionUnitPlugin, runtimeStartup: RuntimeStartUp): void {
         this.executionUnit = executionUnit;
         this.runtimeStartup = runtimeStartup;
     }
@@ -46,7 +41,7 @@ export class DirectExecutionProxyFactory implements ExecutionProxyFactory {
     /**
      *
      */
-    public createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
+    public createExecutionUnit(): ExecutionUnitPlugin {
         return this.executionUnit();
     }
 }

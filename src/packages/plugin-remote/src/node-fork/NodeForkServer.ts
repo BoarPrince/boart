@@ -38,8 +38,8 @@ export class NodeForkServer implements ExecutionUnitPlugin {
     /**
      *
      */
-    execute(request: PluginRequest): Promise<PluginResponse> {
-        return new Promise<PluginResponse>((resolve, reject) => {
+    execute(request: PluginRequest, response: PluginResponse): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
             const id: string = randomUUID();
 
             /**
@@ -50,9 +50,14 @@ export class NodeForkServer implements ExecutionUnitPlugin {
                     return;
                 }
                 this.child.removeListener('message', msgListener);
-                msgFromClient.error //
-                    ? reject(msgFromClient.error)
-                    : resolve(msgFromClient.data);
+
+                if (msgFromClient.error) {
+                    reject(msgFromClient.error);
+                } else {
+                    response.execution = msgFromClient.data.execution;
+                    response.reportItems = msgFromClient.data.reportItems;
+                    resolve();
+                }
             };
 
             this.child.on('message', msgListener);

@@ -1,20 +1,19 @@
 import { RuntimeStartUp } from '../configuration/schema/RuntimeStartUp';
-import { DefaultContext } from '../default/DefaultExecutionContext';
-import { DefaultRowType } from '../default/DefaultRowType';
-import { ExecutionUnit } from '../execution/ExecutionUnit';
+import { ExecutionUnitPlugin } from './ExecutionUnitPlugin';
 
 /**
  *
  */
-export interface ExecutionProxyFactory {
+export interface ExecutionUnitPluginFactory {
+    /**
+     *
+     */
+    readonly isLocal?: boolean;
+
     /**
      * is called once a time during the configuration
      */
-    init(
-        name: string,
-        config: object | (() => ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>),
-        runtimeStartup: RuntimeStartUp
-    ): void;
+    init(name: string, config: object | (() => ExecutionUnitPlugin), runtimeStartup: RuntimeStartUp): void;
 
     /**
      * is called once a time during the configuration and after init.
@@ -33,5 +32,5 @@ export interface ExecutionProxyFactory {
     /**
      * is called each time the executionUnit is used
      */
-    createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>>;
+    createExecutionUnit(): ExecutionUnitPlugin;
 }

@@ -74,21 +74,25 @@ import { ObjectValidator } from './validators/object/ObjectValidator';
 import { DefaultRowType } from './default/DefaultRowType';
 import { DefaultPropertySetterExecutionUnit } from './default/DefaultPropertySetterExecutionUnit';
 import { DefaultContext, DefaultExecutionContext, DefaultPreExecutionContext } from './default/DefaultExecutionContext';
-import { ExecutionProxyFactory } from './execution-proxy/ExecutionProxyFactory';
-import { ExecutionProxyFactoryHandler } from './execution-proxy/ExecutionProxyFactoryHandler';
+import { ExecutionUnitPluginFactory } from './plugin/ExecutionUnitPluginFactory';
 import { RuntimeStartUp } from './configuration/schema/RuntimeStartUp';
 import { ValidatorType } from './validators/ValidatorType';
-import { DirectExecutionProxyFactory } from './configuration/DirectExecutionProxyFactory';
+import { DirectExecutionPluginFactory } from './plugin/DirectExecutionPluginFactory';
+import { ExecutionUnitPlugin } from './plugin/ExecutionUnitPlugin';
+import { PluginRequest } from './plugin/PluginRequest';
+import { PluginResponse } from './plugin/PluginResponse';
+import { ExecutionUnitPluginHandler } from './plugin/ExecutionUnitPluginHandler';
+import { ExecutionUnitPluginFactoryHandler } from './plugin/ExecutionUnitPluginFactoryHandler';
 
 /**
  *
  */
 export {
     ArraySubject,
-    ASTSelectorType,
-    ASTVariable,
-    ASTValue,
     ASTAction,
+    ASTSelectorType,
+    ASTValue,
+    ASTVariable,
     BaseRowMetaDefinition,
     BaseRowType,
     ContentInstance,
@@ -98,17 +102,21 @@ export {
     DataContentBase,
     DataContentHelper,
     DataType,
-    Description,
     DefaultContext,
-    DefaultRowType,
-    DefaultPropertySetterExecutionUnit,
-    DefaultPreExecutionContext,
     DefaultExecutionContext,
+    DefaultPreExecutionContext,
+    DefaultPropertySetterExecutionUnit,
+    DefaultRowType,
+    Description,
     DescriptionHandler,
     EnvLoader,
     ExecutionContext,
     ExecutionEngine,
     ExecutionUnit,
+    ExecutionUnitPlugin,
+    ExecutionUnitPluginFactory,
+    ExecutionUnitPluginHandler,
+    ExecutionUnitPluginFactoryHandler,
     ExecutionUnitValidation,
     ExpectedDescription,
     ExpectedOperator,
@@ -130,6 +138,8 @@ export {
     ObjectValidator,
     OperatorType,
     ParaType,
+    PluginRequest,
+    PluginResponse,
     RepeatableExecutionContext,
     RowDefinition,
     RowValidator,
@@ -137,14 +147,12 @@ export {
     RuntimeContext,
     RuntimePriority,
     RuntimeResultContext,
-    RuntimeStatus,
     RuntimeStartUp,
-    ExecutionProxyFactory,
-    ExecutionProxyFactoryHandler,
+    RuntimeStatus,
     ScopedType,
     ScopeType,
-    SelectorType,
     SelectorExtractor,
+    SelectorType,
     Semaphore,
     StepContext,
     Store,
@@ -162,6 +170,7 @@ export {
     UrlLoader,
     ValidationHandler,
     ValidatorFactory,
+    ValidatorFactoryManager,
     ValidatorType,
     value,
     ValueReplaceArg as ReplaceArg,
@@ -169,7 +178,6 @@ export {
     ValueReplacer,
     ValueReplacerConfig,
     ValueReplacerHandler,
-    ValidatorFactoryManager,
     VariableParser
 };
 
@@ -184,7 +192,7 @@ export default function initialize(): void {
         globalThis._coreInitialized = true;
     }
 
-    ExecutionProxyFactoryHandler.instance.addFactory('direct', new DirectExecutionProxyFactory());
+    ExecutionUnitPluginFactoryHandler.instance.addFactory('direct', new DirectExecutionPluginFactory());
 }
 
 // eslint-disable-next-line jest/require-hook

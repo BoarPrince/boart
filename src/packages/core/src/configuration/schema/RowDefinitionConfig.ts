@@ -2,6 +2,7 @@ import { TableRowType } from '../../table/TableRowType';
 import { ParaType } from '../../types/ParaType';
 import { SelectorType } from '../../types/SelectorType';
 import { ExecutionType } from './ExecutionType';
+import { Runtime } from './Runtime';
 import { ValidatorConfig } from './ValidatorConfig';
 
 /**
@@ -16,4 +17,5 @@ export interface RowDefinitionConfig {
     selectorType?: SelectorType;
     validatorDef?: Array<ValidatorConfig>;
     defaultValue?: string;
+    runtime?: Runtime;
 }

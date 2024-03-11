@@ -12,7 +12,8 @@ import {
     SelectorExtractor,
     SelectorType,
     StoreWrapper,
-    VariableParser
+    VariableParser,
+    ContentType
 } from '@boart/core';
 
 import { QualifierValidator } from '../../validators/QualifierValidator';
@@ -81,7 +82,7 @@ export class OutStoreExecutionUnit<StoreContext extends DefaultContext>
      *
      */
     private getDataContent(context: StoreContext, dataScope: DataScope): DataContent {
-        const nonNullValue = (value: object, nullValue?: DataContent): DataContent =>
+        const nonNullValue = (value: ContentType, nullValue?: DataContent): DataContent =>
             DataContentHelper.isNullOrUndefined(value) && nullValue !== undefined ? nullValue : DataContentHelper.create(value);
 
         const scope = dataScope?.value;

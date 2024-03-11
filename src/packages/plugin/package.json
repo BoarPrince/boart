@@ -47,5 +47,8 @@
     "typescript": "~5.3.3",
     "eslint-plugin-eslint-comments": "~3.2.0",
     "ts-proto": "~1.167.2"
+  },
+  "dependencies": {
+    "@boart/core": "workspace:*"
   }
 }

@@ -331,6 +331,7 @@ importers:
 
   ../../src/packages/plugin:
     specifiers:
+      '@boart/core': workspace:*
       '@jest/types': ~29.6.3
       '@types/jest': ~29.5.11
       '@types/node': ~20.11.7
@@ -352,6 +353,8 @@ importers:
       ts-proto: ~1.167.2
       tslib: ~2.6.2
       typescript: ~5.3.3
+    dependencies:
+      '@boart/core': link:../core
     devDependencies:
       '@jest/types': 29.6.3
       '@types/jest': 29.5.11

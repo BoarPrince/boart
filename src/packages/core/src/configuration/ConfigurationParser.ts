@@ -8,8 +8,7 @@ import { DefaultPropertySetterExecutionUnit } from '../default/DefaultPropertySe
 import { RowValidator } from '../validators/RowValidator';
 import { ValidatorFactoryManager } from '../validators/ValidatorFactoryManager';
 import { ValidatorConfig } from './schema/ValidatorConfig';
-import { ExecutionProxyFactory } from '../execution-proxy/ExecutionProxyFactory';
-import { ExecutionProxyFactoryHandler } from '../execution-proxy/ExecutionProxyFactoryHandler';
+import { ExecutionUnitPluginFactory } from '../plugin/ExecutionUnitPluginFactory';
 import { ConfigurationTableHandler } from './ConfigurationTableHandler';
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
@@ -21,11 +20,21 @@ import { ValidatorType } from '../validators/ValidatorType';
 import { ExecutionType } from './schema/ExecutionType';
 import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { ConfigurationChecker } from './ConfigurationChecker';
+import { Runtime } from './schema/Runtime';
+import { ExecutionUnitPluginAdapter } from '../plugin/ExecutionUnitPluginAdapter';
+import { ExecutionUnitPluginHandler } from '../plugin/ExecutionUnitPluginHandler';
+import { DirectExecutionPluginFactory } from '../plugin/DirectExecutionPluginFactory';
+import { ExecutionUnitPluginFactoryHandler } from '../plugin/ExecutionUnitPluginFactoryHandler';
 
 /**
  *
  */
 export class ConfigurationParser {
+    /**
+     *
+     */
+    private executionHandler = new ExecutionUnitPluginHandler();
+
     /**
      *
      */
@@ -54,14 +63,18 @@ export class ConfigurationParser {
     /**
      *
      */
-    private parseValidator(validatorConfig: Array<ValidatorConfig>, type: ValidatorType): Array<RowValidator> | Array<GroupValidator> {
+    private parseValidator(
+        validatorConfig: Array<ValidatorConfig>,
+        type: ValidatorType,
+        basePath: string
+    ): Array<RowValidator> | Array<GroupValidator> {
         return (validatorConfig || []).map((config, index) => {
             const factory = ValidatorFactoryManager.instance.getFactory(config.name);
             try {
                 factory.check(config.parameter);
             } catch (error) {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                throw new Error(`Cannot parse validator validatorDef[name = '${config.name}', index:${index}].parameter\n${error.message}`);
+                throw new Error(`Cannot parse validator ${basePath}.validatorDef[name = '${config.name}'].parameter\n${error.message}`);
             }
 
             if (factory.type !== type) {
@@ -125,18 +138,24 @@ export class ConfigurationParser {
     private parseRowDefinition(
         config: TestExecutionUnitConfig,
         context: DefaultContext,
-        factory: ExecutionProxyFactory
+        mainExecutionUnitFactory: ExecutionUnitPluginFactory
     ): Array<CoreRowDefinition<DefaultContext, DefaultRowType<DefaultContext>>> {
         const defs = config.rowDef.map((rowDef: RowDefinitionConfig, index) => {
             try {
                 const key = Symbol(rowDef.action);
+                const basePath = `$.rowDef[${index}]`;
+
                 const executionUnit = (() => {
                     if (rowDef.executionType === ExecutionType.PropertySetter) {
-                        ConfigurationChecker.checkPropertySetter(rowDef, `$.rowDef[${index}]`);
+                        ConfigurationChecker.checkPropertySetter(rowDef, basePath);
                         return this.getPropertySetterExecutionUnit(rowDef, context, index);
                     } else {
-                        ConfigurationChecker.checkExecutionUnit(rowDef, `$.rowDef[${index}]`);
-                        return factory.createExecutionUnit();
+                        ConfigurationChecker.checkExecutionUnit(rowDef, basePath);
+                        const factory = rowDef.runtime
+                            ? this.getExecutionUnitFactory(rowDef.runtime, rowDef.action, `${basePath}.runtime`)
+                            : mainExecutionUnitFactory;
+
+                        return new ExecutionUnitPluginAdapter(key, factory);
                     }
                 })();
 
@@ -148,12 +167,12 @@ export class ConfigurationParser {
                     defaultValue: rowDef.defaultValue,
                     defaultValueColumn: rowDef.defaultValue ? Symbol('value') : undefined,
                     executionUnit,
-                    validators: this.parseValidator(rowDef.validatorDef, ValidatorType.ROW) as Array<RowValidator>
+                    validators: this.parseValidator(rowDef.validatorDef, ValidatorType.ROW, basePath) as Array<RowValidator>
                 });
             } catch (error) {
                 throw new Error(
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                    `Problem while reading configuration of $.rowDef[action:'${rowDef.action}', index:${index}]. ${error.message}`
+                    `Problem while reading configuration of $.rowDef[${index}]\n${error.message}`
                 );
             }
         });
@@ -164,16 +183,23 @@ export class ConfigurationParser {
     /**
      *
      */
-    private getExecutionUnitFactory(config: TestExecutionUnitConfig): ExecutionProxyFactory {
-        const factory = ExecutionProxyFactoryHandler.instance.getFactory(config.runtime.type);
-        factory.init(config.name, config.runtime.configuration, config.runtime.startup);
+    private getExecutionUnitFactory(runtime: Runtime, name: string, basePath: string): ExecutionUnitPluginFactory {
+        const factory = ExecutionUnitPluginFactoryHandler.instance.getFactory(runtime.type);
+        factory.init(name, runtime.configuration, runtime.startup);
         try {
-            factory.validate('$.runtime.configuration');
+            factory.validate(basePath);
         } catch (error) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            throw new Error(`Problem while runtime configuration. ${error.message}`);
+            (error as Error).message = 'Problem while runtime configuration.\n' + (error as Error).message;
+            throw error;
         }
-        return factory;
+        if (factory.isLocal === true) {
+            this.executionHandler.addExecutionUnit(name, () => factory.createExecutionUnit());
+            const localFactory = new DirectExecutionPluginFactory();
+            localFactory.init(name, () => this.executionHandler, runtime.startup);
+            return localFactory;
+        } else {
+            return factory;
+        }
     }
 
     /**
@@ -194,9 +220,14 @@ export class ConfigurationParser {
         ConfigurationChecker.check(config);
 
         const context = this.parseContext(config.context);
-        const executionUnitFactory = this.getExecutionUnitFactory(config);
+        const executionUnitFactory = this.getExecutionUnitFactory(config.runtime, config.name, '$.runtime.configuration');
+
         const rowDefinitions = this.parseRowDefinition(config, context, executionUnitFactory);
-        const groupValidations = this.parseValidator(config.groupValidatorDef, ValidatorType.GROUP) as Array<GroupValidator>;
+        const groupValidations = this.parseValidator(
+            config.groupValidatorDef,
+            ValidatorType.GROUP,
+            '$.groupValidatorDef'
+        ) as Array<GroupValidator>;
         const groupRows = config.groupRowDef;
 
         return new ConfigurationTableHandler(config.name, context, executionUnitFactory, rowDefinitions, groupRows, groupValidations);

@@ -9,18 +9,18 @@ import { ValidatorFactoryManager } from '../validators/ValidatorFactoryManager';
 import { ValidatorFactory } from '../validators/ValidatorFactory';
 import { RowValidator } from '../validators/RowValidator';
 import { ObjectValidator } from '../validators/object/ObjectValidator';
-import { ExecutionProxyFactoryHandler } from '../execution-proxy/ExecutionProxyFactoryHandler';
-import { ExecutionProxyFactory } from '../execution-proxy/ExecutionProxyFactory';
+import { ExecutionUnitPluginFactory } from '../plugin/ExecutionUnitPluginFactory';
 import { GroupRowDefinition } from '../table/GroupRowDefinition';
 import { TableHandlerInstances } from '../table/TableHandlerInstances';
 import { ValidatorType } from '../validators/ValidatorType';
 import { MarkdownTableReader } from '../table/MarkdownTableReader';
-import { ExecutionUnit } from '../execution/ExecutionUnit';
-import { DefaultContext } from '../default/DefaultExecutionContext';
-import { DefaultRowType } from '../default/DefaultRowType';
 import { TextContent } from '../data/TextContent';
-import { DirectExecutionProxyFactory } from './DirectExecutionProxyFactory';
+import { DirectExecutionPluginFactory } from '../plugin/DirectExecutionPluginFactory';
 import { ExecutionType } from './schema/ExecutionType';
+import { ExecutionUnitPlugin } from '../plugin/ExecutionUnitPlugin';
+import { ExecutionUnitPluginFactoryHandler } from '../plugin/ExecutionUnitPluginFactoryHandler';
+import { PluginRequest } from '../plugin/PluginRequest';
+import { PluginResponse } from '../plugin/PluginResponse';
 
 /**
  *
@@ -133,7 +133,7 @@ class ValidatorFactoryMock implements ValidatorFactory {
 /**
  *
  */
-class RemoteProxyFactory implements ExecutionProxyFactory {
+class RemoteProxyFactory implements ExecutionUnitPluginFactory {
     private name: string;
     private config: object;
     /**
@@ -164,7 +164,7 @@ class RemoteProxyFactory implements ExecutionProxyFactory {
     /**
      *
      */
-    createExecutionUnit(): ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
+    createExecutionUnit(): ExecutionUnitPlugin {
         return null;
     }
 }
@@ -179,10 +179,10 @@ beforeEach(() => {
     ValidatorFactoryManager.instance.addFactory(new ValidatorFactoryMock('validator-2', ValidatorType.ROW));
     ValidatorFactoryManager.instance.addFactory(new ValidatorFactoryMock('group-val', ValidatorType.GROUP));
 
-    ExecutionProxyFactoryHandler.instance.clear();
-    ExecutionProxyFactoryHandler.instance.addFactory('grpc', new RemoteProxyFactory());
-    ExecutionProxyFactoryHandler.instance.addFactory('node-fork', new RemoteProxyFactory());
-    ExecutionProxyFactoryHandler.instance.addFactory('direct', new DirectExecutionProxyFactory());
+    ExecutionUnitPluginFactoryHandler.instance.clear();
+    ExecutionUnitPluginFactoryHandler.instance.addFactory('grpc', new RemoteProxyFactory());
+    ExecutionUnitPluginFactoryHandler.instance.addFactory('node-fork', new RemoteProxyFactory());
+    ExecutionUnitPluginFactoryHandler.instance.addFactory('direct', new DirectExecutionPluginFactory());
 
     GroupRowDefinition.getInstance('group-1').addGroupValidation(null);
     GroupRowDefinition.getInstance('group-2').addGroupValidation(null);
@@ -206,7 +206,7 @@ describe('configurationParser', () => {
 
         const sut = new ConfigurationParser();
         expect(() => sut.readDefinitions()).toThrow(
-            `Problem while reading configuration of $.rowDef[action:'-key-', index:0]. Reading $.rowDef[0].contextPropery: context 'conf' does not exists. Available: 'config', 'preExecution', 'execution'`
+            `Problem while reading configuration of $.rowDef[0]\nReading $.rowDef[0].contextPropery: context 'conf' does not exists. Available: 'config', 'preExecution', 'execution'`
         );
     });
 
@@ -219,7 +219,7 @@ describe('configurationParser', () => {
 
         const sut = new ConfigurationParser();
         expect(() => sut.readDefinitions()).toThrow(
-            `Problem while reading configuration of $.rowDef[action:'-key-', index:0]. Reading $.rowDef[0].contextPropery: context 'config.config' does not exists. Available: 'config.conf', 'config.conf2'`
+            `Problem while reading configuration of $.rowDef[0]\nReading $.rowDef[0].contextPropery: context 'config.config' does not exists. Available: 'config.conf', 'config.conf2'`
         );
     });
 
@@ -232,7 +232,7 @@ describe('configurationParser', () => {
 
         const sut = new ConfigurationParser();
         expect(() => sut.readDefinitions()).toThrow(
-            `Problem while reading configuration of $.rowDef[action:'-key-', index:0]. Validator '-validator-' does not exist. Available validators: \n'validator-1',\n'validator-2'`
+            `Problem while reading configuration of $.rowDef[0]\nValidator '-validator-' does not exist. Available validators: \n'validator-1',\n'validator-2',\n'group-val'`
         );
     });
 
@@ -245,7 +245,7 @@ describe('configurationParser', () => {
 
         const sut = new ConfigurationParser();
         expect(() => sut.readDefinitions()).toThrow(
-            `Problem while reading configuration of $.rowDef[action:'-key-', index:0]. Incorrect validator type validatorDef[name = 'group-val', index:0], must be of type 'row'. Available:\n - 'validator-1',\n - 'validator-2'`
+            `Problem while reading configuration of $.rowDef[0]\nIncorrect validator type validatorDef[name = 'group-val', index:0], must be of type 'row'. Available:\n - 'validator-1',\n - 'validator-2'`
         );
     });
 
@@ -258,7 +258,7 @@ describe('configurationParser', () => {
 
         const sut = new ConfigurationParser();
         expect(() => sut.readDefinitions()).toThrow(
-            `Problem while reading configuration of $.rowDef[action:'-key-', index:0]. Cannot parse validator validatorDef[name = 'validator-1', index:0].parameter\npath: '$'. Is not of type array<string>, it's: '{}'`
+            `Problem while reading configuration of $.rowDef[0]\nCannot parse validator $.rowDef[0].validatorDef[name = 'validator-1'].parameter\npath: '$'. Is not of type array<string>, it's of type 'object': '{}'`
         );
     });
 
@@ -284,7 +284,7 @@ describe('configurationParser', () => {
 
         const sut = new ConfigurationParser();
         expect(() => sut.readDefinitions()).toThrow(
-            `Reading boart configuration 'extensions/text-extension/boart.json'.\nProblem while runtime configuration. path: $.runtime.configuration\nmust contain property 'path', but only contains ''`
+            `Problem while runtime configuration.\npath: $.runtime.configuration\nmust contain property 'path', but only contains ''`
         );
     });
 
@@ -326,14 +326,14 @@ describe('direct configuration', () => {
     /**
      *
      */
-    class MockExecutionUnit implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
-        key = Symbol('test call');
+    class MockExecutionUnit implements ExecutionUnitPlugin {
+        action = 'test call';
 
         /**
          *
          */
-        execute(context: DefaultContext): void | Promise<void> {
-            context.execution.data = new TextContent(`config.conf: ${context.config['conf']}`);
+        execute(request: PluginRequest, response: PluginResponse): void {
+            response.execution.data = `config.conf: ${request.context.config['conf']}`;
         }
     }
 
@@ -401,6 +401,38 @@ describe('direct configuration', () => {
     /**
      *
      */
+    test('one definition - check paramter', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `| action         | value |
+             |----------------|-------|
+             | set-conf:para1 | xxx   |`
+        );
+
+        const sut = new ConfigurationParser();
+
+        const mockPlugin = new MockExecutionUnit();
+        const mockPluginExecute = jest.spyOn(mockPlugin, 'execute');
+        executionConfig.runtime.configuration = () => mockPlugin;
+
+        const handler = sut.parseDefinition(executionConfig).handler;
+        await handler.process(tableDef);
+
+        expect(mockPluginExecute).toHaveBeenCalledWith(
+            {
+                action: { ast: undefined, name: undefined },
+                context: {
+                    config: { conf: 'xxx' },
+                    execution: { data: {}, header: {}, transformed: {} },
+                    preExecution: { payload: {} }
+                }
+            },
+            { execution: { data: 'config.conf: xxx', header: {} }, reportItems: [] }
+        );
+    });
+
+    /**
+     *
+     */
     test('two definitions', async () => {
         executionConfig.rowDef.push({
             action: 'set-config-2',
@@ -420,8 +452,11 @@ describe('direct configuration', () => {
 
         const executionUnit = new MockExecutionUnit();
         executionConfig.runtime.configuration = () => executionUnit;
-        executionUnit.execute = (context: DefaultContext) => {
-            context.execution.data = new TextContent(`config.conf: ${context.config['conf']}, config.conf2: ${context.config['conf2']}`);
+        executionUnit.execute = (request: PluginRequest, response: PluginResponse) => {
+            response.execution.data = new TextContent(
+                `config.conf: ${request.context.config['conf']}, config.conf2: ${request.context.config['conf2']}`
+            );
+            return null;
         };
 
         const tableDef = MarkdownTableReader.convert(
@@ -437,5 +472,34 @@ describe('direct configuration', () => {
 
         const context = handler.getExecutionEngine().context;
         expect(context.execution.data.valueOf()).toBe('config.conf: xxx, config.conf2: yyy');
+    });
+
+    /**
+     *
+     */
+    test('one execution unit', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `| action      | value |
+             |-------------|-------|
+             | set-conf    | xxx   |
+             | do:anything |       |`
+        );
+
+        const sut = new ConfigurationParser();
+        executionConfig.rowDef.push({
+            action: 'do:anything',
+            executionType: ExecutionType.ExecutionUnit,
+            runtime: {
+                type: 'direct',
+                startup: RuntimeStartUp.EACH,
+                configuration: () => new MockExecutionUnit()
+            }
+        });
+
+        const handler = sut.parseDefinition(executionConfig).handler;
+        await handler.process(tableDef);
+
+        const context = handler.getExecutionEngine().context;
+        expect(context.execution.data.valueOf()).toBe('config.conf: xxx');
     });
 });

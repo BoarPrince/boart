@@ -11,9 +11,9 @@ export interface DefaultPreExecutionContext {
  *
  */
 export interface DefaultExecutionContext {
-    data: object | null;
-    header: object | null;
-    transformed: object | null;
+    data: object | string | number | boolean | null;
+    header: object | string | number | boolean | null;
+    transformed: object | string | number | boolean | null;
 }
 
 /**
