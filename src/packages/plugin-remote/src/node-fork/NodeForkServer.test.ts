@@ -3,7 +3,7 @@ import * as child_process from 'child_process';
 import * as crypto from 'crypto';
 import { Readable } from 'stream';
 import { NodeForkServer } from './NodeForkServer';
-import { PluginRequest, PluginResponse } from '@boart/core';
+import { PluginRequest } from '@boart/core';
 import { NodeForkResponse } from '@boart/plugin';
 
 /**
@@ -57,10 +57,7 @@ beforeEach(() => {
         id: UUID,
         error: null,
         data: {
-            execution: {
-                data: null,
-                header: null
-            },
+            context: undefined,
             reportItems: []
         }
     };
@@ -96,7 +93,8 @@ describe('client - server - communication', () => {
             }
         };
 
-        await sut.execute(messageToClient, {} as PluginResponse);
+        await sut.execute(messageToClient);
+
         expect(onSend).toHaveBeenCalledWith({
             data: messageToClient,
             id: '0-0-0-0-0'
@@ -132,8 +130,7 @@ describe('client - server - communication', () => {
             return process;
         });
 
-        const response = {} as PluginResponse;
-        await sut.execute(messageToClient, response);
+        const response = await sut.execute(messageToClient);
         expect(response).toStrictEqual(messageFromClient.data);
     });
 
@@ -190,27 +187,19 @@ describe('error handing', () => {
     test('id must be the same', async () => {
         const sut = new NodeForkServer('-action-', '-path-');
 
-        const response: PluginResponse = {
-            execution: {
-                data: {},
-                header: {}
-            },
-            reportItems: []
-        };
-
         // check if id is ok
-        let executePromise = sut.execute(messageToClient, response);
+        let responsePromise = sut.execute(messageToClient);
         let timeoutPromise = new Promise((_, reject) => setTimeout(() => reject('timer first'), 200));
 
-        await expect(Promise.race([timeoutPromise, executePromise])).resolves.not.toThrow();
+        await expect(Promise.race([timeoutPromise, responsePromise])).resolves.not.toThrow();
 
         // check if id is not ok
         messageFromClient.id = '1-1-1-1-1-1';
-        executePromise = sut.execute(messageToClient, response);
+        responsePromise = sut.execute(messageToClient);
         timeoutPromise = new Promise((_, reject) => setTimeout(() => reject('timer first'), 200));
 
         // check that the response promise does not resolve
-        await expect(Promise.race([timeoutPromise, executePromise])).rejects.toBe('timer first');
+        await expect(Promise.race([timeoutPromise, responsePromise])).rejects.toBe('timer first');
     });
 
     /**
@@ -221,15 +210,7 @@ describe('error handing', () => {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         messageFromClient = { id: 'uncaughtException' as any, error: 'any exception', data: null };
-        const response: PluginResponse = {
-            execution: {
-                data: {},
-                header: {}
-            },
-            reportItems: []
-        };
-
-        await expect(sut.execute(messageToClient, response)).rejects.toBe('any exception');
+        await expect(sut.execute(messageToClient)).rejects.toBe('any exception');
     });
 
     /**
@@ -239,14 +220,6 @@ describe('error handing', () => {
         const sut = new NodeForkServer('-action-', '-path-');
 
         messageFromClient = { id: UUID, error: 'any exception', data: null };
-        const response: PluginResponse = {
-            execution: {
-                data: {},
-                header: {}
-            },
-            reportItems: []
-        };
-
-        await expect(sut.execute(messageToClient, response)).rejects.toBe('any exception');
+        await expect(sut.execute(messageToClient)).rejects.toBe('any exception');
     });
 });

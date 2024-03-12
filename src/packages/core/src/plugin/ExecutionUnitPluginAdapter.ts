@@ -1,4 +1,3 @@
-import { DataContentHelper } from '../data/DataContentHelper';
 import { DefaultContext } from '../default/DefaultExecutionContext';
 import { DefaultRowType } from '../default/DefaultRowType';
 import { ExecutionUnitPluginFactory } from './ExecutionUnitPluginFactory';
@@ -6,13 +5,12 @@ import { ExecutionUnit } from '../execution/ExecutionUnit';
 import { StepReport } from '../report/StepReport';
 import { ExecutionUnitPlugin } from './ExecutionUnitPlugin';
 import { PluginRequest } from './PluginRequest';
-import { PluginResponse } from './PluginResponse';
 
 /**
  *
  */
 export class ExecutionUnitPluginAdapter implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
-    private executionUnit: ExecutionUnitPlugin;
+    private pluginExecutionUnit: ExecutionUnitPlugin;
     /**
      *
      */
@@ -20,7 +18,7 @@ export class ExecutionUnitPluginAdapter implements ExecutionUnit<DefaultContext,
         public readonly key: symbol,
         factory: ExecutionUnitPluginFactory
     ) {
-        this.executionUnit = factory.createExecutionUnit();
+        this.pluginExecutionUnit = factory.createExecutionUnit();
     }
 
     /**
@@ -30,21 +28,13 @@ export class ExecutionUnitPluginAdapter implements ExecutionUnit<DefaultContext,
         const request: PluginRequest = {
             context: JSON.parse(JSON.stringify(context)) as DefaultContext,
             action: {
-                name: row?.action, //
+                name: row?.ast.match, //
                 ast: row?.ast
             }
         };
-        const response: PluginResponse = {
-            execution: {
-                data: request.context.execution.data,
-                header: request.context.execution.header
-            },
-            reportItems: []
-        };
-        await this.executionUnit.execute(request, response);
 
-        context.execution.data = DataContentHelper.create(response?.execution.data);
-        context.execution.header = DataContentHelper.create(response?.execution.header);
+        const response = await this.pluginExecutionUnit.execute(request);
+        context.execution = request.context.execution;
 
         StepReport.instance.type = row?.action || this.key.description;
         for (const report of response?.reportItems || []) {

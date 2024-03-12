@@ -33,12 +33,12 @@ export class ExecutionUnitPluginHandler implements ExecutionUnitPlugin {
     /**
      *
      */
-    public execute(request: PluginRequest, response: PluginResponse): void | Promise<void> {
+    public execute(request: PluginRequest): PluginResponse | Promise<PluginResponse> {
         const executionUnit = !request?.action.name ? this.mainExecutionPlugin : this.clientImplList.get(request.action.name);
         if (!executionUnit) {
             throw new Error(`client '${request.action.name || '-mainClient-'}' not found`);
         }
 
-        return executionUnit().execute(request, response);
+        return executionUnit().execute(request);
     }
 }

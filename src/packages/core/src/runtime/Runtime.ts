@@ -5,7 +5,7 @@ import { RuntimeContext } from './RuntimeContext';
 import { StepContext } from './StepContext';
 import { TestContext } from './TestContext';
 import { RuntimeNotifier } from './RuntimeNotifier';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ArraySubject } from '../common/ArraySubject';
 
 /**

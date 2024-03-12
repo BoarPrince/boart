@@ -13,6 +13,13 @@ class StarterProxyFactory implements ExecutionUnitPluginFactory {
     /**
      *
      */
+    public get isLocal(): boolean {
+        return this.origin.isLocal;
+    }
+
+    /**
+     *
+     */
     constructor(private origin: ExecutionUnitPluginFactory) {}
 
     /**
@@ -43,15 +50,14 @@ class StarterProxyFactory implements ExecutionUnitPluginFactory {
     createExecutionUnit(): ExecutionUnitPlugin {
         const originExecutionUnit = this.origin.createExecutionUnit();
         const originExecuteMethod = originExecutionUnit.execute.bind(originExecutionUnit) as (
-            request: PluginRequest,
-            response: PluginResponse
-        ) => void | Promise<void>;
+            request: PluginRequest
+        ) => PluginResponse | Promise<PluginResponse>;
 
-        originExecutionUnit.execute = (request, response): void | Promise<void> => {
+        originExecutionUnit.execute = (request): PluginResponse | Promise<PluginResponse> => {
             if (!this.started) {
                 this.start();
             }
-            return originExecuteMethod(request, response);
+            return originExecuteMethod(request);
         };
 
         return originExecutionUnit;

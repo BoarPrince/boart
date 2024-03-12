@@ -1,4 +1,4 @@
-import { PluginResponse } from '@boart/core';
+import { DefaultContext, PluginResponse } from '@boart/core';
 
 /**
  *
@@ -6,5 +6,5 @@ import { PluginResponse } from '@boart/core';
 export interface NodeForkResponse {
     id: string;
     error: unknown;
-    data: PluginResponse;
+    data: PluginResponse & { context: DefaultContext };
 }

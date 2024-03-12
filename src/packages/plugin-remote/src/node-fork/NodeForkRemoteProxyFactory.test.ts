@@ -62,6 +62,22 @@ describe('factory', () => {
     /**
      *
      */
+    test('start must be called before an execution unit can be created', () => {
+        const sut = new NodeForkRemoteProxyFactory();
+
+        const config = {
+            path: '-path-'
+        };
+
+        sut.init('-name-', config, null);
+        sut.start();
+
+        expect(sut.createExecutionUnit()).toBeInstanceOf(NodeForkServer);
+    });
+
+    /**
+     *
+     */
     test('startup can be null or once - but nothing else', () => {
         const sut = new NodeForkRemoteProxyFactory();
 

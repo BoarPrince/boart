@@ -6,5 +6,5 @@ import { PluginResponse } from './PluginResponse';
  */
 export interface ExecutionUnitPlugin {
     action: string;
-    execute(request: PluginRequest, response: PluginResponse): void | Promise<void>;
+    execute(request: PluginRequest): PluginResponse | Promise<PluginResponse>;
 }

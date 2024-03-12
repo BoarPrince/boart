@@ -1,6 +1,6 @@
 import { NodeForkResponse } from './NodeForkResponse';
 import { NodeForkRequest } from './NodeForkRequest';
-import { ExecutionUnitPluginHandler } from '@boart/core';
+import { ExecutionUnitPluginHandler, ReadonlyDefaultContext } from '@boart/core';
 
 /**
  *
@@ -8,6 +8,7 @@ import { ExecutionUnitPluginHandler } from '@boart/core';
 export class NodeForkClient {
     private started = false;
     public readonly pluginHandler = new ExecutionUnitPluginHandler();
+    public context: ReadonlyDefaultContext;
 
     /**
      *
@@ -46,17 +47,17 @@ export class NodeForkClient {
         const response: NodeForkResponse = {
             id: request.id,
             data: {
-                execution: {
-                    data: {},
-                    header: {}
-                },
+                context: undefined,
                 reportItems: []
             },
             error: undefined
         };
 
         try {
-            await this.pluginHandler.execute(request.data, response.data);
+            const result = await this.pluginHandler.execute(request.data);
+            response.data.reportItems = result?.reportItems ?? [];
+            response.data.context = request.data.context;
+            this.context = request.data.context;
         } catch (error) {
             response.data = undefined;
             response.error = (error as { message: string }).message || (error as unknown);

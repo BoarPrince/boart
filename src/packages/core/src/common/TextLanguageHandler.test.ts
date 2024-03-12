@@ -19,9 +19,21 @@ const mockData: EnvironmentSettings = {
  *
  */
 describe('check text language handler', () => {
-    (fs.readFileSync as jest.Mock).mockReturnValue(JSON.stringify(mockData));
-    process.env.environment_project_root = '<root>';
-    process.env.environment_project_location = 'env';
+    /**
+     *
+     */
+    beforeEach(() => {
+        (fs.readFileSync as jest.Mock).mockReturnValue(JSON.stringify(mockData));
+        process.env.environment_project_root = '<root>';
+        process.env.environment_project_location = 'env';
+    });
+
+    /**
+     *
+     */
+    afterEach(() => {
+        (fs.readFileSync as jest.Mock).mockClear();
+    });
 
     /**
      *
@@ -33,7 +45,7 @@ describe('check text language handler', () => {
         it('check initialization', () => {
             const sut = TextLanguageHandler.instance;
 
-            expect(fs.readFileSync).toBeCalledWith('<root>/env', 'utf8');
+            expect(fs.readFileSync).toHaveBeenCalledWith('<root>/env', 'utf8');
             expect(sut.defaultLanguage).toBe('nl');
         });
 
@@ -43,14 +55,7 @@ describe('check text language handler', () => {
         it('add identifier mulitple times', () => {
             const sut = TextLanguageHandler.instance;
 
-            try {
-                sut.add('hello');
-            } catch (error) {
-                expect(error.message).toBe(`language mapping for 'hello' is already defined!`);
-                return;
-            }
-
-            fail('error must be thrown if an identifier is added multiple times');
+            expect(() => sut.add('hello')).toThrow(`language mapping for 'hello' is already defined!`);
         });
 
         /**
@@ -72,14 +77,7 @@ describe('check text language handler', () => {
             const sut = TextLanguageHandler.instance;
             sut.defaultLanguage = 'en';
 
-            try {
-                sut.get('hello', 'nl');
-            } catch (error) {
-                expect(error.message).toBe(`no language defined for 'hello', langauge='nl'`);
-                return;
-            }
-
-            fail('error must be thrown if a language does not exist for the requested identifier');
+            expect(() => sut.get('hello', 'nl')).toThrow(`no language defined for 'hello', langauge='nl'`);
         });
 
         /**
@@ -89,14 +87,7 @@ describe('check text language handler', () => {
             const sut = TextLanguageHandler.instance;
             sut.defaultLanguage = 'en';
 
-            try {
-                sut.get('hello2');
-            } catch (error) {
-                expect(error.message).toBe(`no text entry defined for hello2`);
-                return;
-            }
-
-            fail('error must be thrown if an unknown identifier is requested');
+            expect(() => sut.get('hello2')).toThrow(`no text entry defined for hello2`);
         });
     });
 
@@ -114,24 +105,21 @@ describe('check text language handler', () => {
         /**
          *
          */
-        it('check setting default language', async () => {
+        it('check setting default language', () => {
             const expectedResult = ['nl', 'en'];
-            const foundLanguages = [];
-            const sut = TextLanguageHandler.instance;
 
-            await new Promise<void>((done) => {
+            // eslint-disable-next-line jest/no-test-return-statement
+            return new Promise<void>((done) => {
                 Runtime.instance.language.subscribe((lang) => {
-                    foundLanguages.push(lang);
-                    expect(expectedResult.find((l) => l === lang)).toBe(lang);
+                    const found = expectedResult.shift();
+                    expect(found).toBe(lang);
 
-                    if (expectedResult.toString() === foundLanguages.toString()) {
-                        // latest language must be 'en'
-                        expect(lang).toBe('en');
+                    if (expectedResult.length === 0) {
                         done();
                     }
                 });
 
-                sut.defaultLanguage = 'en';
+                TextLanguageHandler.instance.defaultLanguage = 'en';
             });
         });
 
@@ -212,16 +200,9 @@ describe('check text language handler', () => {
                 } as EnvironmentSettings)
             );
 
-            let sut: TextLanguageHandler;
-            try {
-                sut = TextLanguageHandler.instance;
-            } catch (error) {
-                expect(error.message).toBe(`identifier {"de":"hallo","en":"hello","iden":"hello"} not defined in mapping`);
-                expect(sut).toBeUndefined();
-                return;
-            }
-
-            fail('error must be thrown if the ident property is missing in one entry');
+            expect(() => TextLanguageHandler.instance).toThrow(
+                `identifier {"de":"hallo","en":"hello","iden":"hello"} not defined in mapping`
+            );
         });
 
         /**

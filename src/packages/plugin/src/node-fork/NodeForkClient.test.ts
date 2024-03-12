@@ -1,4 +1,4 @@
-import { PluginResponse } from '@boart/core';
+import { ExecutionUnitPlugin, PluginRequest, PluginResponse } from '@boart/core';
 import { NodeForkClient } from './NodeForkClient';
 import { NodeForkRequest } from './NodeForkRequest';
 
@@ -49,10 +49,6 @@ beforeEach(() => {
 
     response = JSON.parse(
         JSON.stringify({
-            execution: {
-                data: {},
-                header: {}
-            },
             reportItems: []
         })
     );
@@ -100,7 +96,46 @@ describe('synchron', () => {
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: undefined, data: response });
+        expect(process.send).toHaveBeenCalledWith({
+            id: '-id-',
+            error: undefined,
+            data: { context: { ...listenerData.data.context }, reportItems: [] }
+        });
+    });
+
+    /**
+     *
+     */
+    test('with reporting', async () => {
+        const reportResponse: PluginResponse = {
+            reportItems: [
+                {
+                    description: '-desc-',
+                    dataType: 'text',
+                    type: 'input',
+                    data: '-data-'
+                }
+            ]
+        };
+
+        const remoteClient = {
+            action: '-test-action-',
+            execute: jest.fn().mockReturnValue(reportResponse)
+        };
+
+        const sut = new NodeForkClient();
+        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
+        sut.start();
+
+        onListeners.get('message').forEach((listener) => listener(listenerData));
+        await jest.runAllTimersAsync();
+
+        expect(process.send).toHaveBeenCalledTimes(1);
+        expect(process.send).toHaveBeenCalledWith({
+            id: '-id-',
+            error: undefined,
+            data: { context: { ...listenerData.data.context }, reportItems: reportResponse.reportItems }
+        });
     });
 
     /**
@@ -230,7 +265,12 @@ describe('asynchron', () => {
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: undefined, data: response });
+
+        expect(process.send).toHaveBeenCalledWith({
+            id: '-id-',
+            error: undefined,
+            data: { context: { ...listenerData.data.context }, reportItems: [] }
+        });
     });
 });
 
@@ -256,13 +296,18 @@ describe('with clientExecutionProxy', () => {
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: undefined, data: response });
+
+        expect(process.send).toHaveBeenCalledWith({
+            id: '-id-',
+            error: undefined,
+            data: { context: { ...listenerData.data.context }, reportItems: [] }
+        });
     });
 
     /**
      *
      */
-    test('two client proxy', async () => {
+    test('two client proxies', async () => {
         const remoteClient1 = {
             action: '-test-proxy-1-action-',
             execute: jest.fn().mockResolvedValue(response)
@@ -283,7 +328,55 @@ describe('with clientExecutionProxy', () => {
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: undefined, data: response });
+        expect(process.send).toHaveBeenCalledWith({
+            id: '-id-',
+            error: undefined,
+            data: { context: { ...listenerData.data.context }, reportItems: [] }
+        });
+    });
+
+    /**
+     *
+     */
+    test('two client proxies can modify the context', async () => {
+        const remoteClient1: ExecutionUnitPlugin = {
+            action: '-test-proxy-1-action-',
+            execute: jest.fn().mockImplementation((request: PluginRequest) => {
+                request.context.config = { conf1: '-config-' };
+                request.context.execution.data = '-data-1-';
+                request.context.execution.header = '-header-1-';
+            })
+        };
+
+        const remoteClient2 = {
+            action: '-test-proxy-2-action-',
+            execute: jest.fn().mockImplementation((request: PluginRequest) => {
+                request.context.execution.data = request.context.execution.data + ', -data-2-';
+                request.context.execution.header = request.context.execution.header + ', -header-2-';
+            })
+        };
+
+        const sut = new NodeForkClient();
+        sut.pluginHandler.addExecutionUnit(remoteClient1.action, () => remoteClient1);
+        sut.pluginHandler.addExecutionUnit(remoteClient2.action, () => remoteClient2);
+        sut.start();
+
+        onListeners.get('message').forEach((listener) => {
+            listenerData.data.action.name = '-test-proxy-1-action-';
+            listener(listenerData);
+            listenerData.data.action.name = '-test-proxy-2-action-';
+            listener(listenerData);
+        });
+        await jest.runAllTimersAsync();
+
+        expect(sut.context).toStrictEqual({
+            config: { conf1: '-config-' },
+            execution: {
+                data: '-data-1-, -data-2-',
+                header: '-header-1-, -header-2-',
+                transformed: ''
+            }
+        });
     });
 
     /**

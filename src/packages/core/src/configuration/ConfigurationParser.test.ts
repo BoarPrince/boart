@@ -21,6 +21,7 @@ import { ExecutionUnitPlugin } from '../plugin/ExecutionUnitPlugin';
 import { ExecutionUnitPluginFactoryHandler } from '../plugin/ExecutionUnitPluginFactoryHandler';
 import { PluginRequest } from '../plugin/PluginRequest';
 import { PluginResponse } from '../plugin/PluginResponse';
+import { RowDefinitionConfig } from './schema/RowDefinitionConfig';
 
 /**
  *
@@ -332,8 +333,9 @@ describe('direct configuration', () => {
         /**
          *
          */
-        execute(request: PluginRequest, response: PluginResponse): void {
-            response.execution.data = `config.conf: ${request.context.config['conf']}`;
+        execute(request: PluginRequest): PluginResponse {
+            request.context.execution.data = `config.conf: ${request.context.config['conf']}`;
+            return null;
         }
     }
 
@@ -417,17 +419,14 @@ describe('direct configuration', () => {
         const handler = sut.parseDefinition(executionConfig).handler;
         await handler.process(tableDef);
 
-        expect(mockPluginExecute).toHaveBeenCalledWith(
-            {
-                action: { ast: undefined, name: undefined },
-                context: {
-                    config: { conf: 'xxx' },
-                    execution: { data: {}, header: {}, transformed: {} },
-                    preExecution: { payload: {} }
-                }
-            },
-            { execution: { data: 'config.conf: xxx', header: {} }, reportItems: [] }
-        );
+        expect(mockPluginExecute).toHaveBeenCalledWith({
+            action: { ast: undefined, name: undefined },
+            context: {
+                config: { conf: 'xxx' },
+                execution: { data: 'config.conf: xxx', header: {}, transformed: {} },
+                preExecution: { payload: {} }
+            }
+        });
     });
 
     /**
@@ -452,8 +451,8 @@ describe('direct configuration', () => {
 
         const executionUnit = new MockExecutionUnit();
         executionConfig.runtime.configuration = () => executionUnit;
-        executionUnit.execute = (request: PluginRequest, response: PluginResponse) => {
-            response.execution.data = new TextContent(
+        executionUnit.execute = (request: PluginRequest) => {
+            request.context.execution.data = new TextContent(
                 `config.conf: ${request.context.config['conf']}, config.conf2: ${request.context.config['conf2']}`
             );
             return null;
@@ -501,5 +500,82 @@ describe('direct configuration', () => {
 
         const context = handler.getExecutionEngine().context;
         expect(context.execution.data.valueOf()).toBe('config.conf: xxx');
+    });
+
+    /**
+     *
+     */
+    test('two execution units', async () => {
+        executionConfig.runtime.configuration = () => ({
+            action: '-main-',
+
+            /**
+             *
+             */
+            execute: (request: PluginRequest) => {
+                request.context.execution.data = request.context.execution.data + ', -main-';
+                request.context.execution.header = request.context.execution.header + ', -main-';
+                return null;
+            }
+        });
+
+        /**
+         *
+         */
+
+        const tableDef = MarkdownTableReader.convert(
+            `| action        | value |
+             |---------------|-------|
+             | do:anything-1 |       |
+             | do:anything-2 |       |`
+        );
+
+        const sut = new ConfigurationParser();
+
+        executionConfig.rowDef.push({
+            action: 'do:anything-1',
+            executionType: ExecutionType.ExecutionUnit,
+            runtime: {
+                type: 'direct',
+                startup: RuntimeStartUp.EACH,
+                configuration: () => ({
+                    action: 'do:anything-1',
+                    execute: jest.fn().mockImplementation((request: PluginRequest) => {
+                        request.context.execution.data = `-data-1-`;
+                        request.context.execution.header = `-header-1-`;
+                    })
+                })
+            }
+        } satisfies RowDefinitionConfig);
+
+        executionConfig.rowDef.push({
+            action: 'do:anything-2',
+            executionType: ExecutionType.ExecutionUnit,
+            runtime: {
+                type: 'direct',
+                startup: RuntimeStartUp.EACH,
+                configuration: () => ({
+                    action: 'do:anything-2',
+                    execute: jest.fn().mockImplementation((request: PluginRequest) => {
+                        request.context.execution.data = request.context.execution.data + `, -data-2-`;
+                        request.context.execution.header = request.context.execution.header + `, -header-2-`;
+                    })
+                })
+            }
+        } satisfies RowDefinitionConfig);
+
+        const handler = sut.parseDefinition(executionConfig).handler;
+        await handler.process(tableDef);
+
+        const context = handler.getExecutionEngine().context;
+        expect(context).toStrictEqual({
+            config: { conf: '' },
+            execution: {
+                data: '-data-1-, -data-2-, -main-',
+                header: '-header-1-, -header-2-, -main-',
+                transformed: {}
+            },
+            preExecution: { payload: {} }
+        });
     });
 });

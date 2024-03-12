@@ -25,6 +25,7 @@ import { ExecutionUnitPluginAdapter } from '../plugin/ExecutionUnitPluginAdapter
 import { ExecutionUnitPluginHandler } from '../plugin/ExecutionUnitPluginHandler';
 import { DirectExecutionPluginFactory } from '../plugin/DirectExecutionPluginFactory';
 import { ExecutionUnitPluginFactoryHandler } from '../plugin/ExecutionUnitPluginFactoryHandler';
+import { ExecutionUnitPlugin } from '../plugin/ExecutionUnitPlugin';
 
 /**
  *
@@ -185,19 +186,20 @@ export class ConfigurationParser {
      */
     private getExecutionUnitFactory(runtime: Runtime, name: string, basePath: string): ExecutionUnitPluginFactory {
         const factory = ExecutionUnitPluginFactoryHandler.instance.getFactory(runtime.type);
-        factory.init(name, runtime.configuration, runtime.startup);
-        try {
-            factory.validate(basePath);
-        } catch (error) {
-            (error as Error).message = 'Problem while runtime configuration.\n' + (error as Error).message;
-            throw error;
-        }
         if (factory.isLocal === true) {
-            this.executionHandler.addExecutionUnit(name, () => factory.createExecutionUnit());
             const localFactory = new DirectExecutionPluginFactory();
-            localFactory.init(name, () => this.executionHandler, runtime.startup);
+            this.executionHandler.addExecutionUnit(name, () => localFactory.createExecutionUnit());
+            const pluginExecutionUnit = runtime.configuration as () => ExecutionUnitPlugin;
+            localFactory.init(name, pluginExecutionUnit, runtime.startup);
             return localFactory;
         } else {
+            try {
+                factory.init(name, runtime.configuration, runtime.startup);
+                factory.validate(basePath);
+            } catch (error) {
+                (error as Error).message = 'Problem while runtime configuration.\n' + (error as Error).message;
+                throw error;
+            }
             return factory;
         }
     }

@@ -73,7 +73,12 @@ import { ValueReplacerHandler } from './value/ValueReplacerHandler';
 import { ObjectValidator } from './validators/object/ObjectValidator';
 import { DefaultRowType } from './default/DefaultRowType';
 import { DefaultPropertySetterExecutionUnit } from './default/DefaultPropertySetterExecutionUnit';
-import { DefaultContext, DefaultExecutionContext, DefaultPreExecutionContext } from './default/DefaultExecutionContext';
+import {
+    DefaultContext,
+    DefaultExecutionContext,
+    DefaultPreExecutionContext,
+    ReadonlyDefaultContext
+} from './default/DefaultExecutionContext';
 import { ExecutionUnitPluginFactory } from './plugin/ExecutionUnitPluginFactory';
 import { RuntimeStartUp } from './configuration/schema/RuntimeStartUp';
 import { ValidatorType } from './validators/ValidatorType';
@@ -141,6 +146,7 @@ export {
     PluginRequest,
     PluginResponse,
     RepeatableExecutionContext,
+    ReadonlyDefaultContext,
     RowDefinition,
     RowValidator,
     Runtime,

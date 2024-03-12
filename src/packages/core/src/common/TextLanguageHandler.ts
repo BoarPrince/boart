@@ -74,8 +74,8 @@ export class TextLanguageHandler {
         if (!globalThis._textLanguageHandlerInstance) {
             const instance = new TextLanguageHandler();
             globalThis._textLanguageHandlerInstance = instance;
+            globalThis._textLanguageHandlerInstance.readMapping();
         }
-        globalThis._textLanguageHandlerInstance.readMapping();
         return globalThis._textLanguageHandlerInstance;
     }
 

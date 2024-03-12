@@ -19,4 +19,14 @@ export interface DefaultExecutionContext {
 /**
  *
  */
+type ReadOnly<T> = { readonly [key in keyof T]: ReadOnly<T[key]> };
+
+/**
+ *
+ */
 export type DefaultContext = ExecutionContext<object, DefaultPreExecutionContext, DefaultExecutionContext>;
+
+/**
+ *
+ */
+export type ReadonlyDefaultContext = ReadOnly<DefaultContext>;

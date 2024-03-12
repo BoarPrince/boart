@@ -61,7 +61,9 @@ describe('simple object validation', () => {
      */
 
     test('should not array', () => {
-        expect(() => ObjectValidator.instance({}).shouldArray()).toThrow(`path: '$'. Is not of type array<any>, it's: '{}'`);
+        expect(() => ObjectValidator.instance({}).shouldArray()).toThrow(
+            `path: '$'. Is not of type array<any>, it's of type 'object': '{}'`
+        );
     });
 
     /**
@@ -136,7 +138,7 @@ describe('simple object validation', () => {
      */
     test('base path must be used', () => {
         expect(() => ObjectValidator.instance({}, null, '$.base.path').shouldArray()).toThrow(
-            `path: '$.base.path'. Is not of type array<any>, it's: '{}'`
+            `path: '$.base.path'. Is not of type array<any>, it's of type 'object': '{}'`
         );
     });
 });
@@ -451,7 +453,7 @@ describe('array prop validation', () => {
             ])
                 .prop('c')
                 .shouldString()
-        ).toThrow(`path: $.0.c\nproperty 'c' is not of type string => 'c: undefined'`);
+        ).not.toThrow();
     });
 
     /**

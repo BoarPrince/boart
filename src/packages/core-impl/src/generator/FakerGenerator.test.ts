@@ -1,12 +1,20 @@
-import assert from 'assert';
-
 import { faker } from '@faker-js/faker';
 
 import { FakeGenerator } from './FakeGenerator';
 
 let languageChangeSubscriber: (lang: string) => void;
+// eslint-disable-next-line jest/no-untyped-mock-factory
 jest.mock('@boart/core', () => ({
     TextLanguageHandler: class {
+        static instance = {
+            language: {
+                subscribe(next: (lang: string) => void) {
+                    languageChangeSubscriber = next;
+                }
+            }
+        };
+    },
+    Runtime: class {
         static instance = {
             language: {
                 subscribe(next: (lang: string) => void) {
@@ -58,15 +66,8 @@ describe('faker generator', () => {
      *
      */
     it('wrong faker call should throw an error', () => {
-        try {
-            sut.generate(['fake', 'fake']);
-        } catch (error) {
-            expect(error.message).toBe(
-                `error calling faker namespace 'fake.fake', see: https://fakerjs.dev/, \n\nError: Invalid module method or definition: fake.fake\n- faker.fake.fake is not a function\n- faker.definitions.fake.fake is not an array`
-            );
-            return;
-        }
-
-        assert.fail('error not thrown when calling a wrong faker');
+        expect(() => sut.generate(['fake', 'fake'])).toThrow(
+            `error calling faker namespace 'fake.fake', see: https://fakerjs.dev/, \n\nError: Invalid module method or definition: fake.fake\n- faker.fake.fake is not a function\n- faker.definitions.fake.fake is not an array`
+        );
     });
 });
