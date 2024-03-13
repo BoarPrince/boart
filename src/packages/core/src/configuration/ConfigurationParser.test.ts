@@ -546,7 +546,7 @@ describe('direct configuration', () => {
                     })
                 })
             }
-        } satisfies RowDefinitionConfig);
+        });
 
         executionConfig.rowDef.push({
             action: 'do:anything-2',
@@ -562,7 +562,7 @@ describe('direct configuration', () => {
                     })
                 })
             }
-        } satisfies RowDefinitionConfig);
+        });
 
         const handler = sut.parseDefinition(executionConfig).handler;
         await handler.process(tableDef);
