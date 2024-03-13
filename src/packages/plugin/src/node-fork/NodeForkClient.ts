@@ -13,11 +13,6 @@ export class NodeForkClient {
     /**
      *
      */
-    constructor() {}
-
-    /**
-     *
-     */
     public start() {
         if (this.started) {
             return;

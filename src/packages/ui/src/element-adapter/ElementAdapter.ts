@@ -22,13 +22,18 @@ export interface ElementAdapter {
      */
     getXPath(): Promise<string>;
 
-    // /**
-    //  *
-    //  */
-    // isDisplayed(): Promise<boolean>;
+    /**
+     *
+     */
+    isDisplayed(): Promise<boolean>;
 
-    // /**
-    //  *
-    //  */
-    // isEnabled(): Promise<boolean>;
+    /**
+     *
+     */
+    isEnabled(): Promise<boolean>;
+
+    /**
+     *
+     */
+    isAccessible(): Promise<boolean>;
 }

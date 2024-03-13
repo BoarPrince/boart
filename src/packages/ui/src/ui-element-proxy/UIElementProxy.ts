@@ -27,22 +27,27 @@ export interface UIElementProxy {
     /**
      *
      */
-    getElementByMatchingText(text?: string): Promise<ElementAdapter>;
+    getElementByMatchingText(text: string, parentElement: ElementAdapter): Promise<ElementAdapter>;
 
     /**
      *
      */
-    isDisplayed(): Promise<boolean>;
+    isEditable(element: ElementAdapter): Promise<boolean>;
 
     /**
      *
      */
-    isEnabled(): Promise<boolean>;
+    isDisplayed(element: ElementAdapter): Promise<boolean>;
 
     /**
      *
      */
-    requestFocus(element: ElementAdapter): Promise<void>;
+    isEnabled(element: ElementAdapter): Promise<boolean>;
+
+    /**
+     *
+     */
+    getValue(element: ElementAdapter): Promise<string>;
 
     /**
      *

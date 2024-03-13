@@ -37,7 +37,7 @@ export class WebPageAdapterElementDefault<T> implements WebPageAdapterElement<T>
             throw new Error(`elements are nots supported with tagName: '${tagName}'`);
         }
 
-        if (!(await proxy.isDisplayed()) || !(await proxy.isEnabled())) {
+        if (!(await proxy.isDisplayed(element)) || !(await proxy.isEnabled(element))) {
             throw new Error(`element location: '${location}', tagName: '${tagName}' is not visible or not enabled`);
         }
 
@@ -54,8 +54,8 @@ export class WebPageAdapterElementDefault<T> implements WebPageAdapterElement<T>
         const tagName = await element.getTagName();
 
         try {
-            await proxy.requestFocus(element);
             await proxy.setValue(value, element);
+            await this.webDriverAdapter.driver.requestFocus(element);
         } catch (error) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             throw new Error(`set value is not supported for '${location}', tagName: '${tagName}'\n${error.message}`);
@@ -75,8 +75,8 @@ export class WebPageAdapterElementDefault<T> implements WebPageAdapterElement<T>
         const tagName = await element.getTagName();
 
         try {
-            await proxy.requestFocus(element);
             await proxy.click(element);
+            await this.webDriverAdapter.driver.requestFocus(element);
         } catch (error) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             throw new Error(`set value is not supported for '${location}', tagName: '${tagName}'\n${error.message}`);

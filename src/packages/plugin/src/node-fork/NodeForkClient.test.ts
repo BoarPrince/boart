@@ -29,6 +29,9 @@ const mockChildProcess = (listeners: OnListeners): NodeJS.Process => {
     proc.emit = (): any => true;
     jest.spyOn(proc, 'emit');
 
+    proc.cwd = () => '/';
+    jest.spyOn(proc, 'cwd');
+
     return proc;
 };
 
@@ -239,7 +242,7 @@ describe('synchron', () => {
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: `client '-mainClient-' not found` });
+        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: `plugin '-mainClient-' not found` });
     });
 });
 
@@ -397,7 +400,7 @@ describe('with clientExecutionProxy', () => {
         await jest.runAllTimersAsync();
 
         expect(process.send).toHaveBeenCalledTimes(1);
-        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: `client '-test-proxy-action-' not found` });
+        expect(process.send).toHaveBeenCalledWith({ id: '-id-', error: `plugin '-test-proxy-action-' not found` });
     });
 
     /**
@@ -414,7 +417,7 @@ describe('with clientExecutionProxy', () => {
         sut.start();
 
         expect(() => sut.pluginHandler.addExecutionUnit(remoteClient.action, () => remoteClient)).toThrow(
-            'client action -test-proxy-x-action- already exists'
+            `client action '-test-proxy-x-action-' already exists`
         );
     });
 });

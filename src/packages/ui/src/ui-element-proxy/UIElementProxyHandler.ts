@@ -68,12 +68,12 @@ export class UIElementProxyHandler {
     /**
      *
      */
-    public async getElementsByText(text?: string): Promise<ElementAdapter[]> {
+    public async getElementsByText(text: string, parentElement: ElementAdapter): Promise<ElementAdapter[]> {
         const proxies = Array.from(this.proxies.values()).flatMap((proxy) => proxy);
 
         const elements = new Array<ElementAdapter>();
         for (const proxy of proxies) {
-            const proxyElement = await proxy.getElementByMatchingText(text);
+            const proxyElement = await proxy.getElementByMatchingText(text, parentElement);
             elements.push(proxyElement);
         }
 
