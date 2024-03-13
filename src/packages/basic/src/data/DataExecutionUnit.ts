@@ -1,5 +1,5 @@
 import { DefaultContext, DefaultRowType, ExecutionUnit } from '@boart/core';
-import { StepReport } from '@boart/protocol';
+import { StepReport } from '@boart/core';
 
 /**
  *

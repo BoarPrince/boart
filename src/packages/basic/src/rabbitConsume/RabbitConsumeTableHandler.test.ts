@@ -1,7 +1,6 @@
 import fs from 'fs';
 
 import {
-    DataContent,
     LocalContext,
     MarkdownTableReader,
     ObjectContent,
@@ -12,6 +11,7 @@ import {
     StepContext,
     Store,
     StoreMap,
+    StepReport,
     TestContext,
     TextContent,
     ValueReplaceArg,
@@ -19,7 +19,6 @@ import {
     ValueReplacerHandler
 } from '@boart/core';
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution/src/index.mock';
-import { StepReport } from '@boart/protocol';
 import RabbitConsumeTableHandler from './RabbitConsumeTableHandler';
 import { initialized } from '..';
 

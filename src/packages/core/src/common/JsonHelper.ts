@@ -73,7 +73,7 @@ export class JsonHelper {
      *
      */
     private getType(): ContentType {
-        if (typeof this.content === 'string' || (typeof this.content === 'object' && !!(this.content).hasOwnProperty('getText'))) {
+        if (typeof this.content === 'string' || (typeof this.content === 'object' && !!this.content.hasOwnProperty('getText'))) {
             try {
                 JSON.parse(this.content as string);
                 return ContentType.JSON_AS_STRING;
@@ -140,8 +140,3 @@ export class JsonHelper {
         return this.beautifyFor('  ');
     }
 }
-
-module.exports = {
-    JsonHelper,
-    ContentType
-};

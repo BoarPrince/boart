@@ -1,6 +1,5 @@
-import { DefaultRowType, ExecutionUnit, Runtime } from '@boart/core';
+import { DefaultRowType, ExecutionUnit, Runtime, StepReport } from '@boart/core';
 import { RabbitQueueHandler } from '@boart/execution';
-import { StepReport } from '@boart/protocol';
 
 import { RabbitBindContext } from './RabbitBindContext';
 

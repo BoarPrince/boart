@@ -1,6 +1,14 @@
-import { DataContentHelper, DefaultRowType, ExecutionUnit, NativeContent, ObjectContent, TextContent, Timer } from '@boart/core';
+import {
+    DataContentHelper,
+    DefaultRowType,
+    ExecutionUnit,
+    NativeContent,
+    ObjectContent,
+    StepReport,
+    TextContent,
+    Timer
+} from '@boart/core';
 import { MSSQLHandler, MSSQLQueryResult } from '@boart/execution';
-import { StepReport } from '@boart/protocol';
 
 import { SQLQueryContext } from './SQLQueryContext';
 

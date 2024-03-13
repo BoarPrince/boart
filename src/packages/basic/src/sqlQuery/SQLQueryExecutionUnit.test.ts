@@ -1,7 +1,6 @@
 import fs from 'fs';
 
-import { ContentType, MarkdownTableReader, Runtime, StepContext } from '@boart/core';
-import { StepReport } from '@boart/protocol';
+import { ContentType, MarkdownTableReader, Runtime, StepContext, StepReport } from '@boart/core';
 import SQLQueryTableHandler from './SQLQueryTableHandler';
 import { initialized } from '..';
 

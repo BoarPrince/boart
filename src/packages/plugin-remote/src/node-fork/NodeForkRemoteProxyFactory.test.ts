@@ -1,7 +1,8 @@
-import { RuntimeStartUp } from '@boart/core';
+import { ExecutionUnitPluginFactoryHandler, RuntimeStartUp } from '@boart/core';
 import { NodeForkRemoteProxyFactory } from './NodeForkRemoteProxyFactory';
 
 import { NodeForkServer } from './NodeForkServer';
+import plugin_initialize from '..';
 
 /**
  *
@@ -124,5 +125,36 @@ describe('factory', () => {
         );
 
         expect(() => sut.createExecutionUnit()).toThrow(`node fork must be started before creating an execution unit`);
+    });
+});
+
+/**
+ *
+ */
+describe('index', () => {
+    /**
+     *
+     */
+    beforeEach(() => {
+        ExecutionUnitPluginFactoryHandler.instance.clear();
+    });
+
+    /**
+     *
+     */
+    test('first init call', () => {
+        plugin_initialize();
+        expect(ExecutionUnitPluginFactoryHandler.instance.keys().length).toBeGreaterThan(0);
+    });
+
+    /**
+     *
+     */
+    test('second init call', () => {
+        plugin_initialize();
+        const length = ExecutionUnitPluginFactoryHandler.instance.keys().length;
+
+        plugin_initialize();
+        expect(ExecutionUnitPluginFactoryHandler.instance.keys()).toHaveLength(length);
     });
 });

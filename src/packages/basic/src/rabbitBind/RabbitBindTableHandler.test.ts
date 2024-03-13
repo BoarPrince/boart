@@ -12,10 +12,10 @@ import {
     TestContext,
     ValueReplaceArg,
     ValueReplacer,
-    ValueReplacerHandler
+    ValueReplacerHandler,
+    StepReport
 } from '@boart/core';
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution/src/index.mock';
-import { StepReport } from '@boart/protocol';
 
 import RabbitBindTableHandler from './RabbitBindTableHandler';
 

@@ -1,6 +1,5 @@
-import { DataContentHelper, DefaultRowType, ExecutionUnit } from '@boart/core';
+import { DataContentHelper, DefaultRowType, ExecutionUnit, StepReport } from '@boart/core';
 import { RabbitQueueHandler } from '@boart/execution';
-import { StepReport } from '@boart/protocol';
 
 import { RabbitPublishContext } from './RabbitPublishContext';
 import { PublishType } from './RabbitPublishType';

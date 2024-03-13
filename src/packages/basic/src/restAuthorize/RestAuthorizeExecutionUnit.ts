@@ -1,6 +1,5 @@
-import { DefaultRowType, ExecutionUnit, ObjectContent, Timer, UrlLoader } from '@boart/core';
+import { DefaultRowType, ExecutionUnit, ObjectContent, StepReport, Timer, UrlLoader } from '@boart/core';
 import { RestHttp } from '@boart/execution';
-import { StepReport } from '@boart/protocol';
 
 import { RestAuthorizeContext } from './RestAuthorizeContext';
 

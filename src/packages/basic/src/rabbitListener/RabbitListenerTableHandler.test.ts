@@ -10,13 +10,13 @@ import {
     StepContext,
     Store,
     StoreMap,
+    StepReport,
     TestContext,
     ValueReplaceArg,
     ValueReplacer,
     ValueReplacerHandler
 } from '@boart/core';
 import { createAmqplibMock, getAmqplibMock } from '@boart/execution/src/index.mock';
-import { StepReport } from '@boart/protocol';
 import RabbitListenerTableHandler from './RabbitListenerTableHandler';
 import { initialized } from '..';
 

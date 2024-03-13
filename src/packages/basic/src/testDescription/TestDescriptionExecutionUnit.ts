@@ -1,5 +1,4 @@
-import { DefaultRowType, ExecutionUnit, Runtime, RuntimePriority } from '@boart/core';
-import { TestReport } from '@boart/protocol';
+import { DefaultRowType, ExecutionUnit, Runtime, RuntimePriority, TestReport } from '@boart/core';
 
 import { TestDescriptionContext } from './TestDescriptionContext';
 

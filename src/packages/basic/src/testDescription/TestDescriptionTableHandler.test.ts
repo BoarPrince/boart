@@ -1,7 +1,6 @@
 import fs from 'fs';
 
-import { MarkdownTableReader, Runtime, TestContext } from '@boart/core';
-import { TestReport } from '@boart/protocol';
+import { MarkdownTableReader, Runtime, TestReport, TestContext } from '@boart/core';
 import TestDescriptionTableHandler from './TestDescriptionTableHandler';
 
 const sut = new TestDescriptionTableHandler();

@@ -25,7 +25,7 @@ export class ExecutionUnitPluginHandler implements ExecutionUnitPlugin {
      */
     public addExecutionUnit(name: string, clientExecutionPlugin: () => ExecutionUnitPlugin) {
         if (this.clientImplList.has(name)) {
-            throw new Error(`client action ${name} already exists`);
+            throw new Error(`client action '${name}' already exists`);
         }
         this.clientImplList.set(name, clientExecutionPlugin);
     }
@@ -36,7 +36,7 @@ export class ExecutionUnitPluginHandler implements ExecutionUnitPlugin {
     public execute(request: PluginRequest): PluginResponse | Promise<PluginResponse> {
         const executionUnit = !request?.action.name ? this.mainExecutionPlugin : this.clientImplList.get(request.action.name);
         if (!executionUnit) {
-            throw new Error(`client '${request.action.name || '-mainClient-'}' not found`);
+            throw new Error(`plugin '${request.action.name || '-mainClient-'}' not found`);
         }
 
         return executionUnit().execute(request);

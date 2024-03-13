@@ -1,5 +1,5 @@
-import { Runtime, TableHandlerInstances } from '@boart/core';
-import { LocalReport, ProtocolGenerator, StepReport, TestReport } from '@boart/protocol';
+import { LocalReport, Runtime, StepReport, TableHandlerInstances, TestReport } from '@boart/core';
+import { ProtocolGenerator } from '@boart/protocol';
 import remote_server_initialize from '@boart/plugin-remote';
 import core_impl_initialize from '@boart/core-impl';
 

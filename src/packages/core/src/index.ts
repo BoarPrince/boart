@@ -88,6 +88,9 @@ import { PluginRequest } from './plugin/PluginRequest';
 import { PluginResponse } from './plugin/PluginResponse';
 import { ExecutionUnitPluginHandler } from './plugin/ExecutionUnitPluginHandler';
 import { ExecutionUnitPluginFactoryHandler } from './plugin/ExecutionUnitPluginFactoryHandler';
+import { LocalReport } from './report/LocalReport';
+import { StepReport } from './report/StepReport';
+import { TestReport } from './report/TestReport';
 
 /**
  *
@@ -147,6 +150,9 @@ export {
     PluginResponse,
     RepeatableExecutionContext,
     ReadonlyDefaultContext,
+    LocalReport,
+    StepReport,
+    TestReport,
     RowDefinition,
     RowValidator,
     Runtime,

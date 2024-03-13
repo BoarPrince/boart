@@ -1,6 +1,13 @@
-import { DataContent, DataContentHelper, DefaultRowType, ExecutionUnit, ExecutionUnitValidation, ObjectContent } from '@boart/core';
+import {
+    DataContent,
+    DataContentHelper,
+    DefaultRowType,
+    ExecutionUnit,
+    ExecutionUnitValidation,
+    ObjectContent,
+    StepReport
+} from '@boart/core';
 import { RabbitQueueHandler, RabbitQueueMessage, RabbitQueueMessageConsumer } from '@boart/execution';
-import { StepReport } from '@boart/protocol';
 
 import { RabbitConsumeContext } from './RabbitConsumeContext';
 

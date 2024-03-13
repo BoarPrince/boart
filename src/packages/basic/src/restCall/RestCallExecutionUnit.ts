@@ -1,7 +1,6 @@
-import { DataContentHelper, DefaultRowType, ExecutionUnit, ObjectContent, TextContent, Timer, UrlLoader } from '@boart/core';
+import { DataContentHelper, DefaultRowType, ExecutionUnit, ObjectContent, StepReport, TextContent, Timer, UrlLoader } from '@boart/core';
 import { PDFContent } from '@boart/core-impl';
 import { RestHttp } from '@boart/execution';
-import { StepReport } from '@boart/protocol';
 
 import { RestCallContext } from './RestCallContext';
 

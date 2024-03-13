@@ -1,7 +1,6 @@
-import { ExecutionUnit, DefaultRowType, Runtime, Store, StoreMap } from '@boart/core';
+import { ExecutionUnit, DefaultRowType, Runtime, Store, StoreMap, StepReport } from '@boart/core';
 import { UUIDGenerator } from '@boart/core-impl';
 import { RabbitQueueHandler, RabbitQueueMessage, RabbitQueueMessageConsumer } from '@boart/execution';
-import { StepReport } from '@boart/protocol';
 
 import { RabbitListenerContext } from './RabbitListenerContext';
 

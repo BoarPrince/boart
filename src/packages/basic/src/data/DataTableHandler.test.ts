@@ -1,7 +1,16 @@
 import fs from 'fs';
 
-import { LocalContext, MarkdownTableReader, Runtime, RuntimeContext, StepContext, Store, TestContext, VariableParser } from '@boart/core';
-import { StepReport } from '@boart/protocol';
+import {
+    LocalContext,
+    MarkdownTableReader,
+    Runtime,
+    RuntimeContext,
+    StepContext,
+    Store,
+    TestContext,
+    VariableParser,
+    StepReport
+} from '@boart/core';
 import fetchMock from 'jest-fetch-mock';
 import DataTableHandler from './DataTableHandler';
 import { initialized } from '..';
