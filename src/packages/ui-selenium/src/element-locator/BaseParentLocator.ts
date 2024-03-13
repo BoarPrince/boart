@@ -1,7 +1,7 @@
 import { WebElement } from 'selenium-webdriver';
 import { BaseLocator } from './BaseLocator';
 import { ById } from './ById';
-import { SeleniumElementLocatorProxy } from '../element-proxy/SeleniumElementLocatorProxy';
+import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElementLocatorAdapter';
 
 export abstract class BaseParentLocator extends BaseLocator {
     abstract readonly strategy;
@@ -10,12 +10,12 @@ export abstract class BaseParentLocator extends BaseLocator {
     /**
      *
      */
-    abstract findChild(locationByStrategy: string, parentElement: SeleniumElementLocatorProxy): Promise<WebElement[]>;
+    abstract findChild(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]>;
 
     /**
      *
      */
-    public async find(locationByStrategy: string, parentElement: SeleniumElementLocatorProxy): Promise<WebElement[]> {
+    public async find(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
         // check by parent
         if (locationByStrategy.includes('#')) {
             const [parentId, location] = locationByStrategy.split('#');

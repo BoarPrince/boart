@@ -11,7 +11,7 @@ type LocatorType = {
 /**
  *
  */
-export class SeleniumElementLocatorProxy implements ElementAdapter {
+export class SeleniumElementLocatorAdapter implements ElementAdapter {
     /**
      *
      */

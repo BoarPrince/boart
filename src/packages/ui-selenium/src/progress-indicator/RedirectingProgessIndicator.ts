@@ -1,5 +1,5 @@
 import { UIProgressIndicator } from '@boart/ui';
-import { SeleniumWebDriver } from '../web-driver-adapter/SeleniumWebDriver';
+import { SeleniumWebDriver } from '../web-page-adaper/SeleniumWebDriver';
 import { CodeInjectorRedirecting } from '../code-injector/CodeInjectorRedirecting';
 
 /**

@@ -1,11 +1,11 @@
 import { ElementAdapter } from '@boart/ui';
 import selenium, { By } from 'selenium-webdriver';
-import { SeleniumElementLocatorProxy } from './SeleniumElementLocatorProxy';
+import { SeleniumElementLocatorAdapter } from './SeleniumElementLocatorAdapter';
 
 /**
  *
  */
-export class SeleniumElementProxy extends SeleniumElementLocatorProxy {
+export class SeleniumElementAdapter extends SeleniumElementLocatorAdapter {
     private driver: selenium.WebDriver;
 
     // public declare readonly nativeElement: selenium.WebElement;
@@ -36,7 +36,7 @@ export class SeleniumElementProxy extends SeleniumElementLocatorProxy {
      */
     async getParent(): Promise<ElementAdapter> {
         const elements = await this.nativeElement.findElements(By.xpath('./parent::node()'));
-        return elements?.length > 0 ? new SeleniumElementProxy(elements[0]) : null;
+        return elements?.length > 0 ? new SeleniumElementAdapter(elements[0]) : null;
     }
 
     /**

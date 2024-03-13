@@ -1,5 +1,5 @@
 import { ElementAdapter, WebDriverAdapter, WebPageAdapterElementLocator } from '@boart/ui';
-import { SeleniumElementLocatorProxy } from '../element-proxy/SeleniumElementLocatorProxy';
+import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElementLocatorAdapter';
 import { WebDriver } from 'selenium-webdriver';
 
 /**
@@ -17,6 +17,6 @@ export class SeleniumElementAdapterLocator extends WebPageAdapterElementLocator 
      *
      */
     protected getElement(parentElement: ElementAdapter): ElementAdapter {
-        return !parentElement ? new SeleniumElementLocatorProxy(this.driver.nativeDriver) : parentElement;
+        return !parentElement ? new SeleniumElementLocatorAdapter(this.driver.nativeDriver) : parentElement;
     }
 }

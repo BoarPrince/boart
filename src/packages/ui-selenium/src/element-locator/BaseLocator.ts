@@ -1,7 +1,7 @@
 import { WebElement } from 'selenium-webdriver';
 import { ElementAdapterLocator } from '@boart/ui';
-import { SeleniumElementProxy } from '../element-proxy/SeleniumElementProxy';
-import { SeleniumElementLocatorProxy } from '../element-proxy/SeleniumElementLocatorProxy';
+import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapter';
+import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElementLocatorAdapter';
 
 /**
  *
@@ -13,20 +13,24 @@ export abstract class BaseLocator implements ElementAdapterLocator {
     /**
      *
      */
-    abstract find(locationByStrategy: string, parentElement: SeleniumElementLocatorProxy): Promise<WebElement[]>;
+    abstract find(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]>;
 
     /**
      *
      */
-    abstract findAll(parentElement: SeleniumElementLocatorProxy): Promise<WebElement[]>;
+    abstract findAll(parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]>;
 
     /**
      *
      */
-    async findOptionalBy(locationByStrategy: string, parentElement: SeleniumElementLocatorProxy, index = 0): Promise<SeleniumElementProxy> {
+    async findOptionalBy(
+        locationByStrategy: string,
+        parentElement: SeleniumElementLocatorAdapter,
+        index = 0
+    ): Promise<SeleniumElementAdapter> {
         try {
             const element = await this.find(locationByStrategy, parentElement);
-            return new SeleniumElementProxy(element[index]);
+            return new SeleniumElementAdapter(element[index]);
         } catch (error) {
             return null;
         }
@@ -35,10 +39,10 @@ export abstract class BaseLocator implements ElementAdapterLocator {
     /**
      *
      */
-    async findBy(locationByStrategy: string, parentElement: SeleniumElementLocatorProxy, index = 0): Promise<SeleniumElementProxy> {
+    async findBy(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter, index = 0): Promise<SeleniumElementAdapter> {
         try {
             const element = await this.find(locationByStrategy, parentElement);
-            return new SeleniumElementProxy(element[index]);
+            return new SeleniumElementAdapter(element[index]);
         } catch (error) {
             throw new Error(`element with id = '${locationByStrategy}' by strategy findBy:'${this.strategy}' not found!`);
         }
@@ -47,8 +51,8 @@ export abstract class BaseLocator implements ElementAdapterLocator {
     /**
      *
      */
-    async all(parentElement: SeleniumElementProxy): Promise<SeleniumElementProxy[]> {
+    async all(parentElement: SeleniumElementAdapter): Promise<SeleniumElementAdapter[]> {
         const elements = (await this.findAll(parentElement)) || [];
-        return elements.map((element) => new SeleniumElementProxy(element));
+        return elements.map((element) => new SeleniumElementAdapter(element));
     }
 }

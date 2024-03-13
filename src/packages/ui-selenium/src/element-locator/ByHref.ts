@@ -1,7 +1,7 @@
 import { By } from 'selenium-webdriver/lib/by';
 import { WebElement } from 'selenium-webdriver';
 import { BaseLocator } from './BaseLocator';
-import { SeleniumElementLocatorProxy } from '../element-proxy/SeleniumElementLocatorProxy';
+import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElementLocatorAdapter';
 
 /**
  *
@@ -13,14 +13,14 @@ export class ByHref extends BaseLocator {
     /**
      *
      */
-    public async find(locationByStrategy: string, parentElement: SeleniumElementLocatorProxy): Promise<WebElement[]> {
+    public async find(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
         return await parentElement.nativeElement.findElements(By.xpath(`//*[@href='${locationByStrategy}']`));
     }
 
     /**
      *
      */
-    public async findAll(parentElement: SeleniumElementLocatorProxy): Promise<WebElement[]> {
+    public async findAll(parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
         return await parentElement.nativeElement.findElements(By.xpath(`//*[@href]`));
     }
 }

@@ -1,7 +1,7 @@
 import { By } from 'selenium-webdriver/lib/by';
 import { WebElement } from 'selenium-webdriver';
 import { BaseParentLocator } from './BaseParentLocator';
-import { SeleniumElementLocatorProxy } from '../element-proxy/SeleniumElementLocatorProxy';
+import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElementLocatorAdapter';
 
 /**
  *
@@ -13,7 +13,7 @@ export class ByName extends BaseParentLocator {
     /**
      *
      */
-    public findChild(locationByStrategy: string, parentElement: SeleniumElementLocatorProxy): Promise<WebElement[]> {
+    public findChild(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
         // only check by name
         const elements = parentElement.nativeElement.findElements(
             By.xpath(`.//*[@name='${locationByStrategy}' or @formcontrolname='${locationByStrategy}']`)
@@ -24,7 +24,7 @@ export class ByName extends BaseParentLocator {
     /**
      *
      */
-    public findAll(parentElement: SeleniumElementLocatorProxy): Promise<WebElement[]> {
+    public findAll(parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
         return parentElement.nativeElement.findElements(By.xpath(`.//*[@name or @formcontrolname]`));
     }
 }

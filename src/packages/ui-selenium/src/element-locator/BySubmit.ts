@@ -1,7 +1,7 @@
 import { By } from 'selenium-webdriver/lib/by';
 import { WebElement } from 'selenium-webdriver';
 import { BaseLocator } from './BaseLocator';
-import { SeleniumElementLocatorProxy } from '../element-proxy/SeleniumElementLocatorProxy';
+import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElementLocatorAdapter';
 
 /**
  *
@@ -13,14 +13,14 @@ export class ByXPath extends BaseLocator {
     /**
      *
      */
-    public find(_: string, parentElement: SeleniumElementLocatorProxy): Promise<WebElement[]> {
+    public find(_: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
         return parentElement.nativeElement.findElements(By.xpath('(//button|//input)[@type="submit"]|(//form//button)[not(@type)]'));
     }
 
     /**
      *
      */
-    findAll(parentElement: SeleniumElementLocatorProxy): Promise<WebElement[]> {
+    findAll(parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
         return this.find(null, parentElement);
     }
 }
