@@ -196,7 +196,7 @@ export {
 /**
  *
  */
-export default function initialize(): void {
+function initialize(): void {
     if (globalThis._coreInitialized) {
         // call initialize only once a time
         return;

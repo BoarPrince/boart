@@ -12,12 +12,12 @@ export interface UIElementProxy {
     /**
      *
      */
-    readonly order: number;
+    readonly tagName: string;
 
     /**
      *
      */
-    getElement(): Promise<ElementAdapter>;
+    readonly order: number;
 
     /**
      *
@@ -28,6 +28,11 @@ export interface UIElementProxy {
      *
      */
     getElementByMatchingText(text: string, parentElement: ElementAdapter): Promise<ElementAdapter>;
+
+    /**
+     *
+     */
+    isSelected(element: ElementAdapter): Promise<boolean>;
 
     /**
      *
@@ -48,6 +53,11 @@ export interface UIElementProxy {
      *
      */
     getValue(element: ElementAdapter): Promise<string>;
+
+    /**
+     *
+     */
+    getClasses(element: ElementAdapter): Promise<string[]>;
 
     /**
      *

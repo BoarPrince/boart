@@ -1,5 +1,5 @@
 import { UIProgressIndicator } from '@boart/ui';
-import { SeleniumWebDriver } from '../web-page-adaper/SeleniumWebDriver';
+import { SeleniumDriverAdapter } from '../web-driver/SeleniumDriverAdapter';
 import { CodeInjectorRedirecting } from '../code-injector/CodeInjectorRedirecting';
 
 /**
@@ -19,7 +19,7 @@ export class AngularProgessIndicator implements UIProgressIndicator {
     /**
      *
      */
-    public async isProcessing(driver: SeleniumWebDriver): Promise<boolean> {
+    public async isProcessing(driver: SeleniumDriverAdapter): Promise<boolean> {
         const angularReady = await driver.nativeDriver.executeScript(async () => {
             if (!globalThis.getAllAngularTestabilities) {
                 return false;

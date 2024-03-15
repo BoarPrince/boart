@@ -2,6 +2,7 @@ import { By } from 'selenium-webdriver/lib/by';
 import { WebElement } from 'selenium-webdriver';
 import { BaseLocator } from './BaseLocator';
 import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElementLocatorAdapter';
+import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapter';
 
 /**
  *
@@ -9,6 +10,13 @@ import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElemen
 export class ById extends BaseLocator {
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'id';
+
+    /**
+     *
+     */
+    public getId(parentElement: SeleniumElementAdapter): Promise<string> {
+        return parentElement.nativeElement.getAttribute('id');
+    }
 
     /**
      *

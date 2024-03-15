@@ -1,6 +1,7 @@
 import { ElementAdapter } from '../element-adapter/ElementAdapter';
 import { UIElementProxy } from '../ui-element-proxy/UIElementProxy';
 import { UIElementProxyHandler } from '../ui-element-proxy/UIElementProxyHandler';
+import { UIElementProxyInfo } from '../ui-element-proxy/UIElementProxyInfo';
 import { WebDriverAdapter } from '../web-driver/WebDriverAdapter';
 import { WebPageAdapter } from './WebPageAdapter';
 import { WebPageAdapterElement } from './WebPageAdapterElement';
@@ -29,16 +30,12 @@ export class WebPageAdapterElementDefault<T> implements WebPageAdapterElement<T>
     /**
      *
      */
-    private async getProxyAndCheckAccessibility(element: ElementAdapter, location: string): Promise<UIElementProxy> {
+    public async getProxy(element: ElementAdapter): Promise<UIElementProxy> {
         const proxy = await UIElementProxyHandler.instance.getProxy(element);
         const tagName = await element.getTagName();
 
         if (!proxy) {
             throw new Error(`elements are nots supported with tagName: '${tagName}'`);
-        }
-
-        if (!(await proxy.isDisplayed(element)) || !(await proxy.isEnabled(element))) {
-            throw new Error(`element location: '${location}', tagName: '${tagName}' is not visible or not enabled`);
         }
 
         return proxy;
@@ -47,18 +44,45 @@ export class WebPageAdapterElementDefault<T> implements WebPageAdapterElement<T>
     /**
      *
      */
+    public async getElementInfo(element: ElementAdapter): Promise<UIElementProxyInfo> {
+        const proxy = await this.getProxy(element);
+        return {
+            ident: await element.getId(),
+            tagName: proxy.tagName,
+            proxyName: proxy.name,
+            value: await proxy.getValue(element),
+            classes: await proxy.getClasses(element),
+            isDisplayed: await proxy.isDisplayed(element),
+            isEnabled: await proxy.isEnabled(element),
+            isEditable: await proxy.isEditable(element),
+            isSelected: await proxy.isSelected(element)
+        };
+    }
+
+    /**
+     *
+     */
+    private async checkAccessibility(proxy: UIElementProxy, element: ElementAdapter, location: string): Promise<void> {
+        if (!(await proxy.isDisplayed(element)) || !(await proxy.isEnabled(element))) {
+            throw new Error(`element location: '${location ?? '-'}', tagName: '${proxy.tagName}' is not visible or not enabled`);
+        }
+    }
+
+    /**
+     *
+     */
     async setValue(value: string, location: string, element: ElementAdapter): Promise<void> {
         await this.webDriverAdapter.progessWaiting();
 
-        const proxy = await this.getProxyAndCheckAccessibility(element, location);
+        const proxy = await this.getProxy(element);
         const tagName = await element.getTagName();
 
         try {
+            await this.checkAccessibility(proxy, element, location);
             await proxy.setValue(value, element);
             await this.webDriverAdapter.driver.requestFocus(element);
         } catch (error) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            throw new Error(`set value is not supported for '${location}', tagName: '${tagName}'\n${error.message}`);
+            throw new Error(`set value is not supported for '${location}', tagName: '${tagName}'\n${error}`);
         }
 
         await this.webDriverAdapter.progessWaiting();
@@ -71,15 +95,15 @@ export class WebPageAdapterElementDefault<T> implements WebPageAdapterElement<T>
     async click(location: string, element: ElementAdapter): Promise<void> {
         await this.webDriverAdapter.progessWaiting();
 
-        const proxy = await this.getProxyAndCheckAccessibility(element, location);
+        const proxy = await this.getProxy(element);
         const tagName = await element.getTagName();
 
         try {
+            await this.checkAccessibility(proxy, element, location);
             await proxy.click(element);
             await this.webDriverAdapter.driver.requestFocus(element);
         } catch (error) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            throw new Error(`set value is not supported for '${location}', tagName: '${tagName}'\n${error.message}`);
+            throw new Error(`set value is not supported for '${location}', tagName: '${tagName}'\n${error}`);
         }
 
         await this.webDriverAdapter.progessWaiting();

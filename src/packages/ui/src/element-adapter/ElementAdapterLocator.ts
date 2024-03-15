@@ -11,6 +11,11 @@ export interface ElementAdapterLocator {
     /**
      *
      */
+    getId(parentElement: ElementAdapter): Promise<string>;
+
+    /**
+     *
+     */
     findBy(locationByStrategy: string, parentElement: ElementAdapter, index?: number): Promise<ElementAdapter>;
 
     /**

@@ -2,6 +2,7 @@ import { By } from 'selenium-webdriver/lib/by';
 import { WebElement } from 'selenium-webdriver';
 import { BaseLocator } from './BaseLocator';
 import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElementLocatorAdapter';
+import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapter';
 
 /**
  *
@@ -9,6 +10,13 @@ import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElemen
 export class ByTitle extends BaseLocator {
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'input-label';
+
+    /**
+     *
+     */
+    public getId(parentElement: SeleniumElementAdapter): Promise<string> {
+        return parentElement.nativeElement.getText();
+    }
 
     /**
      *
@@ -21,7 +29,7 @@ export class ByTitle extends BaseLocator {
      *
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public findAll(_: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
-        return null;
+    public findAll(parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
+        return parentElement.nativeElement.findElements(By.xpath(`//input[.//*[text()]]`));
     }
 }

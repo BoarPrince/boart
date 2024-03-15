@@ -52,6 +52,10 @@ export class UIElementProxyHandler {
         const tagName = await element.getTagName();
         const proxies = this.proxies.get(tagName);
 
+        if (!proxies) {
+            throw new Error(`no proxy supported for tagName: '${tagName}'`);
+        }
+
         if (proxies.length === 1) {
             return proxies[0];
         } else {
@@ -73,8 +77,12 @@ export class UIElementProxyHandler {
 
         const elements = new Array<ElementAdapter>();
         for (const proxy of proxies) {
-            const proxyElement = await proxy.getElementByMatchingText(text, parentElement);
-            elements.push(proxyElement);
+            try {
+                const proxyElement = await proxy.getElementByMatchingText(text, parentElement);
+                elements.push(proxyElement);
+            } catch (error) {
+                throw new Error(`cannot locate element with text: '${text}', proxy: ${proxy.name}\n${error}`);
+            }
         }
 
         return elements;

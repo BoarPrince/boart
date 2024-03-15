@@ -13,21 +13,25 @@ import { WebPageAdapterElementLocator } from './web-page-adapter/WebPageAdapterE
 import { UIElementProxy } from './ui-element-proxy/UIElementProxy';
 import { WebPageAdapterElementDefault } from './web-page-adapter/WebPageAdaperElementDefault';
 import { WebPageAdapterDefault } from './web-page-adapter/WebPageAdapterDefault';
+import { WebPageAdapterHandler } from './web-page-adapter/WebPageAdapterHandler';
+import { UIElementProxyInfo } from './ui-element-proxy/UIElementProxyInfo';
 
 export {
     ElementAdapter,
     ElementAdapterLocator,
     ElementAdapterLocatorHandler,
-    WebDriverAdapter,
-    WebPageAdapter,
-    WebPageAdapterElement,
-    UIElementProxyHandler,
     UIElementProxy,
+    UIElementProxyInfo,
+    UIElementProxyHandler,
+    UIErrorIndicator,
+    UIErrorIndicatorHandler,
     UIProgressIndicator,
     UIProgressIndicatorHandler,
-    UIErrorIndicatorHandler,
-    UIErrorIndicator,
-    WebPageAdapterElementLocator,
+    WebDriverAdapter,
+    WebPageAdapter,
+    WebPageAdapterHandler,
+    WebPageAdapterDefault,
+    WebPageAdapterElement,
     WebPageAdapterElementDefault,
-    WebPageAdapterDefault
+    WebPageAdapterElementLocator
 };

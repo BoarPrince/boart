@@ -9,6 +9,11 @@ export interface WebDriverAdapter<T> {
     /**
      *
      */
+    clear(): Promise<void>;
+
+    /**
+     *
+     */
     close(): Promise<void>;
 
     /**
@@ -21,6 +26,11 @@ export interface WebDriverAdapter<T> {
      *
      */
     open(url: string): Promise<void>;
+
+    /**
+     *
+     */
+    html(snippet: string): Promise<void>;
 
     /**
      *

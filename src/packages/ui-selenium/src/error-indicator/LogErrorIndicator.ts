@@ -1,5 +1,5 @@
 import { UIErrorIndicator } from '@boart/ui';
-import { SeleniumWebDriver } from '../web-page-adaper/SeleniumWebDriver';
+import { SeleniumDriverAdapter } from '../web-driver/SeleniumDriverAdapter';
 import { logging } from 'selenium-webdriver';
 
 /**
@@ -14,7 +14,7 @@ export class LogErrorIndicator implements UIErrorIndicator {
     /**
      *
      */
-    public async getError(driver: SeleniumWebDriver): Promise<string> {
+    public async getError(driver: SeleniumDriverAdapter): Promise<string> {
         // check logEntries
         const logEntries = await driver.nativeDriver
             .manage() //

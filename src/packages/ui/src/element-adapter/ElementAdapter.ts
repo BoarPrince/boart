@@ -10,6 +10,11 @@ export interface ElementAdapter {
     /**
      *
      */
+    getId(): Promise<string>;
+
+    /**
+     *
+     */
     getParent(): Promise<ElementAdapter> | null;
 
     /**

@@ -4,11 +4,19 @@ import { WebDriver } from 'selenium-webdriver';
 /**
  *
  */
-export class SeleniumWebDriver implements WebDriverAdapter<WebDriver> {
+export class SeleniumDriverAdapter implements WebDriverAdapter<WebDriver> {
     /**
      *
      */
     constructor(public readonly nativeDriver: WebDriver) {}
+
+    /**
+     *
+     */
+    public async clear(): Promise<void> {
+        await this.nativeDriver.close();
+        return this.nativeDriver.quit();
+    }
 
     /**
      *
@@ -30,6 +38,25 @@ export class SeleniumWebDriver implements WebDriverAdapter<WebDriver> {
      */
     public open(url: string): Promise<void> {
         return this.nativeDriver.get(url);
+    }
+
+    /**
+     *
+     */
+    public html(snippet: string): Promise<void> {
+        const html = `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+        ${snippet}
+        </body>
+        </html>`;
+
+        return this.open(`data:text/html;charset=utf-8,${html}`);
     }
 
     /**

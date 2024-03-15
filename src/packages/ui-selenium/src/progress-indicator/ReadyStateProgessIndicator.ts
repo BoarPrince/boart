@@ -1,5 +1,5 @@
 import { UIProgressIndicator } from '@boart/ui';
-import { SeleniumWebDriver } from '../web-page-adaper/SeleniumWebDriver';
+import { SeleniumDriverAdapter } from '../web-driver/SeleniumDriverAdapter';
 
 /**
  *
@@ -13,7 +13,7 @@ export class ReadyStateProgessIndicator implements UIProgressIndicator {
     /**
      *
      */
-    public isProcessing(driver: SeleniumWebDriver): Promise<boolean> {
+    public isProcessing(driver: SeleniumDriverAdapter): Promise<boolean> {
         return driver.nativeDriver //
             .executeScript(() => document.readyState)
             .then((readyState) => readyState !== 'complete');

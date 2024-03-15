@@ -4,9 +4,9 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
 /**
  *
  */
-export class InputProxy implements UIElementProxy {
-    public readonly name = 'input';
-    public readonly tagName = 'input';
+export class DivProxy implements UIElementProxy {
+    public readonly name = 'div';
+    public readonly tagName = 'div';
     public readonly order = 0;
 
     /**
@@ -20,10 +20,7 @@ export class InputProxy implements UIElementProxy {
      *
      */
     async getElementByMatchingText(text: string, parentElement: SeleniumElementAdapter): Promise<ElementAdapter> {
-        const xPaths = [
-            `//input[.//*[text()[normalize-space()="${text}"]]]`, //
-            `//input[@placeholder="${text}"]`
-        ];
+        const xPaths = [`.//div[text()[normalize-space() = "${text}"]]`];
         return await SeleniumElementAdapter.getElement(xPaths, parentElement);
     }
 
@@ -37,8 +34,9 @@ export class InputProxy implements UIElementProxy {
     /**
      *
      */
-    isEditable(element: SeleniumElementAdapter): Promise<boolean> {
-        return element.isEnabled();
+    async isEditable(element: SeleniumElementAdapter): Promise<boolean> {
+        const isEditable = await element.nativeElement.getAttribute('contenteditable');
+        return isEditable === 'true';
     }
 
     /**
@@ -58,8 +56,15 @@ export class InputProxy implements UIElementProxy {
     /**
      *
      */
+    getClasses(element: ElementAdapter): Promise<string[]> {
+        return null;
+    }
+
+    /**
+     *
+     */
     async getValue(element: SeleniumElementAdapter): Promise<string> {
-        return element.nativeElement.getAttribute('value');
+        return element.nativeElement.getText();
     }
 
     /**
@@ -67,13 +72,6 @@ export class InputProxy implements UIElementProxy {
      */
     setControlValue(value: string, element: SeleniumElementAdapter): Promise<void> {
         return this.setValue(value, element);
-    }
-
-    /**
-     *
-     */
-    getClasses(element: ElementAdapter): Promise<string[]> {
-        return null;
     }
 
     /**

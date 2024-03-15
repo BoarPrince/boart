@@ -1,5 +1,5 @@
 import { UIProgressIndicator } from '@boart/ui';
-import { SeleniumWebDriver } from '../web-page-adaper/SeleniumWebDriver';
+import { SeleniumDriverAdapter } from '../web-driver/SeleniumDriverAdapter';
 import { CodeInjectorRestLog } from '../code-injector/CodeInjectorRestLog';
 
 /**
@@ -19,7 +19,7 @@ export class CallCountProgessIndicator implements UIProgressIndicator {
     /**
      *
      */
-    public async isProcessing(driver: SeleniumWebDriver): Promise<boolean> {
+    public async isProcessing(driver: SeleniumDriverAdapter): Promise<boolean> {
         if (!this.codeInjector) {
             this.codeInjector = new CodeInjectorRestLog(driver.nativeDriver);
         }
