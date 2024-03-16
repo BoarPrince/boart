@@ -10,14 +10,8 @@ describe('button-proxy', () => {
     /**
      *
      */
-    beforeAll(() => {
+    beforeAll(async () => {
         initialize();
-    });
-
-    /**
-     *
-     */
-    beforeEach(async () => {
         const pageAdapterCreator = WebPageAdapterHandler.instance.getPageAdapterCreator('selenium.chromium.standalone');
         pageAdapter = await pageAdapterCreator();
     });
