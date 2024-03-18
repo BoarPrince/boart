@@ -1,6 +1,7 @@
 import { WebPageAdapterDefault, WebPageAdapterElementDefault } from '@boart/ui';
 import { By, WebDriver } from 'selenium-webdriver';
 import { SeleniumElementAdapterLocator } from './SeleniumElementAdapterLocator';
+import { SeleniumWebPageAdapterScreenshot } from './SeleniumWebPageAdapterScreenshot';
 
 /**
  *
@@ -32,5 +33,5 @@ export class SeleniumWebPageAdapter extends WebPageAdapterDefault<WebDriver> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     readonly elements: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    readonly screenshot: any;
+    readonly screenshot = new SeleniumWebPageAdapterScreenshot(this);
 }

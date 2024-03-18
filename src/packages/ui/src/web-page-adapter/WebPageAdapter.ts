@@ -1,6 +1,7 @@
 import { ElementAdapter } from '../element-adapter/ElementAdapter';
 import { WebPageAdapterElement } from './WebPageAdapterElement';
 import { WebDriverAdapter } from '../web-driver/WebDriverAdapter';
+import { WebPageAdapterScreenshot } from './WebPageAdapterScreenshot';
 
 /**
  *
@@ -42,10 +43,5 @@ export interface WebPageAdapter<T> {
         toString(element: ElementAdapter[]): string;
     };
 
-    screenshot: {
-        enable(): Promise<void>;
-        disable(): Promise<void>;
-        getFileName(): string;
-        take(): Promise<string>;
-    };
+    screenshot: WebPageAdapterScreenshot<T>;
 }
