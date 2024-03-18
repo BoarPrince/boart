@@ -57,12 +57,12 @@ export interface UIElementProxy {
     /**
      *
      */
-    getClasses(element: ElementAdapter): Promise<string[]>;
+    getText(element: ElementAdapter): Promise<string>;
 
     /**
      *
      */
-    setControlValue(value: string, element: ElementAdapter): Promise<void>;
+    getClasses(element: ElementAdapter): Promise<string[]>;
 
     /**
      *

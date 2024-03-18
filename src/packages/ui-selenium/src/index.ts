@@ -28,6 +28,7 @@ export default function initialize(): void {
 
     UIElementProxyHandler.instance.addProxy('button', new ButtonProxy());
     UIElementProxyHandler.instance.addProxy('div', new DivProxy());
+    UIElementProxyHandler.instance.addProxy('*', new RadioGroupProxy());
 }
 
 // eslint-disable-next-line jest/require-hook

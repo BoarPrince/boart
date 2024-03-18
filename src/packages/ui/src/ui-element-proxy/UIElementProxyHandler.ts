@@ -50,7 +50,9 @@ export class UIElementProxyHandler {
      */
     async getProxy(element: ElementAdapter): Promise<UIElementProxy> {
         const tagName = await element.getTagName();
-        const proxies = this.proxies.get(tagName);
+        const proxies = this.proxies
+            .get(tagName) //
+            .concat(this.proxies.get('*'));
 
         if (!proxies) {
             throw new Error(`no proxy supported for tagName: '${tagName}'`);
@@ -59,7 +61,8 @@ export class UIElementProxyHandler {
         if (proxies.length === 1) {
             return proxies[0];
         } else {
-            for (const proxy of proxies) {
+            const sortedProxies = proxies.sort((p1, p2) => p2.order - p1.order);
+            for (const proxy of sortedProxies) {
                 if (await proxy.isMatching(element)) {
                     return proxy;
                 }

@@ -48,7 +48,7 @@ export class WebPageAdapterElementDefault<T> implements WebPageAdapterElement<T>
         const proxy = await this.getProxy(element);
         return {
             ident: await element.getId(),
-            tagName: proxy.tagName,
+            tagName: await element.getTagName(),
             proxyName: proxy.name,
             value: await proxy.getValue(element),
             classes: await proxy.getClasses(element),
