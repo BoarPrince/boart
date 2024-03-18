@@ -1,10 +1,11 @@
-import { ElementAdapter, UIElementProxy } from '@boart/ui';
+import { ElementAdapter } from '@boart/ui';
 import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapter';
+import { DefaultProxy } from './DefaultProxy';
 
 /**
  *
  */
-export class CheckboxProxy implements UIElementProxy {
+export class CheckboxProxy extends DefaultProxy {
     public readonly name = 'check-box';
     public readonly tagName = 'input';
     public readonly order = 5;

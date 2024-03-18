@@ -1,13 +1,16 @@
-import { ElementAdapter, UIElementProxy } from '@boart/ui';
+import { ElementAdapter } from '@boart/ui';
 import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapter';
+import { DefaultProxy } from './DefaultProxy';
+import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElementLocatorAdapter';
+import { By } from 'selenium-webdriver';
 
 /**
  *
  */
-export class RadioProxy implements UIElementProxy {
+export class RadioProxy extends DefaultProxy {
     public readonly name = 'radio';
     public readonly tagName = 'input';
-    public readonly order = 5;
+    public readonly order = super.defaultOrder + 5;
 
     /**
      *
@@ -20,66 +23,47 @@ export class RadioProxy implements UIElementProxy {
     /**
      *
      */
-    getElementByMatchingText(): Promise<ElementAdapter> {
-        return null;
+    async getElementByMatchingText(text: string, parentElement: SeleniumElementLocatorAdapter): Promise<ElementAdapter> {
+        const xPaths = `//label[text()[normalize-space() = "${text}"]]`;
+        const labels = await parentElement.nativeElement.findElements(By.xpath(xPaths));
+        if (labels.length === 0) {
+            return null;
+        }
+
+        const forAttribute = await labels[0].getAttribute('for');
+
+        if (!forAttribute) {
+            return null;
+        }
+
+        const radio = await parentElement.nativeElement.findElements(By.id(forAttribute));
+        if (radio.length === 0) {
+            return null;
+        }
+
+        if ((await radio[0].getTagName()) !== 'input' || (await radio[0].getAttribute('type')) !== 'radio') {
+            return null;
+        }
+
+        return new SeleniumElementAdapter(radio[0], `text: ${text}`);
     }
 
     /**
      *
      */
-    isSelected(element: SeleniumElementAdapter): Promise<boolean> {
-        return element.nativeElement.isSelected();
-    }
-
-    /**
-     *
-     */
-    isEditable(): Promise<boolean> {
-        return Promise.resolve(false);
-    }
-
-    /**
-     *
-     */
-    isDisplayed(element: SeleniumElementAdapter): Promise<boolean> {
-        return element.isDisplayed();
-    }
-
-    /**
-     *
-     */
-    isEnabled(element: SeleniumElementAdapter): Promise<boolean> {
-        return element.isEnabled();
-    }
-
-    /**
-     *
-     */
-    getClasses(element: ElementAdapter): Promise<string[]> {
-        return null;
-    }
-
-    /**
-     *
-     */
-    async getValue(element: SeleniumElementAdapter): Promise<string> {
+    getValue(element: SeleniumElementAdapter): Promise<string> {
         return element.nativeElement.getAttribute('value');
     }
 
     /**
      *
      */
-    async setControlValue(): Promise<void> {}
-
-    /**
-     *
-     */
-    async setValue(): Promise<void> {}
-
-    /**
-     *
-     */
-    async click(element: SeleniumElementAdapter): Promise<void> {
-        await element.nativeElement.click();
+    getText(element: SeleniumElementAdapter): Promise<string> {
+        return element.nativeElement.getDriver().executeScript(
+            `
+            const radioElement = arguments[0];
+            return !radioElement.labels?.length ? '' : radioElement.labels[0].textContent;`,
+            element.nativeElement
+        );
     }
 }

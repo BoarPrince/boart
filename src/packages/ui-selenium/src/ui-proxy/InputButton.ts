@@ -1,10 +1,11 @@
-import { ElementAdapter, UIElementProxy } from '@boart/ui';
+import { ElementAdapter } from '@boart/ui';
 import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapter';
+import { DefaultProxy } from './DefaultProxy';
 
 /**
  *
  */
-export class InputButton implements UIElementProxy {
+export class InputButton extends DefaultProxy {
     public readonly name = 'input-buttton';
     public readonly tagName = 'input';
     public readonly order = 5;

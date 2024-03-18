@@ -6,6 +6,7 @@ export interface UIElementProxyInfo {
     tagName: string;
     proxyName: string;
     value: string;
+    text: string;
     classes: Array<string>;
     isDisplayed: boolean;
     isEnabled: boolean;

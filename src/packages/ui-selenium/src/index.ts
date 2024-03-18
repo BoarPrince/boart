@@ -6,6 +6,9 @@ import { ById } from './element-locator/ById';
 import { ButtonProxy } from './ui-proxy/ButtonProxy';
 import { ByText } from './element-locator/ByText';
 import { DivProxy } from './ui-proxy/DivProxy';
+import { SelectProxy } from './ui-proxy/SelectProxy';
+import { RadioProxy } from './ui-proxy/RadioProxy';
+import { RadioGroupProxy } from './ui-proxy/RadioGroupProxy';
 
 /**
  *
@@ -28,6 +31,8 @@ export default function initialize(): void {
 
     UIElementProxyHandler.instance.addProxy('button', new ButtonProxy());
     UIElementProxyHandler.instance.addProxy('div', new DivProxy());
+    UIElementProxyHandler.instance.addProxy('select', new SelectProxy());
+    UIElementProxyHandler.instance.addProxy('input', new RadioProxy());
     UIElementProxyHandler.instance.addProxy('*', new RadioGroupProxy());
 }
 

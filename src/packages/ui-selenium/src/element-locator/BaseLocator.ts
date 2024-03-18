@@ -47,12 +47,14 @@ export abstract class BaseLocator implements ElementAdapterLocator {
     async findBy(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter, index = 0): Promise<SeleniumElementAdapter> {
         try {
             const element = await this.find(locationByStrategy, parentElement);
+            if (element?.length === 0) {
+                throw new Error(`not found`);
+            }
             return new SeleniumElementAdapter(element[index], `${this.strategy}:${locationByStrategy}`);
         } catch (error) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             error.message = `element '${locationByStrategy}' by strategy findBy:${this.strategy} not found!\n` + error.message;
             throw error;
-            // throw new Error(`element '${locationByStrategy}' by strategy findBy:${this.strategy} not found!\n${error}`);
         }
     }
 

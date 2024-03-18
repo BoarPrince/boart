@@ -7,12 +7,20 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
 export abstract class DefaultProxy implements UIElementProxy {
     public abstract readonly name: string;
     public abstract readonly tagName: string;
-    public readonly order = 10;
+    public order = 10;
 
     /**
      *
      */
-    isMatching(): Promise<boolean> {
+    protected get defaultOrder(): number {
+        return this.order;
+    }
+
+    /**
+     *
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    isMatching(_: ElementAdapter): Promise<boolean> {
         return Promise.resolve(true);
     }
 
@@ -61,6 +69,13 @@ export abstract class DefaultProxy implements UIElementProxy {
      *
      */
     getValue(element: SeleniumElementAdapter): Promise<string> {
+        return element.nativeElement.getText();
+    }
+
+    /**
+     *
+     */
+    getText(element: SeleniumElementAdapter): Promise<string> {
         return element.nativeElement.getText();
     }
 

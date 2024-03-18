@@ -51,6 +51,7 @@ export class WebPageAdapterElementDefault<T> implements WebPageAdapterElement<T>
             tagName: await element.getTagName(),
             proxyName: proxy.name,
             value: await proxy.getValue(element),
+            text: await proxy.getText(element),
             classes: await proxy.getClasses(element),
             isDisplayed: await proxy.isDisplayed(element),
             isEnabled: await proxy.isEnabled(element),

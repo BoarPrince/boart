@@ -128,7 +128,8 @@ describe('button-proxy', () => {
             isSelected: false,
             proxyName: 'button',
             tagName: 'button',
-            value: 'test-button'
+            value: 'test-button',
+            text: 'test-button'
         });
     });
 
