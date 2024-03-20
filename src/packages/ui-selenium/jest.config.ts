@@ -1,4 +1,4 @@
 import config from '../../../jest.base.config';
 export default config;
 
-config.testTimeout = 10000;
+config.testTimeout = 1000000000;

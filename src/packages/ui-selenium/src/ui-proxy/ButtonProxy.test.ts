@@ -129,7 +129,8 @@ describe('button-proxy', () => {
             proxyName: 'button',
             tagName: 'button',
             value: 'test-button',
-            text: 'test-button'
+            text: 'test-button',
+            tableInfo: undefined
         });
     });
 

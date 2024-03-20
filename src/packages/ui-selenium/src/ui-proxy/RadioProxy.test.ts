@@ -159,7 +159,8 @@ describe('radio-proxy', () => {
             proxyName: 'radio',
             tagName: 'input',
             value: 'test-value',
-            text: 'Test-Value'
+            text: 'Test-Value',
+            tableInfo: undefined
         });
     });
 

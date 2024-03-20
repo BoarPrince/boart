@@ -22,7 +22,7 @@ export class SeleniumElementAdapter extends SeleniumElementLocatorAdapter {
      */
     constructor(
         nativeElement: selenium.WebElement,
-        private id: string
+        private location: string
     ) {
         super(nativeElement);
         this.driver = nativeElement.getDriver();
@@ -31,10 +31,10 @@ export class SeleniumElementAdapter extends SeleniumElementLocatorAdapter {
     /**
      *
      */
-    async getId(): Promise<string> {
-        return !this.id
-            ? await this.nativeElement.getAttribute('id') //
-            : Promise.resolve(this.id);
+    async getLocation(): Promise<string> {
+        return !this.location
+            ? 'id:' + (await this.nativeElement.getAttribute('id')) //
+            : Promise.resolve(this.location);
     }
 
     /**

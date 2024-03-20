@@ -68,7 +68,7 @@ export abstract class BaseLocator implements ElementAdapterLocator {
         for (const element of elements) {
             // adapter is only needed for getting the id
             const adapter = new SeleniumElementAdapter(element, null);
-            const id = await adapter.getId();
+            const id = await adapter.getLocation();
             elementAdapters.push(new SeleniumElementAdapter(element, `${this.strategy}:${id}`));
         }
 

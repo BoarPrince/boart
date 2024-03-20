@@ -1,9 +1,10 @@
 import { ElementAdapter } from '../element-adapter/ElementAdapter';
+import { UIElementProxyActions } from './UIElementProxyActions';
 
 /**
  *
  */
-export interface UIElementProxy {
+export interface UIElementProxy extends UIElementProxyActions {
     /**
      *
      */
@@ -28,49 +29,4 @@ export interface UIElementProxy {
      *
      */
     getElementByMatchingText(text: string, parentElement: ElementAdapter): Promise<ElementAdapter>;
-
-    /**
-     *
-     */
-    isSelected(element: ElementAdapter): Promise<boolean>;
-
-    /**
-     *
-     */
-    isEditable(element: ElementAdapter): Promise<boolean>;
-
-    /**
-     *
-     */
-    isDisplayed(element: ElementAdapter): Promise<boolean>;
-
-    /**
-     *
-     */
-    isEnabled(element: ElementAdapter): Promise<boolean>;
-
-    /**
-     *
-     */
-    getValue(element: ElementAdapter): Promise<string>;
-
-    /**
-     *
-     */
-    getText(element: ElementAdapter): Promise<string>;
-
-    /**
-     *
-     */
-    getClasses(element: ElementAdapter): Promise<string[]>;
-
-    /**
-     *
-     */
-    setValue(value: string, element: ElementAdapter): Promise<void>;
-
-    /**
-     *
-     */
-    click(element: ElementAdapter): Promise<void>;
 }

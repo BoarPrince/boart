@@ -167,7 +167,8 @@ describe('select-proxy', () => {
             proxyName: 'select',
             tagName: 'select',
             value: 'test-value',
-            text: 'Test-Value'
+            text: 'Test-Value',
+            tableInfo: undefined
         });
     });
 

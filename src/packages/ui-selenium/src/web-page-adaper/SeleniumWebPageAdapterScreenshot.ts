@@ -1,7 +1,8 @@
 import { WebPageAdapterScreenshot } from '@boart/ui';
 import { SeleniumWebPageAdapter } from './SeleniumWebPageAdapter';
 import { WebDriver } from 'selenium-webdriver';
-import fs from 'fs';
+import fs from 'fs/promises';
+
 import { randomUUID } from 'crypto';
 
 export class SeleniumWebPageAdapterScreenshot implements WebPageAdapterScreenshot<WebDriver> {
@@ -34,14 +35,14 @@ export class SeleniumWebPageAdapterScreenshot implements WebPageAdapterScreensho
     /**
      *
      */
-    async take(filename: string): Promise<string> {
+    async take(filename?: string): Promise<string> {
         const base64PNG = await this.webDriverAdapter.driver.nativeDriver.takeScreenshot();
         const buff = Buffer.from(base64PNG, 'base64');
 
         filename = filename ?? randomUUID();
         filename = filename.endsWith('.png') ? filename : filename + '.png';
 
-        fs.writeFileSync(filename, buff);
+        await fs.writeFile(filename, buff);
         return filename;
     }
 }

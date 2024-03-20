@@ -9,6 +9,7 @@ import { DivProxy } from './ui-proxy/DivProxy';
 import { SelectProxy } from './ui-proxy/SelectProxy';
 import { RadioProxy } from './ui-proxy/RadioProxy';
 import { RadioGroupProxy } from './ui-proxy/RadioGroupProxy';
+import { TableProxy } from './ui-proxy/TableProxy';
 
 /**
  *
@@ -29,6 +30,7 @@ export default function initialize(): void {
     ElementAdapterLocatorHandler.instance.addLocator(new ById());
     ElementAdapterLocatorHandler.instance.addLocator(new ByText());
 
+    UIElementProxyHandler.instance.addProxy('table', new TableProxy());
     UIElementProxyHandler.instance.addProxy('button', new ButtonProxy());
     UIElementProxyHandler.instance.addProxy('div', new DivProxy());
     UIElementProxyHandler.instance.addProxy('select', new SelectProxy());

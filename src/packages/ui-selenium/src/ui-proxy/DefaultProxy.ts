@@ -1,4 +1,4 @@
-import { ElementAdapter, UIElementProxy } from '@boart/ui';
+import { ElementAdapter, ElementPosition, UIElementProxy } from '@boart/ui';
 import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapter';
 
 /**
@@ -7,6 +7,8 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
 export abstract class DefaultProxy implements UIElementProxy {
     public abstract readonly name: string;
     public abstract readonly tagName: string;
+    public readonly position: ElementPosition;
+    public readonly proxy = this;
     public order = 10;
 
     /**
@@ -28,6 +30,13 @@ export abstract class DefaultProxy implements UIElementProxy {
      *
      */
     abstract getElementByMatchingText(text: string, parentElement: ElementAdapter): Promise<ElementAdapter>;
+
+    /**
+     *
+     */
+    getElement(element: ElementAdapter): Promise<ElementAdapter> {
+        return Promise.resolve(element);
+    }
 
     /**
      *

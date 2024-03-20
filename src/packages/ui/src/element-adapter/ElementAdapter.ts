@@ -10,7 +10,7 @@ export interface ElementAdapter {
     /**
      *
      */
-    getId(): Promise<string>;
+    getLocation(): Promise<string>;
 
     /**
      *

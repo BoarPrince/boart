@@ -1,6 +1,7 @@
 import { ElementAdapter } from '../element-adapter/ElementAdapter';
 import { UIElementProxy } from '../ui-element-proxy/UIElementProxy';
 import { UIElementProxyInfo } from '../ui-element-proxy/UIElementProxyInfo';
+import { ElementPosition } from '../ui-element-proxy/ElementPosition';
 import { WebPageAdapter } from './WebPageAdapter';
 import { WebPageAdapterElementLocator } from './WebPageAdapterElementLocator';
 
@@ -22,7 +23,7 @@ export interface WebPageAdapterElement<T> {
     /**
      *
      */
-    getElementInfo(element: ElementAdapter): Promise<UIElementProxyInfo>;
+    getElementInfo(element: ElementAdapter, position?: ElementPosition): Promise<UIElementProxyInfo>;
 
     /**
      *
@@ -32,7 +33,7 @@ export interface WebPageAdapterElement<T> {
     /**
      *
      */
-    setValue(value: string, location: string, element: ElementAdapter): Promise<void>;
+    setValue(value: string, element: ElementAdapter, position?: ElementPosition): Promise<void>;
 
     // /**
     //  *
@@ -42,5 +43,5 @@ export interface WebPageAdapterElement<T> {
     /**
      *
      */
-    click(location: string, element: ElementAdapter): Promise<void>;
+    click(element: ElementAdapter, position?: ElementPosition): Promise<void>;
 }

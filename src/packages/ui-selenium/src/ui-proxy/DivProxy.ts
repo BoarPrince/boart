@@ -37,7 +37,7 @@ export class DivProxy extends DefaultProxy {
      */
     async isEditable(element: SeleniumElementAdapter): Promise<boolean> {
         const isEditable = await element.nativeElement.getAttribute('contenteditable');
-        return isEditable === 'true';
+        return isEditable != null;
     }
 
     /**

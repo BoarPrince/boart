@@ -27,7 +27,7 @@ export class SeleniumElementLocatorAdapter implements ElementAdapter {
     /**
      *
      */
-    getId(): Promise<string> {
+    getLocation(): Promise<string> {
         throw new Error('Method not implemented.');
     }
 

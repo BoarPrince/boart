@@ -200,7 +200,8 @@ describe('radio-group-proxy', () => {
             proxyName: 'radio-group',
             tagName: 'div',
             value: 'test-value-2',
-            text: 'Test-Value-2'
+            text: 'Test-Value-2',
+            tableInfo: undefined
         });
     });
 

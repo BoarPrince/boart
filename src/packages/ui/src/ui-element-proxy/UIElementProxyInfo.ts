@@ -12,4 +12,10 @@ export interface UIElementProxyInfo {
     isEnabled: boolean;
     isEditable: boolean;
     isSelected: boolean;
+    tableInfo?: {
+        columns: number;
+        rows: number;
+        visibleRows: number;
+        visibleColumns: number;
+    };
 }
