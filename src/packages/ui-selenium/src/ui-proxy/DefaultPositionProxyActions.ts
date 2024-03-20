@@ -17,23 +17,29 @@ export class DefaultPositionProxyActions implements UIElementProxyActions {
     /**
      *
      */
-    private getPositionedElement(element: SeleniumElementAdapter): Promise<WebElement> {
-        return element.nativeElement.getDriver().executeScript(
+    private async getPositionedElement(element: SeleniumElementAdapter): Promise<WebElement> {
+        const positionedElementOrError = await element.nativeElement.getDriver().executeScript<WebElement | string>(
             `const tableElement = arguments[0];
              const position = arguments[1];
 
              if(tableElement.rows.length <= position.row) {
-                throw new Error('table does not have row with index ' + position.row);
+                return 'does not have row with index: ' + position.row + ', only ' + tableElement.rows.length + ' rows found';
              }
 
-             if(tableElement.rows.item(0).cells.length <= position.column) {
-                throw new Error('table does not have column with index ' + position.column);
+             if(tableElement.rows.item(position.row).cells.length <= position.column) {
+                return'does not have column with index: ' + position.column + ', only ' + tableElement.rows.item(position.row).cells.length + ' columns found';
              }
 
              return tableElement.rows.item(position.row)?.cells.item(position.column);`,
             element.nativeElement,
             this.position
         );
+
+        if (typeof positionedElementOrError === 'string') {
+            throw new Error(`table: '${await element.getLocation()}' ${positionedElementOrError}`);
+        } else {
+            return positionedElementOrError;
+        }
     }
 
     /**

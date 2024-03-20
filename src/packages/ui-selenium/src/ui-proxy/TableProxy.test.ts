@@ -209,12 +209,13 @@ describe('table-proxy', () => {
         await pageAdapter.driver.html(`
           <table id="test-id">
             <tr>
-              <th contenteditable="true">cell-1.1</th>
+              <th contenteditable>cell-1.1</th>
               <th>cell-1.2</th>
             </tr>
             <tr>
-            <th>cell-2.1</th>
-            <th>cell-2.2</th>
+              <td>cell-2.1</td>
+              <td>cell-2.2</td>
+            </tr>
           </table>`);
 
         const element = await pageAdapter.element.byId('test-id');
@@ -229,6 +230,73 @@ describe('table-proxy', () => {
     /**
      *
      */
+    test('table does not have rows', async () => {
+        await pageAdapter.driver.html(`
+          <table id="test-id">
+          </table>`);
+
+        const element = await pageAdapter.element.byId('test-id');
+        const sut = await pageAdapter.element.getProxy(element);
+
+        const actionElement = (sut as UIElementTableProxy).actions({ row: 0, column: 0 });
+        await expect(actionElement.getValue(element)).rejects.toThrow(
+            `table: 'id:test-id' does not have row with index: 0, only 0 rows found`
+        );
+    });
+
+    /**
+     *
+     */
+    test('row position cannot be outside', async () => {
+        await pageAdapter.driver.html(`
+          <table id="test-id">
+            <tr>
+              <th >cell-1.1</th>
+              <th>cell-1.2</th>
+            </tr>
+            <tr>
+              <td>cell-2.1</td>
+              <td>cell-2.2</td>
+            </tr>
+          </table>`);
+
+        const element = await pageAdapter.element.byId('test-id');
+        const sut = await pageAdapter.element.getProxy(element);
+
+        const actionElement = (sut as UIElementTableProxy).actions({ row: 2, column: 0 });
+        await expect(actionElement.getValue(element)).rejects.toThrow(
+            `table: 'id:test-id' does not have row with index: 2, only 2 rows found`
+        );
+    });
+
+    /**
+     *
+     */
+    test('column position cannot be outside', async () => {
+        await pageAdapter.driver.html(`
+          <table id="test-id">
+            <tr>
+              <th >cell-1.1</th>
+              <th>cell-1.2</th>
+            </tr>
+            <tr>
+              <td>cell-2.1</td>
+              <td>cell-2.2</td>
+            </tr>
+          </table>`);
+
+        const element = await pageAdapter.element.byId('test-id');
+        const sut = await pageAdapter.element.getProxy(element);
+
+        const actionElement = (sut as UIElementTableProxy).actions({ row: 0, column: 2 });
+        await expect(actionElement.getValue(element)).rejects.toThrow(
+            `table: 'id:test-id' does not have column with index: 2, only 2 columns found`
+        );
+    });
+
+    /**
+     *
+     */
     test('get info from cell element', async () => {
         await pageAdapter.driver.html(`
           <table id="test-id">
@@ -238,8 +306,9 @@ describe('table-proxy', () => {
               <th>cell-1.2</th>
             </tr>
             <tr>
-            <th>cell-2.1</th>
-            <th>cell-2.2</th>
+              <td>cell-2.1</td>
+              <td>cell-2.2</td>
+            </tr>
           </table>`);
 
         const element = await pageAdapter.element.byId('test-id');

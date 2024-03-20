@@ -9,7 +9,6 @@ import { WebPageAdapterElement } from './WebPageAdapterElement';
 import { WebPageAdapterElementLocator } from './WebPageAdapterElementLocator';
 import { UIElementTableProxy } from '../ui-element-proxy/UIElementTableProxy';
 import { UIElementProxyActions } from '../ui-element-proxy/UIElementProxyActions';
-import { table } from 'console';
 
 /**
  *
