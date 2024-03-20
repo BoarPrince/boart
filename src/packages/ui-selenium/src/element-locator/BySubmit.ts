@@ -7,7 +7,7 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
 /**
  *
  */
-export class ByXPath extends BaseLocator {
+export class BySubmit extends BaseLocator {
     public readonly strategyCanBeNull = true;
     public readonly strategy = 'submit';
 
