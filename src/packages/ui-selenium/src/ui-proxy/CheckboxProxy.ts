@@ -1,14 +1,14 @@
 import { ElementAdapter } from '@boart/ui';
 import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapter';
-import { DefaultProxy } from './DefaultProxy';
+import { InputProxy } from './InputProxy';
 
 /**
  *
  */
-export class CheckboxProxy extends DefaultProxy {
-    public readonly name = 'check-box';
+export class CheckboxProxy extends InputProxy {
+    public readonly name = 'checkbox';
     public readonly tagName = 'input';
-    public readonly order = 5;
+    public readonly order = super.defaultOrder + 5;
 
     /**
      *
@@ -21,69 +21,14 @@ export class CheckboxProxy extends DefaultProxy {
     /**
      *
      */
-    getElementByMatchingText(): Promise<ElementAdapter> {
-        return null;
+    async getElementByMatchingText(text: string, parentElement: SeleniumElementAdapter): Promise<ElementAdapter> {
+        return this.getElementByMatchingTextAndType(text, parentElement, 'checkbox');
     }
 
     /**
      *
      */
-    isSelected(element: SeleniumElementAdapter): Promise<boolean> {
-        return element.nativeElement.isSelected();
-    }
-
-    /**
-     *
-     */
-    isEditable(): Promise<boolean> {
-        return Promise.resolve(false);
-    }
-
-    /**
-     *
-     */
-    isDisplayed(element: SeleniumElementAdapter): Promise<boolean> {
-        return element.isDisplayed();
-    }
-
-    /**
-     *
-     */
-    isEnabled(element: SeleniumElementAdapter): Promise<boolean> {
-        return element.isEnabled();
-    }
-
-    /**
-     *
-     */
-    getClasses(element: ElementAdapter): Promise<string[]> {
-        return null;
-    }
-
-    /**
-     *
-     */
-    async getValue(element: SeleniumElementAdapter): Promise<string> {
-        return (await element.nativeElement.getAttribute('value')) || //
-            (await element.nativeElement.isSelected())
-            ? 'true'
-            : 'false';
-    }
-
-    /**
-     *
-     */
-    async setControlValue(): Promise<void> {}
-
-    /**
-     *
-     */
-    async setValue(): Promise<void> {}
-
-    /**
-     *
-     */
-    async click(element: SeleniumElementAdapter): Promise<void> {
-        await element.nativeElement.click();
+    isReadonly(): Promise<boolean> {
+        return undefined;
     }
 }
