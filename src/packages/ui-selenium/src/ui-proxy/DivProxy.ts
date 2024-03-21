@@ -17,4 +17,12 @@ export class DivProxy extends DefaultProxy {
         const xPaths = [`.//div[text()[normalize-space() = "${text}"]]`];
         return await SeleniumElementAdapter.getElement(xPaths, parentElement);
     }
+
+    /**
+     *
+     */
+    async isEditable(element: SeleniumElementAdapter): Promise<boolean> {
+        const isEditable = await element.nativeElement.getAttribute('contenteditable');
+        return isEditable != null;
+    }
 }
