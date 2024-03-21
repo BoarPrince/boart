@@ -1,4 +1,4 @@
-import { WebPageAdapter, WebPageAdapterHandler } from '@boart/ui';
+import { UIElementProxyInfo, WebPageAdapter, WebPageAdapterHandler } from '@boart/ui';
 import initialize from '../index';
 
 /**
@@ -190,13 +190,15 @@ describe('radio-group-proxy', () => {
         const element = await pageAdapter.element.byId('test-id');
 
         const sutElementInfo = await pageAdapter.element.getElementInfo(element);
-        expect(sutElementInfo).toStrictEqual({
+        expect(sutElementInfo).toStrictEqual<UIElementProxyInfo>({
             ident: 'id:test-id',
             classes: ['clazz1', 'clazz2'],
             isDisplayed: true,
             isEditable: true,
             isEnabled: true,
             isSelected: true,
+            isReadonly: undefined,
+            isRequired: undefined,
             proxyName: 'radio-group',
             tagName: 'div',
             value: 'test-value-2',

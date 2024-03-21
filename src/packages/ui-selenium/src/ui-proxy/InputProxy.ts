@@ -73,4 +73,18 @@ export class InputProxy extends DefaultProxy {
             return await element.nativeElement.getAttribute('placeholder');
         }
     }
+
+    /**
+     *
+     */
+    async isReadonly(element: SeleniumElementAdapter): Promise<boolean> {
+        return (await element.nativeElement.getAttribute('readonly')) != null;
+    }
+
+    /**
+     *
+     */
+    async isRequired(element: SeleniumElementAdapter): Promise<boolean> {
+        return (await element.nativeElement.getAttribute('required')) != null;
+    }
 }

@@ -1,4 +1,4 @@
-import { UIElementTableProxy, WebPageAdapter, WebPageAdapterHandler } from '@boart/ui';
+import { UIElementProxyInfo, UIElementTableProxy, WebPageAdapter, WebPageAdapterHandler } from '@boart/ui';
 import initialize from '../index';
 
 /**
@@ -117,13 +117,15 @@ describe('table-proxy', () => {
         const element = await pageAdapter.element.byId('test-id');
 
         const sutElementInfo = await pageAdapter.element.getElementInfo(element);
-        expect(sutElementInfo).toStrictEqual({
+        expect(sutElementInfo).toStrictEqual<UIElementProxyInfo>({
             ident: 'id:test-id',
             classes: ['clazz1', 'clazz2'],
             isDisplayed: true,
             isEditable: true,
             isEnabled: true,
             isSelected: false,
+            isReadonly: undefined,
+            isRequired: undefined,
             proxyName: 'table',
             tagName: 'table',
             value: 'test-text',
@@ -315,13 +317,15 @@ describe('table-proxy', () => {
 
         const sutElementInfo = await pageAdapter.element.getElementInfo(element, { row: 0, column: 0 });
 
-        expect(sutElementInfo).toStrictEqual({
+        expect(sutElementInfo).toStrictEqual<UIElementProxyInfo>({
             ident: 'id:test-id',
             classes: ['clazz1', 'clazz2'],
             isDisplayed: true,
             isEditable: false,
             isEnabled: true,
             isSelected: false,
+            isReadonly: undefined,
+            isRequired: undefined,
             proxyName: 'table',
             tagName: 'th',
             value: 'cell-1.1',

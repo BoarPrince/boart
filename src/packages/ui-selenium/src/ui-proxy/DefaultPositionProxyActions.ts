@@ -53,6 +53,20 @@ export class DefaultPositionProxyActions implements UIElementProxyActions {
     /**
      *
      */
+    isReadonly(): Promise<boolean> {
+        return undefined;
+    }
+
+    /**
+     *
+     */
+    isRequired(): Promise<boolean> {
+        return undefined;
+    }
+
+    /**
+     *
+     */
     async isSelected(element: SeleniumElementAdapter): Promise<boolean> {
         return (await this.getPositionedElement(element)).isSelected();
     }

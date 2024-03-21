@@ -108,6 +108,8 @@ export class WebPageAdapterElementDefault<T> implements WebPageAdapterElement<T>
             value: await elementAction.getValue(element),
             text: await elementAction.getText(element),
             classes: await elementAction.getClasses(element),
+            isReadonly: await elementAction.isReadonly(element),
+            isRequired: await elementAction.isRequired(element),
             isDisplayed: await elementAction.isDisplayed(element),
             isEnabled: await elementAction.isEnabled(element),
             isEditable: await elementAction.isEditable(element),

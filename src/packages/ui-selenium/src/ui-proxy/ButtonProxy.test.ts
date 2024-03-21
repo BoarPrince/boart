@@ -126,6 +126,8 @@ describe('button-proxy', () => {
             isEditable: true,
             isEnabled: true,
             isSelected: false,
+            isReadonly: undefined,
+            isRequired: undefined,
             proxyName: 'button',
             tagName: 'button',
             value: 'test-button',

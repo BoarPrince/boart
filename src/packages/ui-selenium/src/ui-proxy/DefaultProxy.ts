@@ -62,6 +62,22 @@ export abstract class DefaultProxy implements UIElementProxy {
     /**
      *
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    isReadonly(element: SeleniumElementAdapter): Promise<boolean> {
+        return undefined;
+    }
+
+    /**
+     *
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    isRequired(element: SeleniumElementAdapter): Promise<boolean> {
+        return undefined;
+    }
+
+    /**
+     *
+     */
     isEnabled(element: ElementAdapter): Promise<boolean> {
         return element.isEnabled();
     }

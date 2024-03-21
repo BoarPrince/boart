@@ -140,6 +140,8 @@ describe('input-proxy', () => {
             isEditable: true,
             isEnabled: true,
             isSelected: false,
+            isReadonly: false,
+            isRequired: false,
             proxyName: 'input',
             tagName: 'input',
             value: 'test-input-value',

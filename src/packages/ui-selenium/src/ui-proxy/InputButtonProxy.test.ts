@@ -126,6 +126,8 @@ describe('input-button-proxy', () => {
             isEditable: true,
             isEnabled: true,
             isSelected: false,
+            isReadonly: undefined,
+            isRequired: undefined,
             proxyName: 'input-button',
             tagName: 'input',
             value: 'test-input-button-value',

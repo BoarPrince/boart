@@ -80,4 +80,11 @@ export class SelectProxy extends DefaultProxy {
             element.nativeElement
         );
     }
+
+    /**
+     *
+     */
+    async isRequired(element: SeleniumElementAdapter): Promise<boolean> {
+        return (await element.nativeElement.getAttribute('required')) != null;
+    }
 }

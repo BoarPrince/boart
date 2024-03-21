@@ -49,6 +49,16 @@ export interface UIElementProxyActions {
     /**
      *
      */
+    isReadonly(element: ElementAdapter): Promise<boolean>;
+
+    /**
+     *
+     */
+    isRequired(element: ElementAdapter): Promise<boolean>;
+
+    /**
+     *
+     */
     getValue(element: ElementAdapter): Promise<string>;
 
     /**

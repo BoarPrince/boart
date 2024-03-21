@@ -8,6 +8,8 @@ export interface UIElementProxyInfo {
     value: string;
     text: string;
     classes: Array<string>;
+    isReadonly: boolean;
+    isRequired: boolean;
     isDisplayed: boolean;
     isEnabled: boolean;
     isEditable: boolean;
