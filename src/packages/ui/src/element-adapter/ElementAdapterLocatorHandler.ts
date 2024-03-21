@@ -4,7 +4,7 @@ import { ElementAdapterLocator } from './ElementAdapterLocator';
  *
  */
 export class ElementAdapterLocatorHandler {
-    private locators = new Map<string, ElementAdapterLocator>();
+    private locators = new Map<string, Array<ElementAdapterLocator>>();
 
     /**
      *
@@ -27,17 +27,17 @@ export class ElementAdapterLocatorHandler {
      *
      */
     public addLocator(locator: ElementAdapterLocator) {
-        if (this.locators.has(locator.strategy)) {
-            throw new Error(`locator for strategy ${locator.strategy} already exists`);
+        if (!this.locators.has(locator.strategy)) {
+            this.locators.set(locator.strategy, new Array<ElementAdapterLocator>());
         }
 
-        this.locators.set(locator.strategy, locator);
+        this.locators.get(locator.strategy).push(locator);
     }
 
     /**
      *
      */
-    public findLocator(strategy: string): ElementAdapterLocator | null {
+    public getLocators(strategy: string): Array<ElementAdapterLocator> | null {
         if (!this.locators.has(strategy)) {
             throw new Error(`locator for strategy ${strategy} does not exist`);
         }
@@ -49,6 +49,6 @@ export class ElementAdapterLocatorHandler {
      *
      */
     public getAll(): ElementAdapterLocator[] {
-        return Array.from(this.locators.values());
+        return Array.from(this.locators.values()).flat();
     }
 }

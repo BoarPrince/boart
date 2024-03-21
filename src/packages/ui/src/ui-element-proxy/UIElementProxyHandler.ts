@@ -50,8 +50,7 @@ export class UIElementProxyHandler {
      */
     async getProxy(element: ElementAdapter): Promise<UIElementProxy> {
         const tagName = await element.getTagName();
-        const proxies = this.proxies
-            .get(tagName) //
+        const proxies = (this.proxies.get(tagName) ?? []) //
             .concat(this.proxies.get('*'));
 
         if (!proxies) {

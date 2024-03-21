@@ -7,7 +7,7 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
 /**
  *
  */
-export class ById extends BaseLocator {
+export class ByDataTestId extends BaseLocator {
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'id';
 
@@ -15,20 +15,20 @@ export class ById extends BaseLocator {
      *
      */
     public getId(parentElement: SeleniumElementAdapter): Promise<string> {
-        return parentElement.nativeElement.getAttribute('id');
+        return parentElement.nativeElement.getAttribute('data-test-id');
     }
 
     /**
      *
      */
     public async find(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
-        return await parentElement.nativeElement.findElements(By.xpath(`.//*[@id='${locationByStrategy}']`));
+        return await parentElement.nativeElement.findElements(By.xpath(`.//*[@data-test-id='${locationByStrategy}']`));
     }
 
     /**
      *
      */
     public async findAll(parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
-        return await parentElement.nativeElement.findElements(By.xpath(`.//*[@id]`));
+        return await parentElement.nativeElement.findElements(By.xpath(`.//*[@data-test-id]`));
     }
 }

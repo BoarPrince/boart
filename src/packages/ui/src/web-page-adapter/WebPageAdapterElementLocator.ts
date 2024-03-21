@@ -21,9 +21,21 @@ export abstract class WebPageAdapterElementLocator {
     /**
      *
      */
-    public findOptionalBy(strategy: string, location: string, parentElement?: ElementAdapter, index?: number): Promise<ElementAdapter> {
-        const locator = ElementAdapterLocatorHandler.instance.findLocator(strategy);
-        return locator.findBy(location, this.getElement(parentElement), index);
+    public async findOptionalBy(
+        strategy: string,
+        location: string,
+        parentElement?: ElementAdapter,
+        index?: number
+    ): Promise<ElementAdapter> {
+        const locators = ElementAdapterLocatorHandler.instance.getLocators(strategy);
+        for (const locator of locators) {
+            const element = await locator.findBy(location, this.getElement(parentElement), index);
+            if (element) {
+                return element;
+            }
+        }
+
+        return null;
     }
 
     /**

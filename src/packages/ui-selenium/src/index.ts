@@ -16,6 +16,7 @@ import { InputSubmitButtonProxy } from './ui-proxy/InputSubmitButtonProxy';
 import { BySubmit } from './element-locator/BySubmit';
 import { AnyProxy } from './ui-proxy/AnyProxy';
 import { CheckboxProxy } from './ui-proxy/CheckboxProxy';
+import { ByDataTestId } from './element-locator/ByIDataTestId';
 
 /**
  *
@@ -34,6 +35,7 @@ export default function initialize(): void {
     });
 
     ElementAdapterLocatorHandler.instance.addLocator(new ById());
+    ElementAdapterLocatorHandler.instance.addLocator(new ByDataTestId());
     ElementAdapterLocatorHandler.instance.addLocator(new ByText());
     ElementAdapterLocatorHandler.instance.addLocator(new BySubmit());
 
