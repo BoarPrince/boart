@@ -7,8 +7,8 @@ import { By } from 'selenium-webdriver';
  *
  */
 export class InputProxy extends DefaultProxy {
-    public readonly name = 'input';
-    public readonly tagName = 'input';
+    public readonly name: string = 'input';
+    public readonly tagName: string = 'input';
 
     /**
      *
@@ -25,7 +25,11 @@ export class InputProxy extends DefaultProxy {
     /**
      *
      */
-    async getElementByMatchingText(text: string, parentElement: SeleniumElementAdapter): Promise<ElementAdapter> {
+    protected async getElementByMatchingTextAndType(
+        text: string,
+        parentElement: SeleniumElementAdapter,
+        type: string
+    ): Promise<ElementAdapter> {
         const xPaths = `//label[text()[normalize-space() = "${text}"]]`;
         const labels = await parentElement.nativeElement.findElements(By.xpath(xPaths));
         if (labels.length === 0) {
@@ -43,11 +47,18 @@ export class InputProxy extends DefaultProxy {
             return this.tryGetAdapterByPlacehholder(text, parentElement);
         }
 
-        if ((await inputElement[0].getTagName()) !== 'input') {
+        if ((await inputElement[0].getTagName()) !== 'input' || (type && (await inputElement[0].getAttribute('type')) !== type)) {
             return this.tryGetAdapterByPlacehholder(text, parentElement);
         }
 
         return new SeleniumElementAdapter(inputElement[0], `text[label]: ${text}`);
+    }
+
+    /**
+     *
+     */
+    async getElementByMatchingText(text: string, parentElement: SeleniumElementAdapter): Promise<ElementAdapter> {
+        return this.getElementByMatchingTextAndType(text, parentElement, null);
     }
 
     /**
@@ -62,8 +73,8 @@ export class InputProxy extends DefaultProxy {
      */
     async getText(element: SeleniumElementAdapter): Promise<string> {
         const text = await element.nativeElement.getDriver().executeScript<string>(
-            `const radioElement = arguments[0];
-            return !radioElement.labels?.length ? '' : radioElement.labels[0].textContent;`,
+            `const inputElement = arguments[0];
+            return !inputElement.labels?.length ? '' : inputElement.labels[0].textContent;`,
             element.nativeElement
         );
 
