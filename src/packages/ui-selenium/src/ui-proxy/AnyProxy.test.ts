@@ -4,7 +4,7 @@ import initialize from '../index';
 /**
  *
  */
-describe('div-proxy', () => {
+describe('any-proxy', () => {
     let pageAdapter: WebPageAdapter<unknown>;
 
     /**
@@ -26,19 +26,19 @@ describe('div-proxy', () => {
     /**
      *
      */
-    test('must be a div proxy', async () => {
-        await pageAdapter.driver.html('<div id="test-id"></div>');
+    test('must be a any proxy', async () => {
+        await pageAdapter.driver.html('<blockquote id="test-id"></blockquote>');
         const element = await pageAdapter.element.byId('test-id');
 
         const sut = await pageAdapter.element.getProxy(element);
-        expect(sut.name).toBe('div');
+        expect(sut.name).toBe('any');
     });
 
     /**
      *
      */
     test('must not be visible', async () => {
-        await pageAdapter.driver.html('<div hidden id="test-id"></div>');
+        await pageAdapter.driver.html('<blockquote hidden id="test-id"></blockquote>');
         const element = await pageAdapter.element.byId('test-id');
 
         const sut = await pageAdapter.element.getProxy(element);
@@ -49,7 +49,7 @@ describe('div-proxy', () => {
      *
      */
     test('must not be enabled', async () => {
-        await pageAdapter.driver.html('<div disabled id="test-id"></div>');
+        await pageAdapter.driver.html('<blockquote disabled id="test-id"></blockquote>');
         const element = await pageAdapter.element.byId('test-id');
 
         const sut = await pageAdapter.element.getProxy(element);
@@ -60,7 +60,7 @@ describe('div-proxy', () => {
      *
      */
     test('can be editable', async () => {
-        await pageAdapter.driver.html('<div contenteditable id="test-id"></div>');
+        await pageAdapter.driver.html('<blockquote contenteditable id="test-id"></blockquote>');
         const element = await pageAdapter.element.byId('test-id');
 
         const sut = await pageAdapter.element.getProxy(element);
@@ -71,7 +71,7 @@ describe('div-proxy', () => {
      *
      */
     test('text must be available', async () => {
-        await pageAdapter.driver.html(`<div id="test-id">test-div-text</div>`);
+        await pageAdapter.driver.html(`<blockquote id="test-id">test-div-text</blockquote>`);
         const element = await pageAdapter.element.byId('test-id');
 
         const sut = await pageAdapter.element.getProxy(element);
@@ -82,7 +82,7 @@ describe('div-proxy', () => {
      *
      */
     test('classes must be visible', async () => {
-        await pageAdapter.driver.html('<div id="test-id" class="test1  test2">test-button</div>');
+        await pageAdapter.driver.html('<blockquote id="test-id" class="test1  test2">test-button</blockquote>');
         const element = await pageAdapter.element.byId('test-id');
 
         const sut = await pageAdapter.element.getProxy(element);
@@ -93,11 +93,13 @@ describe('div-proxy', () => {
      *
      */
     test('element must be locatable by text', async () => {
-        await pageAdapter.driver.html('<div>test-div</div>');
-        const element = await pageAdapter.element.locator.findBy('text', 'test-div');
+        await pageAdapter.driver.html(`
+          <blockquote>test-any</blockquote>
+          <div>test-duv</div>`);
+        const element = await pageAdapter.element.locator.findBy('text', 'test-any');
 
         const sut = await pageAdapter.element.getProxy(element);
-        expect(sut.name).toBe('div');
+        expect(sut.name).toBe('any');
     });
 
     /**
@@ -105,7 +107,7 @@ describe('div-proxy', () => {
      */
     test('element info must be accessible', async () => {
         await pageAdapter.driver.html(`
-            <div id="test-id" class="clazz1 clazz2">test-div-text</div>`);
+            <blockquote id="test-id" class="clazz1 clazz2">test-any-text</blockquote>`);
         const element = await pageAdapter.element.byId('test-id');
 
         const sutElementInfo = await pageAdapter.element.getElementInfo(element);
@@ -118,10 +120,10 @@ describe('div-proxy', () => {
             isSelected: false,
             isReadonly: undefined,
             isRequired: undefined,
-            proxyName: 'div',
-            tagName: 'div',
-            value: 'test-div-text',
-            text: 'test-div-text',
+            proxyName: 'any',
+            tagName: 'blockquote',
+            value: 'test-any-text',
+            text: 'test-any-text',
             tableInfo: undefined
         });
     });
@@ -130,7 +132,7 @@ describe('div-proxy', () => {
      *
      */
     test('change div value', async () => {
-        await pageAdapter.driver.html('<div contenteditable id="test-id"></div>');
+        await pageAdapter.driver.html('<blockquote contenteditable id="test-id"></blockquote>');
 
         const element = await pageAdapter.element.byId('test-id');
         const sut = await pageAdapter.element.getProxy(element);

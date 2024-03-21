@@ -6,8 +6,8 @@ import { DefaultProxy } from './DefaultProxy';
  *
  */
 export class DivProxy extends DefaultProxy {
-    public readonly name = 'div';
-    public readonly tagName = 'div';
+    public readonly name: string = 'div';
+    public readonly tagName: string = 'div';
     public readonly order = 0;
 
     /**

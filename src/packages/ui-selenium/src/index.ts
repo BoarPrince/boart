@@ -14,6 +14,7 @@ import { InputButtonProxy } from './ui-proxy/InputButtonProxy';
 import { InputProxy } from './ui-proxy/InputProxy';
 import { InputSubmitButtonProxy } from './ui-proxy/InputSubmitButtonProxy';
 import { BySubmit } from './element-locator/BySubmit';
+import { AnyProxy } from './ui-proxy/AnyProxy';
 
 /**
  *
@@ -44,6 +45,7 @@ export default function initialize(): void {
     UIElementProxyHandler.instance.addProxy('input', new InputSubmitButtonProxy());
     UIElementProxyHandler.instance.addProxy('input', new InputProxy());
     UIElementProxyHandler.instance.addProxy('*', new RadioGroupProxy());
+    UIElementProxyHandler.instance.addProxy('*', new AnyProxy());
 }
 
 // eslint-disable-next-line jest/require-hook
