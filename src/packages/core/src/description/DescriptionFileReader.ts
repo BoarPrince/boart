@@ -3,6 +3,7 @@ import path from 'path';
 import { Description } from './Description';
 import { DescriptionParser } from '../parser/DescriptionParser';
 import { ASTDescription, ASTUnitDescription } from '../parser/ast/ASTDescription';
+import { DescriptionFileNotFounError } from './DescriptionFileNotFounError';
 
 /**
  *
@@ -65,7 +66,7 @@ export class DescriptionFileReader {
         const fileAndPath = path.join(pathName, name) + '.desc';
 
         if (!fs.existsSync(fileAndPath)) {
-            throw new Error(`file '${fileAndPath}' does not exist`);
+            throw new DescriptionFileNotFounError(`file '${fileAndPath}' does not exist`);
         }
 
         const description = fs.readFileSync(fileAndPath, 'utf8');

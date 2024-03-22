@@ -28,6 +28,7 @@ export class ExpectedOperatorImplementation {
      *
      */
     private static parseInt(value: NativeType): number {
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         const valueAsString: string = value?.toString();
 
         const numberRegexp = /^\s*-?\s*[.,0-9]+$/;
@@ -89,6 +90,7 @@ export class ExpectedOperatorImplementation {
             caseInsesitive: true,
             check: (value: NativeType, expectedValue: string): ExpectedOperatorResult => {
                 return {
+                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
                     result: value == null ? false : value.toString().startsWith(expectedValue)
                 };
             }
@@ -403,7 +405,8 @@ export class ExpectedOperatorImplementation {
             check: (value: NativeType): ExpectedOperatorResult => {
                 return {
                     result: value?.valueOf() == null,
-                    errorMessage: `, null: actual: '${(value || '').toString()}'`
+                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                    errorMessage: `, null: actual: '${(value ?? '').toString()}'`
                 };
             }
         };

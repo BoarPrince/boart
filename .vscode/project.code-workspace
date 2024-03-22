@@ -129,7 +129,7 @@
     "[svg]": {
       "editor.defaultFormatter": "jock.svg"
     },
-    "testExplorer.useNativeTesting": true,
+    "testExplorer.useNativeTesting": false,
     "jestTestExplorer.hideEmptyProjects": false,
     "jest.disabledWorkspaceFolders": [
       "root ######################",

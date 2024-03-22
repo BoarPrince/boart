@@ -1,3 +1,4 @@
+import { DescriptionCollectorPluginExecutionUnit } from '../description/DescriptionCollectorPluginExecutionUnit';
 import { ExecutionUnitPlugin } from './ExecutionUnitPlugin';
 import { PluginRequest } from './PluginRequest';
 import { PluginResponse } from './PluginResponse';
@@ -6,9 +7,19 @@ import { PluginResponse } from './PluginResponse';
  *
  */
 export class ExecutionUnitPluginHandler implements ExecutionUnitPlugin {
-    private clientImplList = new Map<string, () => ExecutionUnitPlugin>();
+    private clientImplList: Map<string, () => ExecutionUnitPlugin>;
     private mainExecutionPlugin: () => ExecutionUnitPlugin;
     public readonly action: string;
+
+    /**
+     *
+     */
+    constructor() {
+        this.clientImplList = new Map<string, () => ExecutionUnitPlugin>();
+
+        // add default execution unit
+        this.addExecutionUnit(DescriptionCollectorPluginExecutionUnit.name, () => new DescriptionCollectorPluginExecutionUnit());
+    }
 
     /**
      *

@@ -91,6 +91,10 @@ import { ExecutionUnitPluginFactoryHandler } from './plugin/ExecutionUnitPluginF
 import { LocalReport } from './report/LocalReport';
 import { StepReport } from './report/StepReport';
 import { TestReport } from './report/TestReport';
+import { Descriptionable } from './description/Descriptionable';
+import { DescriptionCollectorProvider } from './description/DescriptionCollectorProvider';
+import { DescriptionCollector } from './description/DescriptionCollector';
+import { DescriptionCollectorHandler } from './description/DescriptionCollectorHandler';
 
 /**
  *
@@ -116,7 +120,11 @@ export {
     DefaultPropertySetterExecutionUnit,
     DefaultRowType,
     Description,
+    Descriptionable,
     DescriptionHandler,
+    DescriptionCollector,
+    DescriptionCollectorProvider,
+    DescriptionCollectorHandler,
     EnvLoader,
     ExecutionContext,
     ExecutionEngine,
