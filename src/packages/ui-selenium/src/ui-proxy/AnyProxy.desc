@@ -1,0 +1,17 @@
+# Proxy
+
+## AnyProxy
+
+* Has te lowest order and is used, if no other proxy fits
+
+
+### example: for examples is used for blockquotes
+
+    <blockquote id="test-id">
+      test-button
+    </blockquote>
+
+### example: setValue can be used, if contenteditable is defined
+
+    <blockquote contenteditable id="test-id">
+    </blockquote>

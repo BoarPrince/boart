@@ -1,10 +1,11 @@
+import { Descriptionable } from '@boart/core';
 import { ElementAdapter } from '../element-adapter/ElementAdapter';
 import { UIElementProxyActions } from './UIElementProxyActions';
 
 /**
  *
  */
-export interface UIElementProxy extends UIElementProxyActions {
+export interface UIElementProxy extends UIElementProxyActions, Descriptionable {
     /**
      *
      */

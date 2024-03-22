@@ -1,10 +1,11 @@
+import { DescriptionCollector, DescriptionCollectorProvider } from '@boart/core';
 import { ElementAdapter } from '../element-adapter/ElementAdapter';
 import { UIElementProxy } from './UIElementProxy';
 
 /**
  *
  */
-export class UIElementProxyHandler {
+export class UIElementProxyHandler implements DescriptionCollectorProvider {
     private proxies = new Map<string, Array<UIElementProxy>>();
 
     /**
@@ -88,5 +89,19 @@ export class UIElementProxyHandler {
         }
 
         return elements;
+    }
+
+    /**
+     *
+     */
+    public getAllProxies(): Array<UIElementProxy> {
+        return Array.from(this.proxies.values()).flat();
+    }
+
+    /**
+     *
+     */
+    getDescriptionCollector(): DescriptionCollector {
+        return DescriptionCollector.collect('ui-element-proxy', 'ui-element-proxy', this.getAllProxies());
     }
 }

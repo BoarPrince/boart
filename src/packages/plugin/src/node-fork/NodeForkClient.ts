@@ -7,8 +7,15 @@ import { ExecutionUnitPluginHandler, ReadonlyDefaultContext } from '@boart/core'
  */
 export class NodeForkClient {
     private started = false;
-    public readonly pluginHandler = new ExecutionUnitPluginHandler();
+    public readonly pluginHandler: ExecutionUnitPluginHandler;
     public context: ReadonlyDefaultContext;
+
+    /**
+     *
+     */
+    constructor() {
+        this.pluginHandler = new ExecutionUnitPluginHandler();
+    }
 
     /**
      *

@@ -6,6 +6,7 @@ import { UIProgressIndicatorHandler } from './ui-progress-indicator/UIProgressIn
 import { WebPageAdapterHandler } from './web-page-adapter/WebPageAdapterHandler';
 
 declare global {
+    var _uiInitialized: boolean;
     var _elementProxyLocatorHandler: ElementAdapterLocatorHandler;
     var _uiElementProxyHandler: UIElementProxyHandler;
     var _uiProgressIndicatorHandlerInstance: UIProgressIndicatorHandler;

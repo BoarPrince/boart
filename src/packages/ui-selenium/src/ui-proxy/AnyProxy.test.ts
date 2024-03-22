@@ -1,5 +1,6 @@
 import { WebPageAdapter, WebPageAdapterHandler } from '@boart/ui';
 import initialize from '../index';
+import { Description } from '@boart/core';
 
 /**
  *
@@ -140,5 +141,37 @@ describe('any-proxy', () => {
         await expect(sut.getValue(element)).resolves.toBe('');
         await sut.setValue('new value', element);
         await expect(sut.getValue(element)).resolves.toBe('new value');
+    });
+
+    /**
+     *
+     */
+    test('description is available', async () => {
+        await pageAdapter.driver.html('<blockquote id="test-id"></blockquote>');
+
+        const element = await pageAdapter.element.byId('test-id');
+        const sut = await pageAdapter.element.getProxy(element);
+
+        const desc = sut.description();
+        expect(desc).toStrictEqual<Description>({
+            id: 'AnyProxy',
+            parentId: null,
+            title: 'AnyProxy',
+            titleShort: 'AnyProxy',
+            dataScopes: null,
+            description: '\n* Has te lowest order and is used, if no other proxy fits\n\n',
+            examples: [
+                {
+                    title: 'for examples is used for blockquotes',
+                    example: '\n    <blockquote id="test-id">\n      test-button\n    </blockquote>\n',
+                    codes: []
+                },
+                {
+                    title: 'setValue can be used, if contenteditable is defined',
+                    example: '\n    <blockquote contenteditable id="test-id">\n    </blockquote>\n',
+                    codes: []
+                }
+            ]
+        });
     });
 });

@@ -19,6 +19,7 @@ import { UIElementProxyInfo } from './ui-element-proxy/UIElementProxyInfo';
 import { WebPageAdapterScreenshot } from './web-page-adapter/WebPageAdapterScreenshot';
 import { UIElementProxyActions } from './ui-element-proxy/UIElementProxyActions';
 import { UIElementTableProxy } from './ui-element-proxy/UIElementTableProxy';
+import { DescriptionCollectorHandler } from '@boart/core';
 
 export {
     ElementAdapter,
@@ -43,3 +44,19 @@ export {
     WebPageAdapterElementLocator,
     WebPageAdapterScreenshot
 };
+
+/**
+ *
+ */
+export default function initialize(): void {
+    if (globalThis._uiInitialized) {
+        return;
+    } else {
+        globalThis._uiInitialized = true;
+    }
+
+    DescriptionCollectorHandler.instance.addProvider(UIElementProxyHandler.instance);
+}
+
+// eslint-disable-next-line jest/require-hook
+(() => initialize())();
