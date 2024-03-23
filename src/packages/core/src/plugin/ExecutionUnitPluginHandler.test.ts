@@ -27,6 +27,7 @@ describe('plugin', () => {
         const pluginMock = new ExecutionUnitPluginMock('-mock-');
         const request = {
             context: null,
+            value: null,
             action: { name: '-mock-', ast: null }
         };
 
@@ -45,6 +46,7 @@ describe('plugin', () => {
         const sut = new ExecutionUnitPluginHandler();
         const request = {
             context: null,
+            value: null,
             action: { name: '-mock-', ast: null }
         };
 
@@ -75,6 +77,7 @@ describe('main unit', () => {
         const pluginMock = new ExecutionUnitPluginMock('-mock-');
         const request = {
             context: null,
+            value: null,
             action: { name: null, ast: null }
         };
 

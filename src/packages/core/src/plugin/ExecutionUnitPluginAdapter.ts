@@ -27,6 +27,7 @@ export class ExecutionUnitPluginAdapter implements ExecutionUnit<DefaultContext,
     async execute(context: DefaultContext, row: DefaultRowType<DefaultContext>): Promise<void> {
         const request: PluginRequest = {
             context: JSON.parse(JSON.stringify(context)) as DefaultContext,
+            value: row?.value,
             action: {
                 name: row?.ast.match, //
                 ast: row?.ast
