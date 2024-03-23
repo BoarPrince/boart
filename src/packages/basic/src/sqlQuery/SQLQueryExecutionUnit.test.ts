@@ -82,6 +82,8 @@ beforeAll(() => {
 beforeEach(() => {
     jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
+
+    process.env['environment_reports_data_dir'] = '.';
 });
 
 /**
@@ -238,7 +240,9 @@ describe('text result', () => {
 
         await sut.handler.process(tableRows);
 
+        jest.spyOn(fs, 'readFileSync').mockReturnValue('{}');
         Runtime.instance.stepRuntime.currentContext.id = 'id-id-id';
+
         StepReport.instance.report();
 
         const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;

@@ -8,6 +8,7 @@ const sut = new TestDescriptionTableHandler();
 /**
  *
  */
+// eslint-disable-next-line jest/no-untyped-mock-factory
 jest.mock('@boart/core', () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const originalModule = jest.requireActual('@boart/core');
@@ -40,6 +41,9 @@ jest.mock('@boart/core', () => {
 beforeEach(() => {
     jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
     Runtime.instance.testRuntime.notifyStart({} as TestContext);
+
+    jest.spyOn(fs, 'readFileSync').mockReturnValue('{}');
+    process.env['environment_reports_data_dir'] = '.';
 });
 
 /**
@@ -188,7 +192,7 @@ describe('description', () => {
                 status: 2,
                 priority: 1,
                 startTime: '2020-01-01T00:00:00.000Z',
-                tickets: [{ id: 't-01', link: 'ticket_link_provider-x', source: 'Provider-x' }],
+                tickets: [{ id: 't-01', link: '', source: 'provider-x' }],
                 descriptions: 'desc',
                 failureDescription: ''
             }),
@@ -226,7 +230,7 @@ describe('description', () => {
                 status: 2,
                 priority: 1,
                 startTime: '2020-01-01T00:00:00.000Z',
-                tickets: [{ id: 't-01', link: 'ticket_link_default', source: 'ticket_source_default' }],
+                tickets: [{ id: 't-01', link: '', source: '' }],
                 descriptions: 'desc',
                 failureDescription: ''
             }),

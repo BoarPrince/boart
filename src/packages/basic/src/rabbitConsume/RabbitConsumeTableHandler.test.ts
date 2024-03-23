@@ -878,6 +878,7 @@ describe('reports', () => {
      */
     beforeEach(() => {
         jest.useFakeTimers().setSystemTime(new Date('2000-01-01'));
+        process.env['environment_reports_data_dir'] = '.';
     });
 
     /**

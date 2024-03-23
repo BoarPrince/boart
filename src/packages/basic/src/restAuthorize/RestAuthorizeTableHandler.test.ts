@@ -11,8 +11,8 @@ const sut = new RestAuthorizeTableHandler();
 /**
  *
  */
+// eslint-disable-next-line jest/no-untyped-mock-factory
 jest.mock('@boart/core', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const originalModule = jest.requireActual('@boart/core');
 
     return {
@@ -59,6 +59,8 @@ beforeEach(() => {
     Store.instance.testStore.clear();
     jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
     Runtime.instance.stepRuntime.notifyStart({} as StepContext);
+
+    process.env['environment_reports_data_dir'] = '.';
 });
 
 /**
@@ -290,11 +292,13 @@ it('reporting', async () => {
 
     await sut.handler.process(tableRows);
 
+    jest.spyOn(fs, 'readFileSync').mockReturnValue('{}');
     Runtime.instance.stepRuntime.currentContext.id = 'id-id-id';
+
     StepReport.instance.report();
 
     const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
-    // expect(writeFileMockCalls.length).toBe(1);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     expect(JSON.parse(writeFileMockCalls[0][1] as string)).toStrictEqual({
         description: 'test desc',
         id: 'id-id-id',

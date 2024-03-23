@@ -440,6 +440,8 @@ describe('data:unit repeat', () => {
         Runtime.instance.localRuntime.notifyStart({} as LocalContext);
         Runtime.instance.testRuntime.notifyStart({} as TestContext);
         Runtime.instance.stepRuntime.notifyStart({} as StepContext);
+
+        process.env['environment_reports_data_dir'] = '/';
     });
 
     /**
@@ -528,6 +530,7 @@ describe('data:unit repeat', () => {
         StepReport.instance.report();
 
         const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const report = writeFileMockCalls[0][1] as string;
 
         expect(JSON.parse(report)).toStrictEqual({

@@ -459,6 +459,13 @@ describe('reporting', () => {
     /**
      *
      */
+    beforeEach(() => {
+        process.env['environment_reports_data_dir'] = '.';
+    });
+
+    /**
+     *
+     */
     it('report queue', async () => {
         const tableRows = MarkdownTableReader.convert(
             `| action      | value     |

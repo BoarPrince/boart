@@ -102,6 +102,7 @@ describe('default', () => {
             }
         };
         ValueReplacerHandler.instance.add('env', item);
+        process.env['environment_reports_data_dir'] = '.';
     });
 
     /**

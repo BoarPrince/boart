@@ -11,8 +11,8 @@ const sut = new RestCallTableHandler();
 /**
  *
  */
+// eslint-disable-next-line jest/no-untyped-mock-factory
 jest.mock('@boart/core', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const originalModule = jest.requireActual('@boart/core');
 
     return {
@@ -890,7 +890,7 @@ describe('form-data', () => {
              | payload          | { "a": 1   |`
         );
 
-        await expect(sut.handler.process(tableRows)).rejects.toThrowError('payload cannot be parsed as a valid json\n{ "a": 1');
+        await expect(sut.handler.process(tableRows)).rejects.toThrow('payload cannot be parsed as a valid json\n{ "a": 1');
     });
 });
 
@@ -901,22 +901,32 @@ describe('report', () => {
     /**
      *
      */
+    beforeEach(() => {
+        process.env['environment_reports_data_dir'] = '.';
+    });
+
+    /**
+     *
+     */
     it('report must be written', async () => {
         fetchMock.doMock(JSON.stringify({ b: 2 }));
         const tableRows = MarkdownTableReader.convert(
             `|action       |value       |
-             |-------------|------------|
-             | method:get  | http://xxx |
-             | description | test desc  |`
+         |-------------|------------|
+         | method:get  | http://xxx |
+         | description | test desc  |`
         );
 
         await sut.handler.process(tableRows);
 
+        jest.spyOn(fs, 'readFileSync').mockReturnValue('{}');
         Runtime.instance.stepRuntime.currentContext.id = 'id-id-id';
+
         StepReport.instance.report();
 
         const writeFileMockCalls = (fs.writeFile as unknown as jest.Mock).mock.calls;
-        expect(writeFileMockCalls.length).toBe(1);
+        expect(writeFileMockCalls).toHaveLength(1);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         expect(JSON.parse(writeFileMockCalls[0][1] as string)).toStrictEqual({
             id: 'id-id-id',
             status: 2,
