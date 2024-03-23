@@ -44,5 +44,9 @@
     "@typescript-eslint/eslint-plugin": "~6.19.1",
     "typescript": "~5.3.3",
     "eslint-plugin-eslint-comments": "~3.2.0"
+  },
+  "dependencies": {
+    "@boart/core": "workspace:*",
+    "@boart/plugin": "workspace:*"
   }
 }

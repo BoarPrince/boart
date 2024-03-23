@@ -58,7 +58,7 @@
     "[*.cpt]": {
       "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
     },
-    "[*.spec]": {
+    "[*.spec, *.desc]": {
       "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
     },
     "[html]": {
@@ -111,6 +111,7 @@
     "window.title": "B O A R - T.V 2",
     "files.associations": {
       "*.cpt": "gauge",
+      "*.desc": "markdown",
       "*.json": "jsonc",
       "*.spec": "gauge",
       "*.html": "html"

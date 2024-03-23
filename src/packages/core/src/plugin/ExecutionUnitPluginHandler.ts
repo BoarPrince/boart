@@ -34,7 +34,18 @@ export class ExecutionUnitPluginHandler implements ExecutionUnitPlugin {
     /**
      *
      */
-    public addExecutionUnit(name: string, clientExecutionPlugin: () => ExecutionUnitPlugin) {
+    public addExecutionUnit(clientExecutionPlugin: ExecutionUnitPlugin);
+    public addExecutionUnit(name: string, clientExecutionPlugin: () => ExecutionUnitPlugin);
+    public addExecutionUnit(nameOrPlugin: string | ExecutionUnitPlugin, clientExecutionPlugin?: () => ExecutionUnitPlugin) {
+        let name: string;
+
+        if (typeof nameOrPlugin === 'string') {
+            name = nameOrPlugin;
+        } else {
+            name = nameOrPlugin.action;
+            clientExecutionPlugin = () => nameOrPlugin;
+        }
+
         if (this.clientImplList.has(name)) {
             throw new Error(`client action '${name}' already exists`);
         }

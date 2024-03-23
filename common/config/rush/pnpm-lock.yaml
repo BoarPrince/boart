@@ -481,6 +481,7 @@ importers:
   ../../src/packages/ui:
     specifiers:
       '@boart/core': workspace:*
+      '@boart/plugin': workspace:*
       '@jest/types': ~29.6.3
       '@types/jest': ~29.5.11
       '@types/node': ~20.11.7
@@ -502,6 +503,7 @@ importers:
       typescript: ~5.3.3
     dependencies:
       '@boart/core': link:../core
+      '@boart/plugin': link:../plugin
     devDependencies:
       '@jest/types': 29.6.3
       '@types/jest': 29.5.11
