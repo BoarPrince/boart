@@ -163,12 +163,12 @@ describe('any-proxy', () => {
             examples: [
                 {
                     title: 'for examples is used for blockquotes',
-                    example: '\n    <blockquote id="test-id">\n      test-button\n    </blockquote>\n',
+                    example: '\n    ```html\n    <blockquote id="test-id">\n      test-button\n    </blockquote>\n    ```\n',
                     codes: []
                 },
                 {
                     title: 'setValue can be used, if contenteditable is defined',
-                    example: '\n    <blockquote contenteditable id="test-id">\n    </blockquote>\n',
+                    example: '\n    ```html\n    <blockquote contenteditable id="test-id">\n    </blockquote>\n    ```\n',
                     codes: []
                 }
             ]

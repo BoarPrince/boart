@@ -42,13 +42,15 @@ export class ElementAdapterLocatorHandler {
             throw new Error(`locator for strategy ${strategy} does not exist`);
         }
 
-        return this.locators.get(strategy);
+        return this.locators.get(strategy).sort((a, b) => a.priority - b.priority);
     }
 
     /**
      *
      */
     public getAll(): ElementAdapterLocator[] {
-        return Array.from(this.locators.values()).flat();
+        return Array.from(this.locators.values())
+            .flat()
+            .sort((a, b) => a.priority - b.priority);
     }
 }

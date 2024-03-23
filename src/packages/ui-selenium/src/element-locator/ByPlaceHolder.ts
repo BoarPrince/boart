@@ -8,6 +8,7 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
  *
  */
 export class ByPlaceHolder extends BaseLocator {
+    public readonly priority: 4;
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'placeholder';
 

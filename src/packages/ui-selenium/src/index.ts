@@ -17,6 +17,13 @@ import { BySubmit } from './element-locator/BySubmit';
 import { AnyProxy } from './ui-proxy/AnyProxy';
 import { CheckboxProxy } from './ui-proxy/CheckboxProxy';
 import { ByDataTestId } from './element-locator/ByIDataTestId';
+import { ByHref } from './element-locator/ByHref';
+import { ByInputLabel } from './element-locator/ByInputLabel';
+import { ByName } from './element-locator/ByName';
+import { ByPlaceHolder } from './element-locator/ByPlaceHolder';
+import { ByTitle } from './element-locator/ByTitle';
+import { ByXPath } from './element-locator/ByXPath';
+import { ByClass } from './element-locator/ByClass';
 
 /**
  *
@@ -38,6 +45,13 @@ export default function initialize(): void {
     ElementAdapterLocatorHandler.instance.addLocator(new ByDataTestId());
     ElementAdapterLocatorHandler.instance.addLocator(new ByText());
     ElementAdapterLocatorHandler.instance.addLocator(new BySubmit());
+    ElementAdapterLocatorHandler.instance.addLocator(new ByHref());
+    ElementAdapterLocatorHandler.instance.addLocator(new ByInputLabel());
+    ElementAdapterLocatorHandler.instance.addLocator(new ByName());
+    ElementAdapterLocatorHandler.instance.addLocator(new ByPlaceHolder());
+    ElementAdapterLocatorHandler.instance.addLocator(new ByTitle());
+    ElementAdapterLocatorHandler.instance.addLocator(new ByXPath());
+    ElementAdapterLocatorHandler.instance.addLocator(new ByClass());
 
     UIElementProxyHandler.instance.addProxy('table', new TableProxy());
     UIElementProxyHandler.instance.addProxy('button', new ButtonProxy());

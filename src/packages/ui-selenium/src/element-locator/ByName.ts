@@ -8,6 +8,7 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
  *
  */
 export class ByName extends BaseParentLocator {
+    public readonly priority: 10;
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'name';
 
@@ -23,8 +24,7 @@ export class ByName extends BaseParentLocator {
      */
     public findChild(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
         // only check by name
-        const elements = parentElement.nativeElement.findElements(By.xpath(`.//*[@name='${locationByStrategy}']`));
-        return elements;
+        return parentElement.nativeElement.findElements(By.name(locationByStrategy));
     }
 
     /**

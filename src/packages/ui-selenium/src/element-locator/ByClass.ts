@@ -7,29 +7,29 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
 /**
  *
  */
-export class ByTitle extends BaseLocator {
-    public readonly priority: 3;
+export class ByClass extends BaseLocator {
+    public readonly priority: 9;
     public readonly strategyCanBeNull = false;
-    public readonly strategy = 'title';
+    public readonly strategy = 'class';
 
     /**
      *
      */
     public getId(parentElement: SeleniumElementAdapter): Promise<string> {
-        return parentElement.nativeElement.getAttribute('title');
+        return parentElement.getXPath();
     }
 
     /**
      *
      */
     public async find(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
-        return await parentElement.nativeElement.findElements(By.xpath(`//*[@title='${locationByStrategy}']`));
+        return await parentElement.nativeElement.findElements(By.className(locationByStrategy));
     }
 
     /**
      *
      */
-    findAll(parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
-        return parentElement.nativeElement.findElements(By.xpath(`//*[@title]`));
+    findAll(): Promise<WebElement[]> {
+        return null;
     }
 }

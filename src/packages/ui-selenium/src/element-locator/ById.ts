@@ -8,6 +8,7 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
  *
  */
 export class ById extends BaseLocator {
+    public readonly priority: 20;
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'id';
 
@@ -21,8 +22,8 @@ export class ById extends BaseLocator {
     /**
      *
      */
-    public async find(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
-        return await parentElement.nativeElement.findElements(By.xpath(`.//*[@id='${locationByStrategy}']`));
+    public find(locationByStrategy: string, parentElement: SeleniumElementLocatorAdapter): Promise<WebElement[]> {
+        return parentElement.nativeElement.findElements(By.id(locationByStrategy));
     }
 
     /**

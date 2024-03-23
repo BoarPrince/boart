@@ -8,6 +8,7 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
  *
  */
 export class BySubmit extends BaseLocator {
+    public readonly priority: 15;
     public readonly strategyCanBeNull = true;
     public readonly strategy = 'submit';
 

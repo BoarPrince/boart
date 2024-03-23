@@ -8,6 +8,7 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
  *
  */
 export class ByText extends BaseLocator {
+    public readonly priority: 0;
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'text';
 

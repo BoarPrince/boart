@@ -8,6 +8,7 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
  *
  */
 export class ByXPath extends BaseLocator {
+    public readonly priority: 16;
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'xpath';
 

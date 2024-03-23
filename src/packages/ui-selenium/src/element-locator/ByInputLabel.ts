@@ -7,7 +7,8 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
 /**
  *
  */
-export class ByTitle extends BaseLocator {
+export class ByInputLabel extends BaseLocator {
+    public readonly priority: 5;
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'input-label';
 

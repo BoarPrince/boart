@@ -7,7 +7,8 @@ import { SeleniumElementLocatorAdapter } from '../element-adapter/SeleniumElemen
  *
  */
 export abstract class BaseLocator implements ElementAdapterLocator {
-    abstract readonly strategy;
+    abstract readonly priority: number;
+    abstract readonly strategy: string;
     abstract strategyCanBeNull: boolean;
 
     /**

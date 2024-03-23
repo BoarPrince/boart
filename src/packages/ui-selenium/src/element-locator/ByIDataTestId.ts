@@ -8,6 +8,7 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
  *
  */
 export class ByDataTestId extends BaseLocator {
+    public readonly priority: 19;
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'id';
 

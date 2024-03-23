@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@boart/ui": "workspace:*",
-    "selenium-webdriver": "~4.18.1"
+    "selenium-webdriver": "~4.18.1",
+    "@boart/core": "workspace:*"
   }
 }

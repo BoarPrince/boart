@@ -5,6 +5,7 @@ import { ElementAdapter } from './ElementAdapter';
  */
 
 export interface ElementAdapterLocator {
+    readonly priority: number;
     readonly strategy: string;
     readonly strategyCanBeNull: boolean;
 

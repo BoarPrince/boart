@@ -8,6 +8,7 @@ import { SeleniumElementAdapter } from '../element-adapter/SeleniumElementAdapte
  *
  */
 export class ByHref extends BaseLocator {
+    public readonly priority: 1;
     public readonly strategyCanBeNull = false;
     public readonly strategy = 'href';
 
