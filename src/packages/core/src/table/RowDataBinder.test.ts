@@ -1,5 +1,5 @@
 import { RowDataBinder } from './RowDataBinder';
-import { MetaInfo } from './TableMetaInfo';
+import { MetaInfo } from './MetaInfo';
 import { TableRows } from './TableRows';
 
 /**
@@ -9,7 +9,8 @@ describe('check Row Data Binder', () => {
     const metaInfo: MetaInfo = {
         tableName: 'test-table',
         key: 'action',
-        values: ['value1', 'value2']
+        values: ['value1', 'value2'],
+        requiredValues: ['value1', 'value2']
     };
 
     /**

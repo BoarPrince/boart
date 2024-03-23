@@ -21,7 +21,6 @@ import { ExecutionUnitPlugin } from '../plugin/ExecutionUnitPlugin';
 import { ExecutionUnitPluginFactoryHandler } from '../plugin/ExecutionUnitPluginFactoryHandler';
 import { PluginRequest } from '../plugin/PluginRequest';
 import { PluginResponse } from '../plugin/PluginResponse';
-import { RowDefinitionConfig } from './schema/RowDefinitionConfig';
 
 /**
  *
@@ -577,5 +576,71 @@ describe('direct configuration', () => {
             },
             preExecution: { payload: {} }
         });
+    });
+
+    /**
+     *
+     */
+    test('one definition with location', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `| action       | value | location |
+             |--------------|-------|----------|
+             | use-location | -val- | -loc-    |`
+        );
+
+        const sut = new ConfigurationParser();
+        executionConfig.rowDef.push({
+            action: 'use-location',
+            executionType: ExecutionType.ExecutionUnit,
+            runtime: {
+                type: 'direct',
+                startup: RuntimeStartUp.EACH,
+                configuration: () => ({
+                    action: 'location',
+                    execute: jest.fn().mockImplementation((request: PluginRequest) => {
+                        request.context.execution.header = `value: ${request.value}, location: ${request.additionalValue}`;
+                    })
+                })
+            }
+        });
+
+        const handler = sut.parseDefinition(executionConfig).handler;
+        await handler.process(tableDef);
+
+        const context = handler.getExecutionEngine().context;
+        expect(context.execution.header.valueOf()).toBe('value: -val-, location: -loc-');
+    });
+
+    /**
+     *
+     */
+    test('one definition with property', async () => {
+        const tableDef = MarkdownTableReader.convert(
+            `| action       | value | property |
+             |--------------|-------|----------|
+             | use-property | -val- | -loc-    |`
+        );
+
+        const sut = new ConfigurationParser();
+        executionConfig.rowDef.push({
+            action: 'use-property',
+            executionType: ExecutionType.ExecutionUnit,
+            runtime: {
+                type: 'direct',
+                startup: RuntimeStartUp.EACH,
+                configuration: () => ({
+                    action: 'property',
+                    execute: jest.fn().mockImplementation((request: PluginRequest) => {
+                        request.context.execution.header = `value: ${request.value}, property: ${request.additionalValue}`;
+                    })
+                })
+            }
+        });
+
+        const handler = sut.parseDefinition(executionConfig).handler;
+        await handler.process(tableDef);
+
+        const context = handler.getExecutionEngine().context;
+        expect(context.execution.header.valueOf()).toBe('value: -val-, property: -loc-');
     });
 });

@@ -1,4 +1,5 @@
-import { MetaInfo, TableMetaInfo } from './TableMetaInfo';
+import { TableMetaInfo } from './TableMetaInfo';
+import { MetaInfo } from './MetaInfo';
 
 /**
  *
@@ -13,9 +14,14 @@ export function key() {
 /**
  *
  */
-export function value() {
+export function value(required = true, keys: string[] = null) {
     return (target: unknown, propertyKey: string) => {
+        keys = !keys ? [propertyKey] : keys;
+
         const metaTarget: MetaInfo = TableMetaInfo.addMetaInfo(target.constructor);
-        metaTarget.values.push(propertyKey);
+        metaTarget.values.push(...keys);
+        if (required) {
+            metaTarget.requiredValues.push(...keys);
+        }
     };
 }

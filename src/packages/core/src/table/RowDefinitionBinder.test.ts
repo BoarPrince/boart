@@ -7,7 +7,7 @@ import { SelectorType } from '../types/SelectorType';
 import { AnyBaseRowType } from './BaseRowType';
 import { RowDefinition } from './RowDefinition';
 import { RowDefinitionBinder } from './RowDefinitionBinder';
-import { MetaInfo } from './TableMetaInfo';
+import { MetaInfo } from './MetaInfo';
 import { key, value } from './TableRowDecorator';
 import { TableRowType } from './TableRowType';
 import { Description } from '../description/Description';
@@ -18,7 +18,8 @@ import { Description } from '../description/Description';
 const metaInfo: MetaInfo = {
     tableName: 'test-table',
     key: 'action',
-    values: ['value1']
+    values: ['value1'],
+    requiredValues: ['value1']
 };
 
 /**
@@ -164,7 +165,7 @@ describe('check binding', () => {
             const sut = new RowDefinitionBinder<never, RowWithOneValue>(metaInfo.tableName, metaInfo, rowDefinitions, rawRows);
             if (expectedErrorMessage) {
                 expect(() => sut.bind(RowWithOneValue)).toThrow(expectedErrorMessage);
-              } else {
+            } else {
                 const rows = sut.bind(RowWithOneValue);
                 expect(rows).toBeDefined();
                 expect(rows).toHaveLength(1);
@@ -227,7 +228,7 @@ describe('check binding with multiple definitions', () => {
                 // do noting in mock
             }
 
-            readonly description: () =>  Description;
+            readonly description: () => Description;
             get key() {
                 return Symbol(this.description().title);
             }

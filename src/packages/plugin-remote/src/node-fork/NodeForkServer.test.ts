@@ -91,7 +91,8 @@ describe('client - server - communication', () => {
                 name: '-action-',
                 ast: null
             },
-            value: null
+            value: null,
+            additionalValue: null
         };
 
         await sut.execute(messageToClient);
@@ -124,7 +125,8 @@ describe('client - server - communication', () => {
                 name: '-action-',
                 ast: null
             },
-            value: null
+            value: null,
+            additionalValue: null
         };
 
         jest.spyOn(process, 'on').mockImplementation((_, listener: (message: NodeForkResponse) => void) => {
@@ -181,7 +183,8 @@ describe('error handing', () => {
             name: '-action-',
             ast: null
         },
-        value: null
+        value: null,
+        additionalValue: null
     };
 
     /**

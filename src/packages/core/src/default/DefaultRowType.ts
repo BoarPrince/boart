@@ -20,4 +20,9 @@ export class DefaultRowType<TExecutionContext extends ExecutionContext<object, o
     get value(): string | number | boolean {
         return this.data.values_replaced['value'];
     }
+
+    @value(false, ['location', 'property'])
+    get additionalValue(): string | number | boolean {
+        return this.data.values_replaced['location'] || this.data.values_replaced['property'];
+    }
 }

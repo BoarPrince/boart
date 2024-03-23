@@ -2,7 +2,7 @@ import { ValueReplacerHandler } from '../value/ValueReplacerHandler';
 
 import { MarkdownTableReader } from './MarkdownTableReader';
 import { RowValue } from './RowValue';
-import { MetaInfo } from './TableMetaInfo';
+import { MetaInfo } from './MetaInfo';
 import { TableRows } from './TableRows';
 
 /**
@@ -115,19 +115,21 @@ export class RowDataBinder {
             throw Error(`'${this.tableName}': table parameter must have at least a key and one value`);
         }
 
-        const columnsDefinition = [this.columnMetaInfo?.key || 'no-meta-info'].concat(this.columnMetaInfo?.values || []);
+        const requiredColumnsDefinition = [this.columnMetaInfo?.key || 'no-meta-info'].concat(this.columnMetaInfo?.requiredValues || []);
         const headerCells = this.tableDefinition.headers.cells;
 
         // check containing columns
-        columnsDefinition
+        requiredColumnsDefinition
             .filter((col) => !headerCells.includes(col))
             .forEach((col) => {
                 throw Error(`'${this.tableName}': missing table definition, column: '${col}'`);
             });
 
+        const allColumnsDefinition = [this.columnMetaInfo?.key || 'no-meta-info'].concat(this.columnMetaInfo?.values || []);
+
         // check not defined columns
         headerCells //
-            .filter((header) => !columnsDefinition.includes(header))
+            .filter((header) => !allColumnsDefinition.includes(header))
             .forEach((col) => {
                 throw Error(`column '${col}' is not defined!`);
             });

@@ -10,7 +10,7 @@ import { BaseRowMetaDefinition } from './BaseRowMetaDefinition';
 import { BaseRowType } from './BaseRowType';
 import { RowDefinition } from './RowDefinition';
 import { RowValue } from './RowValue';
-import { MetaInfo } from './TableMetaInfo';
+import { MetaInfo } from './MetaInfo';
 
 /**
  *

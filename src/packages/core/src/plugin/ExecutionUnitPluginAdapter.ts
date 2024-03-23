@@ -28,6 +28,7 @@ export class ExecutionUnitPluginAdapter implements ExecutionUnit<DefaultContext,
         const request: PluginRequest = {
             context: JSON.parse(JSON.stringify(context)) as DefaultContext,
             value: row?.value,
+            additionalValue: row?.additionalValue,
             action: {
                 name: row?.ast.match, //
                 ast: row?.ast

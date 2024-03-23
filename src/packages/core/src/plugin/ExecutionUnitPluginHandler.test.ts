@@ -28,6 +28,7 @@ describe('plugin', () => {
         const request = {
             context: null,
             value: null,
+            additionalValue: null,
             action: { name: '-mock-', ast: null }
         };
 
@@ -47,6 +48,7 @@ describe('plugin', () => {
         const request = {
             context: null,
             value: null,
+            additionalValue: null,
             action: { name: '-mock-', ast: null }
         };
 
@@ -78,6 +80,7 @@ describe('main unit', () => {
         const request = {
             context: null,
             value: null,
+            additionalValue: null,
             action: { name: null, ast: null }
         };
 

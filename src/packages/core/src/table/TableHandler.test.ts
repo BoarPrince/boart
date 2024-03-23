@@ -15,7 +15,8 @@ TableMetaInfo.get = () => {
     return {
         tableName: 'my-table',
         key: 'my-action',
-        values: ['my-value']
+        values: ['my-value'],
+        requiredValues: ['my-value']
     };
 };
 

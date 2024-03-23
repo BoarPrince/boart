@@ -13,7 +13,8 @@ import { GroupRowDefinition } from './GroupRowDefinition';
 import { RowDataBinder } from './RowDataBinder';
 import { RowDefinition } from './RowDefinition';
 import { RowDefinitionBinder } from './RowDefinitionBinder';
-import { MetaInfo, TableMetaInfo } from './TableMetaInfo';
+import { TableMetaInfo } from './TableMetaInfo';
+import { MetaInfo } from './MetaInfo';
 import { TableRows } from './TableRows';
 
 /**
