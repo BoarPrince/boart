@@ -1,5 +1,5 @@
 import { ExecutionUnitPlugin } from '@boart/core/lib/plugin/ExecutionUnitPlugin';
-import { NodeForkServer } from './NodeForkServer';
+import { NodeForkHost } from './NodeForkHost';
 import { ExecutionUnitPluginFactory, ObjectValidator, RuntimeStartUp } from '@boart/core';
 
 /**
@@ -12,8 +12,8 @@ interface Configuration {
 /**
  *
  */
-export class NodeForkRemoteProxyFactory implements ExecutionUnitPluginFactory {
-    private server: NodeForkServer;
+export class NodeForkHostProxyFactory implements ExecutionUnitPluginFactory {
+    private server: NodeForkHost;
     private name: string;
     private config: Configuration;
     private runtimeStartup: RuntimeStartUp;
@@ -46,7 +46,7 @@ export class NodeForkRemoteProxyFactory implements ExecutionUnitPluginFactory {
      *
      */
     public start(): Promise<void> {
-        this.server = new NodeForkServer(this.name, this.config.path);
+        this.server = new NodeForkHost(this.name, this.config.path);
         return Promise.resolve();
     }
 

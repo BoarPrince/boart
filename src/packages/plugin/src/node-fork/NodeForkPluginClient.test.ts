@@ -1,11 +1,17 @@
-import { ExecutionUnitPlugin, ExecutionUnitPluginHandler, PluginExecutionCollector, PluginRequest, PluginResponse } from '@boart/core';
+import {
+    ExecutionUnitPlugin,
+    ExecutionUnitPluginHandler,
+    PluginExecutionCollector,
+    PluginRequest,
+    PluginResponse,
+    RemotePluginRequest
+} from '@boart/core';
 import { NodeForkPluginClient } from './NodeForkPluginClient';
-import { NodeForkRequest } from './NodeForkRequest';
 
 /**
  *
  */
-type OnListeners = Map<string, Array<(value: NodeForkRequest) => void>>;
+type OnListeners = Map<string, Array<(value: RemotePluginRequest) => void>>;
 
 /**
  *
@@ -56,7 +62,7 @@ class MockExecutionCollector implements PluginExecutionCollector {
  */
 let response: PluginResponse;
 let onListeners: OnListeners;
-let listenerData: NodeForkRequest;
+let listenerData: RemotePluginRequest;
 let collector: MockExecutionCollector;
 
 /**
@@ -92,7 +98,7 @@ beforeEach(() => {
                     ast: undefined
                 }
             }
-        } as NodeForkRequest)
+        } as RemotePluginRequest)
     );
 });
 

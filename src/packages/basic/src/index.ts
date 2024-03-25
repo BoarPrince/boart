@@ -1,6 +1,6 @@
 import { LocalReport, Runtime, StepReport, TableHandlerInstances, TestReport } from '@boart/core';
 import { ProtocolGenerator } from '@boart/protocol';
-import remote_server_initialize from '@boart/plugin-remote';
+import remote_server_initialize from '@boart/plugin-host';
 import core_impl_initialize from '@boart/core-impl';
 
 import DataTableHandler from './data/DataTableHandler';

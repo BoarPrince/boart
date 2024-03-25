@@ -1,5 +1,5 @@
 import { ExecutionUnitPluginFactoryHandler } from '@boart/core';
-import { NodeForkRemoteProxyFactory } from './node-fork/NodeForkRemoteProxyFactory';
+import { NodeForkHostProxyFactory } from './node-fork/NodeForkHostProxyFactory';
 
 /**
  *
@@ -12,5 +12,5 @@ export default function initialize(): void {
         globalThis.remoteServerInitialized = true;
     }
 
-    ExecutionUnitPluginFactoryHandler.instance.addFactory('node-fork', new NodeForkRemoteProxyFactory());
+    ExecutionUnitPluginFactoryHandler.instance.addFactory('node-fork', new NodeForkHostProxyFactory());
 }

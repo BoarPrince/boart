@@ -1,5 +1,4 @@
-import { NodeForkRequest } from './NodeForkRequest';
-import { PluginClientDefault, RemotePluginResponse } from '@boart/core';
+import { PluginClientDefault, RemotePluginRequest, RemotePluginResponse } from '@boart/core';
 
 /**
  *
@@ -26,7 +25,7 @@ export class NodeForkPluginClient extends PluginClientDefault {
         /**
          *
          */
-        process.on('message', (request: NodeForkRequest) => {
+        process.on('message', (request: RemotePluginRequest) => {
             this.emitter.emit('message', request);
         });
 

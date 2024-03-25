@@ -1,7 +1,7 @@
 import { ExecutionUnitPluginFactoryHandler, RuntimeStartUp } from '@boart/core';
-import { NodeForkRemoteProxyFactory } from './NodeForkRemoteProxyFactory';
+import { NodeForkHostProxyFactory } from './NodeForkHostProxyFactory';
 
-import { NodeForkServer } from './NodeForkServer';
+import { NodeForkHost } from './NodeForkHost';
 import plugin_initialize from '..';
 
 /**
@@ -17,7 +17,7 @@ describe('factory', () => {
      *
      */
     test('configuration must contain path', () => {
-        const sut = new NodeForkRemoteProxyFactory();
+        const sut = new NodeForkHostProxyFactory();
 
         const config = {
             path: '-path-'
@@ -32,7 +32,7 @@ describe('factory', () => {
      *
      */
     test('configuration must contain path - failed', () => {
-        const sut = new NodeForkRemoteProxyFactory();
+        const sut = new NodeForkHostProxyFactory();
 
         const config = {
             pat: '-path-'
@@ -49,7 +49,7 @@ describe('factory', () => {
      *
      */
     test('startup can be null', () => {
-        const sut = new NodeForkRemoteProxyFactory();
+        const sut = new NodeForkHostProxyFactory();
 
         const config = {
             path: '-path-'
@@ -63,24 +63,24 @@ describe('factory', () => {
     /**
      *
      */
-    test('start must be called before an execution unit can be created', () => {
-        const sut = new NodeForkRemoteProxyFactory();
+    test('start must be called before an execution unit can be created', async () => {
+        const sut = new NodeForkHostProxyFactory();
 
         const config = {
             path: '-path-'
         };
 
         sut.init('-name-', config, null);
-        sut.start();
+        await sut.start();
 
-        expect(sut.createExecutionUnit()).toBeInstanceOf(NodeForkServer);
+        expect(sut.createExecutionUnit()).toBeInstanceOf(NodeForkHost);
     });
 
     /**
      *
      */
     test('startup can be null or once - but nothing else', () => {
-        const sut = new NodeForkRemoteProxyFactory();
+        const sut = new NodeForkHostProxyFactory();
 
         const config = {
             path: '-path-'
@@ -94,8 +94,8 @@ describe('factory', () => {
     /**
      *
      */
-    test('server must be called when start', () => {
-        const sut = new NodeForkRemoteProxyFactory();
+    test('server must be called when start', async () => {
+        const sut = new NodeForkHostProxyFactory();
 
         sut.init(
             '-name-',
@@ -104,17 +104,17 @@ describe('factory', () => {
             },
             null
         );
-        sut.start();
+        await sut.start();
 
-        expect(NodeForkServer).toHaveBeenCalledTimes(1);
-        expect(NodeForkServer).toHaveBeenCalledWith('-name-', '-path-');
+        expect(NodeForkHost).toHaveBeenCalledTimes(1);
+        expect(NodeForkHost).toHaveBeenCalledWith('-name-', '-path-');
     });
 
     /**
      *
      */
     test('execution unit must be provided', () => {
-        const sut = new NodeForkRemoteProxyFactory();
+        const sut = new NodeForkHostProxyFactory();
 
         sut.init(
             '-name-',

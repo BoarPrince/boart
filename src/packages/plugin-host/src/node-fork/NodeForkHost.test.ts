@@ -2,9 +2,8 @@ import EventEmitter from 'events';
 import * as child_process from 'child_process';
 import * as crypto from 'crypto';
 import { Readable } from 'stream';
-import { NodeForkServer } from './NodeForkServer';
-import { PluginRequest } from '@boart/core';
-import { NodeForkResponse } from '@boart/plugin';
+import { NodeForkHost } from './NodeForkHost';
+import { PluginRequest, RemotePluginResponse } from '@boart/core';
 
 /**
  *
@@ -30,7 +29,7 @@ const mockChildProcess = (): child_process.ChildProcess => {
  *
  */
 const UUID: crypto.UUID = '0-0-0-0-0';
-let messageFromClient: NodeForkResponse;
+let messageFromClient: RemotePluginResponse;
 let process: child_process.ChildProcess;
 
 /**
@@ -73,7 +72,7 @@ describe('client - server - communication', () => {
     test('default', async () => {
         const onSend = jest.spyOn(process, 'send');
 
-        const sut = new NodeForkServer('-action-', '-path-');
+        const sut = new NodeForkHost('-action-', '-path-');
 
         const messageToClient: PluginRequest = {
             context: {
@@ -107,7 +106,7 @@ describe('client - server - communication', () => {
      *
      */
     test('check message from client', async () => {
-        const sut = new NodeForkServer('-action-', '-path-');
+        const sut = new NodeForkHost('-action-', '-path-');
 
         const messageToClient: PluginRequest = {
             context: {
@@ -129,7 +128,7 @@ describe('client - server - communication', () => {
             additionalValue: null
         };
 
-        jest.spyOn(process, 'on').mockImplementation((_, listener: (message: NodeForkResponse) => void) => {
+        jest.spyOn(process, 'on').mockImplementation((_, listener: (message: RemotePluginResponse) => void) => {
             listener(messageFromClient);
             return process;
         });
@@ -142,7 +141,7 @@ describe('client - server - communication', () => {
      *
      */
     test('client stdout calls console.log', () => {
-        new NodeForkServer('-action-', '-path-');
+        new NodeForkHost('-action-', '-path-');
         const onConsoleLog = jest.spyOn(console, 'log');
 
         process.stdout.emit('data', '-log-');
@@ -154,7 +153,7 @@ describe('client - server - communication', () => {
      *
      */
     test('client stderr calls console.log', () => {
-        new NodeForkServer('-action-', '-path-');
+        new NodeForkHost('-action-', '-path-');
         const onConsoleError = jest.spyOn(console, 'error');
 
         process.stderr.emit('data', '-error-');
@@ -191,7 +190,7 @@ describe('error handing', () => {
      *
      */
     test('id must be the same', async () => {
-        const sut = new NodeForkServer('-action-', '-path-');
+        const sut = new NodeForkHost('-action-', '-path-');
 
         // check if id is ok
         let responsePromise = sut.execute(messageToClient);
@@ -212,7 +211,7 @@ describe('error handing', () => {
      *
      */
     test('unhandled expections must be catched', async () => {
-        const sut = new NodeForkServer('-action-', '-path-');
+        const sut = new NodeForkHost('-action-', '-path-');
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         messageFromClient = { id: 'uncaughtException' as any, error: 'any exception', data: null };
@@ -223,7 +222,7 @@ describe('error handing', () => {
      *
      */
     test('exception from client', async () => {
-        const sut = new NodeForkServer('-action-', '-path-');
+        const sut = new NodeForkHost('-action-', '-path-');
 
         messageFromClient = { id: UUID, error: 'any exception', data: null };
         await expect(sut.execute(messageToClient)).rejects.toBe('any exception');

@@ -1,12 +1,11 @@
 import { ChildProcess, fork } from 'child_process';
 import { randomUUID } from 'crypto';
-import { NodeForkRequest, NodeForkResponse } from '@boart/plugin';
-import { ExecutionUnitPlugin, PluginRequest, PluginResponse } from '@boart/core';
+import { ExecutionUnitPlugin, PluginRequest, PluginResponse, RemotePluginRequest, RemotePluginResponse } from '@boart/core';
 
 /**
  *
  */
-export class NodeForkServer implements ExecutionUnitPlugin {
+export class NodeForkHost implements ExecutionUnitPlugin {
     private readonly child: ChildProcess;
 
     /**
@@ -45,7 +44,7 @@ export class NodeForkServer implements ExecutionUnitPlugin {
             /**
              *
              */
-            const msgListener = (msgFromClient: NodeForkResponse) => {
+            const msgListener = (msgFromClient: RemotePluginResponse) => {
                 if (msgFromClient.id !== 'uncaughtException' && msgFromClient.id !== id) {
                     return;
                 }
@@ -60,7 +59,7 @@ export class NodeForkServer implements ExecutionUnitPlugin {
             };
 
             this.child.on('message', msgListener);
-            this.child.send({ id, data: request } as NodeForkRequest);
+            this.child.send({ id, data: request } as RemotePluginRequest);
         });
     }
 }
