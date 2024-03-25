@@ -1,8 +1,8 @@
-import { NodeForkClient } from './node-fork/NodeForkClient';
+import { NodeForkPluginClient } from './node-fork/NodeForkPluginClient';
 import { NodeForkRequest } from './node-fork/NodeForkRequest';
 import { NodeForkResponse } from './node-fork/NodeForkResponse';
 
 /**
  *
  */
-export { NodeForkResponse, NodeForkRequest, NodeForkClient };
+export { NodeForkResponse, NodeForkRequest, NodeForkPluginClient as NodeForkClient };

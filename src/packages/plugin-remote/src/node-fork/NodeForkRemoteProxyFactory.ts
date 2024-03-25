@@ -45,8 +45,9 @@ export class NodeForkRemoteProxyFactory implements ExecutionUnitPluginFactory {
     /**
      *
      */
-    public start() {
+    public start(): Promise<void> {
         this.server = new NodeForkServer(this.name, this.config.path);
+        return Promise.resolve();
     }
 
     /**

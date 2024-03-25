@@ -1,5 +1,5 @@
-import { ExecutionUnitPlugin, PluginRequest, PluginResponse } from '@boart/core';
-import { NodeForkClient } from './NodeForkClient';
+import { ExecutionUnitPlugin, ExecutionUnitPluginHandler, PluginExecutionCollector, PluginRequest, PluginResponse } from '@boart/core';
+import { NodeForkPluginClient } from './NodeForkPluginClient';
 import { NodeForkRequest } from './NodeForkRequest';
 
 /**
@@ -15,6 +15,7 @@ const mockChildProcess = (listeners: OnListeners): NodeJS.Process => {
 
     listeners.set('message', []);
     listeners.set('uncaughtException', []);
+    listeners.set('exit', []);
 
     proc.on = () => proc;
     jest.spyOn(proc, 'on').mockImplementation((name: string, listener: (message: unknown) => void) => {
@@ -38,9 +39,25 @@ const mockChildProcess = (listeners: OnListeners): NodeJS.Process => {
 /**
  *
  */
+class MockExecutionCollector implements PluginExecutionCollector {
+    pluginHandler = new ExecutionUnitPluginHandler();
+
+    start(): Promise<void> {
+        return;
+    }
+
+    stop(): Promise<void> {
+        return;
+    }
+}
+
+/**
+ *
+ */
 let response: PluginResponse;
 let onListeners: OnListeners;
 let listenerData: NodeForkRequest;
+let collector: MockExecutionCollector;
 
 /**
  *
@@ -49,6 +66,7 @@ beforeEach(() => {
     jest.useFakeTimers();
     onListeners = new Map<string, Array<(value: unknown) => void>>();
     process = mockChildProcess(onListeners);
+    collector = new MockExecutionCollector();
 
     response = JSON.parse(
         JSON.stringify({
@@ -91,9 +109,9 @@ describe('synchron', () => {
             execute: jest.fn().mockReturnValue(response)
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
-        sut.start();
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.setMainExecutionUnit(() => remoteClient);
+        await sut.start(collector);
 
         onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
@@ -126,9 +144,9 @@ describe('synchron', () => {
             execute: jest.fn().mockReturnValue(reportResponse)
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
-        sut.start();
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.setMainExecutionUnit(() => remoteClient);
+        await sut.start(collector);
 
         onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
@@ -152,9 +170,9 @@ describe('synchron', () => {
             })
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
-        sut.start();
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.setMainExecutionUnit(() => remoteClient);
+        await sut.start(collector);
 
         onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
@@ -174,10 +192,10 @@ describe('synchron', () => {
             })
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.setMainExecutionUnit(() => remoteClient);
 
-        sut.start();
+        await sut.start(collector);
 
         onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
@@ -195,11 +213,11 @@ describe('synchron', () => {
             execute: jest.fn()
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.setMainExecutionUnit(() => remoteClient);
 
-        sut.start();
-        sut.start();
+        await sut.start(collector);
+        await sut.start(collector);
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
         onListeners.get('uncaughtException').forEach((listener) => listener(new Error('-unexpected-') as any));
@@ -218,10 +236,10 @@ describe('synchron', () => {
             execute: jest.fn()
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.setMainExecutionUnit(() => remoteClient);
 
-        sut.start();
+        await sut.start(collector);
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
         onListeners.get('uncaughtException').forEach((listener) => listener('-unexpected-' as any));
@@ -235,8 +253,8 @@ describe('synchron', () => {
      *
      */
     test('no remote client registered', async () => {
-        const sut = new NodeForkClient();
-        sut.start();
+        const sut = new NodeForkPluginClient();
+        await sut.start(collector);
 
         onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
@@ -259,10 +277,10 @@ describe('asynchron', () => {
             execute: jest.fn().mockResolvedValue(response)
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.setMainExecutionUnit(() => remoteClient);
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.setMainExecutionUnit(() => remoteClient);
 
-        sut.start();
+        await sut.start(collector);
 
         onListeners.get('message').forEach((listener) => listener(listenerData));
         await jest.runAllTimersAsync();
@@ -290,9 +308,11 @@ describe('with clientExecutionProxy', () => {
             execute: jest.fn().mockResolvedValue(response)
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.addExecutionUnit(remoteClient.action, () => remoteClient);
-        sut.start();
+        const sut = new NodeForkPluginClient();
+
+        collector.pluginHandler.addExecutionUnit(remoteClient.action, () => remoteClient);
+
+        await sut.start(collector);
 
         listenerData.data.action.name = '-test-proxy-action-';
         onListeners.get('message').forEach((listener) => listener(listenerData));
@@ -321,10 +341,10 @@ describe('with clientExecutionProxy', () => {
             execute: jest.fn().mockResolvedValue(response)
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.addExecutionUnit(remoteClient1.action, () => remoteClient1);
-        sut.pluginHandler.addExecutionUnit(remoteClient2.action, () => remoteClient2);
-        sut.start();
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.addExecutionUnit(remoteClient1.action, () => remoteClient1);
+        collector.pluginHandler.addExecutionUnit(remoteClient2.action, () => remoteClient2);
+        await sut.start(collector);
 
         listenerData.data.action.name = '-test-proxy-1-action-';
         onListeners.get('message').forEach((listener) => listener(listenerData));
@@ -359,10 +379,10 @@ describe('with clientExecutionProxy', () => {
             })
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.addExecutionUnit(remoteClient1.action, () => remoteClient1);
-        sut.pluginHandler.addExecutionUnit(remoteClient2.action, () => remoteClient2);
-        sut.start();
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.addExecutionUnit(remoteClient1.action, () => remoteClient1);
+        collector.pluginHandler.addExecutionUnit(remoteClient2.action, () => remoteClient2);
+        await sut.start(collector);
 
         onListeners.get('message').forEach((listener) => {
             listenerData.data.action.name = '-test-proxy-1-action-';
@@ -391,9 +411,9 @@ describe('with clientExecutionProxy', () => {
             execute: jest.fn().mockResolvedValue(response)
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.addExecutionUnit(remoteClient1.action, () => remoteClient1);
-        sut.start();
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.addExecutionUnit(remoteClient1.action, () => remoteClient1);
+        await sut.start(collector);
 
         listenerData.data.action.name = '-test-proxy-action-';
         onListeners.get('message').forEach((listener) => listener(listenerData));
@@ -406,17 +426,17 @@ describe('with clientExecutionProxy', () => {
     /**
      *
      */
-    test('client proxy already exists', () => {
+    test('client proxy already exists', async () => {
         const remoteClient = {
             action: '-test-proxy-x-action-',
             execute: jest.fn().mockResolvedValue(response)
         };
 
-        const sut = new NodeForkClient();
-        sut.pluginHandler.addExecutionUnit(remoteClient.action, () => remoteClient);
-        sut.start();
+        const sut = new NodeForkPluginClient();
+        collector.pluginHandler.addExecutionUnit(remoteClient.action, () => remoteClient);
+        await sut.start(collector);
 
-        expect(() => sut.pluginHandler.addExecutionUnit(remoteClient.action, () => remoteClient)).toThrow(
+        expect(() => collector.pluginHandler.addExecutionUnit(remoteClient.action, () => remoteClient)).toThrow(
             `client action '-test-proxy-x-action-' already exists`
         );
     });

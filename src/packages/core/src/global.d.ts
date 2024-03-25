@@ -40,6 +40,7 @@ declare global {
     var _stepReportInstance: StepReport;
     var _testReportInstance: TestReport;
     var _descriptionCollectorHandlerInstance: DescriptionCollectorHandler;
+    var _collectorHandlerInstance: PluginExecutionCollectorHandler;
 
     /**
      *

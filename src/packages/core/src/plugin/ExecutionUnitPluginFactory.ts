@@ -27,7 +27,7 @@ export interface ExecutionUnitPluginFactory {
      *
      * Any startup sequences can be called.
      */
-    start(): void;
+    start(): Promise<void>;
 
     /**
      * is called each time the executionUnit is used

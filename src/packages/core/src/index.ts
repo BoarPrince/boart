@@ -95,6 +95,13 @@ import { Descriptionable } from './description/Descriptionable';
 import { DescriptionCollectorProvider } from './description/DescriptionCollectorProvider';
 import { DescriptionCollector } from './description/DescriptionCollector';
 import { DescriptionCollectorHandler } from './description/DescriptionCollectorHandler';
+import { PluginClient } from './plugin/PluginClient';
+import { PluginClientDefault } from './plugin/PluginClientDefault';
+import { PluginExecutionCollector } from './plugin/PluginExecutionCollector';
+import { RemotePluginRequest } from './plugin/RemotePluginRequest';
+import { RemotePluginResponse } from './plugin/RemotePluginResponse';
+import { LocalExecutionPluginFactory } from './plugin/LocalExecutionPluginFactory';
+import { PluginExecutionCollectorHandler } from './plugin/PluginExecutionCollectorHandler';
 
 /**
  *
@@ -156,6 +163,12 @@ export {
     ParaType,
     PluginRequest,
     PluginResponse,
+    PluginClient,
+    PluginClientDefault,
+    PluginExecutionCollector,
+    PluginExecutionCollectorHandler,
+    RemotePluginRequest,
+    RemotePluginResponse,
     RepeatableExecutionContext,
     ReadonlyDefaultContext,
     LocalReport,
@@ -213,6 +226,7 @@ function initialize(): void {
     }
 
     ExecutionUnitPluginFactoryHandler.instance.addFactory('direct', new DirectExecutionPluginFactory());
+    ExecutionUnitPluginFactoryHandler.instance.addFactory('local', new LocalExecutionPluginFactory());
 }
 
 // eslint-disable-next-line jest/require-hook

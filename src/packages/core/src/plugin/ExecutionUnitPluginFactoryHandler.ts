@@ -39,8 +39,8 @@ class StarterProxyFactory implements ExecutionUnitPluginFactory {
     /**
      *
      */
-    start(): void {
-        this.origin.start();
+    async start(): Promise<void> {
+        await this.origin.start();
         this.started = true;
     }
 
@@ -53,9 +53,9 @@ class StarterProxyFactory implements ExecutionUnitPluginFactory {
             request: PluginRequest
         ) => PluginResponse | Promise<PluginResponse>;
 
-        originExecutionUnit.execute = (request): PluginResponse | Promise<PluginResponse> => {
+        originExecutionUnit.execute = async (request): Promise<PluginResponse> => {
             if (!this.started) {
-                this.start();
+                await this.start();
             }
             return originExecuteMethod(request);
         };

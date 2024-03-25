@@ -34,8 +34,9 @@ export class DirectExecutionPluginFactory implements ExecutionUnitPluginFactory 
     /**
      *
      */
-    public start() {
+    public start(): Promise<void> {
         // there is no explicit start needed
+        return Promise.resolve();
     }
 
     /**

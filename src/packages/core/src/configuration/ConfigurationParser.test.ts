@@ -159,7 +159,9 @@ class RemoteProxyFactory implements ExecutionUnitPluginFactory {
     /**
      *
      */
-    start() {}
+    start(): Promise<void> {
+        return Promise.resolve();
+    }
 
     /**
      *
