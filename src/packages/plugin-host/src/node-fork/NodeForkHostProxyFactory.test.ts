@@ -7,7 +7,7 @@ import plugin_initialize from '..';
 /**
  *
  */
-jest.mock('./NodeForkServer');
+jest.mock('./NodeForkHost');
 
 /**
  *

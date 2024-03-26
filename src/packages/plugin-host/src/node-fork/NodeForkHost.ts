@@ -1,65 +1,53 @@
 import { ChildProcess, fork } from 'child_process';
-import { randomUUID } from 'crypto';
-import { ExecutionUnitPlugin, PluginRequest, PluginResponse, RemotePluginRequest, RemotePluginResponse } from '@boart/core';
+import { PluginHostDefault } from '@boart/core';
+import { PluginEventEmitter } from '@boart/core/lib/plugin/PluginEventEmitter';
 
 /**
  *
  */
-export class NodeForkHost implements ExecutionUnitPlugin {
-    private readonly child: ChildProcess;
+export class NodeForkHost extends PluginHostDefault {
+    private childProcess: ChildProcess;
+
+    /**
+     *
+     */
+    protected get clientEmitter(): PluginEventEmitter {
+        if (!this.childProcess) {
+            throw new Error('NodeForkHost: init must be called before requesting the client emitter');
+        }
+        return this.childProcess;
+    }
 
     /**
      *
      */
     constructor(
         public readonly action: string,
-        private path: string
+        private readonly path: string
     ) {
-        this.child = fork(path, {
-            silent: true
-        });
-        this.init();
+        super(action);
     }
 
     /**
      *
      */
-    private init() {
-        this.child.stderr.on('data', (data) => {
+    public init(): Promise<void> {
+        this.childProcess = fork(this.path, {
+            silent: true
+        });
+
+        this.childProcess.on('message', (message) => {
+            this.childProcess.send(message);
+        });
+
+        this.childProcess.stderr.on('data', (data) => {
             console.error('child:', this.path, data);
         });
 
-        this.child.stdout.on('data', (data) => {
+        this.childProcess.stdout.on('data', (data) => {
             console.log('child:', this.path, data);
         });
-    }
 
-    /**
-     *
-     */
-    execute(request: PluginRequest): Promise<PluginResponse> {
-        return new Promise<PluginResponse>((resolve, reject) => {
-            const id: string = randomUUID();
-
-            /**
-             *
-             */
-            const msgListener = (msgFromClient: RemotePluginResponse) => {
-                if (msgFromClient.id !== 'uncaughtException' && msgFromClient.id !== id) {
-                    return;
-                }
-                this.child.removeListener('message', msgListener);
-
-                if (msgFromClient.error) {
-                    reject(msgFromClient.error);
-                } else {
-                    request.context.execution = msgFromClient.data.context?.execution;
-                    resolve(msgFromClient.data);
-                }
-            };
-
-            this.child.on('message', msgListener);
-            this.child.send({ id, data: request } as RemotePluginRequest);
-        });
+        return;
     }
 }

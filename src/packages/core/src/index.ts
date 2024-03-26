@@ -102,6 +102,7 @@ import { RemotePluginRequest } from './plugin/RemotePluginRequest';
 import { RemotePluginResponse } from './plugin/RemotePluginResponse';
 import { LocalExecutionPluginFactory } from './plugin/LocalExecutionPluginFactory';
 import { PluginExecutionCollectorHandler } from './plugin/PluginExecutionCollectorHandler';
+import { PluginHostDefault } from './plugin/PluginHostDefault';
 
 /**
  *
@@ -167,6 +168,7 @@ export {
     PluginClientDefault,
     PluginExecutionCollector,
     PluginExecutionCollectorHandler,
+    PluginHostDefault,
     RemotePluginRequest,
     RemotePluginResponse,
     RepeatableExecutionContext,

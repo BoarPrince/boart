@@ -7,6 +7,7 @@ import { RemotePluginResponse } from './RemotePluginResponse';
  */
 
 export interface PluginEventEmitter extends event.EventEmitter {
+    send?(request: RemotePluginRequest): boolean;
     emit(event: 'message', request: RemotePluginRequest): boolean;
     emit(event: 'response', request: RemotePluginResponse): boolean;
     emit(event: 'exit'): boolean;

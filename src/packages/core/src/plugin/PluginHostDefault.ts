@@ -47,8 +47,11 @@ export abstract class PluginHostDefault implements ExecutionUnitPlugin {
             };
 
             this.clientEmitter.on('response', msgListener);
-            this.clientEmitter.emit('message', { id, data: request } as RemotePluginRequest);
-            // this.child.send({ id, data: request } as RemotePluginRequest);
+            if (this.clientEmitter.send) {
+                this.clientEmitter.send({ id, data: request } as RemotePluginRequest);
+            } else {
+                this.clientEmitter.emit('message', { id, data: request } as RemotePluginRequest);
+            }
         });
     }
 }
