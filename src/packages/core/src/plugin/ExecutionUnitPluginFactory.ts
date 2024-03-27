@@ -29,8 +29,13 @@ export interface ExecutionUnitPluginFactory {
      */
     start(): Promise<void>;
 
+    /***
+     * is called only once a time after the test runtime has finished.
+     */
+    stop(): Promise<void>;
+
     /**
      * is called each time the executionUnit is used
      */
-    createExecutionUnit(): ExecutionUnitPlugin;
+    createExecutionUnit(): Promise<ExecutionUnitPlugin>;
 }

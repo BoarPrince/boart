@@ -40,13 +40,13 @@ export class NodeForkPluginClient extends PluginClientDefault {
          *
          */
         process.on('exit', () => {
-            this.emitter.emit('exit');
+            this.emitter.emit('stop');
         });
 
         /**
          *
          */
-        this.emitter.on('exit', () => {
+        this.emitter.on('stop', () => {
             process.exit();
         });
 

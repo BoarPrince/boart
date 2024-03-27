@@ -46,12 +46,16 @@ export class RuntimeNotifier<TContext extends RuntimeResultContext> {
      *
      */
     public notifyEnd(context: RuntimeResultContext) {
-        this.currentContext.endTime = this.timer.endTime;
-        this.currentContext.duration = this.timer.duration;
-        this.currentContext.status = context.status;
-        this.currentContext.errorMessage = context.errorMessage;
-        this.currentContext.stackTrace = context.stackTrace;
+        if (context) {
+            this.currentContext.endTime = this.timer.endTime;
+            this.currentContext.duration = this.timer.duration;
+            this.currentContext.status = context.status;
+            this.currentContext.errorMessage = context.errorMessage;
+            this.currentContext.stackTrace = context.stackTrace;
+        }
+
         this.end.next(this.currentContext);
+
         if (!this.preserveCurrent) {
             this.currentContext = null;
         }

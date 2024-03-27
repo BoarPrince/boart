@@ -10,15 +10,25 @@ import { PluginRequest } from './PluginRequest';
  *
  */
 export class ExecutionUnitPluginAdapter implements ExecutionUnit<DefaultContext, DefaultRowType<DefaultContext>> {
-    private pluginExecutionUnit: ExecutionUnitPlugin;
+    private _lazyPluginExecutionUnit: ExecutionUnitPlugin;
+
     /**
      *
      */
     constructor(
         public readonly key: symbol,
-        factory: ExecutionUnitPluginFactory
-    ) {
-        this.pluginExecutionUnit = factory.createExecutionUnit();
+        private factory: ExecutionUnitPluginFactory
+    ) {}
+
+    /**
+     * lazy load execution unit
+     */
+    private async getPluginExecutionUnit(): Promise<ExecutionUnitPlugin> {
+        if (!this._lazyPluginExecutionUnit) {
+            this._lazyPluginExecutionUnit = await this.factory.createExecutionUnit();
+        }
+
+        return this._lazyPluginExecutionUnit;
     }
 
     /**
@@ -35,7 +45,8 @@ export class ExecutionUnitPluginAdapter implements ExecutionUnit<DefaultContext,
             }
         };
 
-        const response = await this.pluginExecutionUnit.execute(request);
+        const executionUnit = await this.getPluginExecutionUnit();
+        const response = await executionUnit.execute(request);
         context.execution = request.context.execution;
 
         StepReport.instance.type = row?.action || this.key.description;

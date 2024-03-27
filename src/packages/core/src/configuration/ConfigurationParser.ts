@@ -3,7 +3,7 @@ import fs from 'fs';
 import { ContextConfig } from './schema/ContextConfig';
 import { RowDefinition as CoreRowDefinition } from '../table/RowDefinition';
 import { RowDefinitionConfig } from './schema/RowDefinitionConfig';
-import { TestExecutionUnitConfig } from './schema/TestExecutionUnitConfig';
+import { PluginExecutionUnitConfig } from './schema/PluginExecutionUnitConfig';
 import { DefaultPropertySetterExecutionUnit } from '../default/DefaultPropertySetterExecutionUnit';
 import { RowValidator } from '../validators/RowValidator';
 import { ValidatorFactoryManager } from '../validators/ValidatorFactoryManager';
@@ -34,7 +34,7 @@ export class ConfigurationParser {
     /**
      *
      */
-    private executionHandler = new ExecutionUnitPluginHandler();
+    private executionPluginHandler = new ExecutionUnitPluginHandler();
 
     /**
      *
@@ -137,7 +137,7 @@ export class ConfigurationParser {
      *
      */
     private parseRowDefinition(
-        config: TestExecutionUnitConfig,
+        config: PluginExecutionUnitConfig,
         context: DefaultContext,
         mainExecutionUnitFactory: ExecutionUnitPluginFactory
     ): Array<CoreRowDefinition<DefaultContext, DefaultRowType<DefaultContext>>> {
@@ -156,7 +156,8 @@ export class ConfigurationParser {
                             ? this.getExecutionUnitFactory(rowDef.runtime, rowDef.action, `${basePath}.runtime`)
                             : mainExecutionUnitFactory;
 
-                        return new ExecutionUnitPluginAdapter(key, factory);
+                        const executionUnit = new ExecutionUnitPluginAdapter(key, factory);
+                        return executionUnit;
                     }
                 })();
 
@@ -171,10 +172,9 @@ export class ConfigurationParser {
                     validators: this.parseValidator(rowDef.validatorDef, ValidatorType.ROW, basePath) as Array<RowValidator>
                 });
             } catch (error) {
-                throw new Error(
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                    `Problem while reading configuration of $.rowDef[${index}]\n${error.message}`
-                );
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                error.message = `Problem while reading configuration of $.rowDef[${index}]\n${error.message}`;
+                throw error;
             }
         });
 
@@ -188,16 +188,17 @@ export class ConfigurationParser {
         const factory = ExecutionUnitPluginFactoryHandler.instance.getFactory(runtime.type);
         if (factory.isLocal === true) {
             const localFactory = new DirectExecutionPluginFactory();
-            this.executionHandler.addExecutionUnit(name, () => localFactory.createExecutionUnit());
+            // this.executionPluginHandler.addExecutionUnit(name, () => localFactory.createExecutionUnit());
             const pluginExecutionUnit = runtime.configuration as () => ExecutionUnitPlugin;
             localFactory.init(name, pluginExecutionUnit, runtime.startup);
             return localFactory;
         } else {
             try {
+                // this.executionPluginHandler.addExecutionUnit(name, () => factory.createExecutionUnit());
                 factory.init(name, runtime.configuration, runtime.startup);
                 factory.validate(basePath);
             } catch (error) {
-                (error as Error).message = 'Problem while runtime configuration.\n' + (error as Error).message;
+                (error as Error).message = 'Problem while reading runtime configuration.\n' + (error as Error).message;
                 throw error;
             }
             return factory;
@@ -207,16 +208,16 @@ export class ConfigurationParser {
     /**
      *
      */
-    private readDefinition(configFileName: string): TestExecutionUnitConfig {
+    private readDefinition(configFileName: string): PluginExecutionUnitConfig {
         const content = fs.readFileSync(configFileName, 'utf-8');
-        return JSON.parse(content) as TestExecutionUnitConfig;
+        return JSON.parse(content) as PluginExecutionUnitConfig;
     }
 
     /**
      *
      */
-    public parseDefinition(configOrFileName: TestExecutionUnitConfig | string): ConfigurationTableHandler {
-        const config: TestExecutionUnitConfig =
+    public parseDefinition(configOrFileName: PluginExecutionUnitConfig | string): ConfigurationTableHandler {
+        const config: PluginExecutionUnitConfig =
             typeof configOrFileName === 'string' ? this.readDefinition(configOrFileName) : configOrFileName;
 
         ConfigurationChecker.check(config);

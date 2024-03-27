@@ -31,7 +31,7 @@ export class NodeForkHost extends PluginHostDefault {
     /**
      *
      */
-    public init(): Promise<void> {
+    public start(): Promise<void> {
         this.childProcess = fork(this.path, {
             silent: true
         });
@@ -48,6 +48,14 @@ export class NodeForkHost extends PluginHostDefault {
             console.log('child:', this.path, data);
         });
 
+        return;
+    }
+
+    /**
+     *
+     */
+    stop(): Promise<void> {
+        this.childProcess.kill();
         return;
     }
 }

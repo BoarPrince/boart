@@ -22,12 +22,20 @@ export class LocalPluginHost extends PluginHostDefault {
     /**
      *
      */
-    public init(): Promise<void> {
+    public start(): Promise<void> {
         const collector = PluginExecutionCollectorHandler.instance.getCollector(this.collectorName);
 
         const client = new PluginClientDefault();
         this.clientEmitter = client.emitter;
 
-        return client.start(collector);
+        return client.start(collector());
+    }
+
+    /**
+     *
+     */
+    public stop(): Promise<void> {
+        this.clientEmitter.emit('stop');
+        return;
     }
 }

@@ -5,6 +5,6 @@ import { PluginResponse } from './PluginResponse';
  *
  */
 export interface ExecutionUnitPlugin {
-    action: string;
+    action: string | Array<string>;
     execute(request: PluginRequest): PluginResponse | Promise<PluginResponse>;
 }

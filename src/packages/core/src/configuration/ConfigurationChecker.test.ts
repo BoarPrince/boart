@@ -4,12 +4,12 @@ import { SelectorType } from '../types/SelectorType';
 import { ConfigurationChecker } from './ConfigurationChecker';
 import { ExecutionType } from './schema/ExecutionType';
 import { RuntimeStartUp } from './schema/RuntimeStartUp';
-import { TestExecutionUnitConfig } from './schema/TestExecutionUnitConfig';
+import { PluginExecutionUnitConfig } from './schema/PluginExecutionUnitConfig';
 
 /**
  *
  */
-const defaultConfig: TestExecutionUnitConfig = {
+const defaultConfig: PluginExecutionUnitConfig = {
     name: '-name-',
     context: {
         config: {
@@ -98,9 +98,9 @@ jest.mock('../table/GroupRowDefinition', () => ({
 /**
  *
  */
-let config: TestExecutionUnitConfig;
+let config: PluginExecutionUnitConfig;
 beforeEach(() => {
-    config = JSON.parse(JSON.stringify(defaultConfig)) as TestExecutionUnitConfig;
+    config = JSON.parse(JSON.stringify(defaultConfig)) as PluginExecutionUnitConfig;
 });
 
 /**

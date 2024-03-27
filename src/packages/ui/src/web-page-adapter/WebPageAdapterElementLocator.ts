@@ -13,12 +13,15 @@ export abstract class WebPageAdapterElementLocator {
     /**
      *
      */
-    public async find(location: string, parentElement?: ElementAdapter, index?: number): Promise<ElementAdapter> {
+    public async find(location: string, parentElement?: ElementAdapter, index?: number): Promise<{ id: string; element: ElementAdapter }> {
         const locators = ElementAdapterLocatorHandler.instance.getAll();
         for (const locator of locators) {
-            const element = await locator.findOptionalBy(location, parentElement, index);
+            const element = await locator.findOptionalBy(location, this.getElement(parentElement), index);
             if (element) {
-                return element;
+                return {
+                    id: `${locator.strategy}:${location}`,
+                    element
+                };
             }
         }
 
@@ -56,7 +59,7 @@ export abstract class WebPageAdapterElementLocator {
     /**
      *
      */
-    async all(parentElement: ElementAdapter): Promise<ElementAdapter[]> {
+    public async all(parentElement: ElementAdapter): Promise<ElementAdapter[]> {
         const element = this.getElement(parentElement);
         const elements = new Array<ElementAdapter>();
         for (const locator of ElementAdapterLocatorHandler.instance.getAll()) {
@@ -64,5 +67,12 @@ export abstract class WebPageAdapterElementLocator {
             elements.push(...proxies);
         }
         return elements;
+    }
+
+    /**
+     *
+     */
+    public get strategies(): string[] {
+        return ElementAdapterLocatorHandler.instance.getAll().map((l) => l.strategy);
     }
 }

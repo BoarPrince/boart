@@ -16,6 +16,7 @@ interface Configuration {
  *
  */
 export class LocalExecutionPluginFactory implements ExecutionUnitPluginFactory {
+    isLocal?: boolean;
     private host: PluginHostDefault;
     private name: string;
     private config: Configuration;
@@ -24,12 +25,12 @@ export class LocalExecutionPluginFactory implements ExecutionUnitPluginFactory {
     /**
      *
      */
-    public validate(): void {
+    public validate(basePath: string): void {
         if (this.runtimeStartup && this.runtimeStartup !== RuntimeStartUp.ONCE) {
-            throw new Error(`local execution plugin allows only runtime startup 'once'`);
+            throw new Error(`${basePath}: 'local' execution plugin allows only runtime startup 'once'`);
         }
 
-        ObjectValidator.instance(this.config) //
+        ObjectValidator.instance(this.config, null, basePath) //
             .notNull()
             .onlyContainsProperties(['collectorName'])
             .prop('collectorName')
@@ -50,16 +51,23 @@ export class LocalExecutionPluginFactory implements ExecutionUnitPluginFactory {
      */
     public start(): Promise<void> {
         this.host = new LocalPluginHost(this.name, this.config.collectorName);
-        return this.host.init();
+        return this.host.start();
     }
 
     /**
      *
      */
-    public createExecutionUnit(): ExecutionUnitPlugin {
+    stop(): Promise<void> {
+        return this.host.stop();
+    }
+
+    /**
+     *
+     */
+    public createExecutionUnit(): Promise<ExecutionUnitPlugin> {
         if (this.host == null) {
             throw new Error(`local plugin must be started before creating an execution unit`);
         }
-        return this.host;
+        return Promise.resolve(this.host);
     }
 }

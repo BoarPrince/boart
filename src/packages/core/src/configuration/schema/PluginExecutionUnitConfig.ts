@@ -6,7 +6,7 @@ import { ValidatorConfig } from './ValidatorConfig';
 /**
  *
  */
-export interface TestExecutionUnitConfig {
+export interface PluginExecutionUnitConfig {
     name: string;
     runtime: Runtime;
     context: ContextConfig;

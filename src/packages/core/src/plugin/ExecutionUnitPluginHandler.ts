@@ -6,16 +6,21 @@ import { PluginResponse } from './PluginResponse';
 /**
  *
  */
+type MainExecutionUnitType = Omit<ExecutionUnitPlugin, 'action'>;
+
+/**
+ *
+ */
 export class ExecutionUnitPluginHandler implements ExecutionUnitPlugin {
-    private clientImplList: Map<string, () => ExecutionUnitPlugin>;
-    private mainExecutionPlugin: () => ExecutionUnitPlugin;
+    private pluginList: Map<string, () => ExecutionUnitPlugin | Promise<ExecutionUnitPlugin>>;
+    private mainExecutionPlugin: () => MainExecutionUnitType;
     public readonly action: string;
 
     /**
      *
      */
     constructor() {
-        this.clientImplList = new Map<string, () => ExecutionUnitPlugin>();
+        this.pluginList = new Map<string, () => ExecutionUnitPlugin>();
 
         // add default execution unit
         this.addExecutionUnit(DescriptionCollectorPluginExecutionUnit.name, () => new DescriptionCollectorPluginExecutionUnit());
@@ -24,43 +29,74 @@ export class ExecutionUnitPluginHandler implements ExecutionUnitPlugin {
     /**
      *
      */
-    public setMainExecutionUnit(mainExecutionPlugin: () => ExecutionUnitPlugin) {
+    public setMainExecutionUnit(mainExecutionPlugin: () => MainExecutionUnitType);
+    public setMainExecutionUnit(mainExecutionPlugin: MainExecutionUnitType);
+    public setMainExecutionUnit(mainExecutionPlugin: (() => MainExecutionUnitType) | MainExecutionUnitType) {
         if (this.mainExecutionPlugin) {
             throw new Error('main execution unit is already defined');
         }
-        this.mainExecutionPlugin = mainExecutionPlugin;
+
+        if (typeof mainExecutionPlugin === 'function') {
+            this.mainExecutionPlugin = mainExecutionPlugin;
+        } else {
+            this.mainExecutionPlugin = () => mainExecutionPlugin;
+        }
     }
 
     /**
      *
      */
-    public addExecutionUnit(clientExecutionPlugin: ExecutionUnitPlugin);
-    public addExecutionUnit(name: string, clientExecutionPlugin: () => ExecutionUnitPlugin);
-    public addExecutionUnit(nameOrPlugin: string | ExecutionUnitPlugin, clientExecutionPlugin?: () => ExecutionUnitPlugin) {
-        let name: string;
-
+    public addExecutionUnit(clientExecutionPlugin: ExecutionUnitPlugin | Promise<ExecutionUnitPlugin>);
+    public addExecutionUnit(name: string, clientExecutionPlugin: () => ExecutionUnitPlugin | Promise<ExecutionUnitPlugin>);
+    public addExecutionUnit(name: Array<string>, clientExecutionPlugin: () => ExecutionUnitPlugin | Promise<ExecutionUnitPlugin>);
+    public async addExecutionUnit(
+        nameOrPlugin: string | Array<string> | ExecutionUnitPlugin | Promise<ExecutionUnitPlugin>,
+        clientExecutionPluginCreator?: () => ExecutionUnitPlugin | Promise<ExecutionUnitPlugin>
+    ) {
         if (typeof nameOrPlugin === 'string') {
-            name = nameOrPlugin;
+            const name = nameOrPlugin;
+            this.add(name, clientExecutionPluginCreator);
+        } else if (Array.isArray(nameOrPlugin)) {
+            for (const name of nameOrPlugin) {
+                this.add(name, clientExecutionPluginCreator);
+            }
         } else {
-            name = nameOrPlugin.action;
-            clientExecutionPlugin = () => nameOrPlugin;
+            const nameOrNames = (await nameOrPlugin).action;
+            clientExecutionPluginCreator = () => nameOrPlugin;
+            if (Array.isArray(nameOrNames)) {
+                for (const name of nameOrNames) {
+                    this.add(name, clientExecutionPluginCreator);
+                }
+            } else {
+                this.add(nameOrNames, clientExecutionPluginCreator);
+            }
         }
+    }
 
-        if (this.clientImplList.has(name)) {
+    /**
+     *
+     */
+    private add(name: string, clientExecutionPluginCreator: () => ExecutionUnitPlugin | Promise<ExecutionUnitPlugin>): void {
+        if (this.pluginList.has(name)) {
             throw new Error(`client action '${name}' already exists`);
         }
-        this.clientImplList.set(name, clientExecutionPlugin);
+        this.pluginList.set(name, clientExecutionPluginCreator);
     }
 
     /**
      *
      */
-    public execute(request: PluginRequest): PluginResponse | Promise<PluginResponse> {
-        const executionUnit = !request?.action.name ? this.mainExecutionPlugin : this.clientImplList.get(request.action.name);
-        if (!executionUnit) {
-            throw new Error(`plugin '${request.action.name || '-mainClient-'}' not found`);
+    public async execute(request: PluginRequest): Promise<PluginResponse> {
+        const executionUnitCreator = !request?.action.name ? this.mainExecutionPlugin : this.pluginList.get(request.action.name);
+        if (!executionUnitCreator) {
+            throw new Error(
+                `execution unit plugin not found: '${request.action.name || '-mainClient-'}'\nonly available: ${Array.from(
+                    this.pluginList.keys()
+                ).join(', ')}`
+            );
         }
 
-        return executionUnit().execute(request);
+        const executionUnit = await executionUnitCreator();
+        return executionUnit.execute(request);
     }
 }

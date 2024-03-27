@@ -18,7 +18,7 @@ export class UIErrorIndicatorHandler {
      *
      */
     public static get instance(): UIErrorIndicatorHandler {
-        if (!globalThis._uiProgressIndicatorHandlerInstance) {
+        if (!globalThis._uiErrorIndicatorHandlerInstance) {
             globalThis._uiErrorIndicatorHandlerInstance = new UIErrorIndicatorHandler();
         }
 

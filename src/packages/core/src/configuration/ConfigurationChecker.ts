@@ -1,4 +1,4 @@
-import { TestExecutionUnitConfig } from './schema/TestExecutionUnitConfig';
+import { PluginExecutionUnitConfig } from './schema/PluginExecutionUnitConfig';
 import { RuntimeStartUp } from './schema/RuntimeStartUp';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
@@ -80,7 +80,7 @@ export class ConfigurationChecker {
     /**
      *
      */
-    public static check(config: TestExecutionUnitConfig) {
+    public static check(config: PluginExecutionUnitConfig) {
         ObjectValidator.instance(config)
             .notNull()
             .onlyContainsProperties(['name', 'runtime', 'context', 'groupRowDef', 'groupValidatorDef', 'rowDef'])

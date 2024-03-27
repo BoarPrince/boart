@@ -3,7 +3,14 @@
   "compilerOptions": {
     "outDir": "lib",
     "rootDir": "src",
-    "allowJs": true, // copy js files to outDir  -> parser/peggy/*.js
+    "allowJs": true, // copy js files to outDir  -> parser/peggy/*.js,
+    "rootDirs": [
+      "src/"
+    ],
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    "inlineSources": true,
   },
   "include": [
     "src/**/*.ts"

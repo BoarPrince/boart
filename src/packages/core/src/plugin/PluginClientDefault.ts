@@ -27,11 +27,12 @@ export class PluginClientDefault implements PluginClient {
     /**
      *
      */
-    public start(collector: PluginExecutionCollector): Promise<void> {
+    public async start(collector: PluginExecutionCollector): Promise<void> {
         if (this.started) {
             return;
         }
 
+        await collector.start();
         this.collector = collector;
         this.started = true;
 
@@ -46,7 +47,7 @@ export class PluginClientDefault implements PluginClient {
         /**
          *
          */
-        this.emitter.on('exit', () => {
+        this.emitter.on('stop', () => {
             void this.collector.stop();
         });
 

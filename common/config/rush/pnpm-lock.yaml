@@ -33,7 +33,7 @@ importers:
       '@boart/core': workspace:*
       '@boart/core-impl': workspace:*
       '@boart/execution': workspace:*
-      '@boart/plugin-remote': workspace:*
+      '@boart/plugin-host': workspace:*
       '@boart/protocol': workspace:*
       '@jest/types': ~29.6.3
       '@types/jest': ~29.5.11
@@ -59,7 +59,7 @@ importers:
       '@boart/core': link:../core
       '@boart/core-impl': link:../core-impl
       '@boart/execution': link:../execution
-      '@boart/plugin-remote': link:../plugin-remote
+      '@boart/plugin-host': link:../plugin-host
       '@boart/protocol': link:../protocol
     devDependencies:
       '@jest/types': 29.6.3
@@ -378,7 +378,7 @@ importers:
       tslib: 2.6.2
       typescript: 5.3.3
 
-  ../../src/packages/plugin-remote:
+  ../../src/packages/plugin-host:
     specifiers:
       '@boart/core': workspace:*
       '@boart/plugin': workspace:*
@@ -481,7 +481,6 @@ importers:
   ../../src/packages/ui:
     specifiers:
       '@boart/core': workspace:*
-      '@boart/plugin': workspace:*
       '@jest/types': ~29.6.3
       '@types/jest': ~29.5.11
       '@types/node': ~20.11.7
@@ -503,7 +502,6 @@ importers:
       typescript: ~5.3.3
     dependencies:
       '@boart/core': link:../core
-      '@boart/plugin': link:../plugin
     devDependencies:
       '@jest/types': 29.6.3
       '@types/jest': 29.5.11

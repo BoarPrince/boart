@@ -11,6 +11,7 @@ import { PluginEventEmitter } from './PluginEventEmitter';
  */
 export abstract class PluginHostDefault implements ExecutionUnitPlugin {
     protected abstract readonly clientEmitter: PluginEventEmitter;
+    private static readonly responseEventName = 'response';
 
     /**
      *
@@ -20,7 +21,12 @@ export abstract class PluginHostDefault implements ExecutionUnitPlugin {
     /**
      *
      */
-    public abstract init(): Promise<void>;
+    public abstract start(): Promise<void>;
+
+    /**
+     *
+     */
+    public abstract stop(): Promise<void>;
 
     /**
      *
@@ -36,7 +42,8 @@ export abstract class PluginHostDefault implements ExecutionUnitPlugin {
                 if (msgFromClient.id !== 'uncaughtException' && msgFromClient.id !== id) {
                     return;
                 }
-                this.clientEmitter.removeListener('message', msgListener);
+
+                this.clientEmitter.removeListener(PluginHostDefault.responseEventName, msgListener);
 
                 if (msgFromClient.error) {
                     reject(msgFromClient.error);
@@ -46,7 +53,8 @@ export abstract class PluginHostDefault implements ExecutionUnitPlugin {
                 }
             };
 
-            this.clientEmitter.on('response', msgListener);
+            this.clientEmitter.on(PluginHostDefault.responseEventName, msgListener);
+
             if (this.clientEmitter.send) {
                 this.clientEmitter.send({ id, data: request } as RemotePluginRequest);
             } else {

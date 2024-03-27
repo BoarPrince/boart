@@ -94,7 +94,7 @@ describe('client - server - communication', () => {
             additionalValue: null
         };
 
-        await sut.init();
+        await sut.start();
         await sut.execute(messageToClient);
 
         expect(onSend).toHaveBeenCalledWith({
@@ -134,7 +134,7 @@ describe('client - server - communication', () => {
             return process;
         });
 
-        await sut.init();
+        await sut.start();
         const response = await sut.execute(messageToClient);
         expect(response).toStrictEqual(messageFromClient.data);
     });
@@ -146,7 +146,7 @@ describe('client - server - communication', () => {
         const sut = new NodeForkHost('-action-', '-path-');
         const onConsoleLog = jest.spyOn(console, 'log');
 
-        await sut.init();
+        await sut.start();
 
         process.stdout.emit('data', '-log-');
 
@@ -160,7 +160,7 @@ describe('client - server - communication', () => {
         const sut = new NodeForkHost('-action-', '-path-');
         const onConsoleError = jest.spyOn(console, 'error');
 
-        await sut.init();
+        await sut.start();
         process.stderr.emit('data', '-error-');
 
         expect(onConsoleError).toHaveBeenCalledWith('child:', '-path-', '-error-');
@@ -198,7 +198,7 @@ describe('error handing', () => {
         const sut = new NodeForkHost('-action-', '-path-');
 
         // check if id is ok
-        await sut.init();
+        await sut.start();
         let responsePromise = sut.execute(messageToClient);
         let timeoutPromise = new Promise((_, reject) => setTimeout(() => reject('timer first'), 200));
 
@@ -218,7 +218,7 @@ describe('error handing', () => {
      */
     test('unhandled expections must be catched', async () => {
         const sut = new NodeForkHost('-action-', '-path-');
-        await sut.init();
+        await sut.start();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         messageFromClient = { id: 'uncaughtException' as any, error: 'any exception', data: null };
@@ -230,7 +230,7 @@ describe('error handing', () => {
      */
     test('exception from client', async () => {
         const sut = new NodeForkHost('-action-', '-path-');
-        await sut.init();
+        await sut.start();
 
         messageFromClient = { id: UUID, error: 'any exception', data: null };
         await expect(sut.execute(messageToClient)).rejects.toBe('any exception');

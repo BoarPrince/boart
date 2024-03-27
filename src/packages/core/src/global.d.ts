@@ -16,6 +16,7 @@ import { StepReport } from './report/StepReport';
 import { TestReport } from './report/TestReport';
 import { ExecutionUnitPluginFactoryHandler } from './plugin/ExecutionUnitPluginFactoryHandler';
 import { DescriptionCollectorHandler } from './description/DescriptionCollectorHandler';
+import { PluginExecutionCollectorHandler } from './plugin/PluginExecutionCollectorHandler';
 
 /**
  *

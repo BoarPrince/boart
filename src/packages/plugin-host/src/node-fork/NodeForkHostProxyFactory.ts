@@ -13,6 +13,7 @@ interface Configuration {
  *
  */
 export class NodeForkHostProxyFactory implements ExecutionUnitPluginFactory {
+    isLocal?: boolean;
     private server: NodeForkHost;
     private name: string;
     private config: Configuration;
@@ -53,10 +54,17 @@ export class NodeForkHostProxyFactory implements ExecutionUnitPluginFactory {
     /**
      *
      */
-    public createExecutionUnit(): ExecutionUnitPlugin {
+    stop(): Promise<void> {
+        return this.server.stop();
+    }
+
+    /**
+     *
+     */
+    public createExecutionUnit(): Promise<ExecutionUnitPlugin> {
         if (this.server == null) {
             throw new Error(`node fork must be started before creating an execution unit`);
         }
-        return this.server;
+        return Promise.resolve(this.server);
     }
 }

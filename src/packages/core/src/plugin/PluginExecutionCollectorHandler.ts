@@ -4,13 +4,13 @@ import { PluginExecutionCollector } from './PluginExecutionCollector';
  *
  */
 export class PluginExecutionCollectorHandler {
-    private readonly collectorList: Map<string, PluginExecutionCollector>;
+    private readonly collectorList: Map<string, () => PluginExecutionCollector>;
 
     /**
      *
      */
     private constructor() {
-        this.collectorList = new Map<string, PluginExecutionCollector>();
+        this.collectorList = new Map();
     }
 
     /**
@@ -26,7 +26,7 @@ export class PluginExecutionCollectorHandler {
     /**
      *
      */
-    public addCollector(name: string, collector: PluginExecutionCollector): void {
+    public addCollector(name: string, collector: () => PluginExecutionCollector): void {
         if (this.collectorList.has(name)) {
             throw new Error(`Execution unit collector with name '${name}' already exists`);
         }
@@ -36,7 +36,7 @@ export class PluginExecutionCollectorHandler {
     /**
      *
      */
-    public getCollector(name: string): PluginExecutionCollector {
+    public getCollector(name: string): () => PluginExecutionCollector {
         if (!this.collectorList.has(name)) {
             throw new Error(`Execution unit collector with name '${name}' does not exist`);
         }

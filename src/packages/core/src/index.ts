@@ -103,6 +103,9 @@ import { RemotePluginResponse } from './plugin/RemotePluginResponse';
 import { LocalExecutionPluginFactory } from './plugin/LocalExecutionPluginFactory';
 import { PluginExecutionCollectorHandler } from './plugin/PluginExecutionCollectorHandler';
 import { PluginHostDefault } from './plugin/PluginHostDefault';
+import { PluginExecutionUnitConfig } from './configuration/schema/PluginExecutionUnitConfig';
+import { ExecutionType } from './configuration/schema/ExecutionType';
+import { ConfigurationParser } from './configuration/ConfigurationParser';
 
 /**
  *
@@ -118,6 +121,7 @@ export {
     ContentInstance,
     ContentType,
     Context,
+    ConfigurationParser,
     DataContent,
     DataContentBase,
     DataContentHelper,
@@ -142,6 +146,7 @@ export {
     ExecutionUnitPluginHandler,
     ExecutionUnitPluginFactoryHandler,
     ExecutionUnitValidation,
+    ExecutionType,
     ExpectedDescription,
     ExpectedOperator,
     ExpectedOperatorInitializer,
@@ -169,6 +174,7 @@ export {
     PluginExecutionCollector,
     PluginExecutionCollectorHandler,
     PluginHostDefault,
+    PluginExecutionUnitConfig,
     RemotePluginRequest,
     RemotePluginResponse,
     RepeatableExecutionContext,

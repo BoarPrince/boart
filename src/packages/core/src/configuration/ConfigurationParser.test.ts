@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { TestExecutionUnitConfig } from './schema/TestExecutionUnitConfig';
+import { PluginExecutionUnitConfig } from './schema/PluginExecutionUnitConfig';
 import { TableRowType } from '../table/TableRowType';
 import { ParaType } from '../types/ParaType';
 import { SelectorType } from '../types/SelectorType';
@@ -100,7 +100,7 @@ const defaultConfig = JSON.stringify({
             path: './extensions/text-extension'
         }
     }
-} as TestExecutionUnitConfig);
+} as PluginExecutionUnitConfig);
 
 /**
  *
@@ -134,6 +134,7 @@ class ValidatorFactoryMock implements ValidatorFactory {
  *
  */
 class RemoteProxyFactory implements ExecutionUnitPluginFactory {
+    isLocal?: boolean;
     private name: string;
     private config: object;
     /**
@@ -166,7 +167,14 @@ class RemoteProxyFactory implements ExecutionUnitPluginFactory {
     /**
      *
      */
-    createExecutionUnit(): ExecutionUnitPlugin {
+    stop(): Promise<void> {
+        return Promise.resolve();
+    }
+
+    /**
+     *
+     */
+    createExecutionUnit(): Promise<ExecutionUnitPlugin> {
         return null;
     }
 }
@@ -174,7 +182,7 @@ class RemoteProxyFactory implements ExecutionUnitPluginFactory {
 /**
  *
  */
-let config: TestExecutionUnitConfig;
+let config: PluginExecutionUnitConfig;
 beforeEach(() => {
     ValidatorFactoryManager.instance.clear();
     ValidatorFactoryManager.instance.addFactory(new ValidatorFactoryMock('validator-1', ValidatorType.ROW));
@@ -286,7 +294,7 @@ describe('configurationParser', () => {
 
         const sut = new ConfigurationParser();
         expect(() => sut.readDefinitions()).toThrow(
-            `Problem while runtime configuration.\npath: $.runtime.configuration\nmust contain property 'path', but only contains ''`
+            `Reading boart configuration 'extensions/text-extension/boart.json'.\nProblem while reading runtime configuration.\npath: $.runtime.configuration\nmust contain property 'path', but only contains ''`
         );
     });
 
@@ -343,7 +351,7 @@ describe('direct configuration', () => {
     /**
      *
      */
-    let executionConfig: TestExecutionUnitConfig;
+    let executionConfig: PluginExecutionUnitConfig;
     beforeEach(() => {
         executionConfig = JSON.parse(
             JSON.stringify({

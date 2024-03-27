@@ -19,7 +19,8 @@ import { UIElementProxyInfo } from './ui-element-proxy/UIElementProxyInfo';
 import { WebPageAdapterScreenshot } from './web-page-adapter/WebPageAdapterScreenshot';
 import { UIElementProxyActions } from './ui-element-proxy/UIElementProxyActions';
 import { UIElementTableProxy } from './ui-element-proxy/UIElementTableProxy';
-import { DescriptionCollectorHandler } from '@boart/core';
+import { DescriptionCollectorHandler, PluginExecutionCollectorHandler } from '@boart/core';
+import { UIExecutionCollector } from './client-plugin/UIExecutionCollector';
 
 export {
     ElementAdapter,
@@ -56,6 +57,7 @@ export default function initialize(): void {
     }
 
     DescriptionCollectorHandler.instance.addProvider(UIElementProxyHandler.instance);
+    PluginExecutionCollectorHandler.instance.addCollector('ui-call', () => new UIExecutionCollector());
 }
 
 // eslint-disable-next-line jest/require-hook

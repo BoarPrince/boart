@@ -386,7 +386,7 @@ describe('with clientExecutionProxy', () => {
         };
 
         const sut = new NodeForkPluginClient();
-        collector.pluginHandler.addExecutionUnit(remoteClient1.action, () => remoteClient1);
+        collector.pluginHandler.addExecutionUnit(remoteClient1.action as string, () => remoteClient1);
         collector.pluginHandler.addExecutionUnit(remoteClient2.action, () => remoteClient2);
         await sut.start(collector);
 

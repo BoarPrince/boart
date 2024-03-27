@@ -42,7 +42,15 @@ export class DirectExecutionPluginFactory implements ExecutionUnitPluginFactory 
     /**
      *
      */
-    public createExecutionUnit(): ExecutionUnitPlugin {
-        return this.executionUnit();
+    stop(): Promise<void> {
+        // there is no explicit stop needed
+        return Promise.resolve();
+    }
+
+    /**
+     *
+     */
+    public createExecutionUnit(): Promise<ExecutionUnitPlugin> {
+        return Promise.resolve(this.executionUnit());
     }
 }
