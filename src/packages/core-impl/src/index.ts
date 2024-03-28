@@ -45,6 +45,8 @@ import { StoreReplacer } from './value/StoreReplacer';
 import { TextReplacer } from './value/TextReplacer';
 import { DataScopeValidator } from './validators/DataScopeValidator';
 import { QualifierParaValidator } from './validators/QualifierParaValidator';
+import { initialize as basicDataGroupDefinitionInitialize } from './basicGroup/BasicDataGroupDefinition';
+import { initialize as basicGroupDefinitionInitialize } from './basicGroup/BasicGroupDefinition';
 
 /**
  *
@@ -143,6 +145,9 @@ export default function initialize(): void {
         new TimestampGenerator(),
         new UUIDGenerator()
     ]);
+
+    basicDataGroupDefinitionInitialize();
+    basicGroupDefinitionInitialize();
 }
 
 // eslint-disable-next-line jest/require-hook

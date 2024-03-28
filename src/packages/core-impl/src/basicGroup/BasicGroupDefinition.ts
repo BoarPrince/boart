@@ -1,16 +1,14 @@
 import { DefaultContext, DefaultRowType, GroupRowDefinition, RowDefinition, TableRowType } from '@boart/core';
-import {
-    AnyContext,
-    DescriptionExecutionUnit,
-    GroupExecutionUnit,
-    LinkExecutionUnit,
-    QualifierValidator,
-    RunEnvExecutionUnit,
-    RunNotEmptyExecutionUnit,
-    RunNotExecutionUnit,
-    RunOnlyExecutionUnit,
-    WaitExecutionUnit
-} from '@boart/core-impl';
+import { AnyContext } from '../AnyContext';
+import { RunOnlyExecutionUnit } from '../execution/run/ExecutionUnit.RunOnly';
+import { RunNotExecutionUnit } from '../execution/run/ExecutionUnit.RunNot';
+import { RunNotEmptyExecutionUnit } from '../execution/run/ExecutionUnit.RunNotEmpty';
+import { RunEnvExecutionUnit } from '../execution/run/ExecutionUnit.RunEnv';
+import { WaitExecutionUnit } from '../execution/misc/ExecutionUnit.Wait';
+import { QualifierValidator } from '../validators/QualifierValidator';
+import { DescriptionExecutionUnit } from '../execution/misc/ExecutionUnit.Description';
+import { LinkExecutionUnit } from '../execution/misc/ExecutionUnit.Link';
+import { GroupExecutionUnit } from '../execution/misc/ExecutionUnit.Group';
 
 /**
  *

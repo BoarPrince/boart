@@ -21,7 +21,7 @@ import {
 } from '@boart/core';
 import BasicDataGroupDefinition from './BasicDataGroupDefinition';
 import BasicGroupDefinition from './BasicGroupDefinition';
-import { initialized } from '..';
+import initialized from '../index';
 
 /**
  *

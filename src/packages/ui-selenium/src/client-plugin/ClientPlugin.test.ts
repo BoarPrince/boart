@@ -118,8 +118,8 @@ describe('client-plugin', () => {
         await handler.process(tableDef);
 
         const context = handler.getExecutionEngine().context;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(context.execution.data['info']['test-id'].value).toBe('xxx-value');
+
+        expect(context.execution.data).toHaveProperty('info.test-id.value', 'xxx-value');
     });
 
     /**
@@ -141,8 +141,8 @@ describe('client-plugin', () => {
         await handler.process(tableDef);
 
         const context = handler.getExecutionEngine().context;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(context.execution.data['info']['test-id'].value).toBe('xxx-value');
+
+        expect(context.execution.data).toHaveProperty('info.test-id.value', 'xxx-value');
     });
 
     /**
@@ -164,7 +164,29 @@ describe('client-plugin', () => {
         await handler.process(tableDef);
 
         const context = handler.getExecutionEngine().context;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        expect(context.execution.data['info']['foo'].value).toBe('xxx-value');
+
+        expect(context.execution.data).toHaveProperty('info.foo.value', 'xxx-value');
+    });
+
+    /**
+     *
+     */
+    test('find value by name', async () => {
+        const html = '<input name="test-id" value="input-value"/>';
+
+        const tableDef = MarkdownTableReader.convert(
+            `| action     | location | value     |
+             |------------|----------|-----------|
+             | page:html  |          | ${html}   |
+             | value:name | test-id  | xxx-value |
+             | info:name  | test-id  |           |`
+        );
+
+        const sut = new ConfigurationParser();
+        const handler = sut.parseDefinition(executionConfig).handler;
+        await handler.process(tableDef);
+
+        const context = handler.getExecutionEngine().context;
+        expect(context.execution.data).toHaveProperty('info.test-id.value', 'xxx-value');
     });
 });

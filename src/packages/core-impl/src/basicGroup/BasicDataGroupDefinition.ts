@@ -9,14 +9,12 @@ import {
     SelectorType,
     TableRowType
 } from '@boart/core';
-import {
-    ExpectedDataExecutinoUnit,
-    ExpectedJsonLogicExecutionUnit,
-    OutStoreExecutionUnit,
-    TransformJPathExecutionUnit,
-    TransformJsonLogicExecutionUnit,
-    TransformResetExecutionUnit
-} from '@boart/core-impl';
+import { ExpectedDataExecutinoUnit } from '../execution/expected/ExecutionUnit.ExpectedData';
+import { ExpectedJsonLogicExecutionUnit } from '../execution/expected/ExecutionUnit.ExpectedJsonLogic';
+import { TransformJPathExecutionUnit } from '../execution/transform/ExecutionUnit.TransformJPath';
+import { TransformJsonLogicExecutionUnit } from '../execution/transform/ExecutionUnit.TransformJsonLogic';
+import { TransformResetExecutionUnit } from '../execution/transform/ExecutionUnit.TransformReset';
+import { OutStoreExecutionUnit } from '../execution/misc/ExecutionUnit.OutStore';
 
 /**
  *

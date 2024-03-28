@@ -12,8 +12,6 @@ import RestAuthorizeTableHandler from './restAuthorize/RestAuthorizeTableHandler
 import RestCallTableHandler from './restCall/RestCallTableHandler';
 import SQLQueryTableHandler from './sqlQuery/SQLQueryTableHandler';
 import TestDescriptionTableHandler from './testDescription/TestDescriptionTableHandler';
-import { initialize as basicDataGroupDefinitionInitialize } from './basicGroup/BasicDataGroupDefinition';
-import { initialize as basicGroupDefinitionInitialize } from './basicGroup/BasicGroupDefinition';
 
 /**
  *
@@ -42,9 +40,6 @@ export function initialized(): void {
 
     core_impl_initialize();
     remote_server_initialize();
-
-    basicDataGroupDefinitionInitialize();
-    basicGroupDefinitionInitialize();
 
     TableHandlerInstances.instance.add(new RestCallTableHandler().handler, 'Rest call');
     TableHandlerInstances.instance.add(new RestAuthorizeTableHandler().handler, 'Rest authorize');

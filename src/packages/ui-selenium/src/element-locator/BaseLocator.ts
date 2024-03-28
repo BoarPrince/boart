@@ -34,12 +34,8 @@ export abstract class BaseLocator implements ElementAdapterLocator {
         parentElement: SeleniumElementLocatorAdapter,
         index = 0
     ): Promise<SeleniumElementAdapter> {
-        // try {
         const element = await this.find(locationByStrategy, parentElement);
         return new SeleniumElementAdapter(element[index], `${this.strategy}:${locationByStrategy}`);
-        // } catch (error) {
-        //     return null;
-        // }
     }
 
     /**

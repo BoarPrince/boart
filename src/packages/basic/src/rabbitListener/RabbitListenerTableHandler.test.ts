@@ -281,9 +281,7 @@ describe('default', () => {
              | exchange   | myExchange |`
         );
 
-        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
-            `key 'exchange' depends on 'routing', but it does not exist!`
-        );
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrow(`key 'exchange' depends on 'routing', but it does not exist!`);
     });
 
     /**
@@ -298,9 +296,7 @@ describe('default', () => {
              | routing    | myRouting  |`
         );
 
-        await expect(() => sut.handler.process(tableRows)).rejects.toThrowError(
-            `key 'routing' depends on 'exchange', but it does not exist!`
-        );
+        await expect(() => sut.handler.process(tableRows)).rejects.toThrow(`key 'routing' depends on 'exchange', but it does not exist!`);
     });
 
     /**
@@ -352,9 +348,9 @@ describe('default', () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
         const reportData = JSON.parse(calls[0][1]);
 
-        expect(reportData).toContainKey('result');
-        expect(reportData.result).toContainKey('Rabbit listener (received messages)');
-        expect(Object.values(reportData.result as object)[0]).toContainKey('data');
+        expect(reportData).toContain('result');
+        expect(reportData.result).toContain('Rabbit listener (received messages)');
+        expect(Object.values(reportData.result as object)[0]).toContain('data');
 
         const data = Object.values(reportData.result as object)[0].data as object;
         expect(data).toStrictEqual([

@@ -25,8 +25,8 @@
       "path": "../src/packages/description"
     },
     {
-      "name": "@boart/plugin-remote ###########",
-      "path": "../src/packages/plugin-remote"
+      "name": "@boart/plugin-host ###########",
+      "path": "../src/packages/plugin-host"
     },
     {
       "name": "@boart/plugin ###########",
@@ -98,6 +98,11 @@
     "files.exclude": {
       ".rush/": true,
       "core.*": true
+    },
+    "workbench.colorCustomizations": {
+      "tab.activeBorder": "#1aa569",
+      // "tab.activeBackground": "#000000",
+      "tab.activeBorderTop": "#1aa569"
     },
     "search.exclude": {
       "**/coverage": true,
