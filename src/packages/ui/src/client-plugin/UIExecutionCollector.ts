@@ -34,19 +34,30 @@ export class UIExecutionCollector implements PluginExecutionCollector {
         /**
          *
          */
-        const findElement = async (request: PluginRequest): Promise<{ locationId: string; element: ElementAdapter }> => {
-            const location = request.additionalValue.toString();
-            if (request.action.ast.qualifier?.value) {
-                const strategy = request.action.ast.qualifier.value;
-                return {
-                    locationId: location,
-                    element: await this.pageAdapter.element.locator.findBy(strategy, location)
-                };
-            } else {
-                return {
-                    locationId: location,
-                    element: (await this.pageAdapter.element.locator.find(location)).element
-                };
+        const findElement = async (
+            request: PluginRequest,
+            errorMessage?: string
+        ): Promise<{ locationId: string; element: ElementAdapter }> => {
+            try {
+                const location = request.action.ast.selectors?.match ?? request.additionalValue.toString();
+
+                if (request.action.ast.qualifier?.value) {
+                    const strategy = request.action.ast.qualifier.value;
+                    return {
+                        locationId: location,
+                        element: await this.pageAdapter.element.locator.findBy(strategy, location)
+                    };
+                } else {
+                    return {
+                        locationId: location,
+                        element: (await this.pageAdapter.element.locator.find(location)).element
+                    };
+                }
+            } catch (error) {
+                errorMessage = errorMessage ?? `element for action '${request.action.name}' not found!`;
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                error.message = `${errorMessage}\n${error.message}`;
+                throw error;
             }
         };
 

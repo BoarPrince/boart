@@ -25,7 +25,7 @@ export abstract class WebPageAdapterElementLocator {
             }
         }
 
-        return Promise.reject(`element with location: '${location}' not found!`);
+        throw new Error(`element with location: '${location}' not found!`);
     }
 
     /**
@@ -33,7 +33,11 @@ export abstract class WebPageAdapterElementLocator {
      */
     public async findBy(strategy: string, location: string, parentElement?: ElementAdapter, index?: number): Promise<ElementAdapter> {
         const element = await this.findOptionalBy(strategy, location, parentElement, index);
-        return element ? element : Promise.reject(`element with strategy: '${strategy}' and location: '${location}' not found!`);
+        if (element) {
+            return element;
+        } else {
+            throw new Error(`element with strategy: '${strategy}' and location: '${location}' not found!`);
+        }
     }
 
     /**
@@ -47,7 +51,7 @@ export abstract class WebPageAdapterElementLocator {
     ): Promise<ElementAdapter> {
         const locators = ElementAdapterLocatorHandler.instance.getLocators(strategy);
         for (const locator of locators) {
-            const element = await locator.findBy(location, this.getElement(parentElement), index);
+            const element = await locator.findOptionalBy(location, this.getElement(parentElement), index);
             if (element) {
                 return element;
             }

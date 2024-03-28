@@ -39,8 +39,9 @@ describe('radio-proxy', () => {
      */
     test('id is not correct', async () => {
         await pageAdapter.driver.html(`<input type="radio" id="test-id" value="test-value">`);
+
         await expect(() => pageAdapter.element.byId('test-id-wrong')).rejects.toThrow(
-            `element 'test-id-wrong' by strategy findBy:id not found!`
+            `element with strategy: 'id' and location: 'test-id-wrong' not found!`
         );
     });
 
@@ -134,8 +135,9 @@ describe('radio-proxy', () => {
         await pageAdapter.driver.html(`
           <input checked type="radio" id="test-id" value="test-value">
           <label for="test-id">Test-Text</label>`);
+
         await expect(() => pageAdapter.element.locator.findBy('text', 'Test-Text-Wrong')).rejects.toThrow(
-            `element 'Test-Text-Wrong' by strategy findBy:text not found!`
+            `element with strategy: 'text' and location: 'Test-Text-Wrong' not found!`
         );
     });
 

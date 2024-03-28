@@ -41,7 +41,14 @@ export class PluginClientDefault implements PluginClient {
          */
         this.emitter.on('message', (request: RemotePluginRequest) => {
             void this.execute(request) //
-                .then((response) => this.emitter.emit('response', response));
+                .then((response) => this.emitter.emit('response', response))
+                .catch((error) =>
+                    this.emitter.emit('response', {
+                        id: request.id,
+                        error: error,
+                        data: undefined
+                    })
+                );
         });
 
         /**
@@ -67,15 +74,11 @@ export class PluginClientDefault implements PluginClient {
             error: undefined
         };
 
-        try {
-            const result = await this.collector.pluginHandler.execute(request.data);
-            response.data.reportItems = result?.reportItems ?? [];
-            response.data.context = request.data.context;
-            this.context = request.data.context;
-        } catch (error) {
-            response.data = undefined;
-            response.error = (error as { message: string }).message || (error as unknown);
-        }
+        const result = await this.collector.pluginHandler.execute(request.data);
+        response.data.reportItems = result?.reportItems ?? [];
+        response.data.context = request.data.context;
+        this.context = request.data.context;
+
         return response;
     }
 }

@@ -45,8 +45,9 @@ describe('select-proxy', () => {
           <select name="test-name" id="test-id">
             <option value="test-value">Test-Value</option>
           </select>`);
+
         await expect(() => pageAdapter.element.byId('test-id-wrong')).rejects.toThrow(
-            `element 'test-id-wrong' by strategy findBy:id not found!`
+            `element with strategy: 'id' and location: 'test-id-wrong' not found!`
         );
     });
 
@@ -140,8 +141,9 @@ describe('select-proxy', () => {
      */
     test('must throw error when element is not locatable', async () => {
         await pageAdapter.driver.html(`<label for="test-id">Test-Text</label>`);
+
         await expect(() => pageAdapter.element.locator.findBy('text', 'Test-Text-Wrong')).rejects.toThrow(
-            `element 'Test-Text-Wrong' by strategy findBy:text not found!`
+            `element with strategy: 'text' and location: 'Test-Text-Wrong' not found!`
         );
     });
 

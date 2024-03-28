@@ -174,7 +174,7 @@ describe('radio-group-proxy', () => {
           </div>`);
 
         await expect(pageAdapter.element.locator.findBy('text', 'Test-Text')).rejects.toThrow(
-            `element 'Test-Text' by strategy findBy:text not found!`
+            `element with strategy: 'text' and location: 'Test-Text' not found!`
         );
     });
 

@@ -35,7 +35,13 @@ export abstract class BaseLocator implements ElementAdapterLocator {
         index = 0
     ): Promise<SeleniumElementAdapter> {
         const element = await this.find(locationByStrategy, parentElement);
-        return new SeleniumElementAdapter(element[index], `${this.strategy}:${locationByStrategy}`);
+        if (element?.length === 0) {
+            return null;
+        } else if (element.length < index) {
+            return null;
+        } else {
+            return new SeleniumElementAdapter(element[index], `${this.strategy}:${locationByStrategy}`);
+        }
     }
 
     /**
@@ -46,8 +52,11 @@ export abstract class BaseLocator implements ElementAdapterLocator {
             const element = await this.find(locationByStrategy, parentElement);
             if (element?.length === 0) {
                 throw new Error(`not found`);
+            } else if (element.length < index) {
+                throw new Error(`element only have ${element.length} elements, but you want to get ${index}`);
+            } else {
+                return new SeleniumElementAdapter(element[index], `${this.strategy}:${locationByStrategy}`);
             }
-            return new SeleniumElementAdapter(element[index], `${this.strategy}:${locationByStrategy}`);
         } catch (error) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             error.message = `element '${locationByStrategy}' by strategy findBy:${this.strategy} not found!\n` + error.message;
