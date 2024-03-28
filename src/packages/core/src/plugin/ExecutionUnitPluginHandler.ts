@@ -87,7 +87,9 @@ export class ExecutionUnitPluginHandler implements ExecutionUnitPlugin {
      *
      */
     public async execute(request: PluginRequest): Promise<PluginResponse> {
-        const executionUnitCreator = !request?.action.name ? this.mainExecutionPlugin : this.pluginList.get(request.action.name);
+        const executionUnitCreator = !request?.action.name
+            ? this.mainExecutionPlugin
+            : this.pluginList.get(request.action.ast.name.stringValue);
         if (!executionUnitCreator) {
             throw new Error(
                 `execution unit plugin not found: '${request.action.name || '-mainClient-'}'\nonly available: ${Array.from(
